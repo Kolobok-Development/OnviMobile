@@ -1,117 +1,59 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, {useEffect} from 'react';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {showToast} from '@utils/showToast';
+import {ThemeProvider} from '@context/ThemeProvider';
+import {AuthProvider} from '@context/AuthContext';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {Application} from '@components/Application';
+import ThemeWrapper from '@components/ThemeWrapper';
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      retry: false,
+      staleTime: 5 * 60 * 1000,
+    },
+  },
+});
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+  useEffect(() => {
+    showToast({
+      type: 'success',
+      position: 'top',
+      text1: 'Привет!',
+      text2: 'Как дела?',
+    });
+  }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
+      <ThemeProvider>
+        <ThemeWrapper>
+          <AuthProvider>
+            <GestureHandlerRootView style={{flex: 1}}>
+              <SafeAreaView style={styles.container}>
+                <View style={{height: Dimensions.get('window').height}}>
+                  <Application />
+                </View>
+              </SafeAreaView>
+            </GestureHandlerRootView>
+          </AuthProvider>
+        </ThemeWrapper>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  container: {
+    flex: 1,
   },
 });
 

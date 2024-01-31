@@ -1,13 +1,13 @@
-import { useTheme } from '@context/ThemeProvider'
+import {useTheme} from '@context/ThemeProvider';
 
-const ThemeWrapper = ({ children } : any) => {
-    const { isThemeLoading } = useTheme() as any
+const ThemeWrapper = ({children}: any) => {
+  const {isThemeLoading} = useTheme() as any;
 
-    if (isThemeLoading) {
-        return null
-    } else {
-        return children
-    }
-}
+  if (isThemeLoading) {
+    return null;
+  } else {
+    return children;
+  }
+};
 
-export default ThemeWrapper
+export default ThemeWrapper;

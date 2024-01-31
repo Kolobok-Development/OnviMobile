@@ -1,7 +1,7 @@
 const debounce = (mseconds: number, callback: any) => {
-    setTimeout(() => {
-        callback()
-    }, mseconds)
-}
+  setTimeout(() => {
+    callback();
+  }, mseconds);
+};
 
-export { debounce }
+export {debounce};

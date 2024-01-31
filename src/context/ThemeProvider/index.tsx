@@ -1,45 +1,50 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
-import { darkTheme, defaultTheme } from "./../../utils/theme"
+import React, {createContext, useContext, useState, useEffect} from 'react';
+import {darkTheme, defaultTheme} from './../../utils/theme';
 
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ThemeContext = createContext({})
+const ThemeContext = createContext({});
 
 interface ThemeProviderProps {
-    children: any
+  children: any;
 }
 
-export const ThemeProvider = ({ children } : ThemeProviderProps) => {
-    const [theme, setTheme] = useState(defaultTheme)
-    const [isLoadingTheme, setIsLoadingTheme] = useState(true)
+export const ThemeProvider = ({children}: ThemeProviderProps) => {
+  const [theme, setTheme] = useState(defaultTheme);
+  const [isLoadingTheme, setIsLoadingTheme] = useState(true);
 
-    const findOldTheme = async () => {
-        const themeMode = await AsyncStorage.getItem('themeMode')
+  const findOldTheme = async () => {
+    const themeMode = await AsyncStorage.getItem('themeMode');
 
-        if (themeMode !== null) {
-            themeMode === "default" ? setTheme(defaultTheme) : setTheme(darkTheme)
-        }
-
-        setIsLoadingTheme(false)
+    if (themeMode !== null) {
+      themeMode === 'default' ? setTheme(defaultTheme) : setTheme(darkTheme);
     }
 
-    const updateTheme = (currentThemeMode: string) => {
-        const newTheme = currentThemeMode === "default" ? darkTheme : defaultTheme
-        setTheme(newTheme)
-        AsyncStorage.setItem("themeMode", newTheme.themeMode)
-    }
+    setIsLoadingTheme(false);
+  };
 
-    useEffect(() => {
-        findOldTheme()
-    }, [])
+  const updateTheme = (currentThemeMode: string) => {
+    const newTheme = currentThemeMode === 'default' ? darkTheme : defaultTheme;
+    setTheme(newTheme);
+    AsyncStorage.setItem('themeMode', newTheme.themeMode);
+  };
 
-    return (
-        <ThemeContext.Provider value={{ theme: theme, isLoadingTheme: isLoadingTheme, updateTheme: updateTheme }}>
-            {children}
-        </ThemeContext.Provider>
-    )
-}
+  useEffect(() => {
+    findOldTheme();
+  }, []);
 
-export const useTheme = () => useContext(ThemeContext)
+  return (
+    <ThemeContext.Provider
+      value={{
+        theme: theme,
+        isLoadingTheme: isLoadingTheme,
+        updateTheme: updateTheme,
+      }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
-export default {ThemeProvider}
+export const useTheme = () => useContext(ThemeContext);
+
+export default {ThemeProvider};
