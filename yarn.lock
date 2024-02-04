@@ -1963,10 +1963,10 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@rnmapbox/maps@10.1.8":
-  version "10.1.8"
-  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.1.8.tgz#efb94b4b0eebfd900ae7d231694d9c3fb6b3d9e2"
-  integrity sha512-kJFIQ+MvaXP+H8ZLVhxgaRyQw7M2/fKh6U3CEeD7DWAZiqutrcgL0rZlRFeRF86kz/ij8z7groBovQFHUWCIaw==
+"@rnmapbox/maps@10.1.9":
+  version "10.1.9"
+  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.1.9.tgz#a376e4e183de6668ab271f8cdb3c0a03d644c8e8"
+  integrity sha512-ahup003PT3z2zymlV8g5Bs9Ht/fMrugz00AomZ787iJzl6J5FcKJ9/6ZpMj5Rra7dpRoUi6r35SljC/F0XZ8Sw==
   dependencies:
     "@turf/along" "6.5.0"
     "@turf/distance" "6.5.0"
