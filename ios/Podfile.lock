@@ -1142,13 +1142,13 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - rnmapbox-maps (10.1.9):
+  - rnmapbox-maps (10.1.8):
     - MapboxMaps (~> 10.16.4)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.1.9)
+    - rnmapbox-maps/DynamicLibrary (= 10.1.8)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.1.9):
+  - rnmapbox-maps/DynamicLibrary (10.1.8):
     - MapboxMaps (~> 10.16.4)
     - React
     - React-Core
@@ -1423,7 +1423,7 @@ SPEC CHECKSUMS:
   Flipper-PeerTalk: 116d8f857dc6ef55c7a5a75ea3ceaafe878aadc9
   FlipperKit: 37525a5d056ef9b93d1578e04bc3ea1de940094f
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
-  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: 5420539d016f368cd27e008f65f777abd6098c56
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   MapboxCommon: 90f76693dc02438acbb5ea9a5b266a4c0eb1c875
@@ -1480,7 +1480,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNCPicker: b18aaf30df596e9b1738e7c1f9ee55402a229dca
   RNGestureHandler: 25b969a1ffc806b9f9ad2e170d4a3b049c6af85e
-  rnmapbox-maps: 3b948182ee265800c9b9cf200de1a934a4f260b0
+  rnmapbox-maps: d5b10cb87c93865f4960acf5cd0b348f4f5157cd
   RNPermissions: f418ac274bf5290e91b4a82d2dd98861a3667d35
   RNReanimated: 5589be82dc26b3f94738eb7c6b1f942787532b25
   RNScreens: b582cb834dc4133307562e930e8fa914b8c04ef2
@@ -1491,4 +1491,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c1791321fd802c6ee04074fa254e479ced22c845
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

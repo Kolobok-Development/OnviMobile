@@ -17,7 +17,7 @@ const Application = () => {
 
   return (
     <>
-      {!store.accessToken ? <AuthStack /> : <DrawerStack />}
+      {store.accessToken ? <AuthStack /> : <DrawerStack />}
       <Toast config={toastConfig} />
     </>
   );
