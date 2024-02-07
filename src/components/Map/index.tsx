@@ -12,14 +12,17 @@ import Marker from './Marker';
 
 import axios from 'axios';
 
+import { LocationPuck } from '@rnmapbox/maps';
+import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
+
 // MapboxGL
-MapboxGL.setWellKnownTileServer('Mapbox');
+// MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
 );
 //ONLY for ANDROID
-//MapboxGL.setConnected(true);
-MapboxGL.setTelemetryEnabled(false);
+// MapboxGL.setConnected(true);
+// MapboxGL.setTelemetryEnabled(false);
 
 interface IUserLocation {
   latitude: number;
@@ -148,7 +151,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             animationDuration={6000}
           />
           {memoizedBusinesses}
-          <UserLocation
+          {/* <UserLocation
             visible={hasLocationPermission}
             requestsAlwaysUse={true}
             minDisplacement={2}
@@ -156,7 +159,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             showsUserHeadingIndicator={true}
             animated={true}
             onUpdate={onUserLocationUpdate}
-          />
+          /> */}
+          <LocationPuck androidRenderMode={"normal"} puckBearing="heading" iosShowsUserHeadingIndicator={true} scale={1} pulsing={{isEnabled: true}} visible={true} />
         </MapboxGL.MapView>
       </View>
     </>

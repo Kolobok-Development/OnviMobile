@@ -42,7 +42,7 @@ export default function Marker({ coordinate, business, bottomSheetRef, locationR
                     width={35}
                     height={35}
                     style={{
-                        borderWidth: 1,
+                        borderWidth: 0,
                         position: "absolute",
                         left: 0,
                         top: 0,
