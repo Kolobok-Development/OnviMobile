@@ -6,7 +6,6 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 
 import {ScrollView} from 'react-native-gesture-handler';

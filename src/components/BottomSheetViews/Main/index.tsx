@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -6,12 +6,10 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
-import axios from 'axios';
 
 // styled components
 import {Card} from '@styled/cards';

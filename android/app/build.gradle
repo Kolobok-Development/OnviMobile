@@ -113,6 +113,8 @@ dependencies {
 
     implementation 'com.mapbox.maps:android:10.16.4'
 
+    implementation 'ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.8.0'
+
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {
