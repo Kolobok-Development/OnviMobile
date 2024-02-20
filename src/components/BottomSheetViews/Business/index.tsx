@@ -63,9 +63,9 @@ const Business = ({ bottomSheetRef } : any) => {
                         </View>
                     )})
                 }
-                <View style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: dp(10) }}>
+                {/* <View style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: dp(10) }}>
                     <BackButton index={2} />
-                </View>
+                </View> */}
             </Card>
         </View>
     )
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: "#F5F5F5",
-        height: dp(70),
+        minHeight: dp(70),
         display: "flex",
         borderRadius: 22,
         padding: dp(14),

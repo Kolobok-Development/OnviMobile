@@ -1,6 +1,4 @@
-import React, { useEffect, useRef } from 'react';
-
-import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
+import React, { useEffect } from 'react';
 
 import {
     DefaultTheme,
@@ -34,9 +32,9 @@ const RootStack = createNativeStackNavigator();
 import { createNavigationContainerRef } from '@react-navigation/native';
 
 import { useUpdate } from '@context/AppContext';
-import {Campaign} from "@components/BottomSheetViews/Campaign";
+import { Campaign } from "@components/BottomSheetViews/Campaign";
 
-const navigationRef = createNavigationContainerRef<any>()
+export const navigationRef = createNavigationContainerRef<any>()
 
 const navigateBottomSheet = (name: string, params: any) => {
   if (navigationRef.isReady()) {
@@ -56,7 +54,17 @@ const BottomSheetStack = ({ bottomSheetRef, active, drawerNavigation, cameraRef 
 
     return (
       <>
-        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true}>
+        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true} onStateChange={(state) => {
+          if (state.routes && state.routes.length && state.routes[state?.routes.length - 1].name === "Main") {
+            updateValue({
+              isMainScreen: true
+            })
+          } else {
+            updateValue({
+              isMainScreen: false
+            })
+          }
+        }}>
             <RootStack.Navigator
                 screenOptions={{
                     headerShown: false

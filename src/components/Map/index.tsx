@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo, useRef} from 'react';
 
 import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
 
@@ -6,14 +6,12 @@ import {PUBLIC_URL} from '@env';
 
 import {useUpdate, useStateSelector} from '@context/AppContext';
 
-import MapboxGL, {UserLocation} from '@rnmapbox/maps';
+import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
 
 import Marker from './Marker';
 
 import axios from 'axios';
 
-import { LocationPuck } from '@rnmapbox/maps';
-import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
 
 // MapboxGL
 // MapboxGL.setWellKnownTileServer('Mapbox');
@@ -91,16 +89,18 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   useEffect(() => {
     try {
       async function loadWashes() {
+        console.log(PUBLIC_URL + "/carwash !!!!!!!")
         await axios
           .get(PUBLIC_URL + '/carwash')
           .then(data => {
+            console.log('data -> ', data)
             if (data && data.data) {
               updateValue({
                 businesses: data.data,
               });
             }
           })
-          .catch(err => console.log(err));
+          .catch(err => console.log(`Error: ${err}`));
       }
 
       if (businesses.length === 0) {
@@ -151,7 +151,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             animationDuration={6000}
           />
           {memoizedBusinesses}
-          {/* <UserLocation
+          <UserLocation
             visible={hasLocationPermission}
             requestsAlwaysUse={true}
             minDisplacement={2}
@@ -159,8 +159,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             showsUserHeadingIndicator={true}
             animated={true}
             onUpdate={onUserLocationUpdate}
-          /> */}
-          <LocationPuck androidRenderMode={"normal"} puckBearing="heading" iosShowsUserHeadingIndicator={true} scale={1} pulsing={{isEnabled: true}} visible={true} />
+          />
+          {Platform.OS === 'ios' && <LocationPuck puckBearing="heading" scale={1} pulsing={{isEnabled: true}} visible={true} />}
         </MapboxGL.MapView>
       </View>
     </>

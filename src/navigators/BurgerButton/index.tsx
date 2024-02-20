@@ -6,6 +6,11 @@ import {TouchableOpacity, StyleSheet, View, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import {dp} from "../../utils/dp";
 import {Menu} from "react-native-feather";
+import { ArrowLeft } from 'react-native-feather';
+
+import {useStateSelector} from '@context/AppContext';
+
+import { navigationRef } from '@navigators/BottomSheetStack';
 
 interface BurgerProps {
     bottomSheetIndex?: number;
@@ -14,6 +19,10 @@ interface BurgerProps {
 
 const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false }: BurgerProps) => {
     const navigation = useNavigation<any>();
+
+    const isMainScreen = useStateSelector((state: any) => state.isMainScreen);
+
+    console.log("isMainScreen: ", isMainScreen)
 
     if (isDrawerStack){
         return (
@@ -32,12 +41,20 @@ const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false }: BurgerPro
         )
     }
 
-    return (
-        <TouchableOpacity style={[{...styles.button, display: bottomSheetIndex > 2 ? "none" : "flex"}, Platform.OS === 'android' && styles.androidShadow,
-            Platform.OS === 'ios' && styles.iosShadow,] } onPress={() => navigation.toggleDrawer()}>
-            <Menu  stroke={'#000'}/>
-        </TouchableOpacity>
-    )
+
+    if (isMainScreen || isMainScreen === undefined) {
+        return (
+            <TouchableOpacity style={[{ ...styles.button }, Platform.OS === 'android' && styles.androidShadow,
+                Platform.OS === 'ios' && styles.iosShadow,] } onPress={() => navigation.toggleDrawer()}>
+                <Menu  stroke={'#000'}/>
+            </TouchableOpacity>
+        )
+    }
+
+    return <TouchableOpacity style={[{ ...styles.button }, Platform.OS === 'android' && styles.androidShadow,
+        Platform.OS === 'ios' && styles.iosShadow,] } onPress={() => navigationRef.current?.goBack()}>
+        <ArrowLeft  stroke={'#000'}/>
+    </TouchableOpacity>
 }
 
 const styles = StyleSheet.create({

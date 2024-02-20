@@ -95,9 +95,9 @@ const Search = () => {
     return (
         <BottomSheetScrollView style={styles.container} nestedScrollEnabled={true}>
             <View style={{ flex: 1,  flexDirection: 'row', borderRadius: dp(30)}}>
-                <View style={{paddingRight: dp(5)}}>
+                {/* <View style={{paddingRight: dp(5)}}>
                     <BackButton index={2} />
-                </View>
+                </View> */}
                 <TextInput
                     placeholder='Поиск'
                     maxLength={19}

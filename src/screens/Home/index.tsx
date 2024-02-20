@@ -1,4 +1,4 @@
-import {useRef, useState, useMemo, useCallback} from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 
 import {
   View,
@@ -24,8 +24,6 @@ import {Map} from '@components/Map';
 
 // Bottom Sheet Navigator
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
-
-import {AppProvider} from '@context/AppContext';
 
 import {dp} from '../../utils/dp';
 
@@ -125,19 +123,9 @@ const Home = ({navigation}: any) => {
     );
   }, []);
 
-  console.log('bototmsheetindex:', bottomSheetIndex);
-
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={{...styles.container}}>
-        <AppProvider
-          initialState={{
-            value: '',
-            filters: {},
-            businesses: [],
-            order: {},
-            bottomSheetPosition: {},
-          }}>
           <Map
             bottomSheetRef={bottomSheetRef}
             bottomSheetIndex={bottomSheetIndex}
@@ -168,7 +156,7 @@ const Home = ({navigation}: any) => {
               />
             </View>
           </BottomSheet>
-        </AppProvider>
+        
         <View style={{...styles.burger}}>
           <BurgerButton bottomSheetIndex={bottomSheetIndex} />
         </View>

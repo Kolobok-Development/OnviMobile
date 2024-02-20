@@ -178,9 +178,9 @@ const Filters = () => {
 
     return (
         <BottomSheetScrollView style={styles.container} nestedScrollEnabled={true}>
-            <View style={{paddingRight: dp(10)}}>
+            {/* <View style={{paddingRight: dp(10)}}>
                 <BackButton index={2} />
-            </View>
+            </View> */}
             <SectionList
                 contentContainerStyle={{
                     marginTop: dp(15)
