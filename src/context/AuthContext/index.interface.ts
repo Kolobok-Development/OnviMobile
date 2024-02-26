@@ -13,6 +13,7 @@ export interface IEncryptedStorage {
     balance: string;
     id: number;
     name: string;
+    avatar: string;
 }
 
 export interface IAuthStore {
@@ -24,6 +25,7 @@ export interface IAuthStore {
     expiredDate?: string | null;
     name?: string | null;
     id?: number | null;
+    avatar: string;
 }
 
 
@@ -36,6 +38,7 @@ export interface IAuthStorePartial {
     expiredDate?: string | null;
     name?: string | null;
     id?: number | null;
+    avatar: string;
 }
 
 export interface IAuthContext {
@@ -47,4 +50,5 @@ export interface IAuthContext {
     register: (code: string, phone: string, acceptTerms: boolean, setRegistration: boolean) => any
     login: (otp: string, phone: string) => any
     refreshTokenFromSecureStorage: () => any
+    updateAvatar: (avatar: "male" | "female" | "both") => Promise<void>
 }

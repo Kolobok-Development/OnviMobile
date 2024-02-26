@@ -6,28 +6,37 @@ import {formatPhoneNumber} from "../../utils/phoneFormat";
 import {Button, OnviSwitch} from "@styled/buttons";
 import {Edit3, LogOut, Mail, User} from "react-native-feather";
 import BottomSheet, {BottomSheetTextInput} from "@gorhom/bottom-sheet";
-import {useNavigation} from "@react-navigation/native";
-import {BurgerButton} from "@navigators/BurgerButton";
-import {useAxios} from "@hooks/useAxios";
+import { useNavigation } from "@react-navigation/native";
+import { BurgerButton } from "@navigators/BurgerButton";
+import { useAxios } from "@hooks/useAxios";
 import Switch from "@styled/buttons/CustomSwitch";
 
-
-
-
+export const avatarSwitch = (avatar: string) => {
+    switch (avatar) {
+        case "both.jpg":
+            return require("../../assets/avatars/both.jpg")
+            break
+        case "female.jpg":
+            return require("../../assets/avatars/female.jpg")
+            break
+        case "male.jpg":
+            return require("../../assets/avatars/male.jpg")
+            break
+        default:
+            return require("../../assets/avatars/both.jpg")
+            break;
+    }
+}
 
 const Settings = () => {
-    const { store, getMe, signOut}: any = useAuth();
+    const { store, getMe, signOut, updateAvatar }: any = useAuth();
     const api = useAxios("CORE_URL")
     const navigation = useNavigation<any>();
 
     const initialUserName = store.name || '';
     const initialEmail = store.email || '';
     const initialPhone = store.phone || '';
-
-    useEffect(() => {
-      console.log(store.email);
-    }, [])
-
+    const initialAvatar = store.avatar || 'both.jpg'
 
     const [editing, setEditing] = useState(false);
     const [userName, setUserName] = useState(initialUserName);
@@ -36,8 +45,10 @@ const Settings = () => {
     const [toggle, setToggle] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [selectedAvatar, setSelectedAvatar] = useState<string>(initialAvatar)
+
     const bottomSheetRef = useRef<BottomSheet>(null);
-    const snapPoints = useMemo(() => ["70%"], []);
+    const snapPoints = useMemo(() => ["80%"], []);
 
     const handleClosePress = () => {
         setEditing(false);
@@ -48,6 +59,7 @@ const Settings = () => {
     const  saveUserDate = async () => {
         setLoading(true);
         try{
+            updateAvatar(selectedAvatar)
             const updateUser = await api.patch('/account', {
                 "name": userName,
                 "email": email,
@@ -78,6 +90,8 @@ const Settings = () => {
         return null;
     };
 
+    const avatarValue = avatarSwitch(selectedAvatar)
+
     const editingMode = () => {
         return (
                 <BottomSheet
@@ -85,7 +99,7 @@ const Settings = () => {
                     snapPoints={snapPoints}
                     keyboardBlurBehavior='restore'
                     // add bottom inset to elevate the sheet
-                    bottomInset={dp(Dimensions.get('window').height / 3)}
+                    bottomInset={dp(Dimensions.get('window').height / 5)}
                     // set `detached` to true
                     detached={true}
                     style={styles.sheetContainer}
@@ -95,6 +109,26 @@ const Settings = () => {
                 >
                         <View style={styles.contentContainer}>
                             <Text style={{...styles.titleText, marginBottom: dp(20)}}>Личные данные</Text>
+                            <View style={styles.avatars}>
+                                <TouchableOpacity onPress={() => setSelectedAvatar("both.jpg")} style={styles[selectedAvatar === "both.jpg" ? "selectedAvatar" : "avatarButton"]}>
+                                    <Image
+                                        style={{ height: dp(80), width: dp(80), borderRadius: 50}}
+                                        source={require('../../assets/avatars/both.jpg')}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setSelectedAvatar("female.jpg")}  style={styles[selectedAvatar === "female.jpg" ? "selectedAvatar" : "avatarButton"]}>
+                                    <Image
+                                        style={{ height: dp(80), width: dp(80), borderRadius: 50}}
+                                        source={require('../../assets/avatars/female.jpg')}
+                                    />
+                                </TouchableOpacity>
+                                <TouchableOpacity onPress={() => setSelectedAvatar("male.jpg")}  style={styles[selectedAvatar === "male.jpg" ? "selectedAvatar" : "avatarButton"]}>
+                                    <Image
+                                        style={{ height: dp(80), width: dp(80), borderRadius: 50}}
+                                        source={require('../../assets/avatars/male.jpg')}
+                                    />
+                                </TouchableOpacity>
+                            </View>
                             <View style={styles.textInputGroup}>
                                 <Text style={{ padding: dp(10)}}>
                                     👤
@@ -157,7 +191,7 @@ const Settings = () => {
                         />
                     </TouchableOpacity>
                     <Image
-                        source={require('../../assets/icons/avatar.png')}
+                        source={avatarValue}
                         style={styles.avatar}
                     />
                     <Text style={{...styles.titleText, marginTop: dp(18)}}>{userName}</Text>
@@ -258,7 +292,8 @@ const styles = StyleSheet.create({
       height: dp(70),
       width: dp(70),
       resizeMode: 'contain',
-      marginTop: dp(60)
+      marginTop: dp(60),
+      borderRadius: 50
     },
     balance: {
       display: 'flex',
@@ -375,6 +410,20 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#F5F5F5',
         borderRadius: dp(30),
+    },
+    avatars: {
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-evenly",
+        alignItems: "center"
+    },
+    avatarButton: {
+        borderRadius: 50
+    },
+    selectedAvatar: {
+        borderColor: "#BFFA00",
+        borderWidth: 2,
+        borderRadius: 50
     }
 })
 
