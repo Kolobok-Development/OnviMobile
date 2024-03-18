@@ -12,8 +12,10 @@ import Marker from './Marker';
 
 import axios from 'axios';
 
-import { LocationPuck } from '@rnmapbox/maps';
-import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
+import {LocationPuck} from '@rnmapbox/maps';
+import {isEnabled} from 'react-native/Libraries/Performance/Systrace';
+import {useBusiness} from '../../api/hooks/useAppContent';
+import {CarWashLocation} from '../../api/AppContent/types';
 
 // MapboxGL
 // MapboxGL.setWellKnownTileServer('Mapbox');
@@ -36,23 +38,28 @@ const DEFAULT_COORDINATES: IUserLocation = {
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const businesses = useStateSelector(state => state.businesses);
-  const memoizedBusinesses = useMemo(
-    () =>
-      businesses && businesses.length
-        ? businesses.map(business => {
-            return (
-              <Marker
-                key={business.carwashes[0].id}
-                coordinate={[business.location.lon, business.location.lat]}
-                locationRef={userLocationRef}
-                bottomSheetRef={bottomSheetRef}
-                business={business}
-              />
-            );
-          })
-        : [],
-    [businesses],
-  );
+  const {data, isLoading} = useBusiness({['populate']: '*'});
+  const memoizedBusinesses = useMemo(() => {
+    if (isLoading || !data || data.businessesLocations.length === 0) {
+      return null; // No data yet, or still loading
+    }
+
+    return data.businessesLocations.map(pos => {
+      const carwash = pos.carwashes[0];
+      const {lon, lat} = pos.location;
+      const coordinate = {latitude: lat, longitude: lon};
+
+      return (
+        <Marker
+          key={carwash.id}
+          coordinate={coordinate}
+          locationRef={userLocationRef} // Assuming these props are correct
+          bottomSheetRef={bottomSheetRef} // Assuming these props are correct
+          business={pos}
+        />
+      );
+    });
+  }, [data, isLoading]);
 
   const updateValue = useUpdate();
 
@@ -61,6 +68,11 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     useState<boolean>(false);
   const [userLocation, setUserLocation] =
     useState<IUserLocation>(DEFAULT_COORDINATES);
+
+  useEffect(() => {
+    console.log('HERE***********************************');
+    console.log(memoizedBusinesses);
+  }, [isLoading]);
 
   //Permission Request
   // Check and request location permissions
@@ -88,28 +100,13 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    try {
-      async function loadWashes() {
-        await axios
-          .get(PUBLIC_URL + '/carwash')
-          .then(data => {
-            if (data && data.data) {
-              updateValue({
-                businesses: data.data,
-              });
-            }
-          })
-          .catch(err => console.log(err));
-      }
-
-      if (businesses.length === 0) {
-        loadWashes();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   updateValue({
+  //     businesses: data,
+  //   });
+  //   console.log("CHECK BUSINESS");
+  //   console.log(businesses);
+  // }, [data, updateValue]);
 
   const onUserLocationUpdate = async (location: any) => {
     let lat = location.coords.latitude;
@@ -160,7 +157,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             animated={true}
             onUpdate={onUserLocationUpdate}
           /> */}
-          <LocationPuck androidRenderMode={"normal"} puckBearing="heading" iosShowsUserHeadingIndicator={true} scale={1} pulsing={{isEnabled: true}} visible={true} />
+          <LocationPuck
+            androidRenderMode={'normal'}
+            puckBearing="heading"
+            iosShowsUserHeadingIndicator={true}
+            scale={1}
+            pulsing={{isEnabled: true}}
+            visible={true}
+          />
         </MapboxGL.MapView>
       </View>
     </>

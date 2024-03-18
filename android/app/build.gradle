@@ -111,6 +111,9 @@ dependencies {
 
     implementation("com.google.android.gms:play-services-location:20.0.0")
 
+    //Shared preferenses for yookassa
+    implementation 'androidx.preference:preference:1.2.0'
+
     implementation 'com.mapbox.maps:android:10.16.4'
 
     implementation 'ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.8.0'
