@@ -22,6 +22,7 @@ import { useRoute} from '@react-navigation/native';
 import {Settings} from "react-native-feather";
 
 import { avatarSwitch } from '@screens/Settings';
+import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 const notifications = [
     {
@@ -185,15 +186,15 @@ const History = ({ drawerNavigation } : any) => {
                 isLoading ? <HistoryPlaceholder /> : <>
                     {!tab ? (
                         <ScrollView contentContainerStyle={{paddingBottom: dp(200)}} showsVerticalScrollIndicator={false}>
-                            {orders.map((order, index) => (
+                            {orders.length ? orders.map((order, index) => (
                                 <BalanceCard key={index} option={order} />
-                            ))}
+                            )) : <EmptyPlaceholder text='История операций пока пуста' />}
                         </ScrollView>
                     ) : (
                         <ScrollView>
-                            {notifications.map((notification, index) => (
+                            {[].length ? notifications.map((notification, index) => (
                                 <Notification key={index} option={notification} />
-                            ))}
+                            )) : <EmptyPlaceholder text='У вас пока нет уведомлений. Они будут отображены здесь, когда появятся.' />}
                         </ScrollView>
                     )}
                 </>

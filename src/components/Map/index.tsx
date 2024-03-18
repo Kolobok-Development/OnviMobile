@@ -1,10 +1,10 @@
-import React, {useState, useEffect, useMemo, useRef} from 'react';
+import React, {useState, useEffect, useMemo } from 'react';
 
-import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
+import { View, Dimensions, Platform, PermissionsAndroid } from 'react-native';
 
-import {PUBLIC_URL} from '@env';
+import { PUBLIC_URL } from '@env';
 
-import {useUpdate, useStateSelector} from '@context/AppContext';
+import { useUpdate, useStateSelector } from '@context/AppContext';
 
 import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
 
@@ -12,15 +12,9 @@ import Marker from './Marker';
 
 import axios from 'axios';
 
-
-// MapboxGL
-// MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
 );
-//ONLY for ANDROID
-// MapboxGL.setConnected(true);
-// MapboxGL.setTelemetryEnabled(false);
 
 interface IUserLocation {
   latitude: number;
@@ -89,11 +83,9 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   useEffect(() => {
     try {
       async function loadWashes() {
-        console.log(PUBLIC_URL + "/carwash !!!!!!!")
         await axios
           .get(PUBLIC_URL + '/carwash')
           .then(data => {
-            console.log('data -> ', data)
             if (data && data.data) {
               updateValue({
                 businesses: data.data,
@@ -144,7 +136,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           }>
           <MapboxGL.Camera
             centerCoordinate={[userLocation.longitude, userLocation.latitude]}
-            zoomLevel={15}
+            zoomLevel={100}
             pitch={1}
             ref={cameraRef}
             animationMode="flyTo"

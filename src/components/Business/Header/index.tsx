@@ -111,9 +111,9 @@ const BusinessHeader = ({ navigation, type, box, callback, position } : Business
                 </View>
             </Modal>
         <View style={styles.header}>
-            <View style={{paddingRight: dp(10)}}>
+            {/* <View style={{paddingRight: dp(10)}}>
                 <BackButton callback={callback} position={position} />
-            </View>
+            </View> */}
             <View style={{flex: 5}}>
                 <Text style={styles.title}>{route.params.name}</Text>
                 <Text style={styles.text}>{route.params.address}</Text>

@@ -50,10 +50,10 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
-    cameraRef.current.moveTo(
-      [userLocationRef.current.lon, userLocationRef.current.lat],
-      1,
-    );
+    cameraRef.current.setCamera({
+      centerCoordinate: [userLocationRef.current.lon, userLocationRef.current.lat],
+      zoomLevel: 15
+    })
   };
 
   const renderHandleComponent = useCallback((props: any) => {

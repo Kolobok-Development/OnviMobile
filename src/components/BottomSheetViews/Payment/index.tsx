@@ -20,7 +20,7 @@
 // import { useAuth } from '@context/AuthContext';
 
 // import Toast from 'react-native-alerts-message';
-import {horizontalScale, moderateScale, verticalScale} from "../../../utils/metrics";
+import { horizontalScale, moderateScale, verticalScale } from "../../../utils/metrics";
 // import {BottomSheetScrollView, BottomSheetTextInput} from "@gorhom/bottom-sheet";
 
 // const height = dp(Dimensions.get('screen').height);
@@ -545,8 +545,6 @@ const Payment = () => {
     const order = useStateSelector((state: any) => state.order);
 
     const createOrder = async () => {
-
-
         try {
             const orderName =`Заказ ${order.name}`;
             const orderDescription = `№ ${uuid.v4()}`;
@@ -651,15 +649,11 @@ const Payment = () => {
     const applyPoints = () => {
         let leftToPay = order.sum - (order.sum * discount / 100)
 
-        // order.sum - (order.sum * discount / 100) - usedPoints
-
         if (store.balance >= leftToPay) {
             setUsedPoints(leftToPay)
         } else {
             setUsedPoints(store.balance)
         }
-
-
     }
 
     const debounceTimeout: any = useRef(null);
@@ -695,11 +689,6 @@ const Payment = () => {
         setUsedPoints(0)
     }
   }
-
-
-
-
-
 
     return (
         <View style={{ ...styles.container, paddingLeft: dp(22), paddingRight: dp(22), paddingTop: dp(20)}}>
