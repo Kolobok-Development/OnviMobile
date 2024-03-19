@@ -1,5 +1,8 @@
+import { userApiInstance } from "../axiosConfig";
+
 export async function getMe() {
   try {
+    const response = await userApiInstance.get();
   } catch (e) {}
 }
 
