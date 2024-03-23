@@ -18,16 +18,7 @@ const Application = () => {
 
   return (
     <>
-      <AppProvider
-        initialState={{
-          value: '',
-          filters: {},
-          businesses: [],
-          order: {},
-          bottomSheetPosition: {},
-          bottomSheetOpened: false,
-          isMainScreen: true
-      }}>
+      <AppProvider>
         {store.accessToken ? <AuthStack /> : <DrawerStack />}
         <Toast config={toastConfig} />
       </AppProvider>

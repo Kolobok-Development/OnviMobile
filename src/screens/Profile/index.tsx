@@ -9,7 +9,7 @@ const Profile = () => {
     const { state, setState } = useAppState()
     return (
     <>
-    {state.value &&  <View>
+    <View>
                 <Text>Profile</Text>
                 <TouchableOpacity style={{width: 100, height: 100, backgroundColor: 'red'}} onPress={() => {
                     setState({
@@ -20,7 +20,7 @@ const Profile = () => {
                         }
                     })
                 }} />
-            </View>}
+            </View>
     </>
     )
 }

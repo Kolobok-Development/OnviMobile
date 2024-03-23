@@ -1,9 +1,8 @@
-import React, { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from "react";
+import React, { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction  } from "react";
 
 import { FiltersType } from "../../types/models/FiltersType";
 
 interface AppContextData {
-  value: string
   filters: FiltersType
   businesses: any[]
   order: any
@@ -19,7 +18,6 @@ const AppContext = createContext<{
 
 const AppProvider = ({ children }: { children: ReactNode }) => {
   const [state, setState] = useState<AppContextData>({
-    value: "",
     filters: {},
     businesses: [],
     order: null,

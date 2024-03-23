@@ -8,7 +8,7 @@ const About = () => {
     return (
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <BurgerButton visible={true} />
+                    <BurgerButton />
                 </View>
                 <View style={styles.content}>
                         <Image
