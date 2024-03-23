@@ -15,7 +15,6 @@ import {useTheme} from "@context/ThemeProvider";
 import {formatPhoneNumber} from "../../utils/phoneFormat";
 import {Settings} from "@screens/Settings";
 import {About} from "@screens/About";
-import {TelegramIcon, VkIcon} from "../../assets";
 import {useAuth} from "@context/AuthContext";
 import {Partners} from "@screens/Partners";
 import {Partner} from "@screens/Partner";

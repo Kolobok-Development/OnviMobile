@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -6,30 +6,23 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  ImageBackground,
 } from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
-import axios from 'axios';
 
 // styled components
 import {Card} from '@styled/cards';
 
 import {useAuth} from '@context/AuthContext';
 
-import {useTheme} from '@context/ThemeProvider';
+import { useTheme } from '@context/ThemeProvider';
 
-import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
+import { BLUE, BLACKTWO, WHITE, GREY } from '../../../utils/colors';
 
-// import Toast from 'react-native-alerts-message';
+import { dp } from '../../../utils/dp';
 
-import {showToast} from '../../../utils/showToast';
-
-import {dp} from '../../../utils/dp';
-
-import {useAxios} from '@hooks/useAxios';
-import {useStateSelector} from '@context/AppContext';
+import { useAxios } from '@hooks/useAxios';
+import { useAppState } from '@context/AppContext';
 
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -48,9 +41,11 @@ const Main = ({drawerNavigation}: any) => {
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const isOpened = useStateSelector((state: any) => state.bottomSheetOpened);
+  const { state, setState } = useAppState()
 
-  const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
+  const isOpened = state.bottomSheetOpened
+
+  const { isLoading: campaignLoading, data: campaignData } = useCampaigns();
 
   const {
     isLoading: newsLoading,
@@ -441,36 +436,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Main};
-
-/*
-     {newsLoading || newsError ? <PostsPlaceholder /> : <>
-                                {newsData && <View style={styles.news}>
-                                    {newsData.data[0] &&
-
-                                    <View style={styles.leftNewsColumn}>
-                                        <TouchableOpacity style={{flex: 1}} onPress={() => navigateBottomSheet("Post", {
-                                            postId: newsData.data[0].id
-                                        })}>
-                                            <Image source={{ uri: newsData.data[0].attributes.verticalImage.data.attributes.url }} style={styles.vertical}  />
-                                        </TouchableOpacity>
-                                    </View>}
-
-                                    <View style={styles.rightNewsColumn}>
-                                        {newsData.data[1] && <TouchableOpacity onPress={() => navigateBottomSheet("Post", {
-                                            postId: posts[1].id
-                                        })}>
-                                            <Image source={{ uri: newsData.data[1].attributes.horizontalImage.data.attributes.url }} style={styles.vertical}  />
-                                        </TouchableOpacity>}
-                                        {newsData.data[2] && <TouchableOpacity onPress={() => navigateBottomSheet("Post", {
-                                            postId: newsData.data[2].id
-                                        })}>
-                                            <Image source={{ uri: newsData.data[2].attributes.horizontalImage.data.attributes.url }} style={styles.vertical}  />
-                                        </TouchableOpacity>}
-                                    </View>
-
-                                </View>}
-                            </>}
-
-
- */
+export { Main };

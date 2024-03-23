@@ -4,31 +4,28 @@ import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
 // styled components
 import { Card } from '@styled/cards';
 
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 import { dp } from '../../../utils/dp';
 
 import { navigateBottomSheet } from '@navigators/BottomSheetStack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { useStateSelector } from '@context/AppContext';
-
-import { useUpdate } from '@context/AppContext';
-import { BackButton } from '@components/BackButton';
+import { useAppState } from '@context/AppContext';
 
 const height = dp(Dimensions.get('screen').height);
 const MID_TRANSLATE_Y = -height / 1.5 + dp(50)
 
 const Business = ({ bottomSheetRef } : any) => {
     const route: any = useRoute()
-    const navigation: any = useNavigation()
 
-    const updateValue = useUpdate();
-    const order = useStateSelector((state: any) => state.order);
+    const { state, setState } = useAppState()
+    const order = state.order
 
 
     const selectCarwash = (carwash: any) => {
-        updateValue({
+        setState({
+            ...state,
             order: {
                 ...order,
                 id: carwash.id,

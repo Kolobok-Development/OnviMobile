@@ -25,6 +25,8 @@ const Application = () => {
           businesses: [],
           order: {},
           bottomSheetPosition: {},
+          bottomSheetOpened: false,
+          isMainScreen: true
       }}>
         {store.accessToken ? <AuthStack /> : <DrawerStack />}
         <Toast config={toastConfig} />

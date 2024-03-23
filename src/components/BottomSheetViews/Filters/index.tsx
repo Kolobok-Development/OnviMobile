@@ -8,6 +8,7 @@ import {useNavigation, useRoute} from '@react-navigation/native'
 import {Button} from "@styled/buttons";
 import {useBusiness} from "../../../api/hooks/useAppContent";
 import { useUpdate, useStateSelector } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 import {FiltersType} from "../../../types/models/FiltersType";
 
 const data = [
@@ -82,11 +83,9 @@ const Filters = () => {
     const [query, setQuery] = useState("");
 
     const [filtersApplied, setFiltersApplied] = useState(false);
-
-
-    const route: any = useRoute();
+    
     const navigation: any = useNavigation()
-    const updateValue = useUpdate();
+    const { state, setState } = useAppState()
 
 
     // React query
@@ -127,14 +126,16 @@ const Filters = () => {
     }, [filtersApplied])
 
     useEffect(() => {
-        updateValue({
+        setState({
+            ...state,
             filters: selectedFilters
         });
     }, [selectedFilters])
 
     useEffect(() => {
         if (businessData && filtersApplied) {
-            updateValue({
+            setState({
+                ...state,
                 businesses: businessData.businessesLocations
             });
 

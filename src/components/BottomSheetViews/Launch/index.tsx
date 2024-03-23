@@ -3,12 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import { useTheme } from "@context/ThemeProvider";
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useStateSelector } from '@context/AppContext';
 
 import { dp } from "../../../utils/dp"
 import { Button } from '@styled/buttons';
 
-import { useUpdate } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 import { ScrollView } from 'react-native-gesture-handler';
 import { FilterList } from "@components/FiltersList";
@@ -28,19 +27,20 @@ const Launch = () => {
     const [value, setValue] = useState(150);
     const measureTypeData = ['рубли'];
 
+    const { state, setState } = useAppState()
+
     const colors: Array<"yellow" | "blue" | "grey" | "black"> = ['yellow', 'blue', 'grey', 'black'];
 
     const navigation: any = useNavigation();
     const route: any = useRoute()
 
-    const order = useStateSelector((state: any) => state.order);
-    const isOpened = useStateSelector((state: any) => state.bottomSheetOpened);
-
-    const updateValue = useUpdate();
+    const order = state.order
+    const isOpened = state.bottomSheetOpened
 
     useEffect(() => {
-        if (order.type !== "Portal") {
-            updateValue({
+        if (order?.type !== "Portal") {
+            setState({
+                ...state,
                 order: {
                     ...order,
                     sum: 150,
@@ -51,7 +51,8 @@ const Launch = () => {
     }, [])
 
     const onSelect = (name: string, price: number) => {
-        updateValue({
+        setState({
+            ...state,
             order: {
                 ...order,
                 sum: price,
@@ -61,12 +62,14 @@ const Launch = () => {
         navigation.navigate('Payment', route.params);
     }
 
-    if (order.type === "Portal") {
+    if (order?.type === "Portal") {
         return (
             <BottomSheetScrollView contentContainerStyle={{...styles.container, backgroundColor: theme.mainColor}} nestedScrollEnabled={true} scrollEnabled={isOpened}>
                     <View style={{paddingTop: dp(15)}}></View>
-                    <BusinessHeader navigation={navigation} position={"95%"} type="box" box={order.box + 1} callback={() => {
-                        updateValue({
+                    <Text>{JSON.stringify(order)}</Text>
+                    <BusinessHeader navigation={navigation} position={"95%"} type="box" box={order?.box + 1} callback={() => {
+                        setState({
+                            ...state,
                             order: {
                                 ...order,
                                 sum: null,
@@ -117,8 +120,9 @@ const Launch = () => {
     return (
         <BottomSheetScrollView contentContainerStyle={{ ...styles.container, backgroundColor: theme.mainColor}} nestedScrollEnabled={true} scrollEnabled={isOpened}>
                 <View style={{paddingTop: dp(15)}}></View>
-                <BusinessHeader navigation={navigation} position={"95%"} type="box" box={order.box + 1} callback={() => {
-                        updateValue({
+                <BusinessHeader navigation={navigation} position={"95%"} type="box" box={order?.box + 1} callback={() => {
+                        setState({
+                            ...state,
                             order: {
                                 ...order,
                                 sum: null,
@@ -171,7 +175,8 @@ const Launch = () => {
                         value={value}
                         onChange={(val) => {
                             setValue(val)
-                            updateValue({
+                            setState({
+                                ...state,
                                 order: {
                                     ...order,
                                     sum: val,

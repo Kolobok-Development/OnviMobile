@@ -8,7 +8,7 @@ import {dp} from "../../utils/dp";
 import {Menu} from "react-native-feather";
 import { ArrowLeft } from 'react-native-feather';
 
-import {useStateSelector} from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 import { navigationRef } from '@navigators/BottomSheetStack';
 
@@ -20,9 +20,9 @@ interface BurgerProps {
 const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false }: BurgerProps) => {
     const navigation = useNavigation<any>();
 
-    const isMainScreen = useStateSelector((state: any) => state.isMainScreen);
+    const { state } = useAppState()
 
-    console.log("isMainScreen: ", isMainScreen)
+    const isMainScreen = state.isMainScreen
 
     if (isDrawerStack){
         return (

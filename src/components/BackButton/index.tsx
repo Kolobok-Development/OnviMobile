@@ -7,7 +7,6 @@ import { ChevronLeft } from "react-native-feather";
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import { dp } from "../../utils/dp"
-import { GREY } from "../../utils/colors";
 
 interface BackButtonProps {
     callback?: () => void

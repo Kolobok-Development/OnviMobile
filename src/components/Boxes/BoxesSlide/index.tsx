@@ -6,7 +6,7 @@ import { horizontalScale } from "../../../utils/metrics";
 
 import { ScrollView } from "react-native-gesture-handler";
 
-import { useUpdate, useStateSelector } from '@context/AppContext';
+import { useAppState } from "@context/AppContext";
 
 import { dp } from '../../../utils/dp';
 
@@ -21,10 +21,10 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({ boxes = [], navigation, params } : BoxesSlideProps) => {
-    const updateValue = useUpdate();
-    const order = useStateSelector((state: any) => state.order);
+    const { state, setState } = useAppState()
+    const order = state.order
 
-    const [active, setActive] = useState(order.box)
+    const [active, setActive] = useState(order?.box)
 
     return (
         <ScrollView horizontal style={styles.container} showsVerticalScrollIndicator={false} showsHorizontalScrollIndicator={false}>
@@ -36,7 +36,8 @@ const BoxesSlide = ({ boxes = [], navigation, params } : BoxesSlideProps) => {
                         label={box.number} 
                         onClick={() => {
                             setActive(key)
-                            updateValue({
+                            setState({
+                                ...state,
                                 order: {
                                     ...order,
                                     box: key

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { dp } from "../../utils/dp"
 
-import {View, Text, TextInput, Image, TouchableOpacity, Modal, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, TextInput, Image, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 import {BurgerButton} from "@navigators/BurgerButton";
 
 // import { Button } from '@styled/buttons';

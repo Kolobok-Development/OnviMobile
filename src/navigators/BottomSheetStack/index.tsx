@@ -31,7 +31,7 @@ const RootStack = createNativeStackNavigator();
 // Navigation Ref
 import { createNavigationContainerRef } from '@react-navigation/native';
 
-import { useUpdate } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 import { Campaign } from "@components/BottomSheetViews/Campaign";
 
 export const navigationRef = createNavigationContainerRef<any>()
@@ -43,26 +43,28 @@ const navigateBottomSheet = (name: string, params: any) => {
 }
 
 const BottomSheetStack = ({ bottomSheetRef, active, drawerNavigation, cameraRef } : any) => {
+  const { state, setState } = useAppState()
 
-  const updateValue = useUpdate();
-
-  useEffect(() => {
-    updateValue({
-      bottomSheetOpened: active
+ useEffect(() => {
+    setState({
+     ...state,
+     bottomSheetOpened: active
     })
-  }, [active])
+   }, [active])
 
     return (
       <>
-        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true} onStateChange={(state) => {
-          if (state.routes && state.routes.length && state.routes[state?.routes.length - 1].name === "Main") {
-            updateValue({
-              isMainScreen: true
-            })
-          } else {
-            updateValue({
-              isMainScreen: false
-            })
+        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true} onStateChange={(navigationState) => {
+           if (navigationState.routes && navigationState.routes.length && navigationState.routes[navigationState?.routes.length - 1].name === "Main") {
+             setState({
+               ...state,
+               isMainScreen: true
+             })
+           } else {
+             setState({
+               ...state,
+               isMainScreen: false
+           })
           }
         }}>
             <RootStack.Navigator

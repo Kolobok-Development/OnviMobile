@@ -6,21 +6,20 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import {useStateSelector} from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 
 // Map Component
-import {Map} from '@components/Map';
+import { Map } from '@components/Map';
 
 // Bottom Sheet Navigator
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
@@ -40,6 +39,8 @@ const Home = ({navigation}: any) => {
 
   const bottomSheetRef = useRef(null);
 
+  const { state } = useAppState()
+
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
 
@@ -57,7 +58,7 @@ const Home = ({navigation}: any) => {
   };
 
   const renderHandleComponent = useCallback((props: any) => {
-    const filters: any = useStateSelector((state: any) => state.filters);
+    const filters = state.filters
 
     function extractValues(obj: any) {
       const values = [];

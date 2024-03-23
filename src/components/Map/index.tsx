@@ -4,7 +4,7 @@ import { View, Dimensions, Platform, PermissionsAndroid } from 'react-native';
 
 import { PUBLIC_URL } from '@env';
 
-import { useUpdate, useStateSelector } from '@context/AppContext';
+import { useAppState } from "@context/AppContext"
 
 import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
 
@@ -27,7 +27,10 @@ const DEFAULT_COORDINATES: IUserLocation = {
 };
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const businesses = useStateSelector(state => state.businesses);
+
+  const { state, setState } = useAppState()
+  const businesses = state.businesses
+
   const memoizedBusinesses = useMemo(
     () =>
       businesses && businesses.length
@@ -45,8 +48,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         : [],
     [businesses],
   );
-
-  const updateValue = useUpdate();
 
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
@@ -87,7 +88,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           .get(PUBLIC_URL + '/carwash')
           .then(data => {
             if (data && data.data) {
-              updateValue({
+              setState({
+                ...state,
                 businesses: data.data,
               });
             }

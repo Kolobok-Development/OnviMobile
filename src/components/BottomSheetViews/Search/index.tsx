@@ -1,22 +1,17 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 
-import {View, StyleSheet, TextInput, Text, Image, TouchableOpacity, FlatList} from 'react-native';
+import {View, StyleSheet, TextInput, Text, Image, TouchableOpacity, FlatList } from 'react-native';
 
 import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { BackButton } from '@components/BackButton';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { navigateBottomSheet } from '@navigators/BottomSheetStack';
 
-import { useUpdate } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 import { useRoute } from '@react-navigation/native';
 
 //@ts-ignore
 import { debounce } from "lodash";
-import axios from "axios"
-
-import { PUBLIC_URL } from '@env';
 
 import { dp } from '../../../utils/dp';
 import {useBusiness } from "../../../api/hooks/useAppContent";
@@ -24,8 +19,9 @@ import {CarWashLocation} from "../../../api/AppContent/types";
 
 const Search = () => {
   const [search, setSearch] = useState("")
-  const updateValue = useUpdate();
   const route: any = useRoute();
+
+  const { state, setState } = useAppState()
 
     const {
         isLoading,
@@ -85,7 +81,8 @@ const Search = () => {
 
   const onClick = (carwash: any) => {
     navigateBottomSheet('Business', carwash)
-    updateValue({
+    setState({
+      ...state,
       order: {}
     });
     route.params.bottomSheetRef.current?.snapToPosition("42%")

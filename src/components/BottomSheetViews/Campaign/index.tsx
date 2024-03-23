@@ -1,8 +1,9 @@
 import {Image, Linking, StyleSheet, Text, View} from "react-native";
-import {dp} from "../../../utils/dp";
-import {BottomSheetScrollView} from "@gorhom/bottom-sheet";
-import {useNavigation, useRoute} from "@react-navigation/native";
-import {useStateSelector} from "@context/AppContext";
+import { dp } from "../../../utils/dp";
+import { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import { useRoute } from "@react-navigation/native";
+import { useAppState } from "@context/AppContext";
+
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import React, {useEffect, useState} from "react";
 import {BackButton} from "@components/BackButton";
@@ -12,8 +13,9 @@ import {Button} from "@styled/buttons";
 
 const Campaign = () => {
     const route: any = useRoute();
-    const navigation = useNavigation();
-    const isOpened = useStateSelector((state: any) => state.bottomSheetOpened);
+    const { state } = useAppState()
+
+    const isOpened = state.bottomSheetOpened
 
     const [campaign, setCampaign] = useState<CampaignType | null>(null);
 

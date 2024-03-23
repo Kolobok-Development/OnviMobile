@@ -1,10 +1,10 @@
-import {Dimensions, Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {dp} from "../../utils/dp";
-import React, {useEffect, useMemo, useRef, useState} from "react";
+import React, {useMemo, useRef, useState} from "react";
 import {useAuth} from "@context/AuthContext";
 import {formatPhoneNumber} from "../../utils/phoneFormat";
-import {Button, OnviSwitch} from "@styled/buttons";
-import {Edit3, LogOut, Mail, User} from "react-native-feather";
+import {Button} from "@styled/buttons";
+import { Edit3, LogOut } from "react-native-feather";
 import BottomSheet, {BottomSheetTextInput} from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import { BurgerButton } from "@navigators/BurgerButton";
