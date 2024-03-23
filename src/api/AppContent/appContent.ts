@@ -63,14 +63,17 @@ export async function getCarWashes(query: {[key: string]: string}) {
     console.log(
       'QUERY TO SEND ___________________***************_________________',
     );
-    console.log(query);
     const response = await appContent.get<BusinessSuccessRequestPayload[]>(
       'api/carwash',
       {
         params: query,
       },
     );
-    console.log(response);
+
+    console.log(
+      'RESPONSE DATA ___________________***************_________________',
+    );
+    console.log(response.data);
     return response.data;
   } catch (error: any) {
     console.error('getCampaigns - Error: ', JSON.stringify(error));
