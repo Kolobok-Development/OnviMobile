@@ -4,12 +4,7 @@ import {
   verticalScale,
 } from '../../../utils/metrics';
 import React, {useEffect, useRef, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {
   ScrollView,
   ScrollView as GHScrollView,
@@ -21,11 +16,11 @@ import {useAxios} from '@hooks/useAxios';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { useAppState } from "@context/AppContext";
-import  { dp } from "../../../utils/dp"
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {useAppState} from '@context/AppContext';
+import {dp} from '../../../utils/dp';
 
-import { OnviSwitch } from "@styled/buttons";
+import {OnviSwitch} from '@styled/buttons';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
@@ -42,7 +37,6 @@ import {YOKASSA_KEY, YOKASSA_SHOP_ID} from '@env';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
-
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -54,14 +48,14 @@ const Payment = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
-    const { state, setState } = useAppState()
+  const {state, setState} = useAppState();
 
-    const [promocode, setPromocode] = useState<string>("")
-    const [cashback, setCashback] = useState(0)
-    const [usedPoints, setUsedPoints] = useState(0)
+  const [promocode, setPromocode] = useState<string>('');
+  const [cashback, setCashback] = useState(0);
+  const [usedPoints, setUsedPoints] = useState(0);
 
-    const isOpened = state.bottomSheetOpened
-    const order = state.order
+  const isOpened = state.bottomSheetOpened;
+  const order = state.order;
 
   const [discount, setDiscount] = useState(0);
 
@@ -69,10 +63,6 @@ const Payment = () => {
   const [orderStatus, setOrderSatus] = useState<OrderStatus | null>(null);
 
   const [promoError, setPromoError] = useState<string | null>(null);
-
-  const convertNumber = (number: string) => {
-    return '...' + number.substring(number.length - 4);
-  };
 
   const api = useAxios('CORE_URL');
 
@@ -119,8 +109,6 @@ const Payment = () => {
   useEffect(() => {
     getTariff();
   }, []);
-
-  const order = useStateSelector((state: any) => state.order);
 
   const createOrder = async () => {
     try {
@@ -184,7 +172,6 @@ const Payment = () => {
         amount: String(order.sum),
         description: paymentConfigParams.subtitle,
       });
-
 
       const confirmationUrl = response.data.data.confirmation.confirmation_url;
 
