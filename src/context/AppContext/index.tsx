@@ -28,10 +28,6 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
     isMainScreen: true
   });
 
-  useEffect(() => {
-    console.log("hey:", state);
-  }, [state]);
-
   return (
     <AppContext.Provider value={{ state, setState }}>
       {children}
