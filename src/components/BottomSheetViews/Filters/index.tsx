@@ -7,7 +7,6 @@ import {BackButton} from "@components/BackButton";
 import {useNavigation, useRoute} from '@react-navigation/native'
 import {Button} from "@styled/buttons";
 import {useBusiness} from "../../../api/hooks/useAppContent";
-import { useUpdate, useStateSelector } from '@context/AppContext';
 import { useAppState } from '@context/AppContext';
 import {FiltersType} from "../../../types/models/FiltersType";
 
@@ -78,14 +77,14 @@ const CheckBoxItem: React.FC<CheckBoxItemProps> = ({ code, name, sectionName, on
 
 
 const Filters = () => {
-    const filters: FiltersType = useStateSelector((state: any) => state.filters);
+    const { state, setState } = useAppState()
+    const filters = state.filters
     const [selectedFilters, setSelectedFilters] = useState<FiltersType>(filters);
     const [query, setQuery] = useState("");
 
     const [filtersApplied, setFiltersApplied] = useState(false);
     
     const navigation: any = useNavigation()
-    const { state, setState } = useAppState()
 
 
     // React query
@@ -93,7 +92,7 @@ const Filters = () => {
         isFetching,
         data: businessData,
         refetch: getBusinesses,
-    } = useBusiness({filter: query}, false);
+    } = useBusiness({filter: query});
 
     const getCheckedState = (sectionName: string, code: string) => {
         return Boolean(filters[sectionName] && filters[sectionName][code]);

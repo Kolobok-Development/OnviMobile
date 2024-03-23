@@ -133,7 +133,8 @@ const styles = StyleSheet.create({
         fontSize: moderateScale(20),
         fontWeight: '500',
         paddingBottom: verticalScale(5),
-        overflowWrap: "normal",
+        // @ts-ignore
+        overflowWrap: "normal", 
         color: '#000'
     },
     text: {

@@ -54,7 +54,7 @@ const BottomSheetStack = ({ bottomSheetRef, active, drawerNavigation, cameraRef 
 
     return (
       <>
-        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true} onStateChange={(navigationState) => {
+        <NavigationContainer theme={navTheme} ref={navigationRef} independent={true} onStateChange={(navigationState: any) => {
            if (navigationState.routes && navigationState.routes.length && navigationState.routes[navigationState?.routes.length - 1].name === "Main") {
              setState({
                ...state,
