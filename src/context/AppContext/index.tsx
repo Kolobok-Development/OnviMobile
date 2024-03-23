@@ -1,97 +1,46 @@
-import {
-    createContext,
-    ReactNode,
-    useContext,
-    useEffect,
-    useLayoutEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import React, { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction, useEffect } from "react";
 
-import { MiniStore } from '@context/MiniStore';
-import {FiltersType} from "../../types/models/FiltersType";
+import { FiltersType } from "../../types/models/FiltersType";
 
+interface AppContextData {
+  value: string
+  filters: FiltersType
+  businesses: any[]
+  order: any
+  bottomSheetPosition: any
+  bottomSheetOpened: boolean
+  isMainScreen: boolean
+}
 
+const AppContext = createContext<{
+  state: AppContextData;
+  setState: Dispatch<SetStateAction<AppContextData>>;
+} | null>(null);
 
+const AppProvider = ({ children }: { children: ReactNode }) => {
+  const [state, setState] = useState<AppContextData>({
+    value: "",
+    filters: {},
+    businesses: [],
+    order: null,
+    bottomSheetPosition: null,
+    bottomSheetOpened: false,
+    isMainScreen: true
+  });
 
-
-
-
-function createOptimizedContext<T>() {
-    const Context = createContext<MiniStore<T> | null>(null);
-
-    const Provider = ({
-      initialState,
-      children,
-    }: {
-      initialState: T;
-      children: ReactNode;
-    }) => {
-      const store: any = useMemo(() => new MiniStore(initialState), []);
-
-      return <Context.Provider value={store}>{children}</Context.Provider>;
-    };
-
-    const useStore = () => {
-      const store = useContext(Context);
-      if (!store) {
-        throw new Error("Can not use `useStore` outside of the `Provider`");
-      }
-      return store;
-    };
-
-    const useStateSelector = <Result extends any>(
-      selector: (state: T) => Result
-    ): Result => {
-      const store = useStore();
-      const [state, setState] = useState(() => selector(store.getState()));
-      const selectorRef = useRef(selector);
-      const stateRef = useRef(state);
-
-    useLayoutEffect(() => {
-        selectorRef.current = selector;
-        stateRef.current = state;
-    });
-
-    useEffect(() => {
-      if (store) {
-        return store.subscribe(() => {
-          const state = selectorRef.current(store.getState());
-
-          if (stateRef.current === state) {
-              return;
-          }
-
-          setState(state);
-      });
-      }
-    }, [store]);
-
-    return state;
+  return (
+    <AppContext.Provider value={{ state, setState }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
-    const useUpdate = () => {
-      const store: any = useStore();
-
-      return store.update;
-    };
-
-    return { Provider, useStateSelector, useUpdate };
+const useAppState = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error("useAppState must be used within an AppProvider");
   }
+  return context;
+};
 
-  interface AppContextData {
-    value: string;
-    filters: FiltersType;
-    businesses: any[];
-    order: any;
-    bottomSheetPosition: any;
-  }
-
-  const {
-    Provider: AppProvider,
-    useStateSelector,
-    useUpdate,
-  } = createOptimizedContext<AppContextData>();
-
-  export { AppProvider, useStateSelector, useUpdate };
+export { AppProvider, useAppState };

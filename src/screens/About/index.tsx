@@ -1,4 +1,4 @@
-import {Image, Linking, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Image, Linking, Platform, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {dp} from "../../utils/dp";
 import {BurgerButton} from "@navigators/BurgerButton";
 import React from "react";

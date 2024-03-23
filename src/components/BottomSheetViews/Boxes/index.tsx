@@ -1,4 +1,4 @@
-import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
@@ -7,12 +7,9 @@ import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import { BoxesSlide } from '@components/Boxes/BoxesSlide';
 import { BusinessHeader } from '@components/Business/Header';
 
-import { useUpdate, useStateSelector } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 import { dp } from '../../../utils/dp';
-import { Button } from '@styled/buttons';
-import {CarEmoje} from "../../../assets";
-import { BackButton } from '@components/BackButton';
 import {Price} from "../../../api/AppContent/types";
 import {CheckBox} from "@styled/buttons/CheckBox";
 
@@ -20,9 +17,10 @@ const Boxes = () => {
     const navigation: any = useNavigation();
     const route: any = useRoute()
 
-    const updateValue = useUpdate();
-    const order = useStateSelector((state: any) => state.order);
-    const value = useStateSelector((state: any) => state.order.box);
+    const { state, setState } = useAppState()
+
+    const order = state.order
+
     const num = 0o123;
 
     const textWithNum = () => (
@@ -38,7 +36,8 @@ const Boxes = () => {
                         paddingLeft: dp(22),
                         paddingRight: dp(22),
                     }}>
-                        <BusinessHeader type="empty" navigation={navigation} callback={() => updateValue({
+                        <BusinessHeader type="empty" navigation={navigation} callback={() => setState({
+                            ...state,
                             order: {
                                 ...order,
                                 box: null

@@ -21,6 +21,9 @@ import { useAuth } from '@context/AuthContext';
 import { useRoute} from '@react-navigation/native';
 import {Settings} from "react-native-feather";
 
+import { avatarSwitch } from '@screens/Settings';
+import EmptyPlaceholder from '@components/EmptyPlaceholder';
+
 const notifications = [
     {
         read: false,
@@ -60,6 +63,10 @@ const History = ({ drawerNavigation } : any) => {
     const api = useAxios("CORE_URL")
 
     const route: any = useRoute();
+
+    const initialAvatar = store.avatar || 'both.jpg'
+
+    const avatarValue = avatarSwitch(initialAvatar)
 
     useEffect(() => {
         if (route && route.params && route.params.type && route.params.type === "history") {
@@ -132,7 +139,7 @@ const History = ({ drawerNavigation } : any) => {
             <View style={{paddingBottom: dp(30), flexDirection: "row", display: "flex", alignItems: "center", justifyContent: "space-between"}}>
                 <View style={{flexDirection: "row", flex: 1, alignItems: "center"}}>
                     <Image
-                        source={require('../../../assets/icons/avatar.png')}
+                        source={avatarValue}
                         style={{
                             width: dp(60),
                             height: dp(60),
@@ -179,15 +186,15 @@ const History = ({ drawerNavigation } : any) => {
                 isLoading ? <HistoryPlaceholder /> : <>
                     {!tab ? (
                         <ScrollView contentContainerStyle={{paddingBottom: dp(200)}} showsVerticalScrollIndicator={false}>
-                            {orders.map((order, index) => (
+                            {orders.length ? orders.map((order, index) => (
                                 <BalanceCard key={index} option={order} />
-                            ))}
+                            )) : <EmptyPlaceholder text='История операций пока пуста' />}
                         </ScrollView>
                     ) : (
                         <ScrollView>
-                            {notifications.map((notification, index) => (
+                            {[].length ? notifications.map((notification, index) => (
                                 <Notification key={index} option={notification} />
-                            ))}
+                            )) : <EmptyPlaceholder text='У вас пока нет уведомлений. Они будут отображены здесь, когда появятся.' />}
                         </ScrollView>
                     )}
                 </>

@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, Linking, Modal } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, Modal } from 'react-native'
 
 import { useState } from "react"
 
@@ -9,11 +9,8 @@ import { Button } from '@styled/buttons';
 import { dp } from "../../../utils/dp"
 
 import { Box } from "@components/Boxes/Box"
-//import { sign } from 'rn-yandexnavi-signature';
 
-import Toast from 'react-native-toast-message';
-import {horizontalScale, moderateScale, verticalScale} from "../../../utils/metrics";
-import { BackButton } from '@components/BackButton';
+import { horizontalScale, moderateScale, verticalScale } from "../../../utils/metrics";
 
 interface BusinessHeader {
     navigation: any
@@ -111,9 +108,9 @@ const BusinessHeader = ({ navigation, type, box, callback, position } : Business
                 </View>
             </Modal>
         <View style={styles.header}>
-            <View style={{paddingRight: dp(10)}}>
+            {/* <View style={{paddingRight: dp(10)}}>
                 <BackButton callback={callback} position={position} />
-            </View>
+            </View> */}
             <View style={{flex: 5}}>
                 <Text style={styles.title}>{route.params.name}</Text>
                 <Text style={styles.text}>{route.params.address}</Text>

@@ -1,15 +1,8 @@
 import React from 'react';
-import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
-
-// styled components
-import { Card } from '@styled/cards';
+import { View, Dimensions, StyleSheet } from 'react-native';
 
 import { useNavigation } from '@react-navigation/native';
 
-import { dp } from '../../../utils/dp';
-
-import { navigateBottomSheet } from '@navigators/BottomSheetStack';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Button } from '@styled/buttons';
 
 const Notifications = () => {
@@ -22,10 +15,6 @@ const Notifications = () => {
                 label="История"
                 onClick={() => {}}
                 color='blue'
-                // width,
-                // height,
-                // fontSize,
-                // fontWeight
             />
         </View>
     )

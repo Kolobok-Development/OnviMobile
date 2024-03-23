@@ -38,6 +38,7 @@ const AuthProvider: React.FC<any> = ({
     expiredDate: null,
     name: null,
     id: null,
+    avatar: "both.jpg"
   });
 
   const updateStore = (partialNewState: IAuthStorePartial) => {
@@ -71,6 +72,7 @@ const AuthProvider: React.FC<any> = ({
                 email: formatted.email,
                 name: formatted.name,
                 id: formatted.id,
+                avatar: formatted.avatar
               })
               return;
             }
@@ -121,7 +123,7 @@ const AuthProvider: React.FC<any> = ({
           return data.data
         }).catch(async () => {
           await EncryptedStorage.removeItem("user_session")
-          await updateStore({
+          updateStore({
             loading: false,
           })
           return null
@@ -140,18 +142,20 @@ const AuthProvider: React.FC<any> = ({
                 email: formatted.email,
                 balance: formatted.balance,
                 name: formatted.name,
-                id: formatted.id
+                id: formatted.id,
+                avatar: formatted.avatar
             })
           );
 
-          await updateStore({
+          updateStore({
             accessToken: response.data.accessToken,
             expiredDate: response.data.accessTokenExp,
             loading: false,
             balance: formatted.balance,
             name: formatted.name,
             email: formatted.email,
-            id: formatted.id
+            id: formatted.id,
+            avatar: formatted.avatar
           });
 
           return null
@@ -350,6 +354,21 @@ const AuthProvider: React.FC<any> = ({
     }
   }
 
+  async function updateAvatar(avatar: 'male' | 'female' | 'both') {
+
+
+    await EncryptedStorage.setItem(
+      "user_session",
+      JSON.stringify({
+        avatar: avatar
+      })
+    )
+
+    updateStore({
+      avatar: avatar,
+    })
+  }
+
   //  Sign Out
   async function signOut() {
     try {
@@ -384,7 +403,8 @@ const AuthProvider: React.FC<any> = ({
         getMe: getMe,
         register: register,
         login: login,
-        refreshTokenFromSecureStorage: refreshTokenFromSecureStorage
+        refreshTokenFromSecureStorage: refreshTokenFromSecureStorage,
+        updateAvatar: updateAvatar
       }}
     >
       {children}

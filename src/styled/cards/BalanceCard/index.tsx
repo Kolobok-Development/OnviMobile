@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     box: {
         marginVertical: 10,
         width: dp(342),
-        height: dp(85),
+        minHeight: dp(85),
         backgroundColor: "#F5F5F5",
         borderRadius: dp(25),
         display: "flex",

@@ -7,7 +7,7 @@ import {Partner as PartnerType} from "../../api/AppContent/types";
 import Markdown from "react-native-markdown-display";
 import SkeletonPlaceholder from "react-native-skeleton-placeholder";
 import {Button} from "@styled/buttons";
-import PromoModal, {IPromoModalProps, IPromoCodeData, IInputData} from "@components/PromoModal";
+import PromoModal, {IPromoModalProps, IInputData} from "@components/PromoModal";
 
 
 

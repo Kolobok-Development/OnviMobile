@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Image, Text, Linking } from 'react-native';
 
-import { useStateSelector } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 import { dp } from '../../../utils/dp';
 
@@ -30,7 +30,9 @@ const Post = ({ drawerNavigation } : any) => {
     const [post, setPost] = useState<NewsPost | null>(null)
     const navigation = useNavigation()
 
-    const isOpened = useStateSelector((state: any) => state.bottomSheetOpened);
+    const { state } = useAppState()
+
+    const isOpened = state.bottomSheetOpened
 
     const [isLoading, setIsLoading] = useState(false)
 

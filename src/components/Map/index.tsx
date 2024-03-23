@@ -1,28 +1,20 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, {useState, useEffect, useMemo } from 'react';
 
-import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
+import { View, Dimensions, Platform, PermissionsAndroid } from 'react-native';
 
-import {PUBLIC_URL} from '@env';
+import { PUBLIC_URL } from '@env';
 
-import {useUpdate, useStateSelector} from '@context/AppContext';
+import { useAppState } from "@context/AppContext"
 
-import MapboxGL, {UserLocation} from '@rnmapbox/maps';
+import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
 
 import Marker from './Marker';
 
 import axios from 'axios';
 
-import { LocationPuck } from '@rnmapbox/maps';
-import { isEnabled } from 'react-native/Libraries/Performance/Systrace';
-
-// MapboxGL
-// MapboxGL.setWellKnownTileServer('Mapbox');
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
 );
-//ONLY for ANDROID
-// MapboxGL.setConnected(true);
-// MapboxGL.setTelemetryEnabled(false);
 
 interface IUserLocation {
   latitude: number;
@@ -35,7 +27,10 @@ const DEFAULT_COORDINATES: IUserLocation = {
 };
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const businesses = useStateSelector(state => state.businesses);
+
+  const { state, setState } = useAppState()
+  const businesses = state.businesses
+
   const memoizedBusinesses = useMemo(
     () =>
       businesses && businesses.length
@@ -53,8 +48,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         : [],
     [businesses],
   );
-
-  const updateValue = useUpdate();
 
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
@@ -95,12 +88,13 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           .get(PUBLIC_URL + '/carwash')
           .then(data => {
             if (data && data.data) {
-              updateValue({
+              setState({
+                ...state,
                 businesses: data.data,
               });
             }
           })
-          .catch(err => console.log(err));
+          .catch(err => console.log(`Error: ${err}`));
       }
 
       if (businesses.length === 0) {
@@ -144,14 +138,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           }>
           <MapboxGL.Camera
             centerCoordinate={[userLocation.longitude, userLocation.latitude]}
-            zoomLevel={15}
+            zoomLevel={100}
             pitch={1}
             ref={cameraRef}
             animationMode="flyTo"
             animationDuration={6000}
           />
           {memoizedBusinesses}
-          {/* <UserLocation
+          <UserLocation
             visible={hasLocationPermission}
             requestsAlwaysUse={true}
             minDisplacement={2}
@@ -159,8 +153,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             showsUserHeadingIndicator={true}
             animated={true}
             onUpdate={onUserLocationUpdate}
-          /> */}
-          <LocationPuck androidRenderMode={"normal"} puckBearing="heading" iosShowsUserHeadingIndicator={true} scale={1} pulsing={{isEnabled: true}} visible={true} />
+          />
+          {Platform.OS === 'ios' && <LocationPuck puckBearing="heading" scale={1} pulsing={{isEnabled: true}} visible={true} />}
         </MapboxGL.MapView>
       </View>
     </>

@@ -1,15 +1,11 @@
 
 import React, { useEffect, useState } from 'react';
-import { View, Dimensions, StyleSheet, ScrollView, Image, Text, TouchableOpacity } from 'react-native';
+import { View, Dimensions, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
 
 import { dp } from '../../../utils/dp';
 
-import {Button, OnviSwitch} from '@styled/buttons';
+import { OnviSwitch } from '@styled/buttons';
 import { WHITE } from '../../../utils/colors';
-
-import { Notification } from "@styled/cards/Notification"
-import { BalanceCard } from '@styled/cards/BalanceCard';
-import { NotificationCircle } from '@components/NotificationCircle';
 
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 

@@ -15,10 +15,11 @@ import {useTheme} from "@context/ThemeProvider";
 import {formatPhoneNumber} from "../../utils/phoneFormat";
 import {Settings} from "@screens/Settings";
 import {About} from "@screens/About";
-import {TelegramIcon, VkIcon} from "../../assets";
 import {useAuth} from "@context/AuthContext";
 import {Partners} from "@screens/Partners";
 import {Partner} from "@screens/Partner";
+
+import { avatarSwitch } from '@screens/Settings';
 
 interface CustomDrawerItemProps {
     label: string
@@ -56,7 +57,13 @@ interface CustomDrawerContentProps {
 }
 
 const CustomDrawerContent = ({ navigation, theme, user } : CustomDrawerContentProps) => {
-     return (
+    const { store }: any = useAuth();
+
+    const initialAvatar = store.avatar || 'both.jpg'
+
+    const avatarValue = avatarSwitch(initialAvatar)
+
+    return (
          <View style={{ flex: 1}}>
              <DrawerContentScrollView
                 scrollEnabled={false}
@@ -71,7 +78,7 @@ const CustomDrawerContent = ({ navigation, theme, user } : CustomDrawerContentPr
                 >
                     {/*Profile*/}
                         <Image
-                            source={require('../../assets/icons/avatar.png')}
+                            source={avatarValue}
                             style={{
                                 width: dp(48),
                                 height: dp(48),

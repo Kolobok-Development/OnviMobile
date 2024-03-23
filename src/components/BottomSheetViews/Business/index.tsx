@@ -4,31 +4,28 @@ import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
 // styled components
 import { Card } from '@styled/cards';
 
-import { useRoute, useNavigation } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 
 import { dp } from '../../../utils/dp';
 
 import { navigateBottomSheet } from '@navigators/BottomSheetStack';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-import { useStateSelector } from '@context/AppContext';
-
-import { useUpdate } from '@context/AppContext';
-import { BackButton } from '@components/BackButton';
+import { useAppState } from '@context/AppContext';
 
 const height = dp(Dimensions.get('screen').height);
 const MID_TRANSLATE_Y = -height / 1.5 + dp(50)
 
 const Business = ({ bottomSheetRef } : any) => {
     const route: any = useRoute()
-    const navigation: any = useNavigation()
 
-    const updateValue = useUpdate();
-    const order = useStateSelector((state: any) => state.order);
+    const { state, setState } = useAppState()
+    const order = state.order
 
 
     const selectCarwash = (carwash: any) => {
-        updateValue({
+        setState({
+            ...state,
             order: {
                 ...order,
                 id: carwash.id,
@@ -63,9 +60,9 @@ const Business = ({ bottomSheetRef } : any) => {
                         </View>
                     )})
                 }
-                <View style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: dp(10) }}>
+                {/* <View style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: dp(10) }}>
                     <BackButton index={2} />
-                </View>
+                </View> */}
             </Card>
         </View>
     )
@@ -78,7 +75,7 @@ const styles = StyleSheet.create({
     },
     button: {
         backgroundColor: "#F5F5F5",
-        height: dp(70),
+        minHeight: dp(70),
         display: "flex",
         borderRadius: 22,
         padding: dp(14),

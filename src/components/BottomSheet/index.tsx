@@ -9,8 +9,6 @@ import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import { WHITE } from '../../utils/colors';
 import { dp } from '../../utils/dp'
 
-import { useUpdate } from '@context/AppContext';
-
 const height = dp(Dimensions.get('screen').height);
 
 const MAX_TRANSLATE_Y = -height + dp(50);
@@ -37,9 +35,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(({ch
      // React to changes in active.value 
 
     const activeRef = useRef(false)
-
-    const updateValue = useUpdate();
-
 
     const scrollTo = useCallback((destination: number) => {
         'worklet';

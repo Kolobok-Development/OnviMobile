@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import { Text, View, Image, StyleSheet, Modal, TouchableOpacity } from 'react-native';
+import React, { useState } from 'react';
+import { Text, View, Image, StyleSheet, Modal } from 'react-native';
 
 import { Button } from '@styled/buttons';
 
@@ -9,11 +9,9 @@ import { navigateBottomSheet } from '@navigators/BottomSheetStack';
 import { dp } from '../../../utils/dp';
 import { WHITE } from '../../../utils/colors';
 
-import { FilterList } from '@components/FiltersList';
 import { BusinessHeader } from '@components/Business/Header';
-import {ThinkEmojie} from "../../../assets";
-import {CheckBox} from "@styled/buttons/CheckBox";
-import {Tag} from "../../../api/AppContent/types";
+import { CheckBox } from "@styled/buttons/CheckBox";
+import { Tag } from "../../../api/AppContent/types";
 
 const data = [
     "4 бокса",

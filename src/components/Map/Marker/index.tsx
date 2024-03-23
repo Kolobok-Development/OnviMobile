@@ -2,7 +2,7 @@ import MapboxGL from '@rnmapbox/maps';
 
 import { navigateBottomSheet } from '@navigators/BottomSheetStack';
 import calculateDistance from '../../../utils/calculateDistance';
-import { useUpdate } from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 import Svg, { Path } from "react-native-svg";
 import uuid from "react-native-uuid";
@@ -15,8 +15,7 @@ interface MarkerProps {
 }
 
 export default function Marker({ coordinate, business, bottomSheetRef, locationRef } : MarkerProps) {
-
-    const updateValue = useUpdate()
+    const { state, setState } = useAppState() 
 
     if (coordinate && coordinate[0] && coordinate[1]) {
         return (
@@ -33,7 +32,8 @@ export default function Marker({ coordinate, business, bottomSheetRef, locationR
                     }
 
                     navigateBottomSheet('Business', businessObj)
-                    updateValue({
+                    setState({
+                        ...state,
                         order: {}
                     });
                     bottomSheetRef.current?.snapToPosition("60%")

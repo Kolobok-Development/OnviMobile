@@ -1,4 +1,4 @@
-import {useRef, useState, useMemo, useCallback} from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 
 import {
   View,
@@ -6,26 +6,23 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
-  Image,
 } from 'react-native';
 
-import {ScrollView} from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
-import {useStateSelector} from '@context/AppContext';
+import { useAppState } from '@context/AppContext';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 
 // Map Component
-import {Map} from '@components/Map';
+import { Map } from '@components/Map';
 
 // Bottom Sheet Navigator
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
-
-import {AppProvider} from '@context/AppContext';
 
 import {dp} from '../../utils/dp';
 
@@ -42,6 +39,8 @@ const Home = ({navigation}: any) => {
 
   const bottomSheetRef = useRef(null);
 
+  const { state } = useAppState()
+
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
 
@@ -52,14 +51,14 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
-    cameraRef.current.moveTo(
-      [userLocationRef.current.lon, userLocationRef.current.lat],
-      1,
-    );
+    cameraRef.current.setCamera({
+      centerCoordinate: [userLocationRef.current.lon, userLocationRef.current.lat],
+      zoomLevel: 15
+    })
   };
 
   const renderHandleComponent = useCallback((props: any) => {
-    const filters: any = useStateSelector((state: any) => state.filters);
+    const filters = state.filters
 
     function extractValues(obj: any) {
       const values = [];
@@ -125,19 +124,9 @@ const Home = ({navigation}: any) => {
     );
   }, []);
 
-  console.log('bototmsheetindex:', bottomSheetIndex);
-
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={{...styles.container}}>
-        <AppProvider
-          initialState={{
-            value: '',
-            filters: {},
-            businesses: [],
-            order: {},
-            bottomSheetPosition: {},
-          }}>
           <Map
             bottomSheetRef={bottomSheetRef}
             bottomSheetIndex={bottomSheetIndex}
@@ -168,7 +157,7 @@ const Home = ({navigation}: any) => {
               />
             </View>
           </BottomSheet>
-        </AppProvider>
+        
         <View style={{...styles.burger}}>
           <BurgerButton bottomSheetIndex={bottomSheetIndex} />
         </View>

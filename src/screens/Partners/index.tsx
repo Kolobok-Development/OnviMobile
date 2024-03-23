@@ -1,17 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 
-import {dp} from '../../utils/dp';
+import { dp } from '../../utils/dp';
 
 import {
   View,
   Text,
-  TextInput,
   Image,
   TouchableOpacity,
-  Modal,
   StyleSheet,
   FlatList,
-  TouchableWithoutFeedback,
 } from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {CheckBox} from '@styled/buttons/CheckBox';
@@ -19,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import {usePartners} from '../../api/hooks/useAppContent';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {Partner} from '../../api/AppContent/types';
+import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 const Partners = () => {
   const navigation = useNavigation<any>();
@@ -111,6 +109,11 @@ const Partners = () => {
             data={partnersData?.data}
             renderItem={renderItem}
             keyExtractor={(item: Partner) => item.id.toString()}
+            ListEmptyComponent={() => (
+              <View>
+                <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
+              </View>
+            )}
           />
         </View>
       )}
