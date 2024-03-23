@@ -5,7 +5,7 @@ import { REGISTER, SEND_OTP, LOGIN, REFRESH } from '@mutations/auth';
 
 import Toast from 'react-native-toast-message';
 
-import {AUTH_URL, CORE_URL} from '@env';
+import { AUTH_URL, CORE_URL } from '@env';
 
 // Secure Storage
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -21,9 +21,6 @@ import Loader from '@components/Loader';
 const AuthContext = createContext<IAuthContext | null>(null);
 
 import axios from 'axios';
-
-
-
 
 const AuthProvider: React.FC<any> = ({
   children,
@@ -42,10 +39,7 @@ const AuthProvider: React.FC<any> = ({
   });
 
   const updateStore = (partialNewState: IAuthStorePartial) => {
-    console.log("partial: ", partialNewState)
     const newState = { ...store, ...partialNewState };
-    console.log("~~~~~~~~~~~~~~~~~~~~~~")
-    console.log({newState: newState})
     setStore(newState);
   }
 
@@ -55,14 +49,11 @@ const AuthProvider: React.FC<any> = ({
       try {
         const encryptedStorage: string | null = await EncryptedStorage.getItem("user_session");
 
-        console.log("encryptedStorage: ", encryptedStorage)
-
         if (encryptedStorage) {
           const formatted: IEncryptedStorage = await JSON.parse(encryptedStorage as string);
 
           if (formatted) {
             if (isValidStorageData(formatted.accessToken, formatted.expiredDate)) {
-              console.log("formatted: ", formatted)
               updateStore({
                 accessToken: formatted.accessToken,
                 loading: false,
