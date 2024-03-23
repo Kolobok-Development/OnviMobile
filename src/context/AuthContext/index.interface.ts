@@ -38,7 +38,7 @@ export interface IAuthStorePartial {
     expiredDate?: string | null;
     name?: string | null;
     id?: number | null;
-    avatar: string;
+    avatar?: string;
 }
 
 export interface IAuthContext {

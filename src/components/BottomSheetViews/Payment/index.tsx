@@ -37,6 +37,8 @@ import {YOKASSA_KEY, YOKASSA_SHOP_ID} from '@env';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
+import { PaymentConfig } from 'src/types/PaymentConfig';
+
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -125,22 +127,7 @@ const Payment = () => {
       }
       // Start tokenization and await the result
 
-      const paymentConfigParams: {
-        clientApplicationKey: string;
-        userPhoneNumber: null;
-        authCenterClientId: null;
-        title: string;
-        applePayMerchantId: null;
-        isDebug: boolean;
-        price: number;
-        subtitle: string;
-        customerId: string;
-        paymentMethodTypes: PaymentMethodTypesEnum.BANK_CARD[];
-        shopId: number;
-        returnUrl: null;
-        googlePaymentMethodTypes: null;
-        gatewayId: null;
-      } = {
+      const paymentConfigParams: PaymentConfig = {
         clientApplicationKey: apiKey, // string
         shopId: storeId, // string
         title: `Заказ ${order.name}`, // string

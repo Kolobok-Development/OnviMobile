@@ -1,5 +1,9 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 
+// TODO:
+// Сохранять пользователя в AppContext
+// Исправить type issues
+
 // Hooks
 import { REGISTER, SEND_OTP, LOGIN, REFRESH } from '@mutations/auth';
 
@@ -169,15 +173,10 @@ const AuthProvider: React.FC<any> = ({
   const sendOtp = (phone: string) => {
     const formatted = phone.replace(/[ ]+/g, "").replace("(", "").replace(")", "").replace("-", "");
 
-    console.log({
-      phone: formatted
-    })
-
     axios.post(AUTH_URL + SEND_OTP, {
       phone: formatted
     })
     .then((data) => {
-      console.log(data)
       Toast.show({
         type: 'customSuccessToast',
         text1: 'Cообщение было отправлено',
@@ -185,7 +184,6 @@ const AuthProvider: React.FC<any> = ({
       return data.data
     })
     .catch((err) => {
-      console.log(JSON.stringify(err));
       Toast.show({
         type: 'customErrorToast',
         text1: 'Не получилось отправить СМС сообщение.',
@@ -200,8 +198,6 @@ const AuthProvider: React.FC<any> = ({
       const response: any = await axios.post(AUTH_URL + LOGIN, {"otp": otp, "phone": formatted}).then((data) => {
         return data.data
       }).catch((error) => {
-        console.log("Error: ", error)
-        JSON.stringify(error)
         Toast.show({
           type: 'customErrorToast',
           text1: 'Не получилось зайти в приложение!',
@@ -233,9 +229,6 @@ const AuthProvider: React.FC<any> = ({
           id: response.data.client.id,
         });
       }
-
-      console.log('GET ME RESPONSE_____')
-      console.log(response.data)
       return response.data.type
     } catch (err) {
       Toast.show({
@@ -309,7 +302,6 @@ const AuthProvider: React.FC<any> = ({
   }
 
   async function getMe() {
-    console.log(CORE_URL + "/account/me");
     try{
       const response = await axios.get(CORE_URL + "/account/me", {
         headers: {
@@ -318,7 +310,6 @@ const AuthProvider: React.FC<any> = ({
       });
 
       if (response.data.data) {
-
         await EncryptedStorage.setItem(
             "user_session",
             JSON.stringify({
@@ -329,16 +320,12 @@ const AuthProvider: React.FC<any> = ({
             })
         )
 
-
         updateStore({
           phone: response.data.data.phone,
           email: response.data.data.email,
           balance: response.data.data.cards.balance,
           name: response.data.data.name,
         });
-
-        console.log('GET ME RESPONSE_____')
-        console.log(response.data.data)
       }
     }catch (e: any){
      console.log(e);
@@ -346,8 +333,6 @@ const AuthProvider: React.FC<any> = ({
   }
 
   async function updateAvatar(avatar: 'male' | 'female' | 'both') {
-
-
     await EncryptedStorage.setItem(
       "user_session",
       JSON.stringify({

@@ -8,12 +8,12 @@ export interface PaymentConfig {
   subtitle: string;
   price: number;
   paymentMethodTypes?: PaymentMethodTypesEnum[];
-  customerId?: number;
-  authCenterClientId?: string; // ! If YooMoney method selected
-  userPhoneNumber?: string;
-  gatewayId?: string;
-  returnUrl?: string;
-  googlePaymentMethodTypes?: GooglePaymentMethodTypesEnum[];
-  applePayMerchantId?: string;
+  customerId?: string;
+  authCenterClientId?: string | null; // ! If YooMoney method selected
+  userPhoneNumber?: string | null;
+  gatewayId?: string | null;
+  returnUrl?: string | null;
+  googlePaymentMethodTypes?: GooglePaymentMethodTypesEnum[] | null;
+  applePayMerchantId?: string | null;
   isDebug?: boolean;
 }

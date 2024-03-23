@@ -5,6 +5,6 @@ declare module '@env' {
   export const PUBLIC_URL: string;
   export const STRAPI_URL: string;
   export const YOKASSA_KEY: string;
-  export const YOKASSA_SHOP_ID: number;
+  export const YOKASSA_SHOP_ID: string;
   export const API_URL: string;
 }

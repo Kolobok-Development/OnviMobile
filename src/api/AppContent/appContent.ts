@@ -63,7 +63,7 @@ export async function getCarWashes(query: {[key: string]: string}) {
     console.log(
       'QUERY TO SEND ___________________***************_________________',
     );
-    const response = await appContent.get<BusinessSuccessRequestPayload[]>(
+    const response = await appContent.get<BusinessSuccessRequestPayload>(
       'api/carwash',
       {
         params: query,
