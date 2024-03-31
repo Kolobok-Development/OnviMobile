@@ -1,21 +1,17 @@
 import {useMutation, useQuery} from '@tanstack/react-query';
+import {AxiosError} from 'axios';
+import {IGetAccountHistoryRequestParams} from '../../types/api/user/req/IGetAccountHistoryRequestParams';
+import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequest';
 import {
   getCampaignHistory,
   getMe,
   getOrderHistory,
   getTariff,
   update,
-} from '../user';
-import {IUser} from '../../types/models/User';
-import {AxiosError} from 'axios';
-import {IGetTariffResponse} from '../../types/api/user/res/IGetTariffResponse';
-import {IGetHistoryResponse} from '../../types/api/user/res/IGetHistoryResponse';
-import {IGetAccountHistoryRequestParams} from '../../types/api/user/req/IGetAccountHistoryRequestParams';
-import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
-import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequest';
+} from '../user/index';
 
 function useGetMe() {
-  return useQuery<IUser, AxiosError>({
+  return useQuery({
     queryKey: ['me'],
     queryFn: () => {
       return getMe();
@@ -24,7 +20,7 @@ function useGetMe() {
 }
 
 function useGetTariff() {
-  return useQuery<IGetTariffResponse, AxiosError>({
+  return useQuery({
     queryKey: ['tariff'],
     queryFn: () => {
       return getTariff();
@@ -33,7 +29,7 @@ function useGetTariff() {
 }
 
 function useGetOrderHistory(params: IGetAccountHistoryRequestParams) {
-  return useQuery<IGetHistoryResponse[], AxiosError>({
+  return useQuery({
     queryKey: ['order-hist'],
     queryFn: () => {
       return getOrderHistory(params);
@@ -42,7 +38,7 @@ function useGetOrderHistory(params: IGetAccountHistoryRequestParams) {
 }
 
 function useGetCampaignHistory() {
-  return useQuery<IGetPromoHistoryResponse[], AxiosError>({
+  return useQuery({
     queryKey: ['campaign-hist'],
     queryFn: () => {
       return getCampaignHistory();

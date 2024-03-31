@@ -1,18 +1,50 @@
-import axios from 'axios';
+import axios, {InternalAxiosRequestConfig} from 'axios';
 import {API_URL, STRAPI_URL} from '@env';
-import {useAuth} from '@context/AuthContext';
-
-const authContext: any = useAuth();
+import EncryptedStorage from 'react-native-encrypted-storage';
+import {IEncryptedStorage} from '@context/AuthContext/index.interface';
 
 const userApiInstance = axios.create({
-  baseURL: API_URL,
+  baseURL: API_URL + '/api/v2',
   headers: {
     'Content-Type': 'application/json',
   },
 });
-userApiInstance.defaults.headers.common['access-token'] =
-  authContext?.accessToken;
 
+const _retriveConfigWithAuthorization = async (
+  config: InternalAxiosRequestConfig<any>,
+) => {
+  try {
+    const credentials: string | null = await EncryptedStorage.getItem(
+      'user_session',
+    );
+
+    if (credentials !== null) {
+      const formatted: IEncryptedStorage = await JSON.parse(
+        credentials as string,
+      );
+
+      config.headers.Authorization = `Bearer ${formatted.accessToken}`;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  return config;
+};
+
+const getConfigWithHeaders = async (
+  config: InternalAxiosRequestConfig<any>,
+) => {
+  config.headers['Content-Type'] = 'application/json';
+  return _retriveConfigWithAuthorization(config);
+};
+
+userApiInstance.interceptors.request.use(
+  config => getConfigWithHeaders(config),
+  error => {
+    return Promise.reject(error);
+  },
+);
 const contentApiInstance = axios.create({
   baseURL: STRAPI_URL,
   headers: {

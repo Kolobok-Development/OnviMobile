@@ -1,10 +1,6 @@
 import {userApiInstance} from '../axiosConfig';
 import {IUser} from '../../types/models/User';
 import {IUserApiResponse} from '../../types/api/common/IUserApiResponse';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {AxiosError} from 'axios/index';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import {IUserApiErrorResponse} from '../../types/api/common/IUserApiErrorResponse';
 import {IGetTariffResponse} from '../../types/api/user/res/IGetTariffResponse';
 import {IGetAccountHistoryRequestParams} from '../../types/api/user/req/IGetAccountHistoryRequestParams';
 import {IGetHistoryResponse} from '../../types/api/user/res/IGetHistoryResponse';
@@ -17,14 +13,13 @@ enum ACCOUNT {
   GET_ORDER_HISTORY_URL = '/account/orders',
   GET_TARIFF_URL = '/account/tariff',
   GET_PROMOTION_HISTORY_URL = '/account/promotion',
-  UPDATE_ACCOUNT_URL = 'account',
+  UPDATE_ACCOUNT_URL = '/account',
 }
 
 export async function getMe(): Promise<IUser> {
   const response = await userApiInstance.get<IUserApiResponse<IUser>>(
     ACCOUNT.GET_MET_URL,
   );
-
   return response.data.data;
 }
 
@@ -52,7 +47,6 @@ export async function getCampaignHistory(): Promise<
   const response = await userApiInstance.get<
     IUserApiResponse<IGetPromoHistoryResponse[]>
   >(ACCOUNT.GET_PROMOTION_HISTORY_URL);
-
   return response.data.data;
 }
 

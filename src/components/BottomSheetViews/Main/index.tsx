@@ -15,14 +15,14 @@ import {Card} from '@styled/cards';
 
 import {useAuth} from '@context/AuthContext';
 
-import { useTheme } from '@context/ThemeProvider';
+import {useTheme} from '@context/ThemeProvider';
 
-import { BLUE, BLACKTWO, WHITE, GREY } from '../../../utils/colors';
+import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
 
-import { dp } from '../../../utils/dp';
+import {dp} from '../../../utils/dp';
 
-import { useAxios } from '@hooks/useAxios';
-import { useAppState } from '@context/AppContext';
+import {useAxios} from '@hooks/useAxios';
+import {useAppState} from '@context/AppContext';
 
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -41,11 +41,11 @@ const Main = ({drawerNavigation}: any) => {
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const { state, setState } = useAppState()
+  const {state, setState} = useAppState();
 
-  const isOpened = state.bottomSheetOpened
+  const isOpened = state.bottomSheetOpened;
 
-  const { isLoading: campaignLoading, data: campaignData } = useCampaigns();
+  const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
 
   const {
     isLoading: newsLoading,
@@ -116,21 +116,20 @@ const Main = ({drawerNavigation}: any) => {
 
   const renderCampaignItem = ({item}: {item: Campaign}) => {
     return (
-      <View style={styles.campaigns}>
-        <TouchableOpacity
-          onPress={() => {
-            handleCampaignItemPress(item);
-          }}>
-          <Image
-            source={{uri: item.attributes.image.data.attributes.url}}
-            style={{
-              width: dp(340),
-              height: dp(190),
-              resizeMode: 'contain',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          handleCampaignItemPress(item);
+        }}
+        style={styles.campaigns}>
+        <Image
+          source={{uri: item.attributes.image.data.attributes.url}}
+          style={{
+            width: dp(340),
+            height: dp(190),
+            resizeMode: 'contain',
+          }}
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -325,11 +324,11 @@ const Main = ({drawerNavigation}: any) => {
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <View style={{flex: 1}}>
                 {campaignData && (
                   <SwiperFlatListWithGestureHandler
                     autoplay
-                    autoplayDelay={4}
+                    autoplayDelay={5}
                     autoplayLoop
                     showPagination
                     paginationStyleItem={{
@@ -340,6 +339,7 @@ const Main = ({drawerNavigation}: any) => {
                     indicatorStyle={'white'}
                     data={campaignData.data}
                     renderItem={renderCampaignItem}
+                    useReactNativeGestureHandler={true}
                   />
                 )}
               </View>
@@ -436,4 +436,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Main };
+export {Main};

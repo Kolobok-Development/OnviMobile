@@ -1,21 +1,21 @@
 import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
+import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
 
 const PromosInput = () => {
-  const [search, setSearch] = useState('');
+  const [code, setCode] = useState('');
   const navigation = useNavigation<any>();
-
-  const validatePromoCode = () => {
-    console.log('validating');
-  };
+  const {mutate: applyPromo, isPending} = useApplyPromotion();
 
   const clearInput = () => {
-    setSearch('');
+    setCode('');
   };
+
+
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -31,8 +31,8 @@ const PromosInput = () => {
           <TextInput
             placeholder="Введите промокод"
             maxLength={19}
-            value={search}
-            onChangeText={setSearch}
+            value={code}
+            onChangeText={setCode}
             style={{
               backgroundColor: 'rgba(245, 245, 245, 1)',
               borderRadius: dp(25),
@@ -56,10 +56,11 @@ const PromosInput = () => {
             <Button
               label={'Применить'}
               color={'blue'}
+              showLoading={isPending}
               fontSize={dp(16)}
               height={dp(35)}
               width={dp(125)}
-              onClick={() => validatePromoCode()}
+              onClick={() => applyPromo({code})}
             />
           </View>
         </View>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {dp} from '../../utils/dp';
 
@@ -8,23 +8,17 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  ScrollView,
+  FlatList,
 } from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
-import {Search} from 'react-native-feather';
-import { useNavigation } from "@react-navigation/core";
-import { Partner } from "../../api/AppContent/types";
-
-const promos = [
-  {
-    id: 1,
-    img: '../../assets/coupon.png',
-  },
-];
+import {useNavigation} from '@react-navigation/core';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
+import EmptyPlaceholder from '@components/EmptyPlaceholder';
+import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
 
 const Promos = () => {
-
-  const [modalVisible, setModalVisible] = useState(false);
+  const {isLoading, data, refetch} = useGetCampaignHistory();
 
   const navigation = useNavigation<any>();
 
@@ -32,138 +26,119 @@ const Promos = () => {
     navigation.navigate('Ввод Промокода');
   };
 
-
-
-  const modalCallback = () => {
-    setModalVisible(true);
+  const PromosPlaceholder = () => {
+    return (
+      <SkeletonPlaceholder borderRadius={4}>
+        <View>
+          <SkeletonPlaceholder.Item
+            marginTop={dp(30)}
+            width={'100%'}
+            height={dp(80)}
+            borderRadius={dp(10)}
+            alignSelf="center"
+            marginBottom={dp(10)}
+          />
+          <SkeletonPlaceholder.Item
+            width={'100%'}
+            height={dp(80)}
+            borderRadius={dp(10)}
+            alignSelf="center"
+            marginBottom={dp(10)}
+          />
+          <SkeletonPlaceholder.Item
+            width={'100%'}
+            height={dp(80)}
+            borderRadius={dp(10)}
+            alignSelf="center"
+            marginBottom={dp(10)}
+          />
+        </View>
+      </SkeletonPlaceholder>
+    );
   };
 
-  const forceForward = () => {
-    setModalVisible(false);
+  const renderItem = (promo: IGetPromoHistoryResponse) => {
+    return (
+      <TouchableOpacity key={promo.promotionId}>
+        <Image
+          source={require('../../assets/coupon.png')}
+          style={{
+            width: '100%',
+            height: dp(120),
+            resizeMode: 'contain',
+          }}
+        />
+      </TouchableOpacity>
+    );
   };
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <BurgerButton isDrawerStack={true} />
-          <Text style={styles.screenTitle}>Промокод и Скидки</Text>
-        </View>
-        <View style={styles.content}>
-          <View style={{flex: 1}}>
-            <Text style={styles.sectionTitle}>Ввести промокод</Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'rgba(245, 245, 245, 1)',
-                marginTop: dp(5),
-                height: dp(40),
-                borderRadius: dp(25),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                handlePromoInput()
-              }}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: dp(14),
-                  fontWeight: '600',
-                  opacity: 0.25,
-                  paddingLeft: dp(10),
-                }}>
-                Промокод
-              </Text>
-            </TouchableOpacity>
-            {/*<TextInput*/}
-            {/*  placeholder="Промокод"*/}
-            {/*  keyboardType="numeric"*/}
-            {/*  maxLength={19}*/}
-            {/*  value={search}*/}
-            {/*  onChangeText={setSearch}*/}
-            {/*  style={{*/}
-            {/*    backgroundColor: 'rgba(245, 245, 245, 1)',*/}
-            {/*    borderRadius: 25,*/}
-            {/*    width: '100%',*/}
-            {/*    height: 40,*/}
-            {/*    paddingLeft: dp(20),*/}
-            {/*    textAlign: 'left',*/}
-            {/*    fontSize: 16,*/}
-            {/*    color: '#000000',*/}
-            {/*    marginTop: dp(20),*/}
-            {/*  }}*/}
-            {/*/>*/}
-          </View>
-          <View style={styles.cuponContainer}>
-            <Text style={styles.sectionTitle}>Промокод и Скидки</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <BurgerButton isDrawerStack={true} />
+        <Text style={styles.screenTitle}>Промокод и Скидки</Text>
+      </View>
+      <View style={styles.content}>
+        <View style={{flex: 1}}>
+          <Text style={styles.sectionTitle}>Ввести промокод</Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: 'rgba(245, 245, 245, 1)',
+              marginTop: dp(5),
+              height: dp(40),
+              borderRadius: dp(25),
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              handlePromoInput();
+            }}>
             <Text
               style={{
-                fontWeight: '600',
-                fontSize: dp(20),
-                marginTop: dp(50),
                 color: '#000',
+                fontSize: dp(14),
+                fontWeight: '600',
+                opacity: 0.25,
+                paddingLeft: dp(10),
               }}>
-              Купоны
+              Промокод
             </Text>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                marginTop: dp(25),
-              }}>
-              {promos.map((promo: any) => {
-                return (
-                  <TouchableOpacity onPress={() => modalCallback()}>
-                    <Image
-                      key={promo.id}
-                      source={require('../../assets/coupon.png')}
-                      style={{
-                        width: '100%',
-                        height: dp(120),
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.cuponContainer}>
+          <Text style={styles.sectionTitle}>История</Text>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: dp(25),
+            }}>
+            {isLoading ? (
+              <PromosPlaceholder />
+            ) : (
+              <FlatList
+                data={data}
+                renderItem={renderItem}
+                onRefresh={refetch}
+                refreshing={isLoading}
+                keyExtractor={(promo: IGetPromoHistoryResponse) =>
+                  promo.promotionId.toString()
+                }
+                ListEmptyComponent={() => (
+                  <View>
+                    <EmptyPlaceholder text="У вас нет использованных акций" />
+                  </View>
+                )}
+              />
+            )}
           </View>
         </View>
-        {/*
-                <Modal
-                    visible={modalVisible}
-                    animationType="fade"
-                    transparent={true}
-                    onRequestClose={() => setModalVisible(true)}
-                >
-                    <View style={styles.modalContainer}>
-                        <View style={styles.modalContent}>
-                            <Text style={{ fontWeight: "600", fontSize: dp(24), paddingBottom: dp(24) }}>15% скидка на мойку</Text>
-
-                            <Image source={require("../../assets/emojies/smile.png")} style={styles.circleImage} />
-
-                            <View style={{ display: "flex", flexDirection: "row", marginTop: dp(14), alignItems: "center" }}>
-                                <Text style={{ fontWeight: "600", fontSize: dp(24), color: "rgba(52, 97, 255, 1)" }}>DGFYUE6098</Text>
-                                <TouchableOpacity onPress={() => setModalVisible(false)}><Image source={require("../../assets/icons/Copy.png")} style={styles.copyImage} /></TouchableOpacity>
-                            </View>
-
-                            <View style={{justifyContent: "center", paddingLeft: dp(20), paddingRight: dp(20)}}>
-                                <Text style={styles.modalText}>Промокод действует</Text>
-                            </View>
-                            <View style={{justifyContent: "center", paddingLeft: dp(20), paddingRight: dp(20)}}>
-                            <Text style={styles.modalText}>на покупку от 200 р.</Text>
-                            </View>
-                            <View style={{ display: "flex", flexDirection: "row", marginTop: dp(24), alignItems: "center", backgroundColor: 'rgba(245, 245, 245, 1)', paddingTop: dp(4), paddingRight: dp(10), paddingBottom: dp(5), paddingLeft: dp(10), borderRadius: dp(69)  }}>
-                                <TouchableOpacity onPress={() => setModalVisible(false)}><Image source={require("../../assets/icons/finger.png")} style={styles.copyImage} /></TouchableOpacity>
-                                <Text style={{ fontWeight: "600", fontSize: dp(12), paddingLeft: dp(5) }}>подробнее</Text>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
-                     */}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 

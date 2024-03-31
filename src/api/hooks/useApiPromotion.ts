@@ -1,16 +1,26 @@
 import {useMutation} from '@tanstack/react-query';
 import {IApplyPromotionRequest} from '../../types/api/promotion/req/IApplyPromotionRequest';
-import { apply } from "../promotion";
+import {apply} from '../promotion/index';
+import Toast from 'react-native-toast-message';
 
-function useApplyPromotion(data: IApplyPromotionRequest) {
+function useApplyPromotion() {
   return useMutation({
-    mutationFn: () => {
+    mutationFn: (data: IApplyPromotionRequest) => {
       return apply(data);
+    },
+    onError: () => {
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Призошла ощибка повторите попытку чуть позже',
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'customSuccessToast',
+        text1: 'Промокод успешно применен',
+      });
     },
   });
 }
 
-
-export {
-  useApplyPromotion
-}
+export {useApplyPromotion};

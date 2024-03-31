@@ -19,7 +19,7 @@ const Application = () => {
   return (
     <>
       <AppProvider>
-        {store.accessToken ? <AuthStack /> : <DrawerStack />}
+        {!store.accessToken ? <AuthStack /> : <DrawerStack />}
         <Toast config={toastConfig} />
       </AppProvider>
     </>

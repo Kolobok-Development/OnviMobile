@@ -33,7 +33,7 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
       <ThemeProvider>
         <ThemeWrapper>
           <AuthProvider>
