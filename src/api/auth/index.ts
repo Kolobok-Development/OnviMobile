@@ -8,7 +8,6 @@ import {IRegisterRequest} from '../../types/api/auth/req/IRegisterRequest';
 import {IRegisterResponse} from '../../types/api/auth/res/IRegisterResponse';
 import {IRefreshResponse} from '../../types/api/auth/res/IRefreshResponse';
 import {IRefreshRequest} from '../../types/api/auth/req/IRefreshRequest';
-import {IUserApiErrorResponse} from '../../types/api/common/IUserApiErrorResponse';
 
 enum AUTH {
   SEND_OTP_URL = '/auth/send/otp',
@@ -19,56 +18,36 @@ enum AUTH {
 
 export async function sendOtp(
   body: ISendOtpRequest,
-): Promise<ISendOtpResponse | IUserApiErrorResponse> {
-  try {
+): Promise<ISendOtpResponse> {
     const response = await userApiInstance.post<
       IUserApiResponse<ISendOtpResponse>
     >(AUTH.SEND_OTP_URL, body);
 
     return response.data.data;
-  } catch (error: unknown) {
-    console.log(error)
-    return error as IUserApiErrorResponse
-  }
 }
 
-export async function login(body: ILoginRequest): Promise<ILoginResponse | IUserApiErrorResponse> {
-  try {
+export async function login(body: ILoginRequest): Promise<ILoginResponse> {
     const response = await userApiInstance.post<
       IUserApiResponse<ILoginResponse>
     >(AUTH.LOGIN_URL, body);
 
     return response.data.data;
-  } catch (error: unknown) {
-    console.log(error);
-    return error as IUserApiErrorResponse
-  }
 }
 export async function register(
   body: IRegisterRequest,
-): Promise<IRegisterResponse | IUserApiErrorResponse> {
-  try {
+): Promise<IRegisterResponse> {
     const response = await userApiInstance.post<
       IUserApiResponse<IRegisterResponse>
     >(AUTH.REGISTER_URL, body);
 
     return response.data.data;
-  } catch (error: unknown) {
-    console.log(error);
-    return error as IUserApiErrorResponse
-  }
 }
 export async function refresh(
   body: IRefreshRequest,
-): Promise<IRefreshResponse | IUserApiErrorResponse> {
-  try {
+): Promise<IRefreshResponse> {
     const response = await userApiInstance.post<
       IUserApiResponse<IRefreshResponse>
     >(AUTH.REFRESH_URL, body);
 
     return response.data.data;
-  } catch (error: unknown) {
-    console.log(error);
-    return error as IUserApiErrorResponse
-  }
 }

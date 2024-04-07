@@ -141,7 +141,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           await EncryptedStorage.removeItem('user_session');
           updateStore({ loading: false });
           return null;
-        });
+        })
 
         if (response) {
           await EncryptedStorage.setItem('user_session', JSON.stringify({
@@ -189,7 +189,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     sendOtp({ phone: formatted }).then(data => {
       Toast.show({ type: 'customSuccessToast', text1: 'Cообщение было отправлено' });
       return data;
-    }).catch(err => {
+    }).catch((err: unknown) => {
+      console.log(err)
       Toast.show({ type: 'customErrorToast', text1: 'Не получилось отправить СМС сообщение.' });
     });
   };
@@ -198,7 +199,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     try {
       const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
 
-      const response = await login({ otp: otp, phone: formatted });
+      const response = await login({ otp: otp, phone: formatted })
 
       if (response.type === 'login-success') {
         await saveUserSession(response.tokens, response.client);
