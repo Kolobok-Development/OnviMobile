@@ -1,101 +1,115 @@
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useContext,
-  ReactNode,
-} from 'react';
-
-// TODO:
-// Сохранять пользователя в AppContext
-// Исправить type issues
-
-// Hooks
-import {REGISTER, SEND_OTP, LOGIN, REFRESH} from '@mutations/auth';
-
-import Toast from 'react-native-toast-message';
-
-import {AUTH_URL, CORE_URL} from '@env';
-
-// Secure Storage
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
-// Interfaces
-import {
-  IAuthContext,
-  IEncryptedStorage,
-  IAuthStore,
-  IAuthStorePartial,
-} from './index.interface';
+// utils
+import { isValidStorageData, hasAccessTokenCredentials } from './index.validator';
 
-// Validators
-import {isValidStorageData, hasAccessTokenCredentials} from './index.validator';
-
+// components
 import Loader from '@components/Loader';
+import Toast from 'react-native-toast-message';
+
+// types
+import { IUser, IUserPartial } from "../../types/models/User";
+import { IAuthTokens } from "../../types/models/AuthTokens";
+import { IAuthStore, IAuthStorePartial, IAuthContext } from './index.interface';
+
+// api
+import { getMe } from '../../api/user';
+import { sendOtp, login, register, refresh } from '../../api/auth/index';
 
 const AuthContext = createContext<IAuthContext | null>(null);
 
-import axios from 'axios';
+const saveUserSession = async (tokens: IAuthTokens | null, client: IUser | null) => {
+  try {
+    const existingSession = await EncryptedStorage.getItem('user_session');
+    let existingData: Record<string, any> = {};
+    if (existingSession) {
+      existingData = JSON.parse(existingSession);
+    }
+    const newData = {
+      refreshToken: tokens?.refreshToken || existingData.refreshToken,
+      accessToken: tokens?.accessToken || existingData.accessToken,
+      expiredDate: tokens?.accessTokenExp
+        ? new Date(tokens?.accessTokenExp).toISOString()
+        : existingData.expiredDate,
+      unqNumber: client?.cards?.unqNumber || existingData.unqNumber,
+    };
 
-const AuthProvider: React.FC<any> = ({children}: {children: ReactNode}) => {
+    console.log("new Data: ", newData)
+    await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
+  } catch (error) {
+    console.error('Error saving user session:', error);
+  }
+};
+
+const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [store, setStore] = useState<IAuthStore>({
     accessToken: null,
-    phone: null,
-    balance: null,
     loading: true,
     expiredDate: null,
-    name: null,
-    id: null,
-    avatar: 'both.jpg',
   });
 
+  const [user, setUser] = useState<IUser>({
+    id: null,
+    name: null,
+    phone: null,
+    email: null,
+    birthday: null,
+    cards: null,
+    avatar: 'both.jpg',
+    balance: null
+  })
+
   const updateStore = (partialNewState: IAuthStorePartial) => {
-    const newState = {...store, ...partialNewState};
+    const newState = { ...store, ...partialNewState };
     setStore(newState);
   };
 
-  // loadStorageData on mount of the application
+  const updateUser = (partialNewState: IUserPartial) => {
+    const newState = { ...user, ...partialNewState };
+    setUser(newState);
+  }
+
   useEffect(() => {
     async function loadStorageData() {
       try {
-        const encryptedStorage: string | null = await EncryptedStorage.getItem(
-          'user_session',
-        );
+        const encryptedStorage = await EncryptedStorage.getItem('user_session');
 
         if (encryptedStorage) {
-          const formatted: IEncryptedStorage = await JSON.parse(
-            encryptedStorage as string,
-          );
+          const formatted: Record<string, any> = JSON.parse(encryptedStorage);
 
-          if (formatted) {
-            if (
-              isValidStorageData(formatted.accessToken, formatted.expiredDate)
-            ) {
-              updateStore({
-                accessToken: formatted.accessToken,
-                loading: false,
-                expiredDate: formatted.expiredDate,
-                phone: formatted.phone,
-                balance: formatted.balance,
-                email: formatted.email,
-                name: formatted.name,
-                id: formatted.id,
-                avatar: formatted.avatar,
-              });
-              return;
-            }
+          console.log("STORAGE: ", formatted)
 
-            // if has refresh token -> refresh
-            if (hasAccessTokenCredentials(formatted.refreshToken)) {
-              await refreshToken(formatted);
-              return;
-            }
+          if (formatted && isValidStorageData(formatted.accessToken, formatted.expiredDate)) {
+            updateStore({
+              accessToken: formatted.accessToken,
+              loading: false,
+              expiredDate: formatted.expiredDate,
+            });
+
+            getMe().then((data) => {
+              updateUser({
+                cards: data.cards,
+                phone: data.phone,
+                balance: data.balance,
+                email: data.email,
+                name: data.name,
+                id: data.id,
+                birthday: data.birthday,
+                avatar: formatted.avatar
+              })
+            })
+
+            return;
+          }
+
+          if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
+            await refreshToken(formatted);
+            return;
           }
         }
 
-        updateStore({
-          loading: false,
-        });
+        updateStore({ loading: false });
       } catch (error) {
         console.log('LoadStorageData Error: ', error);
       }
@@ -104,17 +118,12 @@ const AuthProvider: React.FC<any> = ({children}: {children: ReactNode}) => {
     loadStorageData();
   }, []);
 
-  //  Использовать для axios реквестов!
   const refreshTokenFromSecureStorage = async () => {
     try {
-      const encryptedStorage: string | null = await EncryptedStorage.getItem(
-        'user_session',
-      );
+      const encryptedStorage = await EncryptedStorage.getItem('user_session');
 
       if (encryptedStorage) {
-        const formatted: IEncryptedStorage = await JSON.parse(
-          encryptedStorage as string,
-        );
+        const formatted: Record<string, any> = JSON.parse(encryptedStorage);
 
         if (formatted && formatted.refreshToken) {
           await refreshToken(formatted);
@@ -123,300 +132,204 @@ const AuthProvider: React.FC<any> = ({children}: {children: ReactNode}) => {
     } catch (error) {
       console.log('LoadStorageData Error: ', error);
     }
-
-    return;
   };
 
-  const refreshToken: (formatted: any) => Promise<string | null> = async (
-    formatted?: any,
-  ) => {
+  const refreshToken = async (formatted?: any): Promise<string | null> => {
     try {
       if (formatted.refreshToken) {
-        const response: any = await axios
-          .post(AUTH_URL + REFRESH, {refreshToken: formatted.refreshToken})
-          .then(data => {
-            return data.data;
-          })
-          .catch(async () => {
-            await EncryptedStorage.removeItem('user_session');
-            updateStore({
-              loading: false,
-            });
-            return null;
-          });
+        const response = await refresh({ refreshToken: formatted.refreshToken }).catch(async () => {
+          await EncryptedStorage.removeItem('user_session');
+          updateStore({ loading: false });
+          return null;
+        });
 
         if (response) {
-          await EncryptedStorage.setItem(
-            'user_session',
-            JSON.stringify({
-              refreshToken: formatted.refreshToken,
-              accessToken: response.data.accessToken,
-              expiredDate: new Date(response.data.accessTokenExp).toISOString(),
-              devNomer: formatted.devNomer,
-              nomer: formatted.nomer,
-              phone: formatted.phone,
-              email: formatted.email,
-              balance: formatted.balance,
-              name: formatted.name,
-              id: formatted.id,
-              avatar: formatted.avatar,
-            }),
-          );
+          await EncryptedStorage.setItem('user_session', JSON.stringify({
+            refreshToken: formatted.refreshToken,
+            accessToken: response.accessToken,
+            expiredDate: new Date(response.accessTokenExp).toISOString(),
+            devNomer: formatted.devNomer,
+            nomer: formatted.nomer,
+          }));
 
           updateStore({
-            accessToken: response.data.accessToken,
-            expiredDate: response.data.accessTokenExp,
+            accessToken: response.accessToken,
+            expiredDate: response.accessTokenExp,
             loading: false,
-            balance: formatted.balance,
-            name: formatted.name,
-            email: formatted.email,
-            id: formatted.id,
-            avatar: formatted.avatar,
           });
+
+          getMe().then((data) => {
+            updateUser({
+              cards: data.cards,
+              phone: data.phone,
+              balance: data.balance,
+              email: data.email,
+              name: data.name,
+              id: data.id,
+              avatar: data.avatar,
+              birthday: data.birthday
+            })
+          })
 
           return null;
         } else {
-          updateStore({
-            loading: false,
-          });
+          updateStore({ loading: false });
         }
       }
     } catch (error) {
-      updateStore({
-        loading: false,
-      });
+      updateStore({ loading: false });
     }
 
     return null;
   };
 
-  //  Send SMS code to the phone number
-  const sendOtp = (phone: string) => {
-    const formatted = phone
-      .replace(/[ ]+/g, '')
-      .replace('(', '')
-      .replace(')', '')
-      .replace('-', '');
+  const sendOtpFunc = (phone: string) => {
+    const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
 
-    axios
-      .post(AUTH_URL + SEND_OTP, {
-        phone: formatted,
-      })
-      .then(data => {
-        Toast.show({
-          type: 'customSuccessToast',
-          text1: 'Cообщение было отправлено',
-        });
-        return data.data;
-      })
-      .catch(err => {
-        Toast.show({
-          type: 'customErrorToast',
-          text1: 'Не получилось отправить СМС сообщение.',
-        });
-      });
+    sendOtp({ phone: formatted }).then(data => {
+      Toast.show({ type: 'customSuccessToast', text1: 'Cообщение было отправлено' });
+      return data;
+    }).catch(err => {
+      Toast.show({ type: 'customErrorToast', text1: 'Не получилось отправить СМС сообщение.' });
+    });
   };
 
-  const login = async (phone: string, otp: string) => {
+  const loginFunc = async (phone: string, otp: string) => {
     try {
-      const formatted = phone
-        .replace(/[ ]+/g, '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '');
+      const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
 
-      const response: any = await axios
-        .post(AUTH_URL + LOGIN, {otp: otp, phone: formatted})
-        .then(data => {
-          return data.data;
-        })
-        .catch(error => {
-          Toast.show({
-            type: 'customErrorToast',
-            text1: 'Не получилось зайти в приложение!',
-          });
-        });
-      if (response.data.type === 'login-success') {
-        await EncryptedStorage.setItem(
-          'user_session',
-          JSON.stringify({
-            refreshToken: response.data.tokens.refreshToken,
-            accessToken: response.data.tokens.accessToken,
-            expiredDate: new Date(
-              response.data.tokens.accessTokenExp,
-            ).toISOString(),
-            unqNumber: response.data.client.cards.unqNumber,
-            number: response.data.client.cards.number,
-            phone: response.data.client.phone,
-            email: response.data.client.email,
-            balance: response.data.client.cards.balance,
-            name: response.data.client.name,
-            id: response.data.client.id,
-          }),
-        );
+      const response = await login({ otp: otp, phone: formatted });
+
+      if (response.type === 'login-success') {
+        await saveUserSession(response.tokens, response.client);
+
         updateStore({
-          phone: response.data.client.phone,
-          email: response.data.client.email,
-          balance: response.data.client.cards.balance,
-          accessToken: response.data.tokens.accessToken,
-          expiredDate: new Date(
-            response.data.tokens.accessTokenExp,
-          ).toISOString(),
-          name: response.data.client.name,
-          id: response.data.client.id,
+          accessToken: response.tokens?.accessToken,
+          expiredDate: new Date(response.tokens!.accessTokenExp).toISOString(),
         });
+        
+        getMe().then((data) => {
+          updateUser({
+            cards: data.cards,
+            phone: data.phone,
+            balance: data.balance,
+            email: data.email,
+            name: data.name,
+            id: data.id,
+            avatar: data.avatar,
+            birthday: data.birthday
+          })
+        })
       }
-      return response.data.type;
+      return response.type;
     } catch (err) {
-      Toast.show({
-        type: 'customErrorToast',
-        text1: 'Не получилось зайти в приложение!',
-        props: {errorCode: 400},
-      });
+      Toast.show({ type: 'customErrorToast', text1: 'Не получилось зайти в приложение!', props: { errorCode: 400 } });
       return null;
     }
   };
 
-  const register = async (
+  const registerFunc = async (
     otp: string,
     phone: string,
     isTermsAccepted: boolean = true,
     isPromoTermsAccepted: boolean = true,
   ) => {
     try {
-      const formatted = phone
-        .replace(/[ ]+/g, '')
-        .replace('(', '')
-        .replace(')', '')
-        .replace('-', '');
+      const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
 
-      const result = await axios
-        .post(AUTH_URL + REGISTER, {
-          phone: formatted,
-          otp: otp,
-          isTermsAccepted: isTermsAccepted,
-          isPromoTermsAccepted: isPromoTermsAccepted,
-        })
-        .then(data => {
-          console.log(data);
-          return data;
-        })
-        .catch(err => {
-          console.log(err);
-          Toast.show({
-            type: 'customErrorToast',
-            text1: 'Не получилось зарегистрироваться!',
-          });
-        });
+      const result = await register({
+        phone: formatted,
+        otp: otp,
+        isTermsAccepted: isTermsAccepted,
+        isPromoTermsAccepted: isPromoTermsAccepted,
+      }).then(data => {
+        return data;
+      }).catch(err => {
+        Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
+      });
 
-      if (
-        result &&
-        result.data &&
-        result.data.data &&
-        result.data.data.type &&
-        result.data.data.type === 'register-success'
-      ) {
-        await EncryptedStorage.setItem(
-          'user_session',
-          JSON.stringify({
-            refreshToken: result.data.data.tokens.refreshToken,
-            accessToken: result.data.data.tokens.accessToken,
-            expiredDate: new Date(
-              result.data.data.tokens.accessTokenExp,
-            ).toISOString(),
-            unqNumber: result.data.data.client.cards.unqNumber,
-            phone: result.data.data.client.phone,
-            email: result.data.data.client.email,
-            balance: result.data.data.client.cards.balance,
-            name: result.data.data.client.name,
-            id: result.data.data.client.id,
-          }),
-        );
+      if (result && result.type === 'register-success') {
+        await saveUserSession(result.tokens, result.client);
 
         updateStore({
-          phone: result.data.data.client.phone,
-          email: result.data.data.client.email,
-          balance: result.data.data.client.cards.balance,
-          accessToken: result.data.data.tokens.accessToken,
-          expiredDate: new Date(
-            result.data.data.tokens.accessTokenExp,
-          ).toISOString(),
-          name: result.data.data.client.name,
-          id: result.data.data.client.id,
+          accessToken: result.tokens.accessToken,
+          expiredDate: new Date(result.tokens.accessTokenExp).toISOString(),
         });
+        
+        getMe().then((data) => {
+          updateUser({
+            cards: data.cards,
+            phone: data.phone,
+            balance: data.balance,
+            email: data.email,
+            name: data.name,
+            id: data.id,
+            avatar: data.avatar,
+            birthday: data.birthday
+          })
+        })
       } else {
-        Toast.show({
-          type: 'customErrorToast',
-          text1: 'Не получилось зарегистрироваться!',
-        });
+        Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
       }
     } catch (err) {
       console.error(err);
-      Toast.show({
-        type: 'customErrorToast',
-        text1: 'Не получилось зарегистрироваться!',
-      });
+      Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
       return null;
     }
   };
 
-  async function getMe() {
-    try {
-      const response = await axios.get(CORE_URL + '/account/me', {
-        headers: {
-          Authorization: `Bearer ${store.accessToken}`,
-        },
-      });
-
-      if (response.data.data) {
-        await EncryptedStorage.setItem(
-          'user_session',
-          JSON.stringify({
-            phone: response.data.data.phone,
-            email: response.data.data.email,
-            balance: response.data.data.cards.balance,
-            name: response.data.data.name,
-          }),
-        );
-
-        updateStore({
-          phone: response.data.data.phone,
-          email: response.data.data.email,
-          balance: response.data.data.cards.balance,
-          name: response.data.data.name,
-        });
-      }
-    } catch (e: any) {
-      console.log(e);
-    }
+  async function loadUser() {
+    await getMe().then((data) => {
+      updateUser({
+        cards: data.cards,
+        phone: data.phone,
+        balance: data.balance,
+        email: data.email,
+        name: data.name,
+        id: data.id,
+        avatar: data.avatar,
+        birthday: data.birthday
+      })
+    })
   }
 
   async function updateAvatar(avatar: string) {
-    await EncryptedStorage.setItem(
-      'user_session',
-      JSON.stringify({
-        avatar: avatar,
-      }),
-    );
+    try {
+      const existingSession = await EncryptedStorage.getItem('user_session');
+      let existingData: Record<string, any> = {};
+      if (existingSession) {
+        existingData = JSON.parse(existingSession);
+      }
+      const newData = {
+        ...existingData,
+        avatar: avatar
+      };
+      await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
+    } catch (error) {
+      console.error('Error saving user session:', error);
+    }
 
-    updateStore({
-      avatar: avatar,
-    });
+    updateUser({
+      avatar: avatar
+    })
   }
 
-  //  Sign Out
   async function signOut() {
     try {
       await EncryptedStorage.removeItem('user_session');
 
       updateStore({
+        accessToken: null,
+        expiredDate: null,
+      });
+
+      updateUser({
         phone: null,
         email: null,
         balance: null,
-        accessToken: null,
-        expiredDate: null,
         name: null,
-      });
+        avatar: ""
+      })
     } catch (err) {
       console.log(err);
     }
@@ -430,14 +343,15 @@ const AuthProvider: React.FC<any> = ({children}: {children: ReactNode}) => {
     <AuthContext.Provider
       value={{
         store: store,
+        user: user,
         refreshToken: refreshToken,
         signOut: signOut,
-        sendOtp: sendOtp,
-        getMe: getMe,
-        register: register,
-        login: login,
+        sendOtp: sendOtpFunc,
+        register: registerFunc,
+        login: loginFunc,
         refreshTokenFromSecureStorage: refreshTokenFromSecureStorage,
         updateAvatar: updateAvatar,
+        loadUser: loadUser
       }}>
       {children}
     </AuthContext.Provider>
@@ -450,4 +364,4 @@ const useAuth = () => {
   return context;
 };
 
-export {AuthContext, AuthProvider, useAuth};
+export { AuthContext, AuthProvider, useAuth };

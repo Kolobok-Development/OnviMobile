@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
 
 // styled components
@@ -14,7 +14,6 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useAppState } from '@context/AppContext';
 
 const height = dp(Dimensions.get('screen').height);
-const MID_TRANSLATE_Y = -height / 1.5 + dp(50)
 
 const Business = ({ bottomSheetRef } : any) => {
     const route: any = useRoute()
@@ -60,9 +59,6 @@ const Business = ({ bottomSheetRef } : any) => {
                         </View>
                     )})
                 }
-                {/* <View style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingTop: dp(10) }}>
-                    <BackButton index={2} />
-                </View> */}
             </Card>
         </View>
     )

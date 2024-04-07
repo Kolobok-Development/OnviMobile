@@ -37,14 +37,14 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {store, getMe, signOut, updateAvatar}: any = useAuth();
+  const { user, signOut, updateAvatar, loadUser }: any = useAuth();
   const api = useAxios('CORE_URL');
   const navigation = useNavigation<any>();
 
-  const initialUserName = store.name || '';
-  const initialEmail = store.email || '';
-  const initialPhone = store.phone || '';
-  const initialAvatar = store.avatar || 'both.jpg';
+  const initialUserName = user.name || '';
+  const initialEmail = user.email || '';
+  const initialPhone = user.phone || '';
+  const initialAvatar = user.avatar || 'both.jpg';
 
   const [editing, setEditing] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
@@ -69,12 +69,14 @@ const Settings = () => {
     try {
       console.log(selectedAvatar);
       updateAvatar(selectedAvatar);
-      const updateUser = await api.patch('/account', {
+      await api.patch('/account', {
         name: userName,
         email: email,
-      });
+      })
 
-      await getMe();
+      const user = await loadUser();
+
+      console.log("user => ", user)
       setLoading(false);
       setEditing(false);
     } catch (error: any) {
@@ -245,7 +247,7 @@ const Settings = () => {
           <Text style={{...styles.text}}>{email}</Text>
           <View style={styles.balance}>
             <Text style={styles.balanceText}>
-              {store && store.balance ? store.balance : 0}
+              {user && user.cards && user.cards.balance ? user.cards.balance : 0}
             </Text>
             <Image
               source={require('../../assets/icons/onvi_black.png')}

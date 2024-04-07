@@ -48,7 +48,7 @@ const notifications = [
 const History = ({ drawerNavigation } : any) => {
     const [tab, setTab] = useState(true)
 
-    const { store }: any = useAuth()
+    const { user }: any = useAuth()
 
     const switchTab = (val: boolean) => {
         setTab(val)
@@ -56,15 +56,13 @@ const History = ({ drawerNavigation } : any) => {
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
 
-    const [user, setUser] = useState<any>(null)
-
     const [orders, setOrders] = useState([])
 
     const api = useAxios("CORE_URL")
 
     const route: any = useRoute();
 
-    const initialAvatar = store.avatar || 'both.jpg'
+    const initialAvatar = user.avatar || 'both.jpg'
 
     const avatarValue = avatarSwitch(initialAvatar)
 
@@ -80,16 +78,9 @@ const History = ({ drawerNavigation } : any) => {
         }).catch(err => console.log(err.response))
     }
 
-    const updateInfo = async () => {
-        await api.get("/account/me").then((data) => {
-            setUser(data.data.data)
-        }).catch(err => console.log(err.response))
-    }
-
     const loadData = async () => {
         setIsLoading(true)
         try {
-            await updateInfo()
             await getOrderHistory()
 
             setIsLoading(false)
@@ -145,10 +136,10 @@ const History = ({ drawerNavigation } : any) => {
                             height: dp(60),
                         }}
                     />
-                    {store && store.name && <Text style={{ fontWeight: "600", fontSize: dp(24), paddingLeft: dp(5), flexShrink: 1 }}
+                    {user && user.name && <Text style={{ fontWeight: "600", fontSize: dp(24), paddingLeft: dp(5), flexShrink: 1 }}
                         numberOfLines={3}
                         ellipsizeMode="tail"
-                    >{store.name}</Text>}
+                    >{user.name}</Text>}
                 </View>
                 <View style={{ width: dp(34), height: dp(34), borderRadius: dp(50), backgroundColor: "#000000", justifyContent: "center", alignItems: "center" }}>
                     <TouchableOpacity onPress={() => {

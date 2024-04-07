@@ -1,10 +1,9 @@
-import { useTheme } from "@context/ThemeProvider";
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { horizontalScale, moderateScale, verticalScale } from "../../../utils/metrics";
 import { Platform } from 'react-native';
 import React from "react";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 const About = () => {
     const navigation: any = useNavigation()
 

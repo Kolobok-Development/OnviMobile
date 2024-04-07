@@ -3,8 +3,11 @@ import {API_URL, STRAPI_URL} from '@env';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {IEncryptedStorage} from '@context/AuthContext/index.interface';
 
+
+import { AUTH_URL } from '@env';
+
 const userApiInstance = axios.create({
-  baseURL: API_URL + '/api/v2',
+  baseURL: AUTH_URL,
   headers: {
     'Content-Type': 'application/json',
   },

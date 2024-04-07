@@ -1,7 +1,7 @@
 import { BLACK } from '../../utils/colors';
 import React, { useState } from 'react';
 
-import {TouchableOpacity, StyleSheet, Text, Image, View, useWindowDimensions, Dimensions, Platform} from 'react-native';
+import {TouchableOpacity, StyleSheet, Text, Image, View, Dimensions, Platform} from 'react-native';
 
 import { NotificationCircle } from '@components/NotificationCircle';
 
@@ -13,7 +13,6 @@ import { useTheme } from '@context/ThemeProvider';
 import { useAuth } from '@context/AuthContext';
 
 const height = dp(Dimensions.get('screen').height);
-const MAX_TRANSLATE_Y = -height + dp(50);
 
 interface BalanceProps {
     bottomSheetIndex: number;
@@ -23,15 +22,7 @@ interface BalanceProps {
 const Balance = ({ bottomSheetIndex, bottomSheetRef } : BalanceProps) => {
     const { theme }: any = useTheme()
 
-    const { store }: any = useAuth()
-
-    const [containerWidth, setContainerWidth] = useState(0);
-    const windowWidth = useWindowDimensions().width;
-
-    const measureTextWidth = (event: any) => {
-        const { width } = event.nativeEvent.layout;
-        setContainerWidth(width + 20); // Add some padding to the width for better appearance
-    };
+    const { user }: any = useAuth()
 
     return (
         <View style={[styles.container, Platform.OS === 'android' && styles.androidShadow,
@@ -41,7 +32,7 @@ const Balance = ({ bottomSheetIndex, bottomSheetRef } : BalanceProps) => {
                 bottomSheetRef.current?.snapToPosition("95%")
             }}>
                 <Image source={require("../../assets/icons/small-icon.png")} style={{width: dp(30), height: dp(30)}} />
-                <Text style={{...styles.balance, color: theme.textColor}}>{store.balance ? store.balance : 0}</Text>
+                <Text style={{...styles.balance, color: theme.textColor}}>{user && user.cards && user.cards.balance ? user.cards.balance : 0}</Text>
                 <NotificationCircle number={4} />
             </TouchableOpacity>
         </View>

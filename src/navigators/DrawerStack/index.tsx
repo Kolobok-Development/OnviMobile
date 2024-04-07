@@ -69,11 +69,8 @@ const CustomDrawerContent = ({
   theme,
   user,
 }: CustomDrawerContentProps) => {
-  const {store}: any = useAuth();
 
-  const initialAvatar = store.avatar;
-
-  console.log(` AVATAR ${JSON.stringify(store)}`);
+  const initialAvatar = user.avatar;
 
   const avatarValue = avatarSwitch(initialAvatar);
 
@@ -196,7 +193,7 @@ const CustomDrawerContent = ({
 
 const DrawerStack = () => {
   const {theme}: any = useTheme();
-  const {store}: any = useAuth();
+  const { user }: any = useAuth();
 
   return (
     <NavigationContainer independent={false}>
@@ -213,11 +210,11 @@ const DrawerStack = () => {
         drawerContent={props => {
           return (
             <>
-              {store && (
+              {user && (
                 <CustomDrawerContent
                   navigation={props.navigation}
                   theme={theme}
-                  user={store}
+                  user={user}
                 />
               )}
             </>

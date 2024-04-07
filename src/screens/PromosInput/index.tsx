@@ -15,8 +15,6 @@ const PromosInput = () => {
     setCode('');
   };
 
-
-
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.container}>

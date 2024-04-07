@@ -13,11 +13,6 @@ import { BusinessHeader } from '@components/Business/Header';
 import { CheckBox } from "@styled/buttons/CheckBox";
 import { Tag } from "../../../api/AppContent/types";
 
-const data = [
-    "4 бокса",
-    "есть грузовой"
-]
-
 const BusinessInfo = () => {
     const [modalVisible, setModalVisible] = useState(false);
 

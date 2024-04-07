@@ -20,8 +20,6 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {useAppState} from '@context/AppContext';
 import {dp} from '../../../utils/dp';
 
-import {OnviSwitch} from '@styled/buttons';
-
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {Button} from '@styled/buttons';
@@ -46,11 +44,10 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {store}: any = useAuth();
+  const {user}: any = useAuth();
   const navigation: any = useNavigation();
-  const route: any = useRoute();
 
-  const {state, setState} = useAppState();
+  const { state } = useAppState();
 
   const [promocode, setPromocode] = useState<string>('');
   const [cashback, setCashback] = useState(0);
@@ -134,7 +131,7 @@ const Payment = () => {
         subtitle: 'АМС', // string
         price: Number(order.sum), // number
         paymentMethodTypes: [PaymentMethodTypesEnum.BANK_CARD], // optional array of PaymentMethodTypesEnum
-        customerId: String(store.id),
+        customerId: String(user.id),
         authCenterClientId: null,
         userPhoneNumber: null, // optional string
         gatewayId: null, // optional string
@@ -192,10 +189,10 @@ const Payment = () => {
 
     // order.sum - (order.sum * discount / 100) - usedPoints
 
-    if (store.balance >= leftToPay) {
+    if (user.cards.balance >= leftToPay) {
       setUsedPoints(leftToPay);
     } else {
-      setUsedPoints(store.balance);
+      setUsedPoints(user.cards.balance);
     }
   };
 
@@ -377,7 +374,7 @@ const Payment = () => {
                         value={toggled}
                         onValueChange={onToggle}
                         activeText={`${Math.min(
-                          Number(store.balance),
+                          Number(user.cards.balance),
                           Number(
                             order.sum
                               ? order.sum -
@@ -387,7 +384,7 @@ const Payment = () => {
                           ),
                         )}`}
                         inActiveText={`${Math.min(
-                          Number(store.balance),
+                          Number(user.cards.balance),
                           Number(
                             order.sum
                               ? order.sum -

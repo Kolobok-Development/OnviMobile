@@ -30,8 +30,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(({ch
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
 
-    const nestedScrollEnabled = useDerivedValue(() => active.value);
-
      // React to changes in active.value 
 
     const activeRef = useRef(false)

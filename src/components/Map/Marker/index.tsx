@@ -20,7 +20,6 @@ export default function Marker({ coordinate, business, bottomSheetRef, locationR
     if (coordinate && coordinate[0] && coordinate[1]) {
         return (
             <MapboxGL.PointAnnotation id={String(uuid.v4())} coordinate={coordinate} onSelected={() => {
-                console.log('CILCIKED');
                 const distance = calculateDistance(business.location.lat, business.location.lon, locationRef.current?.lat as number, locationRef.current?.lon as number)
 
                     const businessObj = {...business}

@@ -3,8 +3,7 @@ import {FlatList, SectionList, StyleSheet, Text, View} from 'react-native';
 import {CheckBox} from "@styled/buttons/CheckBox";
 import {dp} from "../../../utils/dp";
 import {BottomSheetScrollView} from "@gorhom/bottom-sheet";
-import {BackButton} from "@components/BackButton";
-import {useNavigation, useRoute} from '@react-navigation/native'
+import {useNavigation } from '@react-navigation/native'
 import {Button} from "@styled/buttons";
 import {useBusiness} from "../../../api/hooks/useAppContent";
 import { useAppState } from '@context/AppContext';

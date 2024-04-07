@@ -29,15 +29,13 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {useRoute} from '@react-navigation/native';
 
-import {STRAPI_URL} from '@env';
 import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
-import {SwiperFlatList} from 'react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList';
 import {Campaign} from '../../../api/AppContent/types';
 import {SwiperFlatListWithGestureHandler} from 'react-native-swiper-flatlist/WithGestureHandler';
 
 const Main = ({drawerNavigation}: any) => {
-  const {store}: any = useAuth();
+  const { user }: any = useAuth();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
@@ -213,7 +211,7 @@ const Main = ({drawerNavigation}: any) => {
                 <Text
                   onPress={updateInfo}
                   style={{fontSize: dp(24), fontWeight: '600', color: WHITE}}>
-                  {store.balance}
+                  {user && user.cards && user.cards.balance ? user.cards.balance : ""}
                 </Text>
               </View>
             </TouchableOpacity>

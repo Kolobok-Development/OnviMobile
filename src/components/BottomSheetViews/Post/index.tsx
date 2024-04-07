@@ -11,8 +11,6 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 import {horizontalScale, moderateScale} from '../../../utils/metrics';
 
-import {BackButton} from '@components/BackButton';
-
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
@@ -28,8 +26,6 @@ const Post = ({drawerNavigation}: any) => {
   const {state} = useAppState();
 
   const isOpened = state.bottomSheetOpened;
-
-  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (route && route.params && route.params.data && route.params.data) {

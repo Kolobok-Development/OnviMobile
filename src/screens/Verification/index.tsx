@@ -10,9 +10,7 @@ import { useAuth } from '@context/AuthContext';
 
 import { useTheme } from '@context/ThemeProvider';
 
-import { debounce } from '../../utils/debounce'
 import { dp } from '../../utils/dp';
-import Loader from "@components/Loader";
 import Spinner from "react-native-loading-spinner-overlay/src";
 
 interface VerificationProps {
@@ -22,16 +20,6 @@ interface VerificationProps {
 const Verification = ({ route }: VerificationProps) => {
 
   const popRef = useRef<PopupRefProps>(null);
-
-  // useEffect(() => {
-  //   if (timerRef.current) {
-  //     // Timer is already running, stop it
-  //     stopTimer();
-  //   } else {
-  //     // Timer is not running, start it
-  //     startTimer();
-  //   }
-  // }, [route])
 
   const context = useAuth();
   if ( ! context ) {
@@ -73,13 +61,6 @@ const Verification = ({ route }: VerificationProps) => {
       }
     }
   }
-
-  // TODO: добавить счётчик
-  // useEffect(() => {
-  //   if (disabled) {
-  //     debounce(50000, activateButton)
-  //   }
-  // }, [disabled])
 
   const activateButton = () => {
     setDisabled(false)

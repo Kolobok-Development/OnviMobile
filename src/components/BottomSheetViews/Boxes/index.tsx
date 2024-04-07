@@ -21,13 +21,6 @@ const Boxes = () => {
 
     const order = state.order
 
-    const num = 0o123;
-
-    const textWithNum = () => (
-        <Text>Hello 👋 (num = ${num})</Text>
-    );
-
-
     return (
         <GHScrollView contentContainerStyle={{ flexGrow: 1}} nestedScrollEnabled={true}>
             <View style={styles.container}>

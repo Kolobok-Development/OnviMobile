@@ -13,7 +13,6 @@ import {ScrollView} from 'react-native-gesture-handler';
 import {FilterList} from '@components/FiltersList';
 
 // components
-import {PriceCard} from '@styled/cards/PriceCard';
 import {BusinessHeader} from '@components/Business/Header';
 import {SumInput} from '@styled/inputs/SumInput';
 import {ActionButton} from '@styled/buttons/ActionButton';
