@@ -44,13 +44,14 @@ function useCampaigns() {
     },
   });
 }
-
-function useBusiness(query: {[key: string]: string}) {
+//query: {[key: string]: string}
+function useBusiness(query: {[key: string]: string}, enabled: boolean) {
   return useQuery({
     queryKey: ['business'],
     queryFn: () => {
       return getCarWashes(query);
     },
+    enabled: enabled,
   });
 }
 

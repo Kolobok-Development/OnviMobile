@@ -1,25 +1,34 @@
-import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from 'react';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 // utils
-import { isValidStorageData, hasAccessTokenCredentials } from './index.validator';
+import {isValidStorageData, hasAccessTokenCredentials} from './index.validator';
 
 // components
 import Loader from '@components/Loader';
 import Toast from 'react-native-toast-message';
 
 // types
-import { IUser, IUserPartial } from "../../types/models/User";
-import { IAuthTokens } from "../../types/models/AuthTokens";
-import { IAuthStore, IAuthStorePartial, IAuthContext } from './index.interface';
+import {IUser, IUserPartial} from '../../types/models/User';
+import {IAuthTokens} from '../../types/models/AuthTokens';
+import {IAuthStore, IAuthStorePartial, IAuthContext} from './index.interface';
 
 // api
-import { getMe } from '../../api/user';
-import { sendOtp, login, register, refresh } from '../../api/auth/index';
+import {getMe} from '../../api/user';
+import {sendOtp, login, register, refresh} from '../../api/auth/index';
 
 const AuthContext = createContext<IAuthContext | null>(null);
 
-const saveUserSession = async (tokens: IAuthTokens | null, client: IUser | null) => {
+const saveUserSession = async (
+  tokens: IAuthTokens | null,
+  client: IUser | null,
+) => {
   try {
     const existingSession = await EncryptedStorage.getItem('user_session');
     let existingData: Record<string, any> = {};
@@ -35,14 +44,14 @@ const saveUserSession = async (tokens: IAuthTokens | null, client: IUser | null)
       unqNumber: client?.cards?.unqNumber || existingData.unqNumber,
     };
 
-    console.log("new Data: ", newData)
+    console.log('new Data: ', newData);
     await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
   } catch (error) {
     console.error('Error saving user session:', error);
   }
 };
 
-const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   const [store, setStore] = useState<IAuthStore>({
     accessToken: null,
     loading: true,
@@ -57,18 +66,18 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     birthday: null,
     cards: null,
     avatar: 'both.jpg',
-    balance: null
-  })
+    balance: null,
+  });
 
   const updateStore = (partialNewState: IAuthStorePartial) => {
-    const newState = { ...store, ...partialNewState };
+    const newState = {...store, ...partialNewState};
     setStore(newState);
   };
 
   const updateUser = (partialNewState: IUserPartial) => {
-    const newState = { ...user, ...partialNewState };
+    const newState = {...user, ...partialNewState};
     setUser(newState);
-  }
+  };
 
   useEffect(() => {
     async function loadStorageData() {
@@ -78,16 +87,19 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         if (encryptedStorage) {
           const formatted: Record<string, any> = JSON.parse(encryptedStorage);
 
-          console.log("STORAGE: ", formatted)
+          console.log('STORAGE: ', formatted);
 
-          if (formatted && isValidStorageData(formatted.accessToken, formatted.expiredDate)) {
+          if (
+            formatted &&
+            isValidStorageData(formatted.accessToken, formatted.expiredDate)
+          ) {
             updateStore({
               accessToken: formatted.accessToken,
               loading: false,
               expiredDate: formatted.expiredDate,
             });
 
-            getMe().then((data) => {
+            getMe().then(data => {
               updateUser({
                 cards: data.cards,
                 phone: data.phone,
@@ -96,9 +108,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
                 name: data.name,
                 id: data.id,
                 birthday: data.birthday,
-                avatar: formatted.avatar
-              })
-            })
+                avatar: formatted.avatar,
+              });
+            });
 
             return;
           }
@@ -109,7 +121,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           }
         }
 
-        updateStore({ loading: false });
+        updateStore({loading: false});
       } catch (error) {
         console.log('LoadStorageData Error: ', error);
       }
@@ -137,20 +149,25 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const refreshToken = async (formatted?: any): Promise<string | null> => {
     try {
       if (formatted.refreshToken) {
-        const response = await refresh({ refreshToken: formatted.refreshToken }).catch(async () => {
+        const response = await refresh({
+          refreshToken: formatted.refreshToken,
+        }).catch(async () => {
           await EncryptedStorage.removeItem('user_session');
-          updateStore({ loading: false });
+          updateStore({loading: false});
           return null;
-        })
+        });
 
         if (response) {
-          await EncryptedStorage.setItem('user_session', JSON.stringify({
-            refreshToken: formatted.refreshToken,
-            accessToken: response.accessToken,
-            expiredDate: new Date(response.accessTokenExp).toISOString(),
-            devNomer: formatted.devNomer,
-            nomer: formatted.nomer,
-          }));
+          await EncryptedStorage.setItem(
+            'user_session',
+            JSON.stringify({
+              refreshToken: formatted.refreshToken,
+              accessToken: response.accessToken,
+              expiredDate: new Date(response.accessTokenExp).toISOString(),
+              devNomer: formatted.devNomer,
+              nomer: formatted.nomer,
+            }),
+          );
 
           updateStore({
             accessToken: response.accessToken,
@@ -158,7 +175,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             loading: false,
           });
 
-          getMe().then((data) => {
+          getMe().then(data => {
             updateUser({
               cards: data.cards,
               phone: data.phone,
@@ -167,39 +184,55 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
               name: data.name,
               id: data.id,
               avatar: data.avatar,
-              birthday: data.birthday
-            })
-          })
+              birthday: data.birthday,
+            });
+          });
 
           return null;
         } else {
-          updateStore({ loading: false });
+          updateStore({loading: false});
         }
       }
     } catch (error) {
-      updateStore({ loading: false });
+      updateStore({loading: false});
     }
 
     return null;
   };
 
   const sendOtpFunc = (phone: string) => {
-    const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
+    const formatted = phone
+      .replace(/[ ]+/g, '')
+      .replace('(', '')
+      .replace(')', '')
+      .replace('-', '');
 
-    sendOtp({ phone: formatted }).then(data => {
-      Toast.show({ type: 'customSuccessToast', text1: 'Cообщение было отправлено' });
-      return data;
-    }).catch((err: unknown) => {
-      console.log(err)
-      Toast.show({ type: 'customErrorToast', text1: 'Не получилось отправить СМС сообщение.' });
-    });
+    sendOtp({phone: formatted})
+      .then(data => {
+        Toast.show({
+          type: 'customSuccessToast',
+          text1: 'Cообщение было отправлено',
+        });
+        return data;
+      })
+      .catch((err: unknown) => {
+        console.log(err);
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Не получилось отправить СМС сообщение.',
+        });
+      });
   };
 
   const loginFunc = async (phone: string, otp: string) => {
     try {
-      const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
+      const formatted = phone
+        .replace(/[ ]+/g, '')
+        .replace('(', '')
+        .replace(')', '')
+        .replace('-', '');
 
-      const response = await login({ otp: otp, phone: formatted })
+      const response = await login({otp: otp, phone: formatted});
 
       if (response.type === 'login-success') {
         await saveUserSession(response.tokens, response.client);
@@ -208,8 +241,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           accessToken: response.tokens?.accessToken,
           expiredDate: new Date(response.tokens!.accessTokenExp).toISOString(),
         });
-        
-        getMe().then((data) => {
+
+        getMe().then(data => {
           updateUser({
             cards: data.cards,
             phone: data.phone,
@@ -218,13 +251,17 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             name: data.name,
             id: data.id,
             avatar: data.avatar,
-            birthday: data.birthday
-          })
-        })
+            birthday: data.birthday,
+          });
+        });
       }
       return response.type;
     } catch (err) {
-      Toast.show({ type: 'customErrorToast', text1: 'Не получилось зайти в приложение!', props: { errorCode: 400 } });
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Не получилось зайти в приложение!',
+        props: {errorCode: 400},
+      });
       return null;
     }
   };
@@ -236,18 +273,27 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     isPromoTermsAccepted: boolean = true,
   ) => {
     try {
-      const formatted = phone.replace(/[ ]+/g, '').replace('(', '').replace(')', '').replace('-', '');
+      const formatted = phone
+        .replace(/[ ]+/g, '')
+        .replace('(', '')
+        .replace(')', '')
+        .replace('-', '');
 
       const result = await register({
         phone: formatted,
         otp: otp,
         isTermsAccepted: isTermsAccepted,
         isPromoTermsAccepted: isPromoTermsAccepted,
-      }).then(data => {
-        return data;
-      }).catch(err => {
-        Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
-      });
+      })
+        .then(data => {
+          return data;
+        })
+        .catch(err => {
+          Toast.show({
+            type: 'customErrorToast',
+            text1: 'Не получилось зарегистрироваться!',
+          });
+        });
 
       if (result && result.type === 'register-success') {
         await saveUserSession(result.tokens, result.client);
@@ -256,8 +302,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           accessToken: result.tokens.accessToken,
           expiredDate: new Date(result.tokens.accessTokenExp).toISOString(),
         });
-        
-        getMe().then((data) => {
+
+        getMe().then(data => {
           updateUser({
             cards: data.cards,
             phone: data.phone,
@@ -266,21 +312,27 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
             name: data.name,
             id: data.id,
             avatar: data.avatar,
-            birthday: data.birthday
-          })
-        })
+            birthday: data.birthday,
+          });
+        });
       } else {
-        Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Не получилось зарегистрироваться!',
+        });
       }
     } catch (err) {
       console.error(err);
-      Toast.show({ type: 'customErrorToast', text1: 'Не получилось зарегистрироваться!' });
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Не получилось зарегистрироваться!',
+      });
       return null;
     }
   };
 
   async function loadUser() {
-    await getMe().then((data) => {
+    await getMe().then(data => {
       updateUser({
         cards: data.cards,
         phone: data.phone,
@@ -289,9 +341,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         name: data.name,
         id: data.id,
         avatar: data.avatar,
-        birthday: data.birthday
-      })
-    })
+        birthday: data.birthday,
+      });
+    });
   }
 
   async function updateAvatar(avatar: string) {
@@ -303,7 +355,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
       const newData = {
         ...existingData,
-        avatar: avatar
+        avatar: avatar,
       };
       await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
     } catch (error) {
@@ -311,8 +363,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     updateUser({
-      avatar: avatar
-    })
+      avatar: avatar,
+    });
   }
 
   async function signOut() {
@@ -329,8 +381,8 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         email: null,
         balance: null,
         name: null,
-        avatar: ""
-      })
+        avatar: '',
+      });
     } catch (err) {
       console.log(err);
     }
@@ -352,7 +404,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         login: loginFunc,
         refreshTokenFromSecureStorage: refreshTokenFromSecureStorage,
         updateAvatar: updateAvatar,
-        loadUser: loadUser
+        loadUser: loadUser,
       }}>
       {children}
     </AuthContext.Provider>
@@ -365,4 +417,4 @@ const useAuth = () => {
   return context;
 };
 
-export { AuthContext, AuthProvider, useAuth };
+export {AuthContext, AuthProvider, useAuth};

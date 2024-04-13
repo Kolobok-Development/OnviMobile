@@ -1,14 +1,19 @@
-import React, { createContext, ReactNode, useContext, useState, Dispatch, SetStateAction  } from "react";
-
-import { FiltersType } from "../../types/models/FiltersType";
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  Dispatch,
+  SetStateAction,
+} from 'react';
 
 interface AppContextData {
-  filters: FiltersType
-  businesses: any[]
-  order: any
-  bottomSheetPosition: any
-  bottomSheetOpened: boolean
-  isMainScreen: boolean
+  filters: any;
+  businesses: any[];
+  order: any;
+  bottomSheetPosition: any;
+  bottomSheetOpened: boolean;
+  isMainScreen: boolean;
 }
 
 const AppContext = createContext<{
@@ -16,18 +21,18 @@ const AppContext = createContext<{
   setState: Dispatch<SetStateAction<AppContextData>>;
 } | null>(null);
 
-const AppProvider = ({ children }: { children: ReactNode }) => {
+const AppProvider = ({children}: {children: ReactNode}) => {
   const [state, setState] = useState<AppContextData>({
     filters: {},
     businesses: [],
     order: null,
     bottomSheetPosition: null,
     bottomSheetOpened: false,
-    isMainScreen: true
+    isMainScreen: true,
   });
 
   return (
-    <AppContext.Provider value={{ state, setState }}>
+    <AppContext.Provider value={{state, setState}}>
       {children}
     </AppContext.Provider>
   );
@@ -36,9 +41,9 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
 const useAppState = () => {
   const context = useContext(AppContext);
   if (!context) {
-    throw new Error("useAppState must be used within an AppProvider");
+    throw new Error('useAppState must be used within an AppProvider');
   }
   return context;
 };
 
-export { AppProvider, useAppState };
+export {AppProvider, useAppState};

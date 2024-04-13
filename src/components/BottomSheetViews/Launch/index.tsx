@@ -81,7 +81,6 @@ const Launch = () => {
         nestedScrollEnabled={true}
         scrollEnabled={isOpened}>
         <View style={{paddingTop: dp(15)}} />
-        <Text>{JSON.stringify(order)}</Text>
         <BusinessHeader
           navigation={navigation}
           position={'95%'}

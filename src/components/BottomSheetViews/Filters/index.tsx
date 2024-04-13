@@ -1,254 +1,270 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, SectionList, StyleSheet, Text, View} from 'react-native';
-import {CheckBox} from "@styled/buttons/CheckBox";
-import {dp} from "../../../utils/dp";
-import {BottomSheetScrollView} from "@gorhom/bottom-sheet";
-import {useNavigation } from '@react-navigation/native'
-import {Button} from "@styled/buttons";
-import {useBusiness} from "../../../api/hooks/useAppContent";
-import { useAppState } from '@context/AppContext';
-import {FiltersType} from "../../../types/models/FiltersType";
+import {
+  FlatList,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {CheckBox} from '@styled/buttons/CheckBox';
+import {dp} from '../../../utils/dp';
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {useNavigation} from '@react-navigation/native';
+import {Button} from '@styled/buttons';
+import {useBusiness} from '../../../api/hooks/useAppContent';
+import {useAppState} from '@context/AppContext';
+import {FiltersType} from '../../../types/models/FiltersType';
 
-const data = [
-    {
-        title: { id: 1, name: 'Услуги', code: 'tags' },
-        data: [
-            { code: 'vac', name: 'Пылесос' },
-            { code: 'air', name: 'Воздух' },
-            { code: 'handwash', name: 'Рукомойник' },
-            { code: 'dryer', name: 'Сушка' },
-            { code: 'toilet', name: 'Туалет' },
-            { code: 'dryingarea', name: 'Зона протирки' },
-        ],
-    },
-    {
-        title: { id: 2, name: 'Сеть', code: 'brand' },
-        data: [
-            { code: 'DS', name: 'Мой-Ка!DS' },
-        ],
-    },
-    {
-        title: { id: 3, name: 'Тип', code: 'type' },
-        data: [
-            { code: 'SelfService', name: 'Самообслуживание' },
-            { code: 'Portal', name: 'Робот' },
-        ],
-    },
-];
-
-interface CheckBoxItemProps {
-    code: string;
-    checked: boolean;
-    name: string;
-    sectionName: string;
-    onCheckBoxClick: (sectionName: string, checkBoxCode: string, checkboxValue: string) => void;
-}
-
-// Define a type for the object that will store checkbox values
-
-
-const CheckBoxItem: React.FC<CheckBoxItemProps> = ({ code, name, sectionName, onCheckBoxClick, checked  }) => {
-    const [isChecked, setIsChecked] = React.useState(checked);
-
-    const handleCheckBoxClick = () => {
-        setIsChecked((prevChecked) => !prevChecked);
-        const checkboxValue = !isChecked ? name : ''; // Set checkbox value based on checked state
-        onCheckBoxClick(sectionName, code, checkboxValue);
-    };
-
-    return (
-        <View style={{ paddingRight: dp(6), paddingBottom: dp(6)}}>
-            <CheckBox
-                width={dp(94)}
-                height={dp(24)}
-                borderRadius={dp(69)}
-                backgroundColor={'#F5F5F5'}
-                checked={checked}
-                text={name}
-                textColor={'#000000'}
-                fontSize={dp(12)}
-                fontWeight={'600'}
-                onClick={handleCheckBoxClick}
-            />
-        </View>
-    );
+// Define types
+type Filter = {
+  code: string;
+  name: string;
 };
 
+type Section = {
+  id: number;
+  name: string;
+  code: string;
+};
+
+type FilterItem = {
+  sectionCode: string;
+  filter: Filter;
+};
+
+type SelectedFilters = {
+  [sectionCode: string]: string[];
+};
+
+const data: {title: Section; data: Filter[]}[] = [
+  {
+    title: {id: 1, name: 'Услуги', code: 'tags'},
+    data: [
+      {code: 'vac', name: 'Пылесос'},
+      {code: 'air', name: 'Воздух'},
+      {code: 'handwash', name: 'Рукомойник'},
+      {code: 'dryer', name: 'Сушка'},
+      {code: 'toilet', name: 'Туалет'},
+      {code: 'dryingarea', name: 'Зона протирки'},
+    ],
+  },
+  {
+    title: {id: 2, name: 'Сеть', code: 'brand'},
+    data: [{code: 'DS', name: 'Мой-Ка!DS'}],
+  },
+  {
+    title: {id: 3, name: 'Тип', code: 'type'},
+    data: [
+      {code: 'SelfService', name: 'Самообслуживание'},
+      {code: 'Portal', name: 'Робот'},
+    ],
+  },
+];
+const generateQuery = (selectedFilters: SelectedFilters): string => {
+  const queryFilters: string[] = [];
+  Object.entries(selectedFilters).forEach(([sectionCode, filters]) => {
+    filters.forEach(filter => {
+      if (filter === 'Самообслуживание') {
+        queryFilters.push(`${sectionCode}:SelfService`);
+      } else if (filter === 'Робот') {
+        queryFilters.push(`${sectionCode}:Portal`);
+      } else {
+        queryFilters.push(`${sectionCode}:${filter}`);
+      }
+    });
+  });
+  return queryFilters.join(',');
+};
 
 const Filters = () => {
-    const { state, setState } = useAppState()
-    const filters = state.filters
-    const [selectedFilters, setSelectedFilters] = useState<FiltersType>(filters);
-    const [query, setQuery] = useState("");
+  //Global state
+  const {state, setState} = useAppState();
+  const navigation: any = useNavigation();
 
-    const [filtersApplied, setFiltersApplied] = useState(false);
-    
-    const navigation: any = useNavigation()
+  //Local filters
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
+  const [submit, setSubmit] = useState<boolean>(false);
+  const query = generateQuery(selectedFilters);
 
+  useEffect(() => {
+    setSelectedFilters(state.filters);
+  }, []);
 
-    // React query
-    const {
-        isFetching,
-        data: businessData,
-        refetch: getBusinesses,
-    } = useBusiness({filter: query});
+  useEffect(() => {
+    console.log(`GLOBAL FILTERS ${JSON.stringify(state.filters)}`);
+    console.log(`LOCAL FILTERS ${JSON.stringify(selectedFilters)}`);
+  }, [state.filters]);
 
-    const getCheckedState = (sectionName: string, code: string) => {
-        return Boolean(filters[sectionName] && filters[sectionName][code]);
-    };
+  // Function to handle filter selection
+  const toggleFilter = (sectionCode: string, filterCode: string) => {
+    setSelectedFilters(prevSelectedFilters => {
+      const updatedFilters = {...prevSelectedFilters};
+      if (!updatedFilters[sectionCode]) {
+        updatedFilters[sectionCode] = [];
+      }
+      const index = updatedFilters[sectionCode].indexOf(filterCode);
+      if (index === -1) {
+        updatedFilters[sectionCode].push(filterCode); // Select filter
+      } else {
+        updatedFilters[sectionCode].splice(index, 1); // Deselect filter
+      }
+      return updatedFilters;
+    });
+  };
+  const [columns, setColumns] = useState(3);
+  //Query
+  const {
+    isFetching,
+    data: businessData,
+    isSuccess,
+    refetch,
+  } = useBusiness({filter: query}, false);
 
-
-    // Function to handle checkbox click
-    const handleCheckBoxClick = (sectionName: string, code: string, checkboxValue: string) => {
-        setSelectedFilters((prevValues) => {
-            const updatedSection = { ...prevValues[sectionName] };
-            // Check if checkboxValue is empty (indicating uncheck)
-            if (!checkboxValue) {
-                delete updatedSection[code];
-            } else {
-                updatedSection[code] = checkboxValue;
-            }
-
-            return {
-                ...prevValues,
-                [sectionName]: updatedSection
-            };
-        });
-
-
-    };
-
-
-    useEffect(() => {
-        if(filtersApplied) getBusinesses();
-    }, [filtersApplied])
-
-    useEffect(() => {
-        setState({
-            ...state,
-            filters: selectedFilters
-        });
-    }, [selectedFilters])
-
-    useEffect(() => {
-        if (businessData && filtersApplied) {
-            setState({
-                ...state,
-                businesses: businessData.businessesLocations
-            });
-
-            navigation.goBack();
-        }
-    }, [businessData])
-
-
-
-    const applyFilters = async () => {
-
-        let query: string = '';
-        const carWashType : any = {
-            "Самообслуживание": "SelfService",
-            "Робот": "Portal"
-        };
-
-        for (const key in selectedFilters) {
-            const values = Object.values(selectedFilters[key]);
-            if (key !== 'type' || Object.keys(selectedFilters[key]).length !== 2) {
-                if (values.length > 0) {
-                    values.forEach(value => {
-                        if (key === 'type' && carWashType[value]) {
-                            query += `${key}:${carWashType[value]},`;
-                        } else {
-                            query += `${key}:${value},`;
-                        }
-                    });
-                }
-            }
-        }
-
-        query = query.replace(/,$/, '');
-
-        setQuery(query);
-        setFiltersApplied(true);
-
+  useEffect(() => {
+    if (isSuccess && submit) {
+      console.log('EXECUTED');
+      setState({
+        ...state,
+        businesses: businessData.businessesLocations,
+        filters: selectedFilters,
+      });
     }
+  }, [isSuccess, businessData, submit]);
 
+  // Function to handle submit button press
+  const handleSubmit = async () => {
+    // Clear selected filters state if needed
+    setSubmit(true);
+    await refetch();
+  };
 
+  const renderFilterItem = ({item}: {item: FilterItem}) => {
+    const {sectionCode, filter} = item;
+
+    const isSelected = selectedFilters[sectionCode]?.includes(filter.name);
 
     return (
-        <BottomSheetScrollView style={styles.container} nestedScrollEnabled={true}>
-            {/* <View style={{paddingRight: dp(10)}}>
-                <BackButton index={2} />
-            </View> */}
-            <SectionList
-                contentContainerStyle={{
-                    marginTop: dp(15)
-                }}
-                sections={data}
-                renderItem={() => null}
-                renderSectionHeader={({ section }) => (
-                    <View>
-                        <Text style={styles.sectionHeader}>{section.title.name}</Text>
-                        <FlatList
-                            horizontal
-                            contentContainerStyle={{
-                                marginTop: dp(25),
-                                marginBottom: dp(40),
-                                flexDirection:  'row',
-                                flexShrink: 1,
-                                flexWrap: 'wrap'
+      <TouchableOpacity
+        onPress={() => toggleFilter(sectionCode, filter.name)}
+        style={{marginRight: dp(10)}}>
+        <View
+          style={[
+            styles.chip,
+            {
+              backgroundColor: isSelected ? '#BFFA00' : '#F5F5F5',
+            },
+          ]}>
+          <Text style={styles.chipText}>{filter.name}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
-                            }}
-                            data={section.data}
-                            renderItem={({ item }) => (
-                                <CheckBoxItem code={item.code} name={item.name} sectionName={section.title.code}  onCheckBoxClick={handleCheckBoxClick} checked={getCheckedState(section.title.code, item.code)} key={item.code}/>
-                            )}
-                            keyExtractor={(item) => `sectionListEntry-${item.code}`}
-                        />
-                    </View>
-                )}
-                keyExtractor={(item) => `sectionListEntry-${item.code}`}
-            />
-            <View style={styles.footer}>
-                <Button label={"Применить"} color={"blue"} width={dp(172)} height={dp(43)} fontSize={dp(16)} fontWeight={"600"}  onClick={applyFilters} showLoading={isFetching}/>
-            </View>
+  const renderSection = ({item}: {item: {title: Section; data: Filter[]}}) => {
+    return (
+      <View style={styles.section}>
+        <Text style={styles.sectionHeader}>{item.title.name}</Text>
+        <FlatList
+          data={item.data.map((filter: Filter) => ({
+            sectionCode: item.title.code,
+            filter,
+          }))}
+          renderItem={renderFilterItem}
+          numColumns={columns}
+          keyExtractor={filterItem => filterItem.filter.code}
+          columnWrapperStyle={{
+            paddingTop: dp(10),
+            justifyContent: 'flex-start',
+          }}
+        />
+      </View>
+    );
+  };
 
-        </BottomSheetScrollView>
-    )
-}
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={data}
+        renderItem={renderSection}
+        keyExtractor={section => section.title.code}
+        contentContainerStyle={{
+          marginTop: dp(20),
+          flex: 1,
+          marginBottom: dp(60),
+        }}
+        ListFooterComponentStyle={{
+          flex: 1,
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+        }}
+        ListFooterComponent={
+          <Button
+            label={'Применить'}
+            color={'blue'}
+            width={dp(172)}
+            height={dp(43)}
+            fontSize={dp(16)}
+            fontWeight={'600'}
+            onClick={handleSubmit}
+            showLoading={isFetching}
+          />
+        }
+      />
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        flexDirection: 'column',
-        backgroundColor: '#FFFFFF',
-        paddingTop: dp(15),
-        paddingLeft: dp(22),
-        paddingRight: dp(22),
-        borderRadius: dp(38)
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#FFFFFF',
+    paddingTop: dp(15),
+    paddingLeft: dp(22),
+    paddingRight: dp(22),
+    borderRadius: dp(38),
+  },
+  header: {
+    alignItems: 'center',
+  },
+  list: {
+    paddingLeft: dp(22),
+  },
+  headerTxt: {
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  sectionHeader: {
+    color: '#000',
+    fontSize: dp(24),
+    fontWeight: '600',
+  },
+  footer: {
+    flex: 1,
+    marginVertical: dp(100),
+    alignItems: 'center',
+  },
+  chip: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    paddingRight: dp(10),
+    paddingLeft: dp(10),
+    height: dp(24),
+    minWidth: dp(94),
+    borderRadius: dp(69),
+  },
+  chipText: {
+    textAlign: 'center',
+    color: '#000000',
+    fontSize: dp(12),
+    fontWeight: '600',
+  },
+  section: {
+    marginTop: dp(25),
+  },
+});
 
-    },
-    header: {
-        alignItems: 'center'
-    },
-    list: {
-        paddingLeft: dp(22)
-    },
-    headerTxt: {
-        fontSize: 24,
-        fontWeight: 'bold',
-    },
-    sectionHeader: {
-        color: '#000',
-        fontSize: dp(24),
-        fontWeight: '600'
-    },
-    footer: {
-        flex: 1,
-        marginVertical: dp(100),
-        alignItems: 'center'
-    }
-
-})
-
-export { Filters };
+export {Filters};

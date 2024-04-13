@@ -60,20 +60,14 @@ export async function getCampaign(id: number) {
 
 export async function getCarWashes(query: {[key: string]: string}) {
   try {
-    console.log(
-      'QUERY TO SEND ___________________***************_________________',
-    );
     const response = await appContent.get<BusinessSuccessRequestPayload>(
       'api/carwash',
       {
         params: query,
       },
     );
-
-    console.log(
-      'RESPONSE DATA ___________________***************_________________',
-    );
-    console.log(response.data);
+    console.log('QUERY!!')
+    console.log(query);
     return response.data;
   } catch (error: any) {
     console.error('getCampaigns - Error: ', JSON.stringify(error));
