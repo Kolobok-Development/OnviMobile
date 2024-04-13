@@ -1,4 +1,5 @@
 import { IUser } from "../../types/models/User";
+import { IUserPartial } from "../../types/models/User";
 
 export interface IUserType {
     id: string;
@@ -53,6 +54,6 @@ export interface IAuthContext {
     register: (code: string, phone: string, acceptTerms: boolean, setRegistration: boolean) => any
     login: (otp: string, phone: string) => any
     refreshTokenFromSecureStorage: () => any
-    updateAvatar: (avatar: "male" | "female" | "both") => Promise<void>
     loadUser: () => void
+    updateUser: (partialNewState: IUserPartial) => void
 }

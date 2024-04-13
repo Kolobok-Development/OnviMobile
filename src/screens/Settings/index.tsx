@@ -37,7 +37,7 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const { user, signOut, updateAvatar, loadUser }: any = useAuth();
+  const { user, signOut, updateUser }: any = useAuth();
   const api = useAxios('CORE_URL');
   const navigation = useNavigation<any>();
 
@@ -67,16 +67,17 @@ const Settings = () => {
   const saveUserDate = async () => {
     setLoading(true);
     try {
-      console.log(selectedAvatar);
-      updateAvatar(selectedAvatar);
       await api.patch('/account', {
         name: userName,
         email: email,
       })
 
-      const user = await loadUser();
+      updateUser({
+        name: userName,
+        email: email,
+        avatar: selectedAvatar
+      })
 
-      console.log("user => ", user)
       setLoading(false);
       setEditing(false);
     } catch (error: any) {

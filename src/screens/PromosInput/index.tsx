@@ -5,6 +5,7 @@ import {useEffect, useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
+import { Text } from 'react-native-svg';
 
 const PromosInput = () => {
   const [code, setCode] = useState('');
@@ -21,11 +22,12 @@ const PromosInput = () => {
         <View style={styles.header}>
           <BackButton
             callback={() => {
-              navigation.goBack();
+              navigation.navigate("Промокоды");
             }}
           />
         </View>
         <View style={styles.content}>
+        
           <TextInput
             placeholder="Введите промокод"
             maxLength={19}

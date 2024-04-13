@@ -20,12 +20,14 @@ const BackButton = ({ callback, position = '60%', index = undefined } : BackButt
 
     return <TouchableOpacity style={styles.backButton} onPress={() => {
             if (callback) {
-                callback()
+                return callback()
             }
-            if (index !== undefined) {
-                route.params.bottomSheetRef.current?.snapToIndex(index)
-            } else if (position) {
-                route.params.bottomSheetRef.current?.snapToPosition(position)
+            if (route && route.params && route.params.bottomSheetRef && route.params.bottomSheetRef.current) {
+                if (index !== undefined) {
+                    route.params.bottomSheetRef.current?.snapToIndex(index)
+                } else if (position) {
+                    route.params.bottomSheetRef.current?.snapToPosition(position)
+                }
             }
             navigation.goBack()
         }}>

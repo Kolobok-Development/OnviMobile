@@ -74,7 +74,24 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     setStore(newState);
   };
 
-  const updateUser = (partialNewState: IUserPartial) => {
+  const updateUser = async (partialNewState: IUserPartial) => {
+    if (partialNewState.avatar) {
+      try {
+        const existingSession = await EncryptedStorage.getItem('user_session');
+        let existingData: Record<string, any> = {};
+        if (existingSession) {
+          existingData = JSON.parse(existingSession);
+        }
+        const newData = {
+          ...existingData,
+          avatar: partialNewState.avatar,
+        };
+        await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
+      } catch (error) {
+        console.error('Error saving user session:', error);
+      }
+    }
+
     const newState = {...user, ...partialNewState};
     setUser(newState);
   };
@@ -86,8 +103,6 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
 
         if (encryptedStorage) {
           const formatted: Record<string, any> = JSON.parse(encryptedStorage);
-
-          console.log('STORAGE: ', formatted);
 
           if (
             formatted &&
@@ -116,6 +131,9 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           }
 
           if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
+            updateUser({
+              avatar: formatted.avatar,
+            })
             await refreshToken(formatted);
             return;
           }
@@ -183,7 +201,6 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
               email: data.email,
               name: data.name,
               id: data.id,
-              avatar: data.avatar,
               birthday: data.birthday,
             });
           });
@@ -332,6 +349,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   async function loadUser() {
+    console.log("LOAD USER!!!!")
     await getMe().then(data => {
       updateUser({
         cards: data.cards,
@@ -340,30 +358,8 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         email: data.email,
         name: data.name,
         id: data.id,
-        avatar: data.avatar,
         birthday: data.birthday,
       });
-    });
-  }
-
-  async function updateAvatar(avatar: string) {
-    try {
-      const existingSession = await EncryptedStorage.getItem('user_session');
-      let existingData: Record<string, any> = {};
-      if (existingSession) {
-        existingData = JSON.parse(existingSession);
-      }
-      const newData = {
-        ...existingData,
-        avatar: avatar,
-      };
-      await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
-    } catch (error) {
-      console.error('Error saving user session:', error);
-    }
-
-    updateUser({
-      avatar: avatar,
     });
   }
 
@@ -388,6 +384,10 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     }
   }
 
+  useEffect(() => {
+    console.log("user: ", user)
+  }, [user])
+
   if (store.loading) {
     return <Loader />;
   }
@@ -403,8 +403,8 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         register: registerFunc,
         login: loginFunc,
         refreshTokenFromSecureStorage: refreshTokenFromSecureStorage,
-        updateAvatar: updateAvatar,
         loadUser: loadUser,
+        updateUser: updateUser
       }}>
       {children}
     </AuthContext.Provider>
