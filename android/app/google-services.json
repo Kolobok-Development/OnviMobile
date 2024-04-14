@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "290141704302",
+    "project_id": "onvi-27847",
+    "storage_bucket": "onvi-27847.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:290141704302:android:ba75fd5c930183accdd67f",
+        "android_client_info": {
+          "package_name": "com.onvimobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB08tlvg99sxLCPkFZdDW-fHOv_pVBF2VQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
