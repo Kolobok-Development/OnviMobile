@@ -1,26 +1,22 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect } from "react";
 
 import {dp} from '../../utils/dp';
 
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-} from 'react-native';
+import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
+import {PromoCard} from '@components/PromoCard';
+import { FormattedDate } from 'react-intl';
 
 const Promos = () => {
   const {isLoading, data, refetch} = useGetCampaignHistory();
 
   const navigation = useNavigation<any>();
+
 
   const handlePromoInput = () => {
     navigation.navigate('Ввод Промокода');
@@ -56,25 +52,6 @@ const Promos = () => {
       </SkeletonPlaceholder>
     );
   };
-
-  const renderItem = (promo: IGetPromoHistoryResponse) => {
-    return (
-      <TouchableOpacity key={promo.promotionId}>
-        <Image
-          source={require('../../assets/coupon.png')}
-          style={{
-            width: '100%',
-            height: dp(120),
-            resizeMode: 'contain',
-          }}
-        />
-      </TouchableOpacity>
-    );
-  };
-
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
 
   return (
     <View style={styles.container}>
@@ -122,7 +99,15 @@ const Promos = () => {
             ) : (
               <FlatList
                 data={data}
-                renderItem={renderItem}
+                renderItem={promo => (
+                  <PromoCard
+                    title={promo.item.title}
+                    headerText={'Акция'}
+                    bonus={`${promo.item.point} ₽`}
+                    date={new Date(promo.item.expiryPeriodDate)}
+                    key={promo.item.promotionId.toString()}
+                  />
+                )}
                 onRefresh={refetch}
                 refreshing={isLoading}
                 keyExtractor={(promo: IGetPromoHistoryResponse) =>

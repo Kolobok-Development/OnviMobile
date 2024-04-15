@@ -233,7 +233,6 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return data;
       })
       .catch((err: unknown) => {
-        console.log(err);
         Toast.show({
           type: 'customErrorToast',
           text1: 'Не получилось отправить СМС сообщение.',

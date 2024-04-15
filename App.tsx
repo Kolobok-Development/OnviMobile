@@ -8,7 +8,8 @@ import {AuthProvider} from '@context/AuthContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from '@components/Application';
 import ThemeWrapper from '@components/ThemeWrapper';
-import { SafeAreaView } from "react-native-safe-area-context";
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {IntlProvider} from 'react-intl';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,27 +24,21 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
-  useEffect(() => {
-    showToast({
-      type: 'success',
-      position: 'top',
-      text1: 'Привет!',
-      text2: 'Как дела?',
-    });
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
       <ThemeProvider>
         <ThemeWrapper>
           <AuthProvider>
-            <GestureHandlerRootView style={{flex: 1}}>
-              <SafeAreaView style={styles.container}>
-                <View style={{height: Dimensions.get('window').height}}>
-                  <Application />
-                </View>
-              </SafeAreaView>
-            </GestureHandlerRootView>
+            <IntlProvider locale={'ru'}>
+              <GestureHandlerRootView style={{flex: 1}}>
+                <SafeAreaView style={styles.container}>
+                  <View style={{height: Dimensions.get('window').height}}>
+                    <Application />
+                  </View>
+                </SafeAreaView>
+              </GestureHandlerRootView>
+            </IntlProvider>
           </AuthProvider>
         </ThemeWrapper>
       </ThemeProvider>

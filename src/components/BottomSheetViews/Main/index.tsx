@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useEffect } from "react";
 import {
   View,
   StyleSheet,
   Image,
   Text,
   Dimensions,
-  TouchableOpacity,
-} from 'react-native';
+  TouchableOpacity, useWindowDimensions
+} from "react-native";
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
@@ -32,14 +32,14 @@ import {useRoute} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
-import {SwiperFlatListWithGestureHandler} from 'react-native-swiper-flatlist/WithGestureHandler';
+import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 
 const Main = ({drawerNavigation}: any) => {
-  const { user }: any = useAuth();
+  const {user}: any = useAuth();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const {state, setState} = useAppState();
+  const {state} = useAppState();
 
   const isOpened = state.bottomSheetOpened;
 
@@ -211,7 +211,9 @@ const Main = ({drawerNavigation}: any) => {
                 <Text
                   onPress={updateInfo}
                   style={{fontSize: dp(24), fontWeight: '600', color: WHITE}}>
-                  {user && user.cards && user.cards.balance ? user.cards.balance : ""}
+                  {user && user.cards && user.cards.balance
+                    ? user.cards.balance
+                    : ''}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -324,20 +326,19 @@ const Main = ({drawerNavigation}: any) => {
             ) : (
               <View style={{flex: 1}}>
                 {campaignData && (
-                  <SwiperFlatListWithGestureHandler
-                    autoplay
-                    autoplayDelay={5}
-                    autoplayLoop
-                    showPagination
-                    paginationStyleItem={{
-                      marginTop: dp(5),
-                      width: dp(10),
-                      height: dp(10),
-                    }}
-                    indicatorStyle={'white'}
+                  <Carousel
+                    loop
+                    vertical={false}
+                    width={400}
+                    height={500}
+                    enabled // Default is true, just for demo
+                    //defaultScrollOffsetValue={scrollOffsetValue}
+                    autoPlay={true}
+                    autoPlayInterval={3000}
                     data={campaignData.data}
+                    pagingEnabled={true}
+
                     renderItem={renderCampaignItem}
-                    useReactNativeGestureHandler={true}
                   />
                 )}
               </View>

@@ -47,6 +47,7 @@ export async function getCampaignHistory(): Promise<
   const response = await userApiInstance.get<
     IUserApiResponse<IGetPromoHistoryResponse[]>
   >(ACCOUNT.GET_PROMOTION_HISTORY_URL);
+  console.log('DATA -> ' + JSON.stringify(response.data.data, null, 2));
   return response.data.data;
 }
 

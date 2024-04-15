@@ -5,16 +5,20 @@ import {useEffect, useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
-import { Text } from 'react-native-svg';
+import { err, Text } from "react-native-svg";
 
 const PromosInput = () => {
   const [code, setCode] = useState('');
   const navigation = useNavigation<any>();
-  const {mutate: applyPromo, isPending} = useApplyPromotion();
+  const {mutate: applyPromo, isPending, error} = useApplyPromotion();
 
   const clearInput = () => {
     setCode('');
   };
+
+  useEffect(() => {
+    console.log(error)
+  }, [error]);
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
@@ -27,7 +31,7 @@ const PromosInput = () => {
           />
         </View>
         <View style={styles.content}>
-        
+
           <TextInput
             placeholder="Введите промокод"
             maxLength={19}

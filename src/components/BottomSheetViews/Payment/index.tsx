@@ -127,7 +127,7 @@ const Payment = () => {
       const paymentConfigParams: PaymentConfig = {
         clientApplicationKey: apiKey, // string
         shopId: storeId, // string
-        title: `Заказ ${order.name}`, // string
+        title: `${order.name}`, // string
         subtitle: 'АМС', // string
         price: Number(order.sum), // number
         paymentMethodTypes: [PaymentMethodTypesEnum.BANK_CARD], // optional array of PaymentMethodTypesEnum
@@ -304,7 +304,7 @@ const Payment = () => {
                         fontSize: dp(15),
                         color: 'rgba(0, 0, 0, 1)',
                       }}>
-                      Программа "{order.name}"
+                      {order.name}
                     </Text>
                   ) : (
                     <Text />

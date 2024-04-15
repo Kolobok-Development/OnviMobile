@@ -1,24 +1,25 @@
-import React, {PropsWithChildren, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
-import {dp} from '../../../utils/dp';
+import {StyleSheet, Text, View} from 'react-native';
+import {BLACK, BLUE, GREY, WHITE, YELLOW} from '@utils/colors.ts';
+import {dp} from '@utils/dp.ts';
 import {ArrowUpRight} from 'react-native-feather';
-import {Price} from '../../../api/AppContent/types';
+import React from 'react';
+import { FormattedDate } from "react-intl";
 
-type AccordionItemPros = PropsWithChildren<{
-  data: Price;
+type PromoCardProps = {
+  title: string;
+  headerText: string;
+  bonus: string;
+  date: Date;
   color?: 'blue' | 'grey' | 'yellow' | 'black';
-  onSelect: (name: string, price: number) => void;
-}>;
+};
 
-const ExpandableView: React.FC<AccordionItemPros> = ({
-  children,
+const PromoCard: React.FC<PromoCardProps> = ({
+  title,
+  headerText,
+  bonus,
+  date,
   color = 'blue',
-  data,
-  onSelect,
 }) => {
-  const [expanded, setExpanded] = useState(false);
-
   const getColor = () => {
     switch (color) {
       case 'blue':
@@ -32,16 +33,12 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
     }
   };
 
-  const toggleItem = () => {
-    setExpanded(!expanded);
-  };
-
-  const body = <View style={styles.body}>{children}</View>;
-
   return (
-    <TouchableOpacity
-      style={{...styles.container, backgroundColor: getColor()}}
-      onPress={() => onSelect(data.name, data.cost)}>
+    <View
+      style={{
+        ...styles.container,
+        backgroundColor: getColor(),
+      }}>
       <View style={styles.header}>
         <Text
           style={{
@@ -49,7 +46,7 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             fontWeight: '600',
             color: color === 'blue' ? WHITE : BLACK,
           }}>
-          {data.name}
+          {headerText}
         </Text>
         <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />
       </View>
@@ -60,15 +57,7 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             fontSize: dp(18),
             fontWeight: '600',
           }}>
-          {data.name}
-        </Text>
-        <Text
-          style={{
-            color: color === 'blue' ? WHITE : BLACK,
-            fontSize: dp(12),
-            fontWeight: '600',
-          }}>
-          {data.serviceDuration} мин.
+          {title}
         </Text>
       </View>
       <View style={styles.footer}>
@@ -78,29 +67,20 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity style={styles.toggleBnt} onPress={toggleItem}>
-            {expanded ? (
-              <Text style={{fontWeight: '500', fontSize: dp(11)}}>
-                ☝️cвернуть
-              </Text>
-            ) : (
-              <Text style={{fontWeight: '500', fontSize: dp(11)}}>
-                👇подробнее
-              </Text>
-            )}
-          </TouchableOpacity>
+          <View style={styles.date}>
+            <Text style={{fontWeight: '500', fontSize: dp(11)}}>👉до <FormattedDate value={date} year="numeric" month="long" day="numeric" /></Text>
+          </View>
           <Text
             style={{
               color: color === 'blue' ? WHITE : BLACK,
               fontSize: dp(36),
               fontWeight: '600',
             }}>
-            {data.cost} ₽
+            {bonus}
           </Text>
         </View>
       </View>
-      {expanded && body}
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -131,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  toggleBnt: {
+  date: {
     alignSelf: 'center',
     backgroundColor: 'rgba(245, 245, 245, 1)',
     borderRadius: dp(32),
@@ -142,7 +122,6 @@ const styles = StyleSheet.create({
     paddingTop: dp(3),
     paddingBottom: dp(3),
   },
-  body: {},
 });
 
-export {ExpandableView};
+export {PromoCard};

@@ -15,6 +15,8 @@ import {Button} from '@styled/buttons';
 import {useBusiness} from '../../../api/hooks/useAppContent';
 import {useAppState} from '@context/AppContext';
 import {FiltersType} from '../../../types/models/FiltersType';
+import {cloneDeep} from 'lodash';
+import { filters } from "css-select";
 
 // Define types
 type Filter = {
@@ -80,26 +82,20 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 const Filters = () => {
   //Global state
   const {state, setState} = useAppState();
+  const fitlers = state.filters;
   const navigation: any = useNavigation();
+  console.log(`GLOABL FILTERS LOG => ${JSON.stringify(state.filters)}`);
 
   //Local filters
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>({});
-  const [submit, setSubmit] = useState<boolean>(false);
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(
+    cloneDeep(fitlers),
+  );
   const query = generateQuery(selectedFilters);
-
-  useEffect(() => {
-    setSelectedFilters(state.filters);
-  }, []);
-
-  useEffect(() => {
-    console.log(`GLOBAL FILTERS ${JSON.stringify(state.filters)}`);
-    console.log(`LOCAL FILTERS ${JSON.stringify(selectedFilters)}`);
-  }, [state.filters]);
 
   // Function to handle filter selection
   const toggleFilter = (sectionCode: string, filterCode: string) => {
     setSelectedFilters(prevSelectedFilters => {
-      const updatedFilters = {...prevSelectedFilters};
+      const updatedFilters = cloneDeep(prevSelectedFilters);
       if (!updatedFilters[sectionCode]) {
         updatedFilters[sectionCode] = [];
       }
@@ -112,31 +108,29 @@ const Filters = () => {
       return updatedFilters;
     });
   };
+
   const [columns, setColumns] = useState(3);
   //Query
   const {
     isFetching,
-    data: businessData,
-    isSuccess,
     refetch,
   } = useBusiness({filter: query}, false);
 
-  useEffect(() => {
-    if (isSuccess && submit) {
-      console.log('EXECUTED');
-      setState({
-        ...state,
-        businesses: businessData.businessesLocations,
-        filters: selectedFilters,
-      });
-    }
-  }, [isSuccess, businessData, submit]);
 
   // Function to handle submit button press
   const handleSubmit = async () => {
     // Clear selected filters state if needed
-    setSubmit(true);
-    await refetch();
+    //setSubmit(true);
+    refetch().then(data => {
+      if (data.isSuccess && data.data) {
+        setState({
+          ...state,
+          businesses: data.data.businessesLocations,
+          filters: cloneDeep(selectedFilters),
+        });
+        navigation.navigate('Main');
+      }
+    });
   };
 
   const renderFilterItem = ({item}: {item: FilterItem}) => {

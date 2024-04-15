@@ -2,12 +2,10 @@ import axios, {InternalAxiosRequestConfig} from 'axios';
 import {API_URL, STRAPI_URL} from '@env';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {IEncryptedStorage} from '@context/AuthContext/index.interface';
-
-
-import { AUTH_URL } from '@env';
+const PREFIX = '/api/v2';
 
 const userApiInstance = axios.create({
-  baseURL: AUTH_URL,
+  baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
   headers: {
     'Content-Type': 'application/json',
   },

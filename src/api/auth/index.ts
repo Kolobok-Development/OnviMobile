@@ -19,35 +19,37 @@ enum AUTH {
 export async function sendOtp(
   body: ISendOtpRequest,
 ): Promise<ISendOtpResponse> {
-    const response = await userApiInstance.post<
-      IUserApiResponse<ISendOtpResponse>
-    >(AUTH.SEND_OTP_URL, body);
+  const response = await userApiInstance.post<
+    IUserApiResponse<ISendOtpResponse>
+  >(AUTH.SEND_OTP_URL, body);
 
-    return response.data.data;
+  console.log(JSON.stringify(response, null, 2));
+  return response.data.data;
 }
 
 export async function login(body: ILoginRequest): Promise<ILoginResponse> {
-    const response = await userApiInstance.post<
-      IUserApiResponse<ILoginResponse>
-    >(AUTH.LOGIN_URL, body);
+  const response = await userApiInstance.post<IUserApiResponse<ILoginResponse>>(
+    AUTH.LOGIN_URL,
+    body,
+  );
 
-    return response.data.data;
+  return response.data.data;
 }
 export async function register(
   body: IRegisterRequest,
 ): Promise<IRegisterResponse> {
-    const response = await userApiInstance.post<
-      IUserApiResponse<IRegisterResponse>
-    >(AUTH.REGISTER_URL, body);
+  const response = await userApiInstance.post<
+    IUserApiResponse<IRegisterResponse>
+  >(AUTH.REGISTER_URL, body);
 
-    return response.data.data;
+  return response.data.data;
 }
 export async function refresh(
   body: IRefreshRequest,
 ): Promise<IRefreshResponse> {
-    const response = await userApiInstance.post<
-      IUserApiResponse<IRefreshResponse>
-    >(AUTH.REFRESH_URL, body);
+  const response = await userApiInstance.post<
+    IUserApiResponse<IRefreshResponse>
+  >(AUTH.REFRESH_URL, body);
 
-    return response.data.data;
+  return response.data.data;
 }

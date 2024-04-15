@@ -27,6 +27,7 @@ import {ExpandableView} from '@styled/views/ExpandableView';
 import {Price} from '../../../api/AppContent/types';
 
 const Launch = () => {
+  console.log("Launch component rendered");
   const {theme}: any = useTheme();
   const [value, setValue] = useState(150);
   const measureTypeData = ['рубли'];
@@ -47,17 +48,12 @@ const Launch = () => {
   const isOpened = state.bottomSheetOpened;
 
   useEffect(() => {
-    if (order?.type !== 'Portal') {
-      setState({
-        ...state,
-        order: {
-          ...order,
-          sum: 150,
-          name: 'АМС',
-        },
-      });
-    }
-  }, []);
+    console.log(`GLOBAL STATE: ${JSON.stringify(state.order)}`);
+  }, [state.order]);
+
+  useEffect(() => {
+    console.log(`GLOBAL STATE: ${JSON.stringify(state.order)}`);
+  }, [state.order]);
 
   const onSelect = (name: string, price: number) => {
     setState({
@@ -239,14 +235,6 @@ const Launch = () => {
           value={value}
           onChange={val => {
             setValue(val);
-            setState({
-              ...state,
-              order: {
-                ...order,
-                sum: val,
-                name: 'АМС',
-              },
-            });
           }}
           inputBackgroundColor={'#F5F5F5'}
           shadowProps={{
@@ -338,6 +326,14 @@ const Launch = () => {
         <Button
           label="Оплатить"
           onClick={() => {
+            let cost = value ? value : 150;
+            setState({
+              ...state,
+              order: {
+                ...order,
+                sum: cost,
+              },
+            });
             navigation.navigate('Payment', route.params);
           }}
           color="blue"
