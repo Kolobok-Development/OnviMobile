@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from 'react';
 import {
   View,
   StyleSheet,
   Image,
   Text,
   Dimensions,
-  TouchableOpacity, useWindowDimensions
-} from "react-native";
+  TouchableOpacity,
+  useWindowDimensions,
+} from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
@@ -66,7 +67,7 @@ const Main = ({drawerNavigation}: any) => {
         <SkeletonPlaceholder borderRadius={4}>
           <View style={styles.news}>
             <View style={styles.leftNewsColumn}>
-              <SkeletonPlaceholder.Item flex={1} />
+              <SkeletonPlaceholder.Item flex={1} borderWidth={26} marginTop={dp(16)}/>
             </View>
             <View style={styles.rightNewsColumn}>
               <SkeletonPlaceholder.Item
@@ -103,6 +104,19 @@ const Main = ({drawerNavigation}: any) => {
           </View>
         </SkeletonPlaceholder>
       </View>
+    );
+  };
+
+  const BalancePlaceHolder = () => {
+    return (
+      <SkeletonPlaceholder borderRadius={10}>
+        <View
+          style={{
+            width: dp(70),
+            height: dp(25),
+          }}
+        />
+      </SkeletonPlaceholder>
     );
   };
 
@@ -208,13 +222,19 @@ const Main = ({drawerNavigation}: any) => {
                   source={require('../../../assets/icons/small-icon.png')}
                   style={{width: 30, height: 30}}
                 />
-                <Text
-                  onPress={updateInfo}
-                  style={{fontSize: dp(24), fontWeight: '600', color: WHITE}}>
-                  {user && user.cards && user.cards.balance
-                    ? user.cards.balance
-                    : ''}
-                </Text>
+                {!user || !user.cards ? (
+                  <BalancePlaceHolder />
+                ) : (
+                  <Text
+                    onPress={updateInfo}
+                    style={{
+                      fontSize: dp(24),
+                      fontWeight: '600',
+                      color: 'white',
+                    }}>
+                    {user.cards.balance}
+                  </Text>
+                )}
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -337,7 +357,6 @@ const Main = ({drawerNavigation}: any) => {
                     autoPlayInterval={3000}
                     data={campaignData.data}
                     pagingEnabled={true}
-
                     renderItem={renderCampaignItem}
                   />
                 )}

@@ -30,7 +30,8 @@ import {Partners} from '@screens/Partners';
 import {Partner} from '@screens/Partner';
 
 import {avatarSwitch} from '@screens/Settings';
-import { PromosInput } from "@screens/PromosInput";
+import {PromosInput} from '@screens/PromosInput';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 interface CustomDrawerItemProps {
   label: string;
@@ -69,7 +70,6 @@ const CustomDrawerContent = ({
   theme,
   user,
 }: CustomDrawerContentProps) => {
-
   const initialAvatar = user.avatar;
 
   const avatarValue = avatarSwitch(initialAvatar);
@@ -95,7 +95,22 @@ const CustomDrawerContent = ({
           />
           {/*items*/}
           <View>
-            {user && user.name && (
+            {!user || !user.name ? (
+              <View style={{paddingTop: dp(20)}}>
+                <SkeletonPlaceholder borderRadius={4}>
+                  <Text
+                    style={{
+                      paddingTop: dp(24),
+                      fontStyle: 'normal',
+                      fontSize: dp(24),
+                      fontWeight: '600',
+                      lineHeight: dp(23),
+                      color: theme.textColor,
+                    }}
+                  />
+                </SkeletonPlaceholder>
+              </View>
+            ) : (
               <Text
                 style={{
                   paddingTop: dp(24),
@@ -108,7 +123,24 @@ const CustomDrawerContent = ({
                 {user.name}
               </Text>
             )}
-            {user && user.phone && (
+            {!user || !user.phone ? (
+              <View style={{paddingTop: dp(18)}}>
+                <SkeletonPlaceholder borderRadius={4}>
+                  <Text
+                    style={{
+                      paddingTop: dp(8),
+                      marginBottom: dp(45),
+                      fontStyle: 'normal',
+                      fontSize: dp(10),
+                      fontWeight: '600',
+                      lineHeight: dp(20),
+                      color: '#BEBEBE',
+                      width: '70%',
+                    }}
+                  />
+                </SkeletonPlaceholder>
+              </View>
+            ) : (
               <Text
                 style={{
                   paddingTop: dp(8),
@@ -193,7 +225,7 @@ const CustomDrawerContent = ({
 
 const DrawerStack = () => {
   const {theme}: any = useTheme();
-  const { user }: any = useAuth();
+  const {user}: any = useAuth();
 
   return (
     <NavigationContainer independent={false}>
@@ -229,7 +261,9 @@ const DrawerStack = () => {
         <Drawer.Screen name="Настройки">{props => <Settings />}</Drawer.Screen>
         <Drawer.Screen name="О приложении">{props => <About />}</Drawer.Screen>
         <Drawer.Screen name="Партнер">{props => <Partner />}</Drawer.Screen>
-        <Drawer.Screen name="Ввод Промокода">{props => <PromosInput />}</Drawer.Screen>
+        <Drawer.Screen name="Ввод Промокода">
+          {props => <PromosInput />}
+        </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );

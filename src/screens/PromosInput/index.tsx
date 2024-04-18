@@ -1,11 +1,10 @@
 import {ScrollView, StyleSheet, TextInput, View} from 'react-native';
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
-import { err, Text } from "react-native-svg";
 
 const PromosInput = () => {
   const [code, setCode] = useState('');
@@ -16,9 +15,6 @@ const PromosInput = () => {
     setCode('');
   };
 
-  useEffect(() => {
-    console.log(error)
-  }, [error]);
 
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>

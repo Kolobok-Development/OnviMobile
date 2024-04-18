@@ -35,7 +35,8 @@ import {YOKASSA_KEY, YOKASSA_SHOP_ID} from '@env';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
-import { PaymentConfig } from 'src/types/PaymentConfig';
+import {PaymentConfig} from 'src/types/PaymentConfig';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 enum OrderStatus {
   START = 'start',
@@ -47,7 +48,7 @@ const Payment = () => {
   const {user}: any = useAuth();
   const navigation: any = useNavigation();
 
-  const { state } = useAppState();
+  const {state} = useAppState();
 
   const [promocode, setPromocode] = useState<string>('');
   const [cashback, setCashback] = useState(0);
@@ -318,22 +319,32 @@ const Payment = () => {
                     {order.sum ? order.sum : 0} ₽
                   </Text>
                 </View>
-                {cashback !== 0 ? (
-                  <View
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: dp(6),
+                  }}>
+                  <Text
                     style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginTop: dp(6),
+                      fontWeight: '300',
+                      fontSize: dp(15),
+                      color: 'rgba(0, 0, 0, 1)',
                     }}>
-                    <Text
-                      style={{
-                        fontWeight: '300',
-                        fontSize: dp(15),
-                        color: 'rgba(0, 0, 0, 1)',
-                      }}>
-                      Ваш Cashback
-                    </Text>
+                    Ваш Cashback
+                  </Text>
+                  {!cashback || cashback == 0 ? (
+                    <View>
+                      <SkeletonPlaceholder borderRadius={10}>
+                        <SkeletonPlaceholder.Item
+                          width={40}
+                          height={15}
+                          alignSelf={'flex-end'}
+                        />
+                      </SkeletonPlaceholder>
+                    </View>
+                  ) : (
                     <Text
                       style={{
                         color: 'rgba(0, 0, 0, 1)',
@@ -342,10 +353,8 @@ const Payment = () => {
                       }}>
                       {cashback} ₽
                     </Text>
-                  </View>
-                ) : (
-                  <></>
-                )}
+                  )}
+                </View>
                 <View
                   style={{
                     marginTop: dp(35),
@@ -370,38 +379,50 @@ const Payment = () => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity onPress={applyPoints}>
-                      <Switch
-                        value={toggled}
-                        onValueChange={onToggle}
-                        activeText={`${Math.min(
-                          Number(user.cards.balance),
-                          Number(
-                            order.sum
-                              ? order.sum -
-                                  (order.sum * discount) / 100 -
-                                  usedPoints
-                              : 0,
-                          ),
-                        )}`}
-                        inActiveText={`${Math.min(
-                          Number(user.cards.balance),
-                          Number(
-                            order.sum
-                              ? order.sum -
-                                  (order.sum * discount) / 100 -
-                                  usedPoints
-                              : 0,
-                          ),
-                        )}`}
-                        backgroundActive="#A3A3A6"
-                        backgroundInActive="#000"
-                        circleImageActive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                        circleImageInactive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                        circleSize={dp(18)} // Adjust the circle size as needed
-                        switchBorderRadius={20}
-                        width={dp(55)} // Adjust the switch width as needed
-                        textStyle={{fontSize: dp(13), color: 'white'}}
-                      />
+                      {!user.cards || !user.cards.balance ? (
+                        <View>
+                          <SkeletonPlaceholder borderRadius={20}>
+                            <SkeletonPlaceholder.Item
+                              width={60}
+                              height={25}
+                              alignSelf={'flex-end'}
+                            />
+                          </SkeletonPlaceholder>
+                        </View>
+                      ) : (
+                        <Switch
+                          value={toggled}
+                          onValueChange={onToggle}
+                          activeText={`${Math.min(
+                            Number(user.cards.balance),
+                            Number(
+                              order.sum
+                                ? order.sum -
+                                    (order.sum * discount) / 100 -
+                                    usedPoints
+                                : 0,
+                            ),
+                          )}`}
+                          inActiveText={`${Math.min(
+                            Number(user.cards.balance),
+                            Number(
+                              order.sum
+                                ? order.sum -
+                                    (order.sum * discount) / 100 -
+                                    usedPoints
+                                : 0,
+                            ),
+                          )}`}
+                          backgroundActive="#A3A3A6"
+                          backgroundInActive="#000"
+                          circleImageActive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
+                          circleImageInactive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
+                          circleSize={dp(18)} // Adjust the circle size as needed
+                          switchBorderRadius={20}
+                          width={dp(55)} // Adjust the switch width as needed
+                          textStyle={{fontSize: dp(13), color: 'white'}}
+                        />
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>

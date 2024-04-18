@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useCallback, useEffect } from "react";
+import {useRef, useState, useMemo, useCallback, useEffect} from 'react';
 
 import {
   View,
@@ -79,10 +79,8 @@ const Home = ({navigation}: any) => {
 
     const extractedFilters = useCallback(() => {
       return extractValues(filters);
-
     }, [filters]);
 
-    console.log(`FILTER TO DISPLAY -> ${JSON.stringify(filters)}`);
     return (
       <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
         <View

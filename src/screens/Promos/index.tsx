@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, {useEffect} from 'react';
 
 import {dp} from '../../utils/dp';
 
@@ -10,13 +10,11 @@ import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
 import {PromoCard} from '@components/PromoCard';
-import { FormattedDate } from 'react-intl';
 
 const Promos = () => {
   const {isLoading, data, refetch} = useGetCampaignHistory();
 
   const navigation = useNavigation<any>();
-
 
   const handlePromoInput = () => {
     navigation.navigate('Ввод Промокода');
@@ -103,7 +101,11 @@ const Promos = () => {
                   <PromoCard
                     title={promo.item.title}
                     headerText={'Акция'}
-                    bonus={`${promo.item.point} ₽`}
+                    bonus={
+                      promo.item.point > 0
+                        ? promo.item.point + ' ₽'
+                        : promo.item.cashbackSum + ' %'
+                    }
                     date={new Date(promo.item.expiryPeriodDate)}
                     key={promo.item.promotionId.toString()}
                   />
