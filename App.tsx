@@ -11,6 +11,8 @@ import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 
+import messaging from '@react-native-firebase/messaging';
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -24,6 +26,29 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
+
+  async function requestUserPermission() {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+  
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+    }
+  }
+
+  const getToken = async () => {
+    const token = await messaging().getToken()
+
+    console.log("TOKEN")
+    console.log(token)
+  }
+
+  useEffect(() => {
+    requestUserPermission()
+    getToken()
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>

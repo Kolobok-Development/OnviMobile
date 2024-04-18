@@ -113,6 +113,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
+
+    cameraRef.current.setCamera({
+      centerCoordinate: [
+        long,
+        lat,
+      ],
+      zoomLevel: 15,
+    });
   };
 
   // @ts-ignore
