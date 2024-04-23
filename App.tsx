@@ -32,7 +32,7 @@ function App(): React.JSX.Element {
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-  
+
     if (enabled) {
       console.log('Authorization status:', authStatus);
     }
@@ -41,7 +41,6 @@ function App(): React.JSX.Element {
   const getToken = async () => {
     const token = await messaging().getToken()
 
-    console.log("TOKEN")
     console.log(token)
   }
 

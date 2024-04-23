@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useEffect, useState } from "react";
 
 import {StyleSheet, Dimensions, View} from 'react-native';
 
@@ -24,6 +24,7 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
   const {state, setState} = useAppState();
   const order = state.order;
 
+
   const [active, setActive] = useState(order?.box);
 
   return (
@@ -48,7 +49,8 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
                 ...state,
                 order: {
                   ...order,
-                  box: key,
+                  box: box.number,
+                  prices: params.price,
                 },
               });
 

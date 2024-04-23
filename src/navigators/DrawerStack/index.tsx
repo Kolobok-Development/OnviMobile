@@ -206,8 +206,17 @@ const CustomDrawerContent = ({
                              style={{ marginRight: dp(15)}}
                      /> */}
 
+          <Image
+            style={{
+              marginRight: dp(5),
+              width: dp(25),
+              height: dp(25),
+          }}
+            source={require('../../assets/icons/telegram.png')}
+          />
+
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://t.me/adamsbear34')}>
+            onPress={() => Linking.openURL('https://t.me/evgshom')}>
             <Text
               style={{
                 fontSize: dp(10),

@@ -20,7 +20,7 @@ import {IAuthTokens} from '../../types/models/AuthTokens';
 import {IAuthStore, IAuthStorePartial, IAuthContext} from './index.interface';
 
 // api
-import {getMe} from '../../api/user';
+import {getMe, getTariff} from '../../api/user';
 import {sendOtp, login, register, refresh} from '../../api/auth/index';
 
 const AuthContext = createContext<IAuthContext | null>(null);
@@ -67,6 +67,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
     cards: null,
     avatar: 'both.jpg',
     balance: null,
+    tariff: null,
   });
 
   const updateStore = (partialNewState: IAuthStorePartial) => {
@@ -115,15 +116,17 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
             });
 
             getMe().then(data => {
-              updateUser({
-                cards: data.cards,
-                phone: data.phone,
-                balance: data.balance,
-                email: data.email,
-                name: data.name,
-                id: data.id,
-                birthday: data.birthday,
-                avatar: formatted.avatar,
+              getTariff().then(tariff => {
+                updateUser({
+                  cards: data.cards,
+                  phone: data.phone,
+                  balance: data.balance,
+                  email: data.email,
+                  name: data.name,
+                  id: data.id,
+                  birthday: data.birthday,
+                  tariff: tariff.cashBack,
+                });
               });
             });
 
@@ -133,7 +136,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
             updateUser({
               avatar: formatted.avatar,
-            })
+            });
             await refreshToken(formatted);
             return;
           }
@@ -194,14 +197,17 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           });
 
           getMe().then(data => {
-            updateUser({
-              cards: data.cards,
-              phone: data.phone,
-              balance: data.balance,
-              email: data.email,
-              name: data.name,
-              id: data.id,
-              birthday: data.birthday,
+            getTariff().then(tariff => {
+              updateUser({
+                cards: data.cards,
+                phone: data.phone,
+                balance: data.balance,
+                email: data.email,
+                name: data.name,
+                id: data.id,
+                birthday: data.birthday,
+                tariff: tariff.cashBack,
+              });
             });
           });
 
@@ -259,15 +265,17 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         });
 
         getMe().then(data => {
-          updateUser({
-            cards: data.cards,
-            phone: data.phone,
-            balance: data.balance,
-            email: data.email,
-            name: data.name,
-            id: data.id,
-            avatar: data.avatar,
-            birthday: data.birthday,
+          getTariff().then(tariff => {
+            updateUser({
+              cards: data.cards,
+              phone: data.phone,
+              balance: data.balance,
+              email: data.email,
+              name: data.name,
+              id: data.id,
+              birthday: data.birthday,
+              tariff: tariff.cashBack,
+            });
           });
         });
       }
@@ -320,15 +328,17 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         });
 
         getMe().then(data => {
-          updateUser({
-            cards: data.cards,
-            phone: data.phone,
-            balance: data.balance,
-            email: data.email,
-            name: data.name,
-            id: data.id,
-            avatar: data.avatar,
-            birthday: data.birthday,
+          getTariff().then(tariff => {
+            updateUser({
+              cards: data.cards,
+              phone: data.phone,
+              balance: data.balance,
+              email: data.email,
+              name: data.name,
+              id: data.id,
+              birthday: data.birthday,
+              tariff: tariff.cashBack,
+            });
           });
         });
       } else {
@@ -348,16 +358,18 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   async function loadUser() {
-    console.log("LOAD USER!!!!")
     await getMe().then(data => {
-      updateUser({
-        cards: data.cards,
-        phone: data.phone,
-        balance: data.balance,
-        email: data.email,
-        name: data.name,
-        id: data.id,
-        birthday: data.birthday,
+      getTariff().then(tariff => {
+        updateUser({
+          cards: data.cards,
+          phone: data.phone,
+          balance: data.balance,
+          email: data.email,
+          name: data.name,
+          id: data.id,
+          birthday: data.birthday,
+          tariff: tariff.cashBack,
+        });
       });
     });
   }
@@ -377,15 +389,12 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         balance: null,
         name: null,
         avatar: '',
+        tariff: null,
       });
     } catch (err) {
       console.log(err);
     }
   }
-
-  useEffect(() => {
-    console.log("user: ", user)
-  }, [user])
 
   if (store.loading) {
     return <Loader />;
@@ -403,7 +412,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         login: loginFunc,
         refreshTokenFromSecureStorage: refreshTokenFromSecureStorage,
         loadUser: loadUser,
-        updateUser: updateUser
+        updateUser: updateUser,
       }}>
       {children}
     </AuthContext.Provider>

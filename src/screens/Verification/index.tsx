@@ -45,7 +45,7 @@ const Verification = ({ route }: VerificationProps) => {
       setLoading(false);
       if (!res) {
         setLoading(false);
-        setError(true)
+        setError(true);
       }
 
       switch(res) {

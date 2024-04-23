@@ -66,8 +66,6 @@ export async function getCarWashes(query: {[key: string]: string}) {
         params: query,
       },
     );
-    console.log('QUERY!!')
-    console.log(query);
     return response.data;
   } catch (error: any) {
     console.error('getCampaigns - Error: ', JSON.stringify(error));

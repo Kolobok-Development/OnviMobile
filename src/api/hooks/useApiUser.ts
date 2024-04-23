@@ -9,6 +9,7 @@ import {
   getTariff,
   update,
 } from '../user/index';
+import Toast from "react-native-toast-message";
 
 function useGetMe() {
   return useQuery({
@@ -46,10 +47,22 @@ function useGetCampaignHistory() {
   });
 }
 
-function useUpdateUser(data: IUpdateAccountRequest) {
-  return useMutation<number, AxiosError>({
-    mutationFn: () => {
+function useUpdateUser() {
+  return useMutation({
+    mutationFn: (data: IUpdateAccountRequest) => {
       return update(data);
+    },
+    onError: () => {
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Призошла ощибка повторите попытку чуть позже',
+      });
+    },
+    onSuccess: () => {
+      Toast.show({
+        type: 'customSuccessToast',
+        text1: 'Данные успешно сохраненны ',
+      });
     },
   });
 }

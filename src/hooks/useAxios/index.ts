@@ -1,9 +1,7 @@
 import axios from 'axios';
 
-import { CORE_URL, USER_URL } from '@env';
 
 import { useAuth } from '@context/AuthContext';
-console.log("lol")
 
 // Validators
 import { isValidStorageData, hasAccessTokenCredentials } from '@context/AuthContext/index.validator';
@@ -24,10 +22,10 @@ interface IConfigObject {
 const useAxios = (url: string) => {
     const switchUrl = (url: string) => {
         switch (url) {
-            case 'CORE_URL': 
-                return CORE_URL;
+            case 'CORE_URL':
+                return 'http://213.189.201.57/api/v2';
             case 'USER_URL':
-                return USER_URL;
+                return 'http://213.189.201.57/api/v2';
             default:
                 return '';
         }
@@ -38,14 +36,14 @@ const useAxios = (url: string) => {
     const refresh: () => Promise<string | null> = async () => {
         try {
           const encryptedStorage: string | null = await EncryptedStorage.getItem("user_session");
-    
+
           if (encryptedStorage) {
             const formatted: IEncryptedStorage = await JSON.parse(encryptedStorage as string);
-    
+
             if (formatted) {
               if (hasAccessTokenCredentials(formatted.refreshToken)) {
-                const token = await refreshToken(formatted); 
-    
+                const token = await refreshToken(formatted);
+
                 return token;
               }
             }
@@ -53,7 +51,7 @@ const useAxios = (url: string) => {
         } catch (error) {
           console.log(`Error: ${error}`)
         }
-    
+
         return null;
     }
 

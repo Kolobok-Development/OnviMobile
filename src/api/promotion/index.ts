@@ -13,7 +13,6 @@ export async function apply(
     IUserApiResponse<IApplyPromotionResponse>
   >(PROMOTION.APPLY_URL, body);
 
-  console.log('CONFIG');
   console.log(response.config);
   return response.data.data;
 }

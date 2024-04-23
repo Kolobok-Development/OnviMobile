@@ -29,7 +29,7 @@ const About = () => {
                         <Text style={{ ...styles.text}}>Россия</Text>
                     </View>
                 </View>
-                <TouchableOpacity style={{alignItems: "center"}} onPress={() => Linking.openURL('https://t.me/adamsbear34')}>
+                <TouchableOpacity style={{alignItems: "center"}} onPress={() => Linking.openURL('https://t.me/evgshom')}>
                     <Text style={{ ...styles.title}}>Написать в поддержку</Text>
                 </TouchableOpacity>
             </View>

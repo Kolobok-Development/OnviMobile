@@ -1,14 +1,14 @@
 export interface IGetHistoryResponse {
-  cardId: number;
   unqCardNumber: string;
   name: string;
   phone: string;
-  operDate: string;
+  operDate: Date;
   operSum: number;
-  cashBackAmount: number;
-  operType: string;
+  operSumReal: number;
+  operSumPoint: number;
+  cashBackAmount?: number;
   carWash: string;
-  bay: string;
+  bay: number;
   address: string;
   city: string;
 }

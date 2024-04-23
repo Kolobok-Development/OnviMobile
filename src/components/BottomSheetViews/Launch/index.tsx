@@ -27,7 +27,6 @@ import {ExpandableView} from '@styled/views/ExpandableView';
 import {Price} from '../../../api/AppContent/types';
 
 const Launch = () => {
-  console.log("Launch component rendered");
   const {theme}: any = useTheme();
   const [value, setValue] = useState(150);
   const measureTypeData = ['рубли'];
@@ -45,6 +44,7 @@ const Launch = () => {
   const route: any = useRoute();
 
   const order = state.order;
+  const business = state.businesses;
   const isOpened = state.bottomSheetOpened;
 
   useEffect(() => {
@@ -81,7 +81,7 @@ const Launch = () => {
           navigation={navigation}
           position={'95%'}
           type="box"
-          box={order?.box + 1}
+          box={order?.box}
           callback={() => {
             setState({
               ...state,
@@ -171,7 +171,7 @@ const Launch = () => {
         navigation={navigation}
         position={'95%'}
         type="box"
-        box={order?.box + 1}
+        box={order?.box}
         callback={() => {
           setState({
             ...state,

@@ -18,6 +18,7 @@ import {useNavigation} from '@react-navigation/native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useAxios} from '@hooks/useAxios';
 import Switch from '@styled/buttons/CustomSwitch';
+import {useUpdateUser} from '../../api/hooks/useApiUser.ts';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
@@ -37,9 +38,10 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const { user, signOut, updateUser }: any = useAuth();
+  const {user, signOut, updateUser}: any = useAuth();
   const api = useAxios('CORE_URL');
   const navigation = useNavigation<any>();
+  const {mutate, isPending} = useUpdateUser();
 
   const initialUserName = user.name || '';
   const initialEmail = user.email || '';
@@ -65,20 +67,18 @@ const Settings = () => {
   };
 
   const saveUserDate = async () => {
-    setLoading(true);
     try {
-      await api.patch('/account', {
+      mutate({
         name: userName,
         email: email,
-      })
+      });
 
       updateUser({
         name: userName,
         email: email,
-        avatar: selectedAvatar
-      })
+        avatar: selectedAvatar,
+      });
 
-      setLoading(false);
       setEditing(false);
     } catch (error: any) {
       console.log(JSON.stringify(error));
@@ -216,9 +216,9 @@ const Settings = () => {
             height={dp(40)}
             fontSize={dp(16)}
             fontWeight={'600'}
-            disabled={loading}
+            disabled={isPending}
             onClick={saveUserDate}
-            showLoading={loading}
+            showLoading={isPending}
           />
         </View>
       </BottomSheet>
@@ -248,7 +248,9 @@ const Settings = () => {
           <Text style={{...styles.text}}>{email}</Text>
           <View style={styles.balance}>
             <Text style={styles.balanceText}>
-              {user && user.cards && user.cards.balance ? user.cards.balance : 0}
+              {user && user.cards && user.cards.balance
+                ? user.cards.balance
+                : 0}
             </Text>
             <Image
               source={require('../../assets/icons/onvi_black.png')}

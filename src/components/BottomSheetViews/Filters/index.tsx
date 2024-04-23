@@ -84,7 +84,6 @@ const Filters = () => {
   const {state, setState} = useAppState();
   const fitlers = state.filters;
   const navigation: any = useNavigation();
-  console.log(`GLOABL FILTERS LOG => ${JSON.stringify(state.filters)}`);
 
   //Local filters
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(

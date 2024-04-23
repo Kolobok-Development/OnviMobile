@@ -15,19 +15,17 @@ const PromosInput = () => {
     setCode('');
   };
 
-
   return (
     <ScrollView contentContainerStyle={{flexGrow: 1}}>
       <View style={styles.container}>
         <View style={styles.header}>
           <BackButton
             callback={() => {
-              navigation.navigate("Промокоды");
+              navigation.navigate('Промокоды');
             }}
           />
         </View>
         <View style={styles.content}>
-
           <TextInput
             placeholder="Введите промокод"
             maxLength={19}

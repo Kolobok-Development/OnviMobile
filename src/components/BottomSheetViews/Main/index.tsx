@@ -35,6 +35,9 @@ import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 
+
+const WIDTH = Dimensions.get('screen').width;
+
 const Main = ({drawerNavigation}: any) => {
   const {user}: any = useAuth();
   const {theme}: any = useTheme();
@@ -340,7 +343,7 @@ const Main = ({drawerNavigation}: any) => {
               )}
             </>
           )}
-          <View style={{flex: 1, paddingBottom: dp(100), marginTop: dp(10)}}>
+          <View style={{flex: 1, paddingBottom: dp(50), marginTop: dp(10)}}>
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
@@ -349,8 +352,8 @@ const Main = ({drawerNavigation}: any) => {
                   <Carousel
                     loop
                     vertical={false}
-                    width={400}
-                    height={500}
+                    width={dp(350)}
+                    height={dp(200)}
                     enabled // Default is true, just for demo
                     //defaultScrollOffsetValue={scrollOffsetValue}
                     autoPlay={true}

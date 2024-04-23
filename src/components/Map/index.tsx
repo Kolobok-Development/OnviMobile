@@ -1,16 +1,17 @@
-import React, {useState, useEffect, useMemo } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 
-import { View, Dimensions, Platform, PermissionsAndroid } from 'react-native';
+import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
 
-import { PUBLIC_URL } from '@env';
+import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
 
-import { useAppState } from "@context/AppContext"
+import {useAppState} from '@context/AppContext';
 
-import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
+import MapboxGL, {UserLocation, LocationPuck} from '@rnmapbox/maps';
 
 import Marker from './Marker';
 
 import axios from 'axios';
+import {getCarWashes} from '../../api/AppContent/appContent.ts';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
@@ -27,9 +28,8 @@ const DEFAULT_COORDINATES: IUserLocation = {
 };
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-
-  const { state, setState } = useAppState()
-  const businesses = state.businesses
+  const {state, setState} = useAppState();
+  const businesses = state.businesses;
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -84,13 +84,12 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   useEffect(() => {
     try {
       async function loadWashes() {
-        await axios
-          .get(PUBLIC_URL + '/carwash')
+        await getCarWashes({})
           .then(data => {
-            if (data && data.data) {
+            if (data && data.businessesLocations) {
               setState({
                 ...state,
-                businesses: data.data,
+                businesses: data.businessesLocations,
               });
             }
           })
@@ -115,10 +114,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     });
 
     cameraRef.current.setCamera({
-      centerCoordinate: [
-        long,
-        lat,
-      ],
+      centerCoordinate: [long, lat],
       zoomLevel: 15,
     });
   };
@@ -162,7 +158,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             animated={true}
             onUpdate={onUserLocationUpdate}
           />
-          {Platform.OS === 'ios' && <LocationPuck puckBearing="heading" scale={1} pulsing={{isEnabled: true}} visible={true} />}
+          {Platform.OS === 'ios' && (
+            <LocationPuck
+              puckBearing="heading"
+              scale={1}
+              pulsing={{isEnabled: true}}
+              visible={true}
+            />
+          )}
         </MapboxGL.MapView>
       </View>
     </>

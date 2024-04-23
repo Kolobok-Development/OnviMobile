@@ -1,4 +1,4 @@
-import { ICard } from './Card';
+import {ICard} from './Card';
 
 export interface IUser {
   id: number | null;
@@ -8,7 +8,8 @@ export interface IUser {
   birthday: string | null;
   cards: ICard | null;
   avatar: string | null;
-  balance: number | null
+  balance: number | null;
+  tariff: number | null;
 }
 
 export interface IUserPartial {
@@ -19,5 +20,6 @@ export interface IUserPartial {
   birthday?: string | null;
   cards?: ICard | null;
   avatar?: string | null;
-  balance?: number | null
+  balance?: number | null;
+  tariff?: number | null;
 }

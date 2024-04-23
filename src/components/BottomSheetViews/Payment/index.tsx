@@ -31,12 +31,13 @@ import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
-import {YOKASSA_KEY, YOKASSA_SHOP_ID} from '@env';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
 import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {pingPos, create as createOrderApi} from '../../../api/order';
+import {create} from '../../../api/payment';
 
 enum OrderStatus {
   START = 'start',
@@ -49,6 +50,8 @@ const Payment = () => {
   const navigation: any = useNavigation();
 
   const {state} = useAppState();
+
+  const [btnLoader, setBtnLoader] = useState(false);
 
   const [promocode, setPromocode] = useState<string>('');
   const [cashback, setCashback] = useState(0);
@@ -67,7 +70,6 @@ const Payment = () => {
   const api = useAxios('CORE_URL');
 
   const getTariff = async () => {
-    // console.log("Wait")
     await api
       .get('/account/tariff')
       .then(data => {
@@ -77,7 +79,6 @@ const Payment = () => {
   };
 
   const applyPromocode = async () => {
-    console.log('TRY!');
     await api
       .post('/order/promo/validate', {
         promoCode: promocode,
@@ -112,25 +113,33 @@ const Payment = () => {
 
   const createOrder = async () => {
     try {
-      const apiKey = YOKASSA_KEY;
-      const storeId = YOKASSA_SHOP_ID;
-
-      const bayStatus = await api.get(
-        `/order/ping?carWashId=${order.id}&bayNumber=${order.box}`,
+      setBtnLoader(true);
+      const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
+      const storeId: string = '168905';
+      const realSum = Math.max(
+        order.sum - (order.sum * discount) / 100 - usedPoints,
+        1,
       );
+      const pointsSum = usedPoints;
 
-      if (bayStatus.data.data.status !== 'Free') {
+      const bayStatus = await pingPos({
+        carWashId: order.id,
+        bayNumber: order.box,
+      });
+
+      if (bayStatus.status !== 'Free') {
         setError('Аавтомойка не может принять заказ');
+        setBtnLoader(false);
         return;
       }
-      // Start tokenization and await the result
 
+      // Start tokenization and await the result
       const paymentConfigParams: PaymentConfig = {
         clientApplicationKey: apiKey, // string
         shopId: storeId, // string
         title: `${order.name}`, // string
         subtitle: 'АМС', // string
-        price: Number(order.sum), // number
+        price: realSum, // number
         paymentMethodTypes: [PaymentMethodTypesEnum.BANK_CARD], // optional array of PaymentMethodTypesEnum
         customerId: String(user.id),
         authCenterClientId: null,
@@ -145,33 +154,35 @@ const Payment = () => {
       const {token, paymentMethodType} = await tokenize(paymentConfigParams);
 
       if (!token) {
-        setError('Что то пошло не так...');
+        setError('Что то пошло не так ...');
+        setBtnLoader(false);
         return;
       }
 
       setOrderSatus(OrderStatus.START);
 
-      // Make the API call to create payment
-      const response = await api.post('/payment', {
+      const payment = await create({
         paymentToken: token,
-        amount: String(order.sum),
+        amount: realSum.toString(),
         description: paymentConfigParams.subtitle,
       });
 
-      const confirmationUrl = response.data.data.confirmation.confirmation_url;
+      const confirmationUrl = payment.confirmation.confirmation_url;
+      const paymentId = payment.id;
 
       setOrderSatus(null);
       await confirmPayment({confirmationUrl, paymentMethodType});
       setOrderSatus(OrderStatus.PROCESSING);
 
-      await api.post('/order/create', {
-        transactionId: 'test-order-123456',
-        sum: Number(order.sum),
-        rewardPointsUsed: Number(usedPoints),
+      await createOrderApi({
+        transactionId: paymentId,
+        sum: realSum,
+        rewardPointsUsed: pointsSum,
         carWashId: Number(order.id),
         bayNumber: Number(order.box),
       });
       setOrderSatus(OrderStatus.END);
+      setBtnLoader(false);
       setTimeout(() => {
         setOrderSatus(null);
         navigateBottomSheet('Main', {});
@@ -180,15 +191,14 @@ const Payment = () => {
     } catch (error) {
       console.log('Error:', JSON.stringify(error));
       setOrderSatus(null);
-      setError('Что то пошло не так...');
+      setBtnLoader(false);
+      setError('Что то пошло не так ...');
       // Handle errors appropriately
     }
   };
 
   const applyPoints = () => {
     let leftToPay = order.sum - (order.sum * discount) / 100;
-
-    // order.sum - (order.sum * discount / 100) - usedPoints
 
     if (user.cards.balance >= leftToPay) {
       setUsedPoints(leftToPay);
@@ -237,7 +247,7 @@ const Payment = () => {
         ...styles.container,
         paddingLeft: dp(22),
         paddingRight: dp(22),
-        paddingTop: dp(20),
+        paddingTop: dp(5),
       }}>
       <BottomSheetScrollView nestedScrollEnabled={true} scrollEnabled={true}>
         <CustomModal
@@ -275,9 +285,10 @@ const Payment = () => {
         ) : (
           <>
             <BusinessHeader
-              type="empty"
+              type="box"
               navigation={navigation}
               position={'95%'}
+              box={order?.box}
             />
             <Text style={styles.title}>Оплата</Text>
             <GHScrollView
@@ -334,7 +345,7 @@ const Payment = () => {
                     }}>
                     Ваш Cashback
                   </Text>
-                  {!cashback || cashback == 0 ? (
+                  {!user.tariff || user.tariff == 0 ? (
                     <View>
                       <SkeletonPlaceholder borderRadius={10}>
                         <SkeletonPlaceholder.Item
@@ -351,7 +362,7 @@ const Payment = () => {
                         fontWeight: '700',
                         fontSize: dp(16),
                       }}>
-                      {cashback} ₽
+                      {Math.round((order.sum * user.tariff) / 100)} ₽
                     </Text>
                   )}
                 </View>
@@ -379,7 +390,7 @@ const Payment = () => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity onPress={applyPoints}>
-                      {!user.cards || !user.cards.balance ? (
+                      {!user.cards || !user.cards.balance == null ? (
                         <View>
                           <SkeletonPlaceholder borderRadius={20}>
                             <SkeletonPlaceholder.Item
@@ -399,7 +410,7 @@ const Payment = () => {
                               order.sum
                                 ? order.sum -
                                     (order.sum * discount) / 100 -
-                                    usedPoints
+                                    usedPoints || 1
                                 : 0,
                             ),
                           )}`}
@@ -505,7 +516,8 @@ const Payment = () => {
                       color: '#000',
                     }}>
                     {order.sum
-                      ? order.sum - (order.sum * discount) / 100 - usedPoints
+                      ? order.sum - (order.sum * discount) / 100 - usedPoints ||
+                        1
                       : 0}{' '}
                     ₽
                   </Text>
@@ -518,6 +530,7 @@ const Payment = () => {
                   height={43}
                   fontSize={18}
                   fontWeight={'600'}
+                  showLoading={btnLoader}
                 />
               </View>
             </GHScrollView>
