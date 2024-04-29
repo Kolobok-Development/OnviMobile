@@ -1,8 +1,7 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {showToast} from '@utils/showToast';
 import {ThemeProvider} from '@context/ThemeProvider';
 import {AuthProvider} from '@context/AuthContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -11,7 +10,8 @@ import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 
-import messaging from '@react-native-firebase/messaging';
+import PushNotifications from '@services/PushNotifications';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,30 +27,9 @@ const queryClient = new QueryClient({
 
 function App(): React.JSX.Element {
 
-  async function requestUserPermission() {
-    const authStatus = await messaging().requestPermission();
-    const enabled =
-      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-    if (enabled) {
-      console.log('Authorization status:', authStatus);
-    }
-  }
-
-  const getToken = async () => {
-    const token = await messaging().getToken()
-
-    console.log(token)
-  }
-
-  useEffect(() => {
-    requestUserPermission()
-    getToken()
-  }, [])
-
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
+      <PushNotifications />
       <ThemeProvider>
         <ThemeWrapper>
           <AuthProvider>
