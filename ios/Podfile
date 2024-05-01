@@ -5,6 +5,9 @@ require Pod::Executable.execute_command('node', ['-p',
     {paths: [process.argv[1]]},
   )', __dir__]).strip
 
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://git.yoomoney.ru/scm/sdk/cocoa-pod-specs.git'
+
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
@@ -27,9 +30,8 @@ end
 
 target 'OnviMobile' do
   config = use_native_modules!
-
-  $RNFirebaseAsStaticFramework = true
   use_frameworks! :linkage => :static
+  $RNFirebaseAsStaticFramework = true
   use_react_native!(
     :path => config[:reactNativePath],
     # Enables Flipper.
@@ -40,6 +42,10 @@ target 'OnviMobile' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+
+  pod 'YooKassaPayments',
+      :git => 'https://git.yoomoney.ru/scm/sdk/yookassa-payments-swift.git',
+      :tag => '6.13.0'
 
   target 'OnviMobileTests' do
     inherit! :complete

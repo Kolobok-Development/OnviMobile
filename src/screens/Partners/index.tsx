@@ -8,8 +8,8 @@ import {
   Image,
   TouchableOpacity,
   StyleSheet,
-  FlatList,
-} from 'react-native';
+  FlatList, SafeAreaView, Platform
+} from "react-native";
 import {BurgerButton} from '@navigators/BurgerButton';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {useNavigation} from '@react-navigation/native';
@@ -96,28 +96,30 @@ const Partners = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <BurgerButton isDrawerStack={true} />
-        <Text style={styles.screenTitle}>Партнеры</Text>
-      </View>
-      {isLoading ? (
-        <PartnersPlaceholder />
-      ) : (
-        <View style={styles.content}>
-          <FlatList
-            data={partnersData?.data}
-            renderItem={renderItem}
-            keyExtractor={(item: Partner) => item.id.toString()}
-            ListEmptyComponent={() => (
-              <View>
-                <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
-              </View>
-            )}
-          />
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <BurgerButton isDrawerStack={true} />
+          <Text style={styles.screenTitle}>Партнеры</Text>
         </View>
-      )}
-    </View>
+        {isLoading ? (
+          <PartnersPlaceholder />
+        ) : (
+          <View style={styles.content}>
+            <FlatList
+              data={partnersData?.data}
+              renderItem={renderItem}
+              keyExtractor={(item: Partner) => item.id.toString()}
+              ListEmptyComponent={() => (
+                <View>
+                  <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
+                </View>
+              )}
+            />
+          </View>
+        )}
+      </View>
+    </SafeAreaView>
   );
 };
 
@@ -126,12 +128,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: dp(16),
     flexDirection: 'column',
-    backgroundColor: '#FFF',
   },
   header: {
     flexDirection: 'row',
     textAlign: 'center',
-    marginTop: dp(20),
   },
   screenTitle: {
     fontWeight: '600',
@@ -139,6 +139,11 @@ const styles = StyleSheet.create({
     marginLeft: dp(15),
     textAlignVertical: 'center',
     color: '#000',
+    ...Platform.select({
+      ios: {
+        lineHeight: dp(40),
+      },
+    }),
   },
   content: {
     marginTop: dp(30),

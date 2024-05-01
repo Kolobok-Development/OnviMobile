@@ -120,7 +120,7 @@ const Payment = () => {
         order.sum - (order.sum * discount) / 100 - usedPoints,
         1,
       );
-      const pointsSum = usedPoints;
+      const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
       const bayStatus = await pingPos({
         carWashId: order.id,

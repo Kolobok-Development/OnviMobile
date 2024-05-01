@@ -216,7 +216,7 @@ const CustomDrawerContent = ({
           />
 
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://t.me/evgshom')}>
+            onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
             <Text
               style={{
                 fontSize: dp(10),

@@ -1,12 +1,13 @@
 import {
   Dimensions,
-  Image,
+  Image, Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-} from 'react-native';
+  View
+} from "react-native";
 import {dp} from '../../utils/dp';
 import React, {useMemo, useRef, useState} from 'react';
 import {useAuth} from '@context/AuthContext';
@@ -226,83 +227,85 @@ const Settings = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={{flexGrow: 1}}>
-      <View style={styles.header}>
-        <BurgerButton isDrawerStack={true} />
-        <Text style={styles.screenTitle}>Настройки</Text>
-      </View>
-      <View style={styles.container}>
-        <View style={styles.profileCard}>
-          <TouchableOpacity
-            style={{alignSelf: 'flex-end'}}
-            onPress={() => setEditing(true)}>
-            <Edit3 height={dp(20)} width={dp(20)} stroke={'#000000'} />
-          </TouchableOpacity>
-          <Image source={avatarValue} style={styles.avatar} />
-          <Text style={{...styles.titleText, marginTop: dp(18)}}>
-            {userName}
-          </Text>
-          <Text style={{...styles.text, marginTop: dp(18)}}>
-            {formatPhoneNumber(phone)}
-          </Text>
-          <Text style={{...styles.text}}>{email}</Text>
-          <View style={styles.balance}>
-            <Text style={styles.balanceText}>
-              {user && user.cards && user.cards.balance
-                ? user.cards.balance
-                : 0}
+    <SafeAreaView style={styles.container}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+        <View style={styles.header}>
+          <BurgerButton isDrawerStack={true} />
+          <Text style={styles.screenTitle}>Настройки</Text>
+        </View>
+        <View style={styles.container}>
+          <View style={styles.profileCard}>
+            <TouchableOpacity
+              style={{alignSelf: 'flex-end'}}
+              onPress={() => setEditing(true)}>
+              <Edit3 height={dp(20)} width={dp(20)} stroke={'#000000'} />
+            </TouchableOpacity>
+            <Image source={avatarValue} style={styles.avatar} />
+            <Text style={{...styles.titleText, marginTop: dp(18)}}>
+              {userName}
             </Text>
-            <Image
-              source={require('../../assets/icons/onvi_black.png')}
-              style={styles.balanceIcon}
-            />
-          </View>
-          <Text style={styles.text}>onvi бонусов</Text>
-        </View>
-        <View style={styles.footer}>
-          <View style={styles.notification}>
-            <Text style={styles.text}>Разрешить отправку уведомлений</Text>
-            <Switch
-              value={toggle}
-              onValueChange={() => setToggle(!toggle)}
-              activeText={''}
-              inActiveText={''}
-              backgroundActive="#000"
-              backgroundInActive="#000"
-              circleImageActive={require('../../assets/icons/small-icon.png')} // Replace with your image source
-              circleImageInactive={require('../../assets/icons/small-icon.png')} // Replace with your image source
-              circleSize={dp(18)} // Adjust the circle size as needed
-              switchBorderRadius={20}
-              width={dp(45)} // Adjust the switch width as needed
-              textStyle={{fontSize: dp(13), color: 'white'}}
-            />
-          </View>
-          <TouchableOpacity
-            style={styles.btnAbout}
-            onPress={onAboutButtonHandle}>
-            <Text style={styles.text}>О приложении</Text>
-            <Image
-              style={{height: dp(24), width: dp(24), resizeMode: 'contain'}}
-              source={require('../../assets/icons/arrow-up.png')}
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.footerBtns}>
-          <TouchableOpacity style={styles.btnDelete}>
-            <Text
-              style={{fontSize: dp(10), fontWeight: '400', color: '#AFAEAE'}}>
-              УДАЛИТЬ АККАУНТ
+            <Text style={{...styles.text, marginTop: dp(18)}}>
+              {formatPhoneNumber(phone)}
             </Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.btnExit} onPress={signOut}>
-            <Text style={styles.text}>Выйти</Text>
-            <LogOut height={dp(20)} width={dp(20)} stroke={'#000000'} />
-          </TouchableOpacity>
+            <Text style={{...styles.text}}>{email}</Text>
+            <View style={styles.balance}>
+              <Text style={styles.balanceText}>
+                {user && user.cards && user.cards.balance
+                  ? user.cards.balance
+                  : 0}
+              </Text>
+              <Image
+                source={require('../../assets/icons/onvi_black.png')}
+                style={styles.balanceIcon}
+              />
+            </View>
+            <Text style={styles.text}>onvi бонусов</Text>
+          </View>
+          <View style={styles.footer}>
+            <View style={styles.notification}>
+              <Text style={styles.text}>Разрешить отправку уведомлений</Text>
+              <Switch
+                value={toggle}
+                onValueChange={() => setToggle(!toggle)}
+                activeText={''}
+                inActiveText={''}
+                backgroundActive="#000"
+                backgroundInActive="#000"
+                circleImageActive={require('../../assets/icons/small-icon.png')} // Replace with your image source
+                circleImageInactive={require('../../assets/icons/small-icon.png')} // Replace with your image source
+                circleSize={dp(18)} // Adjust the circle size as needed
+                switchBorderRadius={20}
+                width={dp(45)} // Adjust the switch width as needed
+                textStyle={{fontSize: dp(13), color: 'white'}}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.btnAbout}
+              onPress={onAboutButtonHandle}>
+              <Text style={styles.text}>О приложении</Text>
+              <Image
+                style={{height: dp(24), width: dp(24), resizeMode: 'contain'}}
+                source={require('../../assets/icons/arrow-up.png')}
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.footerBtns}>
+            <TouchableOpacity style={styles.btnDelete}>
+              <Text
+                style={{fontSize: dp(10), fontWeight: '400', color: '#AFAEAE'}}>
+                УДАЛИТЬ АККАУНТ
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btnExit} onPress={signOut}>
+              <Text style={styles.text}>Выйти</Text>
+              <LogOut height={dp(20)} width={dp(20)} stroke={'#000000'} />
+            </TouchableOpacity>
+          </View>
         </View>
-        {renderOverlay()}
-        {editing && editingMode()}
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {renderOverlay()}
+      {editing && editingMode()}
+    </SafeAreaView>
   );
 };
 
@@ -327,6 +330,11 @@ const styles = StyleSheet.create({
     fontSize: dp(24),
     marginLeft: dp(15),
     textAlignVertical: 'center',
+    ...Platform.select({
+      ios: {
+        lineHeight: dp(40),
+      },
+    }),
     color: '#000',
   },
   backButton: {

@@ -5,8 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  TouchableOpacity,
-} from 'react-native';
+  TouchableOpacity, Platform
+} from "react-native";
 
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -116,7 +116,7 @@ const Home = ({navigation}: any) => {
               onPress={async () => {
                 await findMe();
               }}>
-              <Navigation fill={'white'} />
+              <Navigation fill={'white'} color={'white'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -192,7 +192,11 @@ const styles = StyleSheet.create({
     left: dp(5),
     flexDirection: 'row',
     alignItems: 'center',
-    // zIndex: 999999
+    ...Platform.select({
+      ios: {
+        top: dp(40),
+      },
+    }),
   },
   balance: {
     position: 'absolute',
@@ -200,7 +204,11 @@ const styles = StyleSheet.create({
     right: dp(5),
     flexDirection: 'row',
     alignItems: 'center',
-    // zIndex: 999999
+    ...Platform.select({
+      ios: {
+        top: dp(40),
+      },
+    }),
   },
   contentContainer: {
     flex: 1,

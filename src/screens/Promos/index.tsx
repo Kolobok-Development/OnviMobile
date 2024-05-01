@@ -2,7 +2,14 @@ import React, {useEffect} from 'react';
 
 import {dp} from '../../utils/dp';
 
-import {View, Text, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  SafeAreaView, Platform
+} from "react-native";
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -52,80 +59,82 @@ const Promos = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <BurgerButton isDrawerStack={true} />
-        <Text style={styles.screenTitle}>Промокод и Скидки</Text>
-      </View>
-      <View style={styles.content}>
-        <View style={{flex: 1}}>
-          <Text style={styles.sectionTitle}>Ввести промокод</Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: 'rgba(245, 245, 245, 1)',
-              marginTop: dp(5),
-              height: dp(40),
-              borderRadius: dp(25),
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-            onPress={() => {
-              handlePromoInput();
-            }}>
-            <Text
-              style={{
-                color: '#000',
-                fontSize: dp(14),
-                fontWeight: '600',
-                opacity: 0.25,
-                paddingLeft: dp(10),
-              }}>
-              Промокод
-            </Text>
-          </TouchableOpacity>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <BurgerButton isDrawerStack={true} />
+          <Text style={styles.screenTitle}>Промокод и Скидки</Text>
         </View>
-        <View style={styles.cuponContainer}>
-          <Text style={styles.sectionTitle}>История</Text>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: dp(25),
-            }}>
-            {isLoading ? (
-              <PromosPlaceholder />
-            ) : (
-              <FlatList
-                data={data}
-                renderItem={promo => (
-                  <PromoCard
-                    title={promo.item.title}
-                    headerText={'Акция'}
-                    bonus={
-                      promo.item.point > 0
-                        ? promo.item.point + ' ₽'
-                        : promo.item.cashbackSum + ' %'
-                    }
-                    date={new Date(promo.item.expiryPeriodDate)}
-                    key={promo.item.promotionId.toString()}
-                  />
-                )}
-                onRefresh={refetch}
-                refreshing={isLoading}
-                keyExtractor={(promo: IGetPromoHistoryResponse) =>
-                  promo.promotionId.toString()
-                }
-                ListEmptyComponent={() => (
-                  <View>
-                    <EmptyPlaceholder text="У вас нет использованных акций" />
-                  </View>
-                )}
-              />
-            )}
+        <View style={styles.content}>
+          <View style={{flex: 1}}>
+            <Text style={styles.sectionTitle}>Ввести промокод</Text>
+            <TouchableOpacity
+              style={{
+                backgroundColor: 'rgba(245, 245, 245, 1)',
+                marginTop: dp(5),
+                height: dp(40),
+                borderRadius: dp(25),
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                handlePromoInput();
+              }}>
+              <Text
+                style={{
+                  color: '#000',
+                  fontSize: dp(14),
+                  fontWeight: '600',
+                  opacity: 0.25,
+                  paddingLeft: dp(10),
+                }}>
+                Промокод
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.cuponContainer}>
+            <Text style={styles.sectionTitle}>История</Text>
+            <View
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                marginTop: dp(25),
+              }}>
+              {isLoading ? (
+                <PromosPlaceholder />
+              ) : (
+                <FlatList
+                  data={data}
+                  renderItem={promo => (
+                    <PromoCard
+                      title={promo.item.title}
+                      headerText={'Акция'}
+                      bonus={
+                        promo.item.point > 0
+                          ? promo.item.point + ' ₽'
+                          : promo.item.cashbackSum + ' %'
+                      }
+                      date={new Date(promo.item.expiryPeriodDate)}
+                      key={promo.item.promotionId.toString()}
+                    />
+                  )}
+                  onRefresh={refetch}
+                  refreshing={isLoading}
+                  keyExtractor={(promo: IGetPromoHistoryResponse) =>
+                    promo.promotionId.toString()
+                  }
+                  ListEmptyComponent={() => (
+                    <View>
+                      <EmptyPlaceholder text="У вас нет использованных акций" />
+                    </View>
+                  )}
+                />
+              )}
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -133,13 +142,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: dp(16),
-    flexDirection: 'column',
-    backgroundColor: '#FFF',
+    flexDirection: 'column'
   },
   header: {
     flexDirection: 'row',
     textAlign: 'center',
-    marginTop: dp(20),
   },
   screenTitle: {
     fontWeight: '600',
@@ -147,6 +154,11 @@ const styles = StyleSheet.create({
     marginLeft: dp(15),
     textAlignVertical: 'center',
     color: '#000',
+    ...Platform.select({
+      ios: {
+        lineHeight: dp(40),
+      },
+    }),
   },
   content: {
     flex: 1,

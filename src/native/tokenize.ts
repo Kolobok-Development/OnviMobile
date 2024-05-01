@@ -1,9 +1,12 @@
-import {NativeModules} from 'react-native';
+import {NativeModules, Platform} from 'react-native';
 import {PaymentConfig} from '../types/PaymentConfig';
 import {TokenizationResult} from '../types/TokenizationResult';
 import {ErrorResult} from '../types/ErrorResult';
 
-const RnYookassa = NativeModules.YooKassaPaymentGateway;
+const RnYookassa =
+  Platform.OS === 'android'
+    ? NativeModules.YooKassaPaymentGateway
+    : NativeModules.PaymentGatewayModule;
 
 const tokenize = (params: PaymentConfig): Promise<TokenizationResult> => {
   return new Promise((resolve, reject) => {
