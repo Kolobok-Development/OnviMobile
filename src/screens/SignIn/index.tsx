@@ -49,7 +49,7 @@ const SignIn = () => {
           Введите номер телефона
         </Text>
         <Text style={styles.descriptionText}>
-          Мы отправи на него код активации
+          Мы отправили на него код активации
         </Text>
 
         <PhoneInp

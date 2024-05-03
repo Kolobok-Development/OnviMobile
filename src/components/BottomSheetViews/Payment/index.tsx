@@ -38,6 +38,8 @@ import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {pingPos, create as createOrderApi} from '../../../api/order';
 import {create} from '../../../api/payment';
+import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
+import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 
 enum OrderStatus {
   START = 'start',
@@ -54,7 +56,6 @@ const Payment = () => {
   const [btnLoader, setBtnLoader] = useState(false);
 
   const [promocode, setPromocode] = useState<string>('');
-  const [cashback, setCashback] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
 
   const isOpened = state.bottomSheetOpened;
@@ -67,49 +68,24 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const api = useAxios('CORE_URL');
 
-  const getTariff = async () => {
-    await api
-      .get('/account/tariff')
-      .then(data => {
-        setCashback(data.data.data.cashBack);
-      })
-      .catch(err => console.log(err.response));
-  };
+  const {mutate, isPending, data} = useValidatePromoCode();
+
+  useEffect(() => {
+    if (data?.discount && showPromocodeModal) {
+      setDiscount(data.discount);
+      setShowPromocodeModal(false);
+      setPromoError(null);
+    }
+  }, [data]);
 
   const applyPromocode = async () => {
-    await api
-      .post('/order/promo/validate', {
-        promoCode: promocode,
-        carWashId: 66,
-      })
-      .then(data => {
-        if (data && data.data && data.data.data && data.data.data.discount) {
-          setDiscount(data.data.data.discount);
-          Toast.show({
-            type: 'customSuccessToast',
-            text1: 'Промокод успешно применен!',
-          });
-
-          setShowPromocodeModal(false);
-          setPromoError(null);
-        }
-      })
-      .catch(err => {
-        Toast.show({
-          type: 'customErrorToast',
-          text1: 'Не получилось получить промокод',
-        });
-
-        setPromoError('Промокод не работает');
-      });
+    const body: IValidatePromoCodeRequest = {
+      promoCode: promocode,
+      carWashId: Number(order.id),
+    };
+    mutate(body);
   };
-
-  // get the payment info
-  useEffect(() => {
-    getTariff();
-  }, []);
 
   const createOrder = async () => {
     try {
@@ -281,6 +257,7 @@ const Payment = () => {
             handleSearchChange={handleSearchChange}
             apply={() => debouncedSearch(promocode)}
             promocodeError={promoError}
+            fetching={isPending}
           />
         ) : (
           <>
