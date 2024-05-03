@@ -40,6 +40,7 @@ import {pingPos, create as createOrderApi} from '../../../api/order';
 import {create} from '../../../api/payment';
 import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
+import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 
 enum OrderStatus {
   START = 'start',
@@ -68,7 +69,6 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-
   const {mutate, isPending, data} = useValidatePromoCode();
 
   useEffect(() => {
@@ -92,10 +92,8 @@ const Payment = () => {
       setBtnLoader(true);
       const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
       const storeId: string = '168905';
-      const realSum = Math.max(
-        order.sum - (order.sum * discount) / 100 - usedPoints,
-        1,
-      );
+      const discountSum: number = (order.sum * discount) / 100;
+      const realSum: number = Math.max(order.sum - discountSum - usedPoints, 1);
       const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
       const bayStatus = await pingPos({
@@ -150,13 +148,20 @@ const Payment = () => {
       await confirmPayment({confirmationUrl, paymentMethodType});
       setOrderSatus(OrderStatus.PROCESSING);
 
-      await createOrderApi({
+      const createOrderRequest: ICreateOrderRequest = {
         transactionId: paymentId,
         sum: realSum,
         rewardPointsUsed: pointsSum,
         carWashId: Number(order.id),
         bayNumber: Number(order.box),
-      });
+      };
+
+      if (data?.id && promocode) {
+        createOrderRequest.sum = realSum + discountSum;
+        createOrderRequest.promoCodeId = data.id;
+      }
+
+      await createOrderApi(createOrderRequest);
       setOrderSatus(OrderStatus.END);
       setBtnLoader(false);
       setTimeout(() => {
