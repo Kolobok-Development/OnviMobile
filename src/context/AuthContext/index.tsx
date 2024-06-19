@@ -358,6 +358,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   async function loadUser() {
+    console.log('Called');
     await getMe().then(data => {
       getTariff().then(tariff => {
         updateUser({

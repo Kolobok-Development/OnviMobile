@@ -49,7 +49,7 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user}: any = useAuth();
+  const {user, loadUser}: any = useAuth();
   const navigation: any = useNavigation();
 
   const {state} = useAppState();
@@ -166,6 +166,7 @@ const Payment = () => {
       setBtnLoader(false);
       setTimeout(() => {
         setOrderSatus(null);
+        loadUser();
         navigateBottomSheet('Main', {});
         // route.params.bottomSheetRef.current.scrollTo(MIN_TRANSLATE_Y)
       }, 3000);

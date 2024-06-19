@@ -37,7 +37,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         ? businesses.map(business => {
             return (
               <Marker
-                key={business.carwashes[0].id}
+                key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
                 coordinate={[business.location.lon, business.location.lat]}
                 locationRef={userLocationRef}
                 bottomSheetRef={bottomSheetRef}
@@ -48,6 +48,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         : [],
     [businesses],
   );
+
+  useEffect(() => {
+    console.log(`Businesses change --->, ${JSON.stringify(state.businesses)}`);
+  }, [state.businesses]);
 
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
@@ -134,12 +138,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           }}
           zoomEnabled={true}
           scaleBarEnabled={false}
-          preferredFramesPerSecond={120}
-          styleURL={
-            hasLocationPermission
-              ? 'mapbox://styles/mapbox/streets-v11'
-              : undefined
-          }>
+          preferredFramesPerSecond={120}>
           <MapboxGL.Camera
             centerCoordinate={[userLocation.longitude, userLocation.latitude]}
             zoomLevel={100}
@@ -162,7 +161,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             <LocationPuck
               puckBearing="heading"
               scale={1}
-              pulsing={{isEnabled: true}}
+              pulsing={{isEnabled: false}}
               visible={true}
             />
           )}

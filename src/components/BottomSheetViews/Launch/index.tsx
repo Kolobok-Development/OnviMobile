@@ -47,13 +47,6 @@ const Launch = () => {
   const business = state.businesses;
   const isOpened = state.bottomSheetOpened;
 
-  useEffect(() => {
-    console.log(`GLOBAL STATE: ${JSON.stringify(state.order)}`);
-  }, [state.order]);
-
-  useEffect(() => {
-    console.log(`GLOBAL STATE: ${JSON.stringify(state.order)}`);
-  }, [state.order]);
 
   const onSelect = (name: string, price: number) => {
     setState({
@@ -357,6 +350,7 @@ const styles = StyleSheet.create({
   },
   sum: {
     position: 'absolute',
+    overflow: 'hidden',
     color: '#0B68E1',
     fontSize: moderateScale(30),
     fontWeight: '600',
@@ -365,7 +359,7 @@ const styles = StyleSheet.create({
     paddingLeft: dp(15),
     paddingTop: dp(3),
     paddingBottom: dp(3),
-    borderRadius: dp(32),
+    borderRadius: dp(20),
   },
 });
 

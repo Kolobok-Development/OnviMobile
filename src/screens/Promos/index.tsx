@@ -8,8 +8,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   FlatList,
-  SafeAreaView, Platform
-} from "react-native";
+  SafeAreaView,
+  Platform,
+} from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: dp(16),
-    flexDirection: 'column'
+    flexDirection: 'column',
   },
   header: {
     flexDirection: 'row',

@@ -25,7 +25,7 @@ export default function Marker({
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
       <MapboxGL.PointAnnotation
-        id={String(uuid.v4())}
+        id={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
         coordinate={coordinate}
         onSelected={() => {
           const distance = calculateDistance(
