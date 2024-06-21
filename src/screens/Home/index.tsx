@@ -5,8 +5,9 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  TouchableOpacity, Platform
-} from "react-native";
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 
 import {ScrollView} from 'react-native-gesture-handler';
 
@@ -34,6 +35,7 @@ const Home = ({navigation}: any) => {
   const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
 
   const cameraRef = useRef<any>(null);
+
 
   const userLocationRef = useRef<any>(null);
 

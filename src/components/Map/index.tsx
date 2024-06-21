@@ -6,7 +6,11 @@ import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
 
 import {useAppState} from '@context/AppContext';
 
-import MapboxGL, {UserLocation, LocationPuck} from '@rnmapbox/maps';
+import MapboxGL, {
+  UserLocation,
+  LocationPuck,
+  UserTrackingMode,
+} from '@rnmapbox/maps';
 
 import Marker from './Marker';
 
@@ -23,8 +27,8 @@ interface IUserLocation {
 }
 
 const DEFAULT_COORDINATES: IUserLocation = {
-  latitude: 55.7558,
-  longitude: 37.6176,
+  latitude: 55.751244,
+  longitude: 37.618423,
 };
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
@@ -49,13 +53,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     [businesses],
   );
 
-  useEffect(() => {
-    console.log(`Businesses change --->, ${JSON.stringify(state.businesses)}`);
-  }, [state.businesses]);
-
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
+
   const [userLocation, setUserLocation] =
     useState<IUserLocation>(DEFAULT_COORDINATES);
 
@@ -123,6 +124,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     });
   };
 
+
   // @ts-ignore
   return (
     <>
@@ -139,32 +141,34 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           zoomEnabled={true}
           scaleBarEnabled={false}
           preferredFramesPerSecond={120}>
+
           <MapboxGL.Camera
             centerCoordinate={[userLocation.longitude, userLocation.latitude]}
+            ref={cameraRef}
             zoomLevel={100}
             pitch={1}
-            ref={cameraRef}
             animationMode="flyTo"
             animationDuration={6000}
+            followUserLocation={false}
           />
           {memoizedBusinesses}
           <UserLocation
-            visible={hasLocationPermission}
+            visible={false}
             requestsAlwaysUse={true}
-            minDisplacement={2}
-            androidRenderMode={'compass'}
-            showsUserHeadingIndicator={true}
-            animated={true}
             onUpdate={onUserLocationUpdate}
+            animated={true}
           />
-          {Platform.OS === 'ios' && (
-            <LocationPuck
-              puckBearing="heading"
-              scale={1}
-              pulsing={{isEnabled: false}}
-              visible={true}
-            />
-          )}
+          <LocationPuck
+            puckBearing="heading"
+            scale={1}
+            pulsing={{
+              isEnabled: true,
+              color: '#BFFA00',
+              radius: 25.0,
+            }}
+            visible={true}
+
+          />
         </MapboxGL.MapView>
       </View>
     </>

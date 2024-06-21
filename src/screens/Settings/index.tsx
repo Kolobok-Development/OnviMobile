@@ -1,6 +1,8 @@
 import {
   Dimensions,
-  Image, Platform,
+  FlatList,
+  Image, Linking,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -235,59 +237,107 @@ const Settings = () => {
         </View>
         <View style={styles.container}>
           <View style={styles.profileCard}>
-            <TouchableOpacity
-              style={{alignSelf: 'flex-end'}}
-              onPress={() => setEditing(true)}>
-              <Edit3 height={dp(20)} width={dp(20)} stroke={'#000000'} />
-            </TouchableOpacity>
             <Image source={avatarValue} style={styles.avatar} />
-            <Text style={{...styles.titleText, marginTop: dp(18)}}>
+            <Text style={{...styles.titleText, marginTop: dp(12)}}>
               {userName}
             </Text>
-            <Text style={{...styles.text, marginTop: dp(18)}}>
+            <Text style={{...styles.text, marginTop: dp(5)}}>
               {formatPhoneNumber(phone)}
             </Text>
             <Text style={{...styles.text}}>{email}</Text>
-            <View style={styles.balance}>
-              <Text style={styles.balanceText}>
-                {user && user.cards && user.cards.balance
-                  ? user.cards.balance
-                  : 0}
-              </Text>
-              <Image
-                source={require('../../assets/icons/onvi_black.png')}
-                style={styles.balanceIcon}
-              />
+            <View
+              style={{
+                marginTop: dp(40),
+              }}>
+              <View style={styles.balance}>
+                <Text style={styles.balanceText}>
+                  {user && user.cards && user.cards.balance
+                    ? user.cards.balance
+                    : 0}
+                </Text>
+                <Image
+                  source={require('../../assets/icons/onvi_black.png')}
+                  style={styles.balanceIcon}
+                />
+              </View>
+              <Text style={styles.text}>onvi бонусов</Text>
             </View>
-            <Text style={styles.text}>onvi бонусов</Text>
           </View>
           <View style={styles.footer}>
-            <View style={styles.notification}>
-              <Text style={styles.text}>Разрешить отправку уведомлений</Text>
-              <Switch
-                value={toggle}
-                onValueChange={() => setToggle(!toggle)}
-                activeText={''}
-                inActiveText={''}
-                backgroundActive="#000"
-                backgroundInActive="#000"
-                circleImageActive={require('../../assets/icons/small-icon.png')} // Replace with your image source
-                circleImageInactive={require('../../assets/icons/small-icon.png')} // Replace with your image source
-                circleSize={dp(18)} // Adjust the circle size as needed
-                switchBorderRadius={20}
-                width={dp(45)} // Adjust the switch width as needed
-                textStyle={{fontSize: dp(13), color: 'white'}}
-              />
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Профиль</Text>
+              <View style={styles.sectionBody}>
+                <View style={styles.rowWrapper}>
+                  <TouchableOpacity
+                    style={[styles.row, styles.rowFirst]}
+                    onPress={() => setEditing(true)}>
+                    <Text style={styles.rowLabel}>Изменить личные данные</Text>
+                    <Image
+                      style={{
+                        height: dp(24),
+                        width: dp(24),
+                        resizeMode: 'contain',
+                      }}
+                      source={require('../../assets/icons/arrow-up.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.rowWrapper}>
+                  <View style={[styles.row, styles.rowFirst]}>
+                    <Text style={styles.rowLabel}>
+                      Разрешить отправку уведомлений
+                    </Text>
+                    <Switch
+                      value={toggle}
+                      onValueChange={() => setToggle(!toggle)}
+                      activeText={''}
+                      inActiveText={''}
+                      backgroundActive="#000"
+                      backgroundInActive="#000"
+                      circleImageActive={require('../../assets/icons/small-icon.png')} // Replace with your image source
+                      circleImageInactive={require('../../assets/icons/small-icon.png')} // Replace with your image source
+                      circleSize={dp(18)} // Adjust the circle size as needed
+                      switchBorderRadius={20}
+                      width={dp(45)} // Adjust the switch width as needed
+                      textStyle={{fontSize: dp(13), color: 'white'}}
+                    />
+                  </View>
+                </View>
+              </View>
             </View>
-            <TouchableOpacity
-              style={styles.btnAbout}
-              onPress={onAboutButtonHandle}>
-              <Text style={styles.text}>О приложении</Text>
-              <Image
-                style={{height: dp(24), width: dp(24), resizeMode: 'contain'}}
-                source={require('../../assets/icons/arrow-up.png')}
-              />
-            </TouchableOpacity>
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Система</Text>
+              <View style={styles.sectionBody}>
+                <View style={styles.rowWrapper}>
+                  <TouchableOpacity
+                    style={[styles.row, styles.rowFirst]}
+                    onPress={onAboutButtonHandle}>
+                    <Text style={styles.rowLabel}>О приложении</Text>
+                    <Image
+                      style={{
+                        height: dp(24),
+                        width: dp(24),
+                        resizeMode: 'contain',
+                      }}
+                      source={require('../../assets/icons/arrow-up.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.rowWrapper}>
+                  <TouchableOpacity style={[styles.row, styles.rowFirst] }  onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
+                    <Text style={styles.rowLabel}>Сообщить о проблеме</Text>
+                    <Image
+                      style={{
+                        height: dp(24),
+                        width: dp(24),
+                        resizeMode: 'contain',
+                      }}
+                      source={require('../../assets/icons/arrow-up.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
           </View>
           <View style={styles.footerBtns}>
             <TouchableOpacity style={styles.btnDelete}>
@@ -336,6 +386,7 @@ const styles = StyleSheet.create({
       },
     }),
     color: '#000',
+    letterSpacing: 0.33,
   },
   backButton: {
     alignSelf: 'flex-start',
@@ -347,24 +398,23 @@ const styles = StyleSheet.create({
   },
   profileCard: {
     display: 'flex',
+    flexDirection: 'column',
     width: '100%',
-    height: dp(397),
+    height: dp(300),
     alignItems: 'center',
     backgroundColor: '#BFFA00',
     borderRadius: dp(28),
-    padding: dp(15),
   },
   avatar: {
     height: dp(70),
     width: dp(70),
+    marginTop: dp(20),
     resizeMode: 'contain',
-    marginTop: dp(60),
     borderRadius: 50,
   },
   balance: {
     display: 'flex',
     flexDirection: 'row',
-    marginTop: dp(44),
   },
   balanceText: {
     fontSize: dp(36),
@@ -384,6 +434,7 @@ const styles = StyleSheet.create({
     lineHeight: dp(24),
     color: '#000000',
     textAlign: 'center',
+    letterSpacing: 0.33,
   },
   text: {
     fontSize: dp(14),
@@ -394,8 +445,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
-    marginTop: dp(30),
     flexDirection: 'column',
+    marginTop: dp(15),
     width: '100%',
   },
   notification: {
@@ -489,6 +540,58 @@ const styles = StyleSheet.create({
     borderColor: '#BFFA00',
     borderWidth: 2,
     borderRadius: 50,
+  },
+  section: {
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  sectionTitle: {
+    marginLeft: dp(10),
+    marginBottom: dp(10),
+    fontSize: 13,
+    fontWeight: '500',
+    color: '#a69f9f',
+    textTransform: 'uppercase',
+    letterSpacing: 0.33
+  },
+  sectionBody: {
+    borderRadius: dp(12),
+    backgroundColor: '#F5F5F5',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+    marginBottom: dp(10)
+  },
+  rowWrapper: {
+    paddingLeft: 16,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderColor: '#f0f0f0',
+  },
+  row: {
+    height: dp(40),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingRight: dp(5),
+  },
+  rowLabel: {
+    fontSize: dp(15),
+    letterSpacing: 0.24,
+    color: '#000',
+  },
+  rowLast: {
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  rowFirst: {
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
   },
 });
 

@@ -5,7 +5,7 @@ import {IEncryptedStorage} from '@context/AuthContext/index.interface';
 const PREFIX = '/api/v2';
 
 const userApiInstance = axios.create({
-  baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
+  baseURL: 'https://api.onvione.ru' + PREFIX,
   headers: {
     'Content-Type': 'application/json',
   },
