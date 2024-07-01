@@ -69,7 +69,13 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const {mutate, isPending, data} = useValidatePromoCode();
+  const {mutate, isPending, data, error: promocodeError } = useValidatePromoCode();
+
+  useEffect(() => {
+    if (promocodeError) {
+      setPromocode("")
+    }
+  }, [promocodeError])
 
   useEffect(() => {
     if (data?.discount && showPromocodeModal) {
