@@ -139,6 +139,8 @@ const Home = ({navigation}: any) => {
           userLocationRef={userLocationRef}
         />
         <BottomSheet
+          enableContentPanningGesture={state.isMainScreen}
+          enableHandlePanningGesture={state.isMainScreen}
           handleComponent={renderHandleComponent}
           ref={bottomSheetRef}
           handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}
