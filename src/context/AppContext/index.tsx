@@ -27,7 +27,7 @@ const AppProvider = ({children}: {children: ReactNode}) => {
     businesses: [],
     order: null,
     bottomSheetPosition: null,
-    bottomSheetOpened: false,
+    bottomSheetOpened: true,
     isMainScreen: true,
   });
 
