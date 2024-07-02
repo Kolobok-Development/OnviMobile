@@ -1,14 +1,12 @@
 import axios, {InternalAxiosRequestConfig} from 'axios';
-import {API_URL, STRAPI_URL} from '@env';
+import {STRAPI_URL} from '@env';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import {IEncryptedStorage} from '@context/AuthContext/index.interface';
-const PREFIX = '/api/v2';
+const PREFIX = '/api/v2/';
 
 const userApiInstance = axios.create({
-  baseURL: 'https://api.onvione.ru' + PREFIX,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
+  withCredentials: true,
 });
 
 const _retriveConfigWithAuthorization = async (
@@ -37,8 +35,16 @@ const getConfigWithHeaders = async (
   config: InternalAxiosRequestConfig<any>,
 ) => {
   config.headers['Content-Type'] = 'application/json';
+  config.headers['Accept'] = 'application/json';
+  config.headers['Access-Control-Allow-Origin'] = '*';
   return _retriveConfigWithAuthorization(config);
 };
+
+//DEBUG
+userApiInstance.interceptors.request.use(request => {
+  console.log('Starting Request', JSON.stringify(request, null, 2));
+  return request;
+});
 
 userApiInstance.interceptors.request.use(
   config => getConfigWithHeaders(config),

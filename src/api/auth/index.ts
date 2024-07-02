@@ -10,10 +10,10 @@ import {IRefreshResponse} from '../../types/api/auth/res/IRefreshResponse';
 import {IRefreshRequest} from '../../types/api/auth/req/IRefreshRequest';
 
 enum AUTH {
-  SEND_OTP_URL = '/auth/send/otp',
+  SEND_OTP_URL = 'auth/send/otp',
   LOGIN_URL = 'auth/login',
-  REGISTER_URL = '/auth/register',
-  REFRESH_URL = '/auth/refresh',
+  REGISTER_URL = 'auth/register',
+  REFRESH_URL = 'auth/refresh',
 }
 
 export async function sendOtp(

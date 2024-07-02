@@ -239,6 +239,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return data;
       })
       .catch((err: unknown) => {
+        console.log(JSON.stringify(err, null, 2));
         Toast.show({
           type: 'customErrorToast',
           text1: 'Не получилось отправить СМС сообщение.',
@@ -281,6 +282,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
       }
       return response.type;
     } catch (err) {
+      console.log(JSON.stringify(err, null, 2));
       Toast.show({
         type: 'customErrorToast',
         text1: 'Не получилось зайти в приложение!',
