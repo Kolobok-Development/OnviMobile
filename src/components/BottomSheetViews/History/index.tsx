@@ -20,9 +20,6 @@ import {WHITE} from '../../../utils/colors';
 
 import {Notification} from '@styled/cards/Notification';
 import {BalanceCard} from '@styled/cards/BalanceCard';
-import {NotificationCircle} from '@components/NotificationCircle';
-
-import {useAxios} from '@hooks/useAxios';
 
 import {useAuth} from '@context/AuthContext';
 
@@ -33,6 +30,8 @@ import {avatarSwitch} from '@screens/Settings';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
 import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
+
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 const notifications = [
   {
@@ -157,6 +156,7 @@ const History = ({drawerNavigation}: any) => {
           }}>
           <TouchableOpacity
             onPress={() => {
+              navigateBottomSheet('Main', {});
               route.params.drawerNavigation.navigate('Настройки');
             }}>
             <Settings stroke={'white'} width={dp(18)} height={dp(18)} />

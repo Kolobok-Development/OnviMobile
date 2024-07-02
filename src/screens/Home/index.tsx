@@ -32,7 +32,7 @@ import {Navigation} from 'react-native-feather';
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(3);
 
   const cameraRef = useRef<any>(null);
 
@@ -139,6 +139,8 @@ const Home = ({navigation}: any) => {
           userLocationRef={userLocationRef}
         />
         <BottomSheet
+          enableContentPanningGesture={state.isMainScreen}
+          enableHandlePanningGesture={false}
           handleComponent={renderHandleComponent}
           ref={bottomSheetRef}
           handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}

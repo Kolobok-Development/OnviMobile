@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
@@ -16,6 +16,12 @@ const PromosInput = () => {
   const [code, setCode] = useState('');
   const navigation = useNavigation<any>();
   const {mutate: applyPromo, isPending, error} = useApplyPromotion();
+
+  useEffect(() => {
+    if (error) {
+      setCode("")
+    }
+  }, [error])
 
   const clearInput = () => {
     setCode('');
