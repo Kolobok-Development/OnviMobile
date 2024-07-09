@@ -10,13 +10,11 @@ import {
   ScrollView as GHScrollView,
 } from 'react-native-gesture-handler';
 
-import {useAxios} from '@hooks/useAxios';
-
 // styled components
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useAppState} from '@context/AppContext';
 import {dp} from '../../../utils/dp';
 
@@ -25,8 +23,6 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {Button} from '@styled/buttons';
 
 import {useAuth} from '@context/AuthContext';
-
-import Toast from 'react-native-toast-message';
 import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
@@ -36,11 +32,12 @@ import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
 import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {pingPos, create as createOrderApi} from '../../../api/order';
+import {create as createOrderApi, pingPos} from '../../../api/order';
 import {create} from '../../../api/payment';
 import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
+import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
 
 enum OrderStatus {
   START = 'start',
@@ -69,13 +66,18 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const {mutate, isPending, data, error: promocodeError } = useValidatePromoCode();
+  const {
+    mutate,
+    isPending,
+    data,
+    error: promocodeError,
+  } = useValidatePromoCode();
 
   useEffect(() => {
     if (promocodeError) {
-      setPromocode("")
+      setPromocode('');
     }
-  }, [promocodeError])
+  }, [promocodeError]);
 
   useEffect(() => {
     if (data?.discount && showPromocodeModal) {
@@ -167,15 +169,20 @@ const Payment = () => {
         createOrderRequest.promoCodeId = data.id;
       }
 
-      await createOrderApi(createOrderRequest);
-      setOrderSatus(OrderStatus.END);
-      setBtnLoader(false);
+      createOrderApi(createOrderRequest).then(data => {
+        if (data.sendStatus === SendStatus.SUCCESS) {
+          loadUser().then(() => {
+            setOrderSatus(OrderStatus.END);
+            setBtnLoader(false);
+          });
+        }
+      });
+
       setTimeout(() => {
         setOrderSatus(null);
-        loadUser();
         navigateBottomSheet('Main', {});
         // route.params.bottomSheetRef.current.scrollTo(MIN_TRANSLATE_Y)
-      }, 3000);
+      }, 5000);
     } catch (error) {
       console.log('Error:', JSON.stringify(error));
       setOrderSatus(null);
@@ -399,7 +406,7 @@ const Payment = () => {
                               order.sum
                                 ? order.sum -
                                     (order.sum * discount) / 100 -
-                                    usedPoints || 1
+                                    usedPoints || usedPoints - 1
                                 : 0,
                             ),
                           )}`}
@@ -472,7 +479,13 @@ const Payment = () => {
                   {usedPoints ? (
                     <View style={{paddingTop: dp(15)}}>
                       <Button
-                        label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
+                        label={`ИСПОЛЬЗОВАНО ${Number(
+                          order.sum
+                            ? order.sum -
+                                (order.sum * discount) / 100 -
+                                usedPoints || usedPoints - 1
+                            : 0,
+                        )} БАЛОВ`}
                         onClick={() => {}}
                         color="blue"
                         width={184}

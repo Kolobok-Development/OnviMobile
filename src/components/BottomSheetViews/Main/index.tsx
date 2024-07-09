@@ -34,6 +34,7 @@ import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import { useIsFocused } from "@react-navigation/core";
 
 
 const WIDTH = Dimensions.get('screen').width;
@@ -63,6 +64,18 @@ const Main = ({drawerNavigation}: any) => {
       .then(data => {})
       .catch(err => console.log(err.response));
   };
+
+
+  // UPDATE BALANCE
+  const {loadUser}: any = useAuth();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      console.log('UPDATING USER DATA!!!!')
+      loadUser();
+    }
+  }, [isFocused]);
 
   const PostsPlaceholder = () => {
     return (

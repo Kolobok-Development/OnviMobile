@@ -29,6 +29,8 @@ import {dp} from '../../utils/dp';
 
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
+import { useIsFocused } from "@react-navigation/core";
+import { useAuth } from "@context/AuthContext";
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
@@ -61,6 +63,7 @@ const Home = ({navigation}: any) => {
       zoomLevel: 15,
     });
   };
+
 
   const renderHandleComponent = useCallback((props: any) => {
     const filters = state.filters;

@@ -51,9 +51,24 @@ const About = () => {
           </View>
         </View>
         <TouchableOpacity
-          style={{alignItems: 'center'}}
+          style={{
+            borderRadius: dp(12),
+            alignItems: 'center',
+            backgroundColor: '#f0f0f0',
+            shadowColor: '#000',
+            shadowOffset: {
+              width: 0,
+              height: 1,
+            },
+            shadowOpacity: 0.2,
+            shadowRadius: 1.41,
+            elevation: 2,
+            padding: dp(10),
+          }}
           onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
-          <Text style={{...styles.title}}>Написать в поддержку</Text>
+          <Text style={{fontSize: dp(14), color: '#000000', fontWeight: '600', letterSpacing: 0.22}}>
+            Написать в поддержку
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -84,7 +99,7 @@ const styles = StyleSheet.create({
     }),
   },
   content: {
-    marginTop: dp(70),
+    marginTop: dp(30),
     height: '80%',
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -96,7 +111,7 @@ const styles = StyleSheet.create({
   },
   section: {
     alignItems: 'center',
-    paddingBottom: dp(15),
+    paddingBottom: dp(13),
   },
   title: {
     color: '#000000',

@@ -1,27 +1,28 @@
 import {
   Dimensions,
-  FlatList,
-  Image, Linking,
+  Image,
+  Linking,
   Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
 import {dp} from '../../utils/dp';
 import React, {useMemo, useRef, useState} from 'react';
 import {useAuth} from '@context/AuthContext';
 import {formatPhoneNumber} from '../../utils/phoneFormat';
 import {Button} from '@styled/buttons';
-import {Edit3, LogOut} from 'react-native-feather';
+import {LogOut} from 'react-native-feather';
 import BottomSheet, {BottomSheetTextInput} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useAxios} from '@hooks/useAxios';
 import Switch from '@styled/buttons/CustomSwitch';
 import {useUpdateUser} from '../../api/hooks/useApiUser.ts';
+import {AvatarEnum} from '../../types/AvatarEnum.ts';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
@@ -41,7 +42,7 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, updateUser}: any = useAuth();
+  const {user, signOut, updateUser, loadUser}: any = useAuth();
   const api = useAxios('CORE_URL');
   const navigation = useNavigation<any>();
   const {mutate, isPending} = useUpdateUser();
@@ -71,20 +72,33 @@ const Settings = () => {
 
   const saveUserDate = async () => {
     try {
-      mutate({
-        name: userName,
-        email: email,
-      });
+      const avatarMapping: {[key in AvatarEnum]?: number} = {
+        [AvatarEnum.ONE]: 1,
+        [AvatarEnum.TWO]: 2,
+        [AvatarEnum.THREE]: 3,
+      };
 
-      updateUser({
-        name: userName,
-        email: email,
-        avatar: selectedAvatar,
-      });
+      const avatar: number = avatarMapping[selectedAvatar];
 
-      setEditing(false);
+      const userData: {name?: string; email?: string; avatar?: number} = {};
+
+      if (userName) {
+        userData.name = userName;
+      }
+      if (email) {
+        userData.email = email;
+      }
+      if (avatar !== undefined) {
+        userData.avatar = avatar;
+      }
+
+      mutate(userData, {
+        onSuccess: async () => {
+          await loadUser();
+          setEditing(false);
+        },
+      });
     } catch (error: any) {
-      console.log(JSON.stringify(error));
       setLoading(false);
       setEditing(false);
     }
@@ -177,15 +191,6 @@ const Settings = () => {
             />
           </View>
           <View style={styles.textInputGroup}>
-            <Text style={{padding: dp(10)}}>📞</Text>
-            <BottomSheetTextInput
-              editable={false}
-              value={formatPhoneNumber(phone)}
-              placeholder={'Почта'}
-              style={styles.bottomSheetTextInput}
-            />
-          </View>
-          <View style={styles.textInputGroup}>
             <Text style={{padding: dp(10)}}>✉️</Text>
             <BottomSheetTextInput
               value={email}
@@ -194,6 +199,22 @@ const Settings = () => {
                 setEmail(val);
               }}
               style={styles.bottomSheetTextInput}
+            />
+          </View>
+          <View
+            style={{
+              ...styles.textInputGroup,
+              backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            }}>
+            <Text style={{padding: dp(10)}}>📞</Text>
+            <BottomSheetTextInput
+              editable={false}
+              value={formatPhoneNumber(phone)}
+              placeholder={'Почта'}
+              style={{
+                ...styles.bottomSheetTextInput,
+                backgroundColor: 'rgba(0, 0, 0, 0.008)',
+              }}
             />
           </View>
         </View>
@@ -293,7 +314,7 @@ const Settings = () => {
                       activeText={''}
                       inActiveText={''}
                       backgroundActive="#000"
-                      backgroundInActive="#000"
+                      backgroundInActive="#A3A3A6"
                       circleImageActive={require('../../assets/icons/small-icon.png')} // Replace with your image source
                       circleImageInactive={require('../../assets/icons/small-icon.png')} // Replace with your image source
                       circleSize={dp(18)} // Adjust the circle size as needed
@@ -324,7 +345,11 @@ const Settings = () => {
                   </TouchableOpacity>
                 </View>
                 <View style={styles.rowWrapper}>
-                  <TouchableOpacity style={[styles.row, styles.rowFirst] }  onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
+                  <TouchableOpacity
+                    style={[styles.row, styles.rowFirst]}
+                    onPress={() =>
+                      Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')
+                    }>
                     <Text style={styles.rowLabel}>Сообщить о проблеме</Text>
                     <Image
                       style={{
@@ -552,7 +577,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#a69f9f',
     textTransform: 'uppercase',
-    letterSpacing: 0.33
+    letterSpacing: 0.33,
   },
   sectionBody: {
     borderRadius: dp(12),
@@ -565,10 +590,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
-    marginBottom: dp(10)
+    marginBottom: dp(10),
   },
   rowWrapper: {
-    paddingLeft: 16,
+    paddingLeft: dp(10),
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderColor: '#f0f0f0',
@@ -581,8 +606,8 @@ const styles = StyleSheet.create({
     paddingRight: dp(5),
   },
   rowLabel: {
-    fontSize: dp(15),
-    letterSpacing: 0.24,
+    fontSize: dp(13),
+    letterSpacing: 0.22,
     color: '#000',
   },
   rowLast: {

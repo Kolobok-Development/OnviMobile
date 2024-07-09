@@ -40,12 +40,6 @@ const getConfigWithHeaders = async (
   return _retriveConfigWithAuthorization(config);
 };
 
-//DEBUG
-userApiInstance.interceptors.request.use(request => {
-  console.log('Starting Request', JSON.stringify(request, null, 2));
-  return request;
-});
-
 userApiInstance.interceptors.request.use(
   config => getConfigWithHeaders(config),
   error => {

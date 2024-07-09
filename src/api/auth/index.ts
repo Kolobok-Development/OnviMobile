@@ -32,7 +32,6 @@ export async function login(body: ILoginRequest): Promise<ILoginResponse> {
     AUTH.LOGIN_URL,
     body,
   );
-
   return response.data.data;
 }
 export async function register(
