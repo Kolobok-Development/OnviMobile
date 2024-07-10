@@ -53,12 +53,14 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
+    console.log({lon:  userLocationRef.current.lon,
+      lat: userLocationRef.current.lat})
     cameraRef.current.setCamera({
       centerCoordinate: [
         userLocationRef.current.lon,
         userLocationRef.current.lat,
       ],
-      zoomLevel: 15,
+      zoomLevel: 5,
     });
   };
 

@@ -35,6 +35,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {state, setState} = useAppState();
   const businesses = state.businesses;
 
+  const [zoomedIn, setZoomedIn] = useState(false)
+
   console.log(state.businesses.length)
 
   const memoizedBusinesses = useMemo(
@@ -60,7 +62,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     useState<boolean>(false);
 
   const [userLocation, setUserLocation] =
-    useState<IUserLocation>(DEFAULT_COORDINATES);
+    useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -121,6 +123,17 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     });
   };
 
+  useEffect(() => {
+    if (!zoomedIn && userLocation) {
+      setUserLocation({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude
+      });
+
+      setZoomedIn(true)
+    }
+  }, [userLocation])
+
 
   // @ts-ignore
   return (
@@ -140,7 +153,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           preferredFramesPerSecond={120}>
 
           <MapboxGL.Camera
-            centerCoordinate={[userLocation.longitude, userLocation.latitude]}
+            centerCoordinate={[userLocation ? userLocation.longitude : DEFAULT_COORDINATES.longitude,  userLocation ? userLocation.latitude : DEFAULT_COORDINATES.latitude]}
             ref={cameraRef}
             zoomLevel={100}
             pitch={1}
