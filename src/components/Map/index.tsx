@@ -119,11 +119,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
-
-    cameraRef.current.setCamera({
-      centerCoordinate: [long, lat],
-      zoomLevel: 15,
-    });
   };
 
 
@@ -151,11 +146,12 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             pitch={1}
             animationMode="flyTo"
             animationDuration={6000}
-            followUserLocation={false}
+            followUserLocation={true}
           />
           {memoizedBusinesses}
           <UserLocation
-            visible={false}
+            visible={hasLocationPermission}
+            showsUserHeadingIndicator={true}
             requestsAlwaysUse={true}
             onUpdate={onUserLocationUpdate}
             animated={true}
