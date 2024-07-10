@@ -151,7 +151,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             animationDuration={6000}
             followUserLocation={false}
           />
-          {memoizedBusinesses}
+          {memoizedBusinesses}    
           <UserLocation
             visible={false}
             requestsAlwaysUse={true}
