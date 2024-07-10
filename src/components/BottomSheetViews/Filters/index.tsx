@@ -18,6 +18,8 @@ import {FiltersType} from '../../../types/models/FiltersType';
 import {cloneDeep} from 'lodash';
 import { filters } from "css-select";
 
+import { getCarWashes } from "../../../api/AppContent/appContent"
+
 // Define types
 type Filter = {
   code: string;
@@ -53,7 +55,7 @@ const data: {title: Section; data: Filter[]}[] = [
   },
   {
     title: {id: 2, name: 'Сеть', code: 'brand'},
-    data: [{code: 'DS', name: 'Мой-Ка!DS'}],
+    data: [{code: 'DS', name: 'МОЙ-КА!DS'}],
   },
   {
     title: {id: 3, name: 'Тип', code: 'type'},
@@ -132,6 +134,21 @@ const Filters = () => {
     });
   };
 
+  const reset = async () => {
+    const filtersQuery = generateQuery({})
+    setSelectedFilters({})
+    getCarWashes({filter: filtersQuery}).then((data: any) => {
+        setState({
+          ...state,
+          businesses: data.businessesLocations,
+          filters: {},
+        });
+
+        navigation.navigate('Main');
+      
+    })
+  }
+
   const renderFilterItem = ({item}: {item: FilterItem}) => {
     const {sectionCode, filter} = item;
 
@@ -192,16 +209,31 @@ const Filters = () => {
           alignItems: 'center',
         }}
         ListFooterComponent={
-          <Button
-            label={'Применить'}
-            color={'blue'}
-            width={dp(172)}
-            height={dp(43)}
-            fontSize={dp(16)}
-            fontWeight={'600'}
-            onClick={handleSubmit}
-            showLoading={isFetching}
-          />
+          <View style={{
+            display: "flex",
+            flexDirection: "row",
+          }}>
+            <Button
+              label={'Сбросить'}
+              color={'lightGrey'}
+              width={dp(120)}
+              height={dp(43)}
+              fontSize={dp(15)}
+              fontWeight={'600'}
+              onClick={reset}
+            />
+            <View style={{ width: dp(10) }}></View>
+            <Button
+              label={'Применить'}
+              color={'blue'}
+              width={dp(120)}
+              height={dp(43)}
+              fontSize={dp(15)}
+              fontWeight={'600'}
+              onClick={handleSubmit}
+              showLoading={isFetching}
+            />
+          </View>
         }
       />
     </View>

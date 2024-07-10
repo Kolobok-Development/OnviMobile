@@ -35,6 +35,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {state, setState} = useAppState();
   const businesses = state.businesses;
 
+  console.log(state.businesses.length)
+
   const memoizedBusinesses = useMemo(
     () =>
       businesses && businesses.length

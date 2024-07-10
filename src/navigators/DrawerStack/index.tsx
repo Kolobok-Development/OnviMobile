@@ -84,6 +84,12 @@ const CustomDrawerContent = ({
             paddingTop: dp(20),
             paddingLeft: dp(20),
           }}>
+            <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          paddingBottom: dp(15),
+        }}
+        onPress={() => navigation.navigate('Настройки')}>
           {/*Profile*/}
           <Image
             source={avatarValue}
@@ -93,6 +99,7 @@ const CustomDrawerContent = ({
               marginTop: dp(40),
             }}
           />
+          </TouchableOpacity>
           {/*items*/}
           <View>
             {!user || !user.name ? (
@@ -111,6 +118,12 @@ const CustomDrawerContent = ({
                 </SkeletonPlaceholder>
               </View>
             ) : (
+              <TouchableOpacity
+        style={{
+          flexDirection: 'row',
+          paddingBottom: dp(15),
+        }}
+        onPress={() => navigation.navigate('Настройки')}>
               <Text
                 style={{
                   paddingTop: dp(24),
@@ -122,6 +135,7 @@ const CustomDrawerContent = ({
                 }}>
                 {user.name}
               </Text>
+              </TouchableOpacity>
             )}
             {!user || !user.phone ? (
               <View style={{paddingTop: dp(18)}}>

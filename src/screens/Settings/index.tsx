@@ -260,7 +260,7 @@ const Settings = () => {
                   style={styles.balanceIcon}
                 />
               </View>
-              <Text style={styles.text}>onvi бонусов</Text>
+              <Text style={styles.text}>Onvi бонусов</Text>
             </View>
           </View>
           <View style={styles.footer}>

@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View} from 'react-native';
-import {BLACK, BLUE, GREY, WHITE, YELLOW} from '@utils/colors.ts';
+import {BLACK, BLUE, GREY, WHITE, YELLOW, DARKGREY} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {ArrowUpRight} from 'react-native-feather';
 import React from 'react';
@@ -21,6 +21,9 @@ const PromoCard: React.FC<PromoCardProps> = ({
   color = 'blue',
 }) => {
   const getColor = () => {
+    if (new Date() > date) {
+      return DARKGREY
+    }
     switch (color) {
       case 'blue':
         return BLUE;
@@ -48,7 +51,9 @@ const PromoCard: React.FC<PromoCardProps> = ({
           }}>
           {headerText}
         </Text>
-        <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />
+        {new Date() > date ? <View style={styles.expiredBadge}>
+          <Text style={styles.expiredBadgeText}>Закончился</Text>
+        </View> : <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />}
       </View>
       <View style={styles.content}>
         <Text
@@ -122,6 +127,19 @@ const styles = StyleSheet.create({
     paddingTop: dp(3),
     paddingBottom: dp(3),
   },
+  expiredBadge: {
+    paddingLeft: dp(5),
+    paddingRight: dp(5),
+    paddingTop: dp(3),
+    paddingBottom: dp(3),
+    borderRadius: dp(10),
+    backgroundColor: 'rgb(164, 37, 22)',
+  },
+  expiredBadgeText: {
+    color: "#FFF",
+    fontSize: 13
+  }
 });
+
 
 export {PromoCard};
