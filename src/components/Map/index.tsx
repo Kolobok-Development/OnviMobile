@@ -14,7 +14,6 @@ import MapboxGL, {
 
 import Marker from './Marker';
 
-import axios from 'axios';
 import {getCarWashes} from '../../api/AppContent/appContent.ts';
 
 MapboxGL.setAccessToken(
@@ -36,8 +35,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const businesses = state.businesses;
 
   const [zoomedIn, setZoomedIn] = useState(false)
-
-  console.log(state.businesses.length)
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -130,6 +127,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         longitude: userLocation.longitude
       });
 
+      cameraRef.current.setCamera({
+        centerCoordinate: [
+          userLocation.longitude,
+          userLocation.latitude
+        ],
+        zoomLevel: 10,
+      });
+
       setZoomedIn(true)
     }
   }, [userLocation])
@@ -153,13 +158,12 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           preferredFramesPerSecond={120}>
 
           <MapboxGL.Camera
-            centerCoordinate={[userLocation ? userLocation.longitude : DEFAULT_COORDINATES.longitude,  userLocation ? userLocation.latitude : DEFAULT_COORDINATES.latitude]}
             ref={cameraRef}
             zoomLevel={100}
             pitch={1}
             animationMode="flyTo"
             animationDuration={6000}
-            followUserLocation={true}
+            followUserLocation={false}
           />
           {memoizedBusinesses}
           <UserLocation
