@@ -14,7 +14,6 @@ import MapboxGL, {
 
 import Marker from './Marker';
 
-import axios from 'axios';
 import {getCarWashes} from '../../api/AppContent/appContent.ts';
 
 MapboxGL.setAccessToken(
@@ -34,6 +33,8 @@ const DEFAULT_COORDINATES: IUserLocation = {
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {state, setState} = useAppState();
   const businesses = state.businesses;
+
+  const [zoomedIn, setZoomedIn] = useState(false)
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -58,7 +59,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     useState<boolean>(false);
 
   const [userLocation, setUserLocation] =
-    useState<IUserLocation>(DEFAULT_COORDINATES);
+    useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -117,12 +118,26 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
-
-    cameraRef.current.setCamera({
-      centerCoordinate: [long, lat],
-      zoomLevel: 15,
-    });
   };
+
+  useEffect(() => {
+    if (!zoomedIn && userLocation) {
+      setUserLocation({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude
+      });
+
+      cameraRef.current.setCamera({
+        centerCoordinate: [
+          userLocation.longitude,
+          userLocation.latitude
+        ],
+        zoomLevel: 10,
+      });
+
+      setZoomedIn(true)
+    }
+  }, [userLocation])
 
 
   // @ts-ignore
@@ -143,7 +158,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           preferredFramesPerSecond={120}>
 
           <MapboxGL.Camera
-            centerCoordinate={[userLocation.longitude, userLocation.latitude]}
             ref={cameraRef}
             zoomLevel={100}
             pitch={1}
@@ -153,7 +167,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           />
           {memoizedBusinesses}
           <UserLocation
-            visible={false}
+            visible={hasLocationPermission}
+            showsUserHeadingIndicator={true}
             requestsAlwaysUse={true}
             onUpdate={onUserLocationUpdate}
             animated={true}

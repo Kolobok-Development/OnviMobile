@@ -34,7 +34,7 @@ import { useAuth } from "@context/AuthContext";
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(3);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
 
   const cameraRef = useRef<any>(null);
 
@@ -55,12 +55,16 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
+    console.log({lon:  userLocationRef.current.lon,
+      lat: userLocationRef.current.lat})
+    console.log('camera: ', [userLocationRef.current.lon,
+      userLocationRef.current.lat])
     cameraRef.current.setCamera({
       centerCoordinate: [
         userLocationRef.current.lon,
-        userLocationRef.current.lat,
+        userLocationRef.current.lat
       ],
-      zoomLevel: 15,
+      zoomLevel: 10,
     });
   };
 
@@ -169,7 +173,7 @@ const Home = ({navigation}: any) => {
         </BottomSheet>
 
         <View style={{...styles.burger}}>
-          <BurgerButton bottomSheetIndex={bottomSheetIndex} />
+          <BurgerButton bottomSheetIndex={bottomSheetIndex} handleSheetChanges={handleSheetChanges} />
         </View>
         <View style={{...styles.balance}}>
           <Balance
