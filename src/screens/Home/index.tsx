@@ -32,7 +32,7 @@ import {Navigation} from 'react-native-feather';
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(3);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
 
   const cameraRef = useRef<any>(null);
 
@@ -168,7 +168,7 @@ const Home = ({navigation}: any) => {
         </BottomSheet>
 
         <View style={{...styles.burger}}>
-          <BurgerButton bottomSheetIndex={bottomSheetIndex} />
+          <BurgerButton bottomSheetIndex={bottomSheetIndex} handleSheetChanges={handleSheetChanges} />
         </View>
         <View style={{...styles.balance}}>
           <Balance

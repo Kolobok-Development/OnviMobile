@@ -40,28 +40,25 @@ const BusinessHeader = ({
 }: BusinessHeader) => {
   const route: any = useRoute();
 
-  const makeAYandexRoute = () => {
-    /*
-        const url = `yandexnavi://build_route_on_map?lat_to=${String(route.params.location.lat)}&lon_to=${String(route.params.location.lon)}`;
-        const key = 'a357185e-8ab9-4f04-b3b0-b26c56871365';
-        const client = 'SavniKamos77';
+  // const makeAYandexRoute = () => {
+  //       const url = `yandexnavi://build_route_on_map?lat_to=${String(route.params.location.lat)}&lon_to=${String(route.params.location.lon)}`;
+  //       const key = 'a357185e-8ab9-4f04-b3b0-b26c56871365';
+  //       const client = 'SavniKamos77';
 
-        sign(url, client, key)
-        .then((signedUrl) => {
-          Linking.openURL(signedUrl);
-        })
-        .catch((error) => {
-          // open without sinature
-          setModalVisible(false)
-          Linking.openURL(url);
-          Toast.show({
-            type: 'error',
-            text1: 'Не получилось построить маршрут!',
-          });
-        });
-
-         */
-  };
+  //       sign(url, client, key)
+  //       .then((signedUrl) => {
+  //         Linking.openURL(signedUrl);
+  //       })
+  //       .catch((error) => {
+  //         // open without sinature
+  //         setModalVisible(false)
+  //         Linking.openURL(url);
+  //         Toast.show({
+  //           type: 'error',
+  //           text1: 'Не получилось построить маршрут!',
+  //         });
+  //       });
+  // };
 
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -70,7 +67,8 @@ const BusinessHeader = ({
       return <></>;
     } else if (type === 'navigate') {
       return (
-        <View
+        <>
+        {/* <View
           style={{
             flex: 1,
             display: 'flex',
@@ -82,7 +80,8 @@ const BusinessHeader = ({
               style={styles.circleImage}
             />
           </TouchableOpacity>
-        </View>
+        </View> */}
+        </>
       );
     } else if (type === 'box') {
       return (
@@ -122,7 +121,7 @@ const BusinessHeader = ({
 
             <Text style={styles.modalTitle}>Построить маршрут</Text>
 
-            <View style={styles.actionButtons}>
+            {/* <View style={styles.actionButtons}>
               <Button
                 onClick={makeAYandexRoute}
                 label="Яндекс"
@@ -131,7 +130,7 @@ const BusinessHeader = ({
                 fontSize={18}
                 fontWeight="600"
               />
-            </View>
+            </View> */}
 
             <View style={styles.actionButtons}>
               <Button
