@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -34,8 +34,10 @@ import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
-import { useIsFocused } from "@react-navigation/core";
-
+import {useIsFocused} from '@react-navigation/core';
+import calculateDistance from '@utils/calculateDistance.ts';
+import Geolocation from '@react-native-community/geolocation';
+import { CustomModal } from "@styled/views/CustomModal";
 
 const WIDTH = Dimensions.get('screen').width;
 
@@ -65,17 +67,64 @@ const Main = ({drawerNavigation}: any) => {
       .catch(err => console.log(err.response));
   };
 
-
   // UPDATE BALANCE
   const {loadUser}: any = useAuth();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (isFocused) {
-      console.log('UPDATING USER DATA!!!!')
       loadUser();
     }
   }, [isFocused]);
+
+  //Near by carwash
+  const [nearestCarWash, setNearestCarWash] = useState(null);
+  const businesses = state.businesses;
+  const userLocation = state.userLocation;
+  const [nearByModal, setNearByModal] = useState(false)
+
+  const findNearestCarWash = () => {
+    if (!userLocation) {
+      return;
+    }
+
+    if (!businesses) {
+      return;
+    }
+
+    let nearest = null;
+    let minDistance = Infinity;
+
+    businesses.forEach(carWash => {
+      const cwLat = carWash.location.lat;
+      const cwLon = carWash.location.lon;
+      const distance = calculateDistance(
+        userLocation.longitude,
+        userLocation.latitude,
+        cwLon,
+        cwLat,
+      );
+      if (distance < minDistance && distance <= 0.5) {
+        minDistance = distance;
+        nearest = carWash;
+      }
+    });
+    setNearestCarWash(nearest);
+  };
+
+  useEffect(() => {
+    console.log(`NEARSETS: ${JSON.stringify(nearestCarWash)}`);
+    findNearestCarWash();
+  }, [state]);
+
+  const handleLaunchCarWash = () => {
+    if (nearestCarWash) {
+      // Launch car wash logic here
+      navigateBottomSheet('Business', nearestCarWash);
+    } else {
+      setNearByModal(true);
+    }
+  };
 
   const PostsPlaceholder = () => {
     return (
@@ -83,7 +132,11 @@ const Main = ({drawerNavigation}: any) => {
         <SkeletonPlaceholder borderRadius={4}>
           <View style={styles.news}>
             <View style={styles.leftNewsColumn}>
-              <SkeletonPlaceholder.Item flex={1} borderWidth={26} marginTop={dp(16)}/>
+              <SkeletonPlaceholder.Item
+                flex={1}
+                borderWidth={26}
+                marginTop={dp(16)}
+              />
             </View>
             <View style={styles.rightNewsColumn}>
               <SkeletonPlaceholder.Item
@@ -167,6 +220,7 @@ const Main = ({drawerNavigation}: any) => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
+        <CustomModal isVisible={nearByModal} text={'К сожалению, поблизости не удалось найти автомойку 🚗'} onClick={() => setNearByModal(false)} btnText={'Закрыть'} />
         <Card>
           <View style={{...styles.row, marginBottom: dp(16)}}>
             <TouchableOpacity
@@ -222,35 +276,29 @@ const Main = ({drawerNavigation}: any) => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                navigateBottomSheet('History', {
-                  type: 'history',
-                });
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                handleLaunchCarWash()
               }}>
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Баланс
+                  Запустить
                 </Text>
               </View>
               <View style={styles.info}>
+                <Text
+                  onPress={updateInfo}
+                  style={{
+                    fontSize: dp(12),
+                    fontWeight: '700',
+                    color: 'white',
+                    letterSpacing: 0.2,
+                  }}>
+                  {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
+                </Text>
                 <Image
                   source={require('../../../assets/icons/small-icon.png')}
                   style={{width: 30, height: 30}}
                 />
-                {!user || !user.cards ? (
-                  <BalancePlaceHolder />
-                ) : (
-                  <Text
-                    onPress={updateInfo}
-                    style={{
-                      fontSize: dp(24),
-                      fontWeight: '600',
-                      color: 'white',
-                    }}>
-                    {user.cards.balance}
-                  </Text>
-                )}
               </View>
             </TouchableOpacity>
             <TouchableOpacity

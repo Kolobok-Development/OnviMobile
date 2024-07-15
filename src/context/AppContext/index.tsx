@@ -4,8 +4,8 @@ import React, {
   useContext,
   useState,
   Dispatch,
-  SetStateAction,
-} from 'react';
+  SetStateAction, useEffect
+} from "react";
 
 interface AppContextData {
   filters: any;
@@ -14,6 +14,7 @@ interface AppContextData {
   bottomSheetPosition: any;
   bottomSheetOpened: boolean;
   isMainScreen: boolean;
+  userLocation: any;
 }
 
 const AppContext = createContext<{
@@ -29,6 +30,7 @@ const AppProvider = ({children}: {children: ReactNode}) => {
     bottomSheetPosition: null,
     bottomSheetOpened: true,
     isMainScreen: true,
+    userLocation: null,
   });
 
   return (

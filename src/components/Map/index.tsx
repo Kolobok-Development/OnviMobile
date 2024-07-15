@@ -34,7 +34,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {state, setState} = useAppState();
   const businesses = state.businesses;
 
-  const [zoomedIn, setZoomedIn] = useState(false)
+  const [zoomedIn, setZoomedIn] = useState(false);
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -58,8 +58,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
 
-  const [userLocation, setUserLocation] =
-    useState<IUserLocation | null>(null);
+  const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -93,10 +92,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         await getCarWashes({})
           .then(data => {
             if (data && data.businessesLocations) {
-              setState({
-                ...state,
+              setState((prevState: any) => ({
+                ...prevState,
                 businesses: data.businessesLocations,
-              });
+              }));
             }
           })
           .catch(err => console.log(`Error: ${err}`));
@@ -118,27 +117,25 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
+    setState((prevState: any) => ({
+      ...prevState,
+      userLocation: {latitude: lat, longitude: long},
+    }));
   };
 
   useEffect(() => {
     if (!zoomedIn && userLocation) {
       setUserLocation({
         latitude: userLocation.latitude,
-        longitude: userLocation.longitude
+        longitude: userLocation.longitude,
       });
-
       cameraRef.current.setCamera({
-        centerCoordinate: [
-          userLocation.longitude,
-          userLocation.latitude
-        ],
+        centerCoordinate: [userLocation.longitude, userLocation.latitude],
         zoomLevel: 10,
       });
-
-      setZoomedIn(true)
+      setZoomedIn(true);
     }
-  }, [userLocation])
-
+  }, [userLocation]);
 
   // @ts-ignore
   return (
@@ -156,7 +153,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           zoomEnabled={true}
           scaleBarEnabled={false}
           preferredFramesPerSecond={120}>
-
           <MapboxGL.Camera
             ref={cameraRef}
             zoomLevel={100}
@@ -182,7 +178,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
               radius: 25.0,
             }}
             visible={true}
-
           />
         </MapboxGL.MapView>
       </View>

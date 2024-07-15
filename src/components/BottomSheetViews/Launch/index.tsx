@@ -25,10 +25,11 @@ import {
 } from '../../../utils/metrics';
 import {ExpandableView} from '@styled/views/ExpandableView';
 import {Price} from '../../../api/AppContent/types';
+import LottieView from "lottie-react-native";
 
 const Launch = () => {
   const {theme}: any = useTheme();
-  const [value, setValue] = useState(150);
+  const [value, setValue] = useState(50);
   const measureTypeData = ['рубли'];
 
   const {state, setState} = useAppState();
@@ -46,7 +47,6 @@ const Launch = () => {
   const order = state.order;
   const business = state.businesses;
   const isOpened = state.bottomSheetOpened;
-
 
   const onSelect = (name: string, price: number) => {
     setState({
@@ -211,7 +211,7 @@ const Launch = () => {
           fontSize={moderateScale(22)}
           fontWeight={'400'}
           onClick={() => {
-            if (value <= 980) {
+            if (value <= 480) {
               setValue(value + 20);
             }
           }}
@@ -219,9 +219,9 @@ const Launch = () => {
       </View>
       <View style={{...styles.sumSelector}}>
         <SumInput
-          maxValue={1000}
-          minValue={100}
-          step={20}
+          maxValue={500}
+          minValue={50}
+          step={10}
           height={moderateVerticalScale(235)}
           width={moderateVerticalScale(235)}
           borderRadius={moderateScale(1000)}
@@ -255,6 +255,19 @@ const Launch = () => {
             flexDirection: 'row',
             justifyContent: 'flex-start',
           }}>
+          <ActionButton
+            style={{
+              marginRight: horizontalScale(10),
+              paddingTop: verticalScale(4),
+              paddingBottom: verticalScale(4),
+              paddingLeft: horizontalScale(10),
+              paddingRight: horizontalScale(10),
+            }}
+            fontWeight={'600'}
+            width={horizontalScale(60)}
+            text={'50 р'}
+            onClick={() => setValue(50)}
+          />
           <ActionButton
             style={{
               marginRight: horizontalScale(10),

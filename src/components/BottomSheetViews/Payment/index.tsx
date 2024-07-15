@@ -38,6 +38,8 @@ import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
+import {X} from 'react-native-feather';
+import {GREY} from '@utils/colors.ts';
 
 enum OrderStatus {
   START = 'start',
@@ -534,6 +536,41 @@ const Payment = () => {
                   fontWeight={'600'}
                   showLoading={btnLoader}
                 />
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  height: '35%',
+                  justifyContent: 'flex-end',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    height: dp(45),
+                    width: dp(45),
+                    backgroundColor: GREY,
+                    borderRadius: dp(50),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    elevation: 2,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 1,
+                    },
+                  }}
+                  onPress={() => {
+                    navigateBottomSheet('Main', {});
+                  }}>
+                  <X stroke={'#000000'} aria-label={'Hello'} />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#494949',
+                    letterSpacing: 1,
+                    fontSize: dp(12),
+                  }}>
+                  Отмена
+                </Text>
               </View>
             </GHScrollView>
           </>
