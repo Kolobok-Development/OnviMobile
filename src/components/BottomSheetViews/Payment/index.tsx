@@ -10,34 +10,36 @@ import {
   ScrollView as GHScrollView,
 } from 'react-native-gesture-handler';
 
-import {useAxios} from '@hooks/useAxios';
-
 // styled components
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useAppState} from '@context/AppContext';
 import {dp} from '../../../utils/dp';
-
-import {OnviSwitch} from '@styled/buttons';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {Button} from '@styled/buttons';
 
 import {useAuth} from '@context/AuthContext';
-
-import Toast from 'react-native-toast-message';
 import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
-import {YOKASSA_KEY, YOKASSA_SHOP_ID} from '@env';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
-import { PaymentConfig } from 'src/types/PaymentConfig';
+import {PaymentConfig} from 'src/types/PaymentConfig';
+import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {create as createOrderApi, pingPos} from '../../../api/order';
+import {create} from '../../../api/payment';
+import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
+import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
+import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
+import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
+import {X} from 'react-native-feather';
+import {GREY} from '@utils/colors.ts';
 
 enum OrderStatus {
   START = 'start',
@@ -46,14 +48,14 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {store}: any = useAuth();
+  const {user, loadUser}: any = useAuth();
   const navigation: any = useNavigation();
-  const route: any = useRoute();
 
-  const {state, setState} = useAppState();
+  const {state} = useAppState();
+
+  const [btnLoader, setBtnLoader] = useState(false);
 
   const [promocode, setPromocode] = useState<string>('');
-  const [cashback, setCashback] = useState(0);
   const [usedPoints, setUsedPoints] = useState(0);
 
   const isOpened = state.bottomSheetOpened;
@@ -66,75 +68,64 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const api = useAxios('CORE_URL');
+  const {
+    mutate,
+    isPending,
+    data,
+    error: promocodeError,
+  } = useValidatePromoCode();
 
-  const getTariff = async () => {
-    // console.log("Wait")
-    await api
-      .get('/account/tariff')
-      .then(data => {
-        setCashback(data.data.data.cashBack);
-      })
-      .catch(err => console.log(err.response));
-  };
+  useEffect(() => {
+    if (promocodeError) {
+      setPromocode('');
+    }
+  }, [promocodeError]);
+
+  useEffect(() => {
+    if (data?.discount && showPromocodeModal) {
+      setDiscount(data.discount);
+      setShowPromocodeModal(false);
+      setPromoError(null);
+    }
+  }, [data]);
 
   const applyPromocode = async () => {
-    console.log('TRY!');
-    await api
-      .post('/order/promo/validate', {
-        promoCode: promocode,
-        carWashId: 66,
-      })
-      .then(data => {
-        if (data && data.data && data.data.data && data.data.data.discount) {
-          setDiscount(data.data.data.discount);
-          Toast.show({
-            type: 'customSuccessToast',
-            text1: 'Промокод успешно применен!',
-          });
-
-          setShowPromocodeModal(false);
-          setPromoError(null);
-        }
-      })
-      .catch(err => {
-        Toast.show({
-          type: 'customErrorToast',
-          text1: 'Не получилось получить промокод',
-        });
-
-        setPromoError('Промокод не работает');
-      });
+    const body: IValidatePromoCodeRequest = {
+      promoCode: promocode,
+      carWashId: Number(order.id),
+    };
+    mutate(body);
   };
-
-  // get the payment info
-  useEffect(() => {
-    getTariff();
-  }, []);
 
   const createOrder = async () => {
     try {
-      const apiKey = YOKASSA_KEY;
-      const storeId = YOKASSA_SHOP_ID;
+      setBtnLoader(true);
+      const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
+      const storeId: string = '168905';
+      const discountSum: number = (order.sum * discount) / 100;
+      const realSum: number = Math.max(order.sum - discountSum - usedPoints, 1);
+      const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
-      const bayStatus = await api.get(
-        `/order/ping?carWashId=${order.id}&bayNumber=${order.box}`,
-      );
+      const bayStatus = await pingPos({
+        carWashId: order.id,
+        bayNumber: order.box,
+      });
 
-      if (bayStatus.data.data.status !== 'Free') {
+      if (bayStatus.status !== 'Free') {
         setError('Аавтомойка не может принять заказ');
+        setBtnLoader(false);
         return;
       }
-      // Start tokenization and await the result
 
+      // Start tokenization and await the result
       const paymentConfigParams: PaymentConfig = {
         clientApplicationKey: apiKey, // string
         shopId: storeId, // string
-        title: `Заказ ${order.name}`, // string
+        title: `${order.name}`, // string
         subtitle: 'АМС', // string
-        price: Number(order.sum), // number
+        price: realSum, // number
         paymentMethodTypes: [PaymentMethodTypesEnum.BANK_CARD], // optional array of PaymentMethodTypesEnum
-        customerId: String(store.id),
+        customerId: String(user.id),
         authCenterClientId: null,
         userPhoneNumber: null, // optional string
         gatewayId: null, // optional string
@@ -147,42 +138,58 @@ const Payment = () => {
       const {token, paymentMethodType} = await tokenize(paymentConfigParams);
 
       if (!token) {
-        setError('Что то пошло не так...');
+        setError('Что то пошло не так ...');
+        setBtnLoader(false);
         return;
       }
 
       setOrderSatus(OrderStatus.START);
 
-      // Make the API call to create payment
-      const response = await api.post('/payment', {
+      const payment = await create({
         paymentToken: token,
-        amount: String(order.sum),
+        amount: realSum.toString(),
         description: paymentConfigParams.subtitle,
       });
 
-      const confirmationUrl = response.data.data.confirmation.confirmation_url;
+      const confirmationUrl = payment.confirmation.confirmation_url;
+      const paymentId = payment.id;
 
       setOrderSatus(null);
       await confirmPayment({confirmationUrl, paymentMethodType});
       setOrderSatus(OrderStatus.PROCESSING);
 
-      await api.post('/order/create', {
-        transactionId: 'test-order-123456',
-        sum: Number(order.sum),
-        rewardPointsUsed: Number(usedPoints),
+      const createOrderRequest: ICreateOrderRequest = {
+        transactionId: paymentId,
+        sum: realSum,
+        rewardPointsUsed: pointsSum,
         carWashId: Number(order.id),
         bayNumber: Number(order.box),
+      };
+
+      if (data?.id && promocode) {
+        createOrderRequest.sum = realSum + discountSum;
+        createOrderRequest.promoCodeId = data.id;
+      }
+
+      createOrderApi(createOrderRequest).then(data => {
+        if (data.sendStatus === SendStatus.SUCCESS) {
+          loadUser().then(() => {
+            setOrderSatus(OrderStatus.END);
+            setBtnLoader(false);
+          });
+        }
       });
-      setOrderSatus(OrderStatus.END);
+
       setTimeout(() => {
         setOrderSatus(null);
         navigateBottomSheet('Main', {});
         // route.params.bottomSheetRef.current.scrollTo(MIN_TRANSLATE_Y)
-      }, 3000);
+      }, 5000);
     } catch (error) {
       console.log('Error:', JSON.stringify(error));
       setOrderSatus(null);
-      setError('Что то пошло не так...');
+      setBtnLoader(false);
+      setError('Что то пошло не так ...');
       // Handle errors appropriately
     }
   };
@@ -190,12 +197,10 @@ const Payment = () => {
   const applyPoints = () => {
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
-    // order.sum - (order.sum * discount / 100) - usedPoints
-
-    if (store.balance >= leftToPay) {
+    if (user.cards.balance >= leftToPay) {
       setUsedPoints(leftToPay);
     } else {
-      setUsedPoints(store.balance);
+      setUsedPoints(user.cards.balance);
     }
   };
 
@@ -239,7 +244,7 @@ const Payment = () => {
         ...styles.container,
         paddingLeft: dp(22),
         paddingRight: dp(22),
-        paddingTop: dp(20),
+        paddingTop: dp(5),
       }}>
       <BottomSheetScrollView nestedScrollEnabled={true} scrollEnabled={true}>
         <CustomModal
@@ -273,13 +278,15 @@ const Payment = () => {
             handleSearchChange={handleSearchChange}
             apply={() => debouncedSearch(promocode)}
             promocodeError={promoError}
+            fetching={isPending}
           />
         ) : (
           <>
             <BusinessHeader
-              type="empty"
+              type="box"
               navigation={navigation}
               position={'95%'}
+              box={order?.box}
             />
             <Text style={styles.title}>Оплата</Text>
             <GHScrollView
@@ -307,7 +314,7 @@ const Payment = () => {
                         fontSize: dp(15),
                         color: 'rgba(0, 0, 0, 1)',
                       }}>
-                      Программа "{order.name}"
+                      {order.name}
                     </Text>
                   ) : (
                     <Text />
@@ -321,34 +328,42 @@ const Payment = () => {
                     {order.sum ? order.sum : 0} ₽
                   </Text>
                 </View>
-                {cashback !== 0 ? (
-                  <View
+                <View
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: dp(6),
+                  }}>
+                  <Text
                     style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
-                      marginTop: dp(6),
+                      fontWeight: '300',
+                      fontSize: dp(15),
+                      color: 'rgba(0, 0, 0, 1)',
                     }}>
-                    <Text
-                      style={{
-                        fontWeight: '300',
-                        fontSize: dp(15),
-                        color: 'rgba(0, 0, 0, 1)',
-                      }}>
-                      Ваш Cashback
-                    </Text>
+                    Ваш Cashback
+                  </Text>
+                  {!user.tariff || user.tariff == 0 ? (
+                    <View>
+                      <SkeletonPlaceholder borderRadius={10}>
+                        <SkeletonPlaceholder.Item
+                          width={40}
+                          height={15}
+                          alignSelf={'flex-end'}
+                        />
+                      </SkeletonPlaceholder>
+                    </View>
+                  ) : (
                     <Text
                       style={{
                         color: 'rgba(0, 0, 0, 1)',
                         fontWeight: '700',
                         fontSize: dp(16),
                       }}>
-                      {cashback} ₽
+                      {Math.round((order.sum * user.tariff) / 100)} ₽
                     </Text>
-                  </View>
-                ) : (
-                  <></>
-                )}
+                  )}
+                </View>
                 <View
                   style={{
                     marginTop: dp(35),
@@ -373,38 +388,50 @@ const Payment = () => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity onPress={applyPoints}>
-                      <Switch
-                        value={toggled}
-                        onValueChange={onToggle}
-                        activeText={`${Math.min(
-                          Number(store.balance),
-                          Number(
-                            order.sum
-                              ? order.sum -
-                                  (order.sum * discount) / 100 -
-                                  usedPoints
-                              : 0,
-                          ),
-                        )}`}
-                        inActiveText={`${Math.min(
-                          Number(store.balance),
-                          Number(
-                            order.sum
-                              ? order.sum -
-                                  (order.sum * discount) / 100 -
-                                  usedPoints
-                              : 0,
-                          ),
-                        )}`}
-                        backgroundActive="#A3A3A6"
-                        backgroundInActive="#000"
-                        circleImageActive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                        circleImageInactive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                        circleSize={dp(18)} // Adjust the circle size as needed
-                        switchBorderRadius={20}
-                        width={dp(55)} // Adjust the switch width as needed
-                        textStyle={{fontSize: dp(13), color: 'white'}}
-                      />
+                      {!user.cards || !user.cards.balance == null ? (
+                        <View>
+                          <SkeletonPlaceholder borderRadius={20}>
+                            <SkeletonPlaceholder.Item
+                              width={60}
+                              height={25}
+                              alignSelf={'flex-end'}
+                            />
+                          </SkeletonPlaceholder>
+                        </View>
+                      ) : (
+                        <Switch
+                          value={toggled}
+                          onValueChange={onToggle}
+                          activeText={`${Math.min(
+                            Number(user.cards.balance),
+                            Number(
+                              order.sum
+                                ? order.sum -
+                                    (order.sum * discount) / 100 -
+                                    usedPoints || usedPoints - 1
+                                : 0,
+                            ),
+                          )}`}
+                          inActiveText={`${Math.min(
+                            Number(user.cards.balance),
+                            Number(
+                              order.sum
+                                ? order.sum -
+                                    (order.sum * discount) / 100 -
+                                    usedPoints
+                                : 0,
+                            ),
+                          )}`}
+                          backgroundActive="#A3A3A6"
+                          backgroundInActive="#000"
+                          circleImageActive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
+                          circleImageInactive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
+                          circleSize={dp(18)} // Adjust the circle size as needed
+                          switchBorderRadius={20}
+                          width={dp(55)} // Adjust the switch width as needed
+                          textStyle={{fontSize: dp(13), color: 'white'}}
+                        />
+                      )}
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -454,7 +481,13 @@ const Payment = () => {
                   {usedPoints ? (
                     <View style={{paddingTop: dp(15)}}>
                       <Button
-                        label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
+                        label={`ИСПОЛЬЗОВАНО ${Number(
+                          order.sum
+                            ? order.sum -
+                                (order.sum * discount) / 100 -
+                                usedPoints || usedPoints - 1
+                            : 0,
+                        )} БАЛОВ`}
                         onClick={() => {}}
                         color="blue"
                         width={184}
@@ -487,7 +520,8 @@ const Payment = () => {
                       color: '#000',
                     }}>
                     {order.sum
-                      ? order.sum - (order.sum * discount) / 100 - usedPoints
+                      ? order.sum - (order.sum * discount) / 100 - usedPoints ||
+                        1
                       : 0}{' '}
                     ₽
                   </Text>
@@ -500,7 +534,43 @@ const Payment = () => {
                   height={43}
                   fontSize={18}
                   fontWeight={'600'}
+                  showLoading={btnLoader}
                 />
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  height: '35%',
+                  justifyContent: 'flex-end',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    height: dp(45),
+                    width: dp(45),
+                    backgroundColor: GREY,
+                    borderRadius: dp(50),
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    elevation: 2,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 1,
+                    },
+                  }}
+                  onPress={() => {
+                    navigateBottomSheet('Main', {});
+                  }}>
+                  <X stroke={'#000000'} aria-label={'Hello'} />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#494949',
+                    letterSpacing: 1,
+                    fontSize: dp(12),
+                  }}>
+                  Отмена
+                </Text>
               </View>
             </GHScrollView>
           </>

@@ -1,9 +1,12 @@
-import {NativeModules} from 'react-native';
+import { NativeModules, Platform } from "react-native";
 import {ConfirmationPaymentParams} from '../types/ConfirmationPaymentParams';
 import {ErrorResult} from '../types/ErrorResult';
 import {ConfirmationPaymentResult} from '../types/ConfirmationPaymentResult';
 
-const RnYookassa = NativeModules.YooKassaPaymentGateway;
+const RnYookassa =
+  Platform.OS === 'android'
+    ? NativeModules.YooKassaPaymentGateway
+    : NativeModules.PaymentGatewayModule;
 
 const confirmPayment = (
   params: ConfirmationPaymentParams,

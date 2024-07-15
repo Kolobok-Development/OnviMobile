@@ -1,16 +1,20 @@
-import React, {useState, useEffect, useMemo } from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 
-import { View, Dimensions, Platform, PermissionsAndroid } from 'react-native';
+import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
 
-import { PUBLIC_URL } from '@env';
+import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
 
-import { useAppState } from "@context/AppContext"
+import {useAppState} from '@context/AppContext';
 
-import MapboxGL, { UserLocation, LocationPuck } from '@rnmapbox/maps';
+import MapboxGL, {
+  UserLocation,
+  LocationPuck,
+  UserTrackingMode,
+} from '@rnmapbox/maps';
 
 import Marker from './Marker';
 
-import axios from 'axios';
+import {getCarWashes} from '../../api/AppContent/appContent.ts';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
@@ -22,14 +26,15 @@ interface IUserLocation {
 }
 
 const DEFAULT_COORDINATES: IUserLocation = {
-  latitude: 55.7558,
-  longitude: 37.6176,
+  latitude: 55.751244,
+  longitude: 37.618423,
 };
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
+  const {state, setState} = useAppState();
+  const businesses = state.businesses;
 
-  const { state, setState } = useAppState()
-  const businesses = state.businesses
+  const [zoomedIn, setZoomedIn] = useState(false);
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -37,7 +42,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         ? businesses.map(business => {
             return (
               <Marker
-                key={business.carwashes[0].id}
+                key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
                 coordinate={[business.location.lon, business.location.lat]}
                 locationRef={userLocationRef}
                 bottomSheetRef={bottomSheetRef}
@@ -52,8 +57,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
-  const [userLocation, setUserLocation] =
-    useState<IUserLocation>(DEFAULT_COORDINATES);
+
+  const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -84,14 +89,13 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   useEffect(() => {
     try {
       async function loadWashes() {
-        await axios
-          .get(PUBLIC_URL + '/carwash')
+        await getCarWashes({})
           .then(data => {
-            if (data && data.data) {
-              setState({
-                ...state,
-                businesses: data.data,
-              });
+            if (data && data.businessesLocations) {
+              setState((prevState: any) => ({
+                ...prevState,
+                businesses: data.businessesLocations,
+              }));
             }
           })
           .catch(err => console.log(`Error: ${err}`));
@@ -113,7 +117,25 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
+    setState((prevState: any) => ({
+      ...prevState,
+      userLocation: {latitude: lat, longitude: long},
+    }));
   };
+
+  useEffect(() => {
+    if (!zoomedIn && userLocation) {
+      setUserLocation({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+      });
+      cameraRef.current.setCamera({
+        centerCoordinate: [userLocation.longitude, userLocation.latitude],
+        zoomLevel: 10,
+      });
+      setZoomedIn(true);
+    }
+  }, [userLocation]);
 
   // @ts-ignore
   return (
@@ -130,31 +152,33 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           }}
           zoomEnabled={true}
           scaleBarEnabled={false}
-          preferredFramesPerSecond={120}
-          styleURL={
-            hasLocationPermission
-              ? 'mapbox://styles/mapbox/streets-v11'
-              : undefined
-          }>
+          preferredFramesPerSecond={120}>
           <MapboxGL.Camera
-            centerCoordinate={[userLocation.longitude, userLocation.latitude]}
+            ref={cameraRef}
             zoomLevel={100}
             pitch={1}
-            ref={cameraRef}
             animationMode="flyTo"
             animationDuration={6000}
+            followUserLocation={false}
           />
           {memoizedBusinesses}
           <UserLocation
             visible={hasLocationPermission}
-            requestsAlwaysUse={true}
-            minDisplacement={2}
-            androidRenderMode={'compass'}
             showsUserHeadingIndicator={true}
-            animated={true}
+            requestsAlwaysUse={true}
             onUpdate={onUserLocationUpdate}
+            animated={true}
           />
-          {Platform.OS === 'ios' && <LocationPuck puckBearing="heading" scale={1} pulsing={{isEnabled: true}} visible={true} />}
+          <LocationPuck
+            puckBearing="heading"
+            scale={1}
+            pulsing={{
+              isEnabled: true,
+              color: '#BFFA00',
+              radius: 25.0,
+            }}
+            visible={true}
+          />
         </MapboxGL.MapView>
       </View>
     </>

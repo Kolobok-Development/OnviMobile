@@ -15,9 +15,10 @@ import { navigationRef } from '@navigators/BottomSheetStack';
 interface BurgerProps {
     bottomSheetIndex?: number;
     isDrawerStack?: boolean
+    handleSheetChanges?: (index: number) => void 
 }
 
-const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false }: BurgerProps) => {
+const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false, handleSheetChanges }: BurgerProps) => {
     const navigation = useNavigation<any>();
 
     const { state } = useAppState()
@@ -52,7 +53,13 @@ const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false }: BurgerPro
     }
 
     return <TouchableOpacity style={[{ ...styles.button }, Platform.OS === 'android' && styles.androidShadow,
-        Platform.OS === 'ios' && styles.iosShadow,] } onPress={() => navigationRef.current?.goBack()}>
+        Platform.OS === 'ios' && styles.iosShadow,] } onPress={() => {
+            console.log("navigationRef: ", navigationRef)
+            navigationRef.current?.goBack()
+            if (navigationRef.current?.getCurrentRoute()?.name === "BusinessInfo" && handleSheetChanges) {
+                handleSheetChanges(2)
+            }
+        }}>
         <ArrowLeft  stroke={'#000'}/>
     </TouchableOpacity>
 }

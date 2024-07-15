@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  useWindowDimensions,
 } from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -15,37 +16,41 @@ import {Card} from '@styled/cards';
 
 import {useAuth} from '@context/AuthContext';
 
-import { useTheme } from '@context/ThemeProvider';
+import {useTheme} from '@context/ThemeProvider';
 
-import { BLUE, BLACKTWO, WHITE, GREY } from '../../../utils/colors';
+import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
 
-import { dp } from '../../../utils/dp';
+import {dp} from '../../../utils/dp';
 
-import { useAxios } from '@hooks/useAxios';
-import { useAppState } from '@context/AppContext';
+import {useAxios} from '@hooks/useAxios';
+import {useAppState} from '@context/AppContext';
 
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {useRoute} from '@react-navigation/native';
 
-import {STRAPI_URL} from '@env';
 import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
-import {SwiperFlatList} from 'react-native-swiper-flatlist/src/components/SwiperFlatList/SwiperFlatList';
 import {Campaign} from '../../../api/AppContent/types';
-import {SwiperFlatListWithGestureHandler} from 'react-native-swiper-flatlist/WithGestureHandler';
+import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import {useIsFocused} from '@react-navigation/core';
+import calculateDistance from '@utils/calculateDistance.ts';
+import Geolocation from '@react-native-community/geolocation';
+import { CustomModal } from "@styled/views/CustomModal";
+
+const WIDTH = Dimensions.get('screen').width;
 
 const Main = ({drawerNavigation}: any) => {
-  const {store}: any = useAuth();
+  const {user}: any = useAuth();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const { state, setState } = useAppState()
+  const {state} = useAppState();
 
-  const isOpened = state.bottomSheetOpened
+  const isOpened = state.bottomSheetOpened;
 
-  const { isLoading: campaignLoading, data: campaignData } = useCampaigns();
+  const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
 
   const {
     isLoading: newsLoading,
@@ -62,13 +67,76 @@ const Main = ({drawerNavigation}: any) => {
       .catch(err => console.log(err.response));
   };
 
+  // UPDATE BALANCE
+  const {loadUser}: any = useAuth();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      loadUser();
+    }
+  }, [isFocused]);
+
+  //Near by carwash
+  const [nearestCarWash, setNearestCarWash] = useState(null);
+  const businesses = state.businesses;
+  const userLocation = state.userLocation;
+  const [nearByModal, setNearByModal] = useState(false)
+
+  const findNearestCarWash = () => {
+    if (!userLocation) {
+      return;
+    }
+
+    if (!businesses) {
+      return;
+    }
+
+    let nearest = null;
+    let minDistance = Infinity;
+
+    businesses.forEach(carWash => {
+      const cwLat = carWash.location.lat;
+      const cwLon = carWash.location.lon;
+      const distance = calculateDistance(
+        userLocation.longitude,
+        userLocation.latitude,
+        cwLon,
+        cwLat,
+      );
+      if (distance < minDistance && distance <= 0.5) {
+        minDistance = distance;
+        nearest = carWash;
+      }
+    });
+    setNearestCarWash(nearest);
+  };
+
+  useEffect(() => {
+    console.log(`NEARSETS: ${JSON.stringify(nearestCarWash)}`);
+    findNearestCarWash();
+  }, [state]);
+
+  const handleLaunchCarWash = () => {
+    if (nearestCarWash) {
+      // Launch car wash logic here
+      navigateBottomSheet('Business', nearestCarWash);
+    } else {
+      setNearByModal(true);
+    }
+  };
+
   const PostsPlaceholder = () => {
     return (
       <View>
         <SkeletonPlaceholder borderRadius={4}>
           <View style={styles.news}>
             <View style={styles.leftNewsColumn}>
-              <SkeletonPlaceholder.Item flex={1} />
+              <SkeletonPlaceholder.Item
+                flex={1}
+                borderWidth={26}
+                marginTop={dp(16)}
+              />
             </View>
             <View style={styles.rightNewsColumn}>
               <SkeletonPlaceholder.Item
@@ -108,6 +176,19 @@ const Main = ({drawerNavigation}: any) => {
     );
   };
 
+  const BalancePlaceHolder = () => {
+    return (
+      <SkeletonPlaceholder borderRadius={10}>
+        <View
+          style={{
+            width: dp(70),
+            height: dp(25),
+          }}
+        />
+      </SkeletonPlaceholder>
+    );
+  };
+
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
       data,
@@ -116,21 +197,20 @@ const Main = ({drawerNavigation}: any) => {
 
   const renderCampaignItem = ({item}: {item: Campaign}) => {
     return (
-      <View style={styles.campaigns}>
-        <TouchableOpacity
-          onPress={() => {
-            handleCampaignItemPress(item);
-          }}>
-          <Image
-            source={{uri: item.attributes.image.data.attributes.url}}
-            style={{
-              width: dp(340),
-              height: dp(190),
-              resizeMode: 'contain',
-            }}
-          />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        onPress={() => {
+          handleCampaignItemPress(item);
+        }}
+        style={styles.campaigns}>
+        <Image
+          source={{uri: item.attributes.image.data.attributes.url}}
+          style={{
+            width: dp(340),
+            height: dp(190),
+            resizeMode: 'contain',
+          }}
+        />
+      </TouchableOpacity>
     );
   };
 
@@ -140,6 +220,7 @@ const Main = ({drawerNavigation}: any) => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
+        <CustomModal isVisible={nearByModal} text={'К сожалению, поблизости не удалось найти автомойку 🚗'} onClick={() => setNearByModal(false)} btnText={'Закрыть'} />
         <Card>
           <View style={{...styles.row, marginBottom: dp(16)}}>
             <TouchableOpacity
@@ -195,27 +276,31 @@ const Main = ({drawerNavigation}: any) => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                navigateBottomSheet('History', {
-                  type: 'history',
-                });
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                handleLaunchCarWash()
               }}>
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Баланс
+                  Запустить
                 </Text>
               </View>
               <View style={styles.info}>
+                <Text
+                  onPress={updateInfo}
+                  style={{
+                    fontSize: dp(12),
+                    fontWeight: '600',
+                    color: 'white',
+                    letterSpacing: 0.2,
+                    flexShrink: 1,
+                  }}
+                >
+                  {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
+                </Text>
                 <Image
                   source={require('../../../assets/icons/small-icon.png')}
                   style={{width: 30, height: 30}}
                 />
-                <Text
-                  onPress={updateInfo}
-                  style={{fontSize: dp(24), fontWeight: '600', color: WHITE}}>
-                  {store.balance}
-                </Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity
@@ -321,24 +406,23 @@ const Main = ({drawerNavigation}: any) => {
               )}
             </>
           )}
-          <View style={{flex: 1, paddingBottom: dp(100), marginTop: dp(10)}}>
+          <View style={{flex: 1, paddingBottom: dp(50), marginTop: dp(10)}}>
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
-              <View style={{alignItems: 'center', justifyContent: 'center'}}>
+              <View style={{flex: 1}}>
                 {campaignData && (
-                  <SwiperFlatListWithGestureHandler
-                    autoplay
-                    autoplayDelay={4}
-                    autoplayLoop
-                    showPagination
-                    paginationStyleItem={{
-                      marginTop: dp(5),
-                      width: dp(10),
-                      height: dp(10),
-                    }}
-                    indicatorStyle={'white'}
+                  <Carousel
+                    loop
+                    vertical={false}
+                    width={dp(350)}
+                    height={dp(200)}
+                    enabled // Default is true, just for demo
+                    //defaultScrollOffsetValue={scrollOffsetValue}
+                    autoPlay={true}
+                    autoPlayInterval={3000}
                     data={campaignData.data}
+                    pagingEnabled={true}
                     renderItem={renderCampaignItem}
                   />
                 )}
@@ -436,4 +520,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Main };
+export {Main};

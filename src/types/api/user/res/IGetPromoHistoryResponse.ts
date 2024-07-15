@@ -7,6 +7,7 @@ export interface IGetPromoHistoryResponse {
   type: number;
   point: number;
   cashbackType: number;
+  cashbackSum: number;
   promotionUsageId: number;
   expiryPeriodDate: Date;
   usageDate: Date;

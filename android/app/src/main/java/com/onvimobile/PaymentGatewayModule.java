@@ -239,7 +239,6 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
             if (requestCode == REQUEST_CODE_TOKENIZE) {
                 switch (resultCode){
                     case Activity.RESULT_OK:
-                        Log.d("PaymentLog", "RESULT OK SENDING CALLBACK");
                         final TokenizationResult result = Checkout.createTokenizationResult(data);
                         String token = result.getPaymentToken();
                         String type = result.getPaymentMethodType().name().toLowerCase();

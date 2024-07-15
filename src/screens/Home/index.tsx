@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo, useCallback } from 'react';
+import {useRef, useState, useMemo, useCallback, useEffect} from 'react';
 
 import {
   View,
@@ -6,20 +6,21 @@ import {
   Dimensions,
   Text,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 
-import { ScrollView } from 'react-native-gesture-handler';
+import {ScrollView} from 'react-native-gesture-handler';
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-import { useAppState } from '@context/AppContext';
+import {useAppState} from '@context/AppContext';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 
 // Map Component
-import { Map } from '@components/Map';
+import {Map} from '@components/Map';
 
 // Bottom Sheet Navigator
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
@@ -28,18 +29,21 @@ import {dp} from '../../utils/dp';
 
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
+import { useIsFocused } from "@react-navigation/core";
+import { useAuth } from "@context/AuthContext";
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
 
   const cameraRef = useRef<any>(null);
+
 
   const userLocationRef = useRef<any>(null);
 
   const bottomSheetRef = useRef(null);
 
-  const { state } = useAppState()
+  const {state} = useAppState();
 
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
@@ -51,14 +55,22 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
+    console.log({lon:  userLocationRef.current.lon,
+      lat: userLocationRef.current.lat})
+    console.log('camera: ', [userLocationRef.current.lon,
+      userLocationRef.current.lat])
     cameraRef.current.setCamera({
-      centerCoordinate: [userLocationRef.current.lon, userLocationRef.current.lat],
-      zoomLevel: 15
-    })
+      centerCoordinate: [
+        userLocationRef.current.lon,
+        userLocationRef.current.lat
+      ],
+      zoomLevel: 10,
+    });
   };
 
+
   const renderHandleComponent = useCallback((props: any) => {
-    const filters = state.filters
+    const filters = state.filters;
 
     function extractValues(obj: any) {
       const values = [];
@@ -113,7 +125,7 @@ const Home = ({navigation}: any) => {
               onPress={async () => {
                 await findMe();
               }}>
-              <Navigation fill={'white'} />
+              <Navigation fill={'white'} color={'white'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -127,39 +139,41 @@ const Home = ({navigation}: any) => {
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={{...styles.container}}>
-          <Map
-            bottomSheetRef={bottomSheetRef}
-            bottomSheetIndex={bottomSheetIndex}
-            cameraRef={cameraRef}
-            userLocationRef={userLocationRef}
-          />
-          <BottomSheet
-            handleComponent={renderHandleComponent}
-            ref={bottomSheetRef}
-            handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}
-            keyboardBlurBehavior="restore"
-            index={bottomSheetIndex}
-            snapPoints={snapPoints}
-            onChange={handleSheetChanges}
-            backgroundComponent={({style}) => (
-              <View
-                style={[style, styles.transparentBackground, styles.shadow]}
-              />
-            )}
-            style={styles.shadow}
-            topInset={0}>
-            <View style={styles.contentContainer}>
-              <BottomSheetStack
-                bottomSheetRef={bottomSheetRef}
-                active={visible}
-                drawerNavigation={navigation}
-                cameraRef={cameraRef}
-              />
-            </View>
-          </BottomSheet>
-        
+        <Map
+          bottomSheetRef={bottomSheetRef}
+          bottomSheetIndex={bottomSheetIndex}
+          cameraRef={cameraRef}
+          userLocationRef={userLocationRef}
+        />
+        <BottomSheet
+          enableContentPanningGesture={state.isMainScreen}
+          enableHandlePanningGesture={false}
+          handleComponent={renderHandleComponent}
+          ref={bottomSheetRef}
+          handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}
+          keyboardBlurBehavior="restore"
+          index={bottomSheetIndex}
+          snapPoints={snapPoints}
+          onChange={handleSheetChanges}
+          backgroundComponent={({style}) => (
+            <View
+              style={[style, styles.transparentBackground, styles.shadow]}
+            />
+          )}
+          style={styles.shadow}
+          topInset={0}>
+          <View style={styles.contentContainer}>
+            <BottomSheetStack
+              bottomSheetRef={bottomSheetRef}
+              active={visible}
+              drawerNavigation={navigation}
+              cameraRef={cameraRef}
+            />
+          </View>
+        </BottomSheet>
+
         <View style={{...styles.burger}}>
-          <BurgerButton bottomSheetIndex={bottomSheetIndex} />
+          <BurgerButton bottomSheetIndex={bottomSheetIndex} handleSheetChanges={handleSheetChanges} />
         </View>
         <View style={{...styles.balance}}>
           <Balance
@@ -189,7 +203,11 @@ const styles = StyleSheet.create({
     left: dp(5),
     flexDirection: 'row',
     alignItems: 'center',
-    // zIndex: 999999
+    ...Platform.select({
+      ios: {
+        top: dp(40),
+      },
+    }),
   },
   balance: {
     position: 'absolute',
@@ -197,7 +215,11 @@ const styles = StyleSheet.create({
     right: dp(5),
     flexDirection: 'row',
     alignItems: 'center',
-    // zIndex: 999999
+    ...Platform.select({
+      ios: {
+        top: dp(40),
+      },
+    }),
   },
   contentContainer: {
     flex: 1,

@@ -1,14 +1,17 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {showToast} from '@utils/showToast';
 import {ThemeProvider} from '@context/ThemeProvider';
 import {AuthProvider} from '@context/AuthContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from '@components/Application';
 import ThemeWrapper from '@components/ThemeWrapper';
-import { SafeAreaView } from "react-native-safe-area-context";
+import {SafeAreaView} from 'react-native-safe-area-context';
+import {IntlProvider} from 'react-intl';
+
+import PushNotifications from '@services/PushNotifications';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,27 +26,22 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
-  useEffect(() => {
-    showToast({
-      type: 'success',
-      position: 'top',
-      text1: 'Привет!',
-      text2: 'Как дела?',
-    });
-  }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={queryClient} contextSharing={true}>
+      <PushNotifications />
       <ThemeProvider>
         <ThemeWrapper>
           <AuthProvider>
-            <GestureHandlerRootView style={{flex: 1}}>
-              <SafeAreaView style={styles.container}>
-                <View style={{height: Dimensions.get('window').height}}>
-                  <Application />
-                </View>
-              </SafeAreaView>
-            </GestureHandlerRootView>
+            <IntlProvider locale={'ru'}>
+              <GestureHandlerRootView style={{flex: 1}}>
+                <SafeAreaView style={styles.container}>
+                  <View style={{height: Dimensions.get('window').height}}>
+                    <Application />
+                  </View>
+                </SafeAreaView>
+              </GestureHandlerRootView>
+            </IntlProvider>
           </AuthProvider>
         </ThemeWrapper>
       </ThemeProvider>

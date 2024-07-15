@@ -8,6 +8,7 @@ interface ILoadingModal {
     isVisible: boolean;
     text: string;
     onClick: () => void;
+    btnText?: string;
 }
 
 const CustomModal = (props: ILoadingModal) => {
@@ -30,7 +31,7 @@ const CustomModal = (props: ILoadingModal) => {
                     <Text style={styles.modalText}>{props.text}</Text>
                     <View style={styles.actionButtons}>
                         <View>
-                            <Button onClick={props.onClick} label="Повторить" color="blue" width={129} height={42} fontSize={18} fontWeight="600" />
+                            <Button onClick={props.onClick} label={props.btnText ? props.btnText : 'Повторить'} color="blue" width={129} height={42} fontSize={18} fontWeight="600" />
                         </View>
                     </View>
                 </View>
