@@ -289,10 +289,12 @@ const Main = ({drawerNavigation}: any) => {
                   onPress={updateInfo}
                   style={{
                     fontSize: dp(12),
-                    fontWeight: '700',
+                    fontWeight: '600',
                     color: 'white',
                     letterSpacing: 0.2,
-                  }}>
+                    flexShrink: 1,
+                  }}
+                >
                   {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
                 </Text>
                 <Image
