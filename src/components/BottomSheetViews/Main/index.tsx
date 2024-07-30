@@ -6,7 +6,6 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  useWindowDimensions,
 } from 'react-native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
@@ -220,7 +219,7 @@ const Main = ({drawerNavigation}: any) => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
-        <CustomModal isVisible={nearByModal} text={'К сожалению, поблизости не удалось найти автомойку 🚗'} onClick={() => setNearByModal(false)} btnText={'Закрыть'} />
+        <CustomModal isVisible={nearByModal} text={'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'} onClick={() => setNearByModal(false)} btnText={'Закрыть'} />
         <Card>
           <View style={{...styles.row, marginBottom: dp(16)}}>
             <TouchableOpacity

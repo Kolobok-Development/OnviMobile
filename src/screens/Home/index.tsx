@@ -15,6 +15,8 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import {useAppState} from '@context/AppContext';
 
+import { useReducedMotion } from 'react-native-reanimated';
+
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
@@ -44,6 +46,8 @@ const Home = ({navigation}: any) => {
   const bottomSheetRef = useRef(null);
 
   const {state} = useAppState();
+
+  const reduceMotion = useReducedMotion()
 
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
@@ -146,6 +150,7 @@ const Home = ({navigation}: any) => {
           userLocationRef={userLocationRef}
         />
         <BottomSheet
+          animateOnMount={!reduceMotion}
           enableContentPanningGesture={state.isMainScreen}
           enableHandlePanningGesture={false}
           handleComponent={renderHandleComponent}
