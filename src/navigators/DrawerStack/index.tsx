@@ -84,21 +84,21 @@ const CustomDrawerContent = ({
             paddingTop: dp(20),
             paddingLeft: dp(20),
           }}>
-            <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          paddingBottom: dp(15),
-        }}
-        onPress={() => navigation.navigate('Настройки')}>
-          {/*Profile*/}
-          <Image
-            source={avatarValue}
+          <TouchableOpacity
             style={{
-              width: dp(48),
-              height: dp(48),
-              marginTop: dp(40),
+              flexDirection: 'row',
+              paddingBottom: dp(15),
             }}
-          />
+            onPress={() => navigation.navigate('Настройки')}>
+            {/*Profile*/}
+            <Image
+              source={avatarValue}
+              style={{
+                width: dp(48),
+                height: dp(48),
+                marginTop: dp(40),
+              }}
+            />
           </TouchableOpacity>
           {/*items*/}
           <View>
@@ -119,22 +119,22 @@ const CustomDrawerContent = ({
               </View>
             ) : (
               <TouchableOpacity
-        style={{
-          flexDirection: 'row',
-          paddingBottom: dp(15),
-        }}
-        onPress={() => navigation.navigate('Настройки')}>
-              <Text
                 style={{
-                  paddingTop: dp(24),
-                  fontStyle: 'normal',
-                  fontSize: dp(24),
-                  fontWeight: '600',
-                  lineHeight: dp(23),
-                  color: theme.textColor,
-                }}>
-                {user.name}
-              </Text>
+                  flexDirection: 'row',
+                  paddingBottom: dp(15),
+                }}
+                onPress={() => navigation.navigate('Настройки')}>
+                <Text
+                  style={{
+                    paddingTop: dp(24),
+                    fontStyle: 'normal',
+                    fontSize: dp(24),
+                    fontWeight: '600',
+                    lineHeight: dp(23),
+                    color: theme.textColor,
+                  }}>
+                  {user.name}
+                </Text>
               </TouchableOpacity>
             )}
             {!user || !user.phone ? (
@@ -225,7 +225,7 @@ const CustomDrawerContent = ({
               marginRight: dp(5),
               width: dp(25),
               height: dp(25),
-          }}
+            }}
             source={require('../../assets/icons/telegram.png')}
           />
 
@@ -293,9 +293,6 @@ const DrawerStack = () => {
 };
 
 const styles = StyleSheet.create({
-  drawer: {
-    width: '65%',
-  },
   drawerContent: {
     flex: 1,
   },

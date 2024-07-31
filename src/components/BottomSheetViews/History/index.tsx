@@ -72,6 +72,10 @@ const History = ({drawerNavigation}: any) => {
   const avatarValue = avatarSwitch(initialAvatar);
 
   useEffect(() => {
+    console.log(`ORDER => ${JSON.stringify(data)}`);
+  }, []);
+
+  useEffect(() => {
     if (
       route &&
       route.params &&
@@ -192,7 +196,7 @@ const History = ({drawerNavigation}: any) => {
       ) : (
         <>
           {!tab ? (
-            <BottomSheetFlatList
+            <FlatList
               data={data}
               renderItem={order => (
                 <BalanceCard key={order.index} option={order.item} />
@@ -200,6 +204,7 @@ const History = ({drawerNavigation}: any) => {
               refreshing={isLoading}
               keyExtractor={(_order, index) => index.toString()}
               onRefresh={refetch}
+              showsVerticalScrollIndicator={false}
               ListEmptyComponent={() => (
                 <>
                   <EmptyPlaceholder text="У вас пока нет заказов" />

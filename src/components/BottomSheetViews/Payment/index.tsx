@@ -172,6 +172,7 @@ const Payment = () => {
       }
 
       createOrderApi(createOrderRequest).then(data => {
+        console.log(JSON.stringify(data, null, 2));
         if (data.sendStatus === SendStatus.SUCCESS) {
           loadUser().then(() => {
             setOrderSatus(OrderStatus.END);
