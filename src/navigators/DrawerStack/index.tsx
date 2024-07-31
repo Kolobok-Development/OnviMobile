@@ -2,18 +2,14 @@ import React from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 
-import {
-  createDrawerNavigator,
-} from '@react-navigation/drawer';
+import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
 import {Home} from '@screens/Home';
 import {Promos} from '@screens/Promos';
 
-import {
-  StyleSheet,
-} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {useTheme} from '@context/ThemeProvider';
 import {Settings} from '@screens/Settings';
 import {About} from '@screens/About';
@@ -24,8 +20,7 @@ import {Partner} from '@screens/Partner';
 import {PromosInput} from '@screens/PromosInput';
 
 //CustomDrawerContent
-import { CustomDrawerContent } from "./CustomDrawerContent"
-
+import {CustomDrawerContent} from './CustomDrawerContent';
 
 const DrawerStack = () => {
   const {theme}: any = useTheme();
@@ -60,13 +55,13 @@ const DrawerStack = () => {
           {props => <Home navigation={props.navigation} />}
         </Drawer.Screen>
 
-        <Drawer.Screen name="Промокоды">{props => <Promos />}</Drawer.Screen>
-        <Drawer.Screen name="Партнеры">{props => <Partners />}</Drawer.Screen>
-        <Drawer.Screen name="Настройки">{props => <Settings />}</Drawer.Screen>
-        <Drawer.Screen name="О приложении">{props => <About />}</Drawer.Screen>
-        <Drawer.Screen name="Партнер">{props => <Partner />}</Drawer.Screen>
+        <Drawer.Screen name="Промокоды">{() => <Promos />}</Drawer.Screen>
+        <Drawer.Screen name="Партнеры">{() => <Partners />}</Drawer.Screen>
+        <Drawer.Screen name="Настройки">{() => <Settings />}</Drawer.Screen>
+        <Drawer.Screen name="О приложении">{() => <About />}</Drawer.Screen>
+        <Drawer.Screen name="Партнер">{() => <Partner />}</Drawer.Screen>
         <Drawer.Screen name="Ввод Промокода">
-          {props => <PromosInput />}
+          {() => <PromosInput />}
         </Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
@@ -83,5 +78,3 @@ const styles = StyleSheet.create({
 });
 
 export {DrawerStack};
-
-
