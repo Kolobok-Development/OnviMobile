@@ -280,7 +280,7 @@
 		};
 		00EEFC60759A1932668264C0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -290,7 +290,7 @@
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
@@ -371,7 +371,7 @@
 		};
 		E235C05ADACE081382539298 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
+			buildActionMask = 8;
 			files = (
 			);
 			inputFileListPaths = (
@@ -380,7 +380,7 @@
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources.sh\"\n";
 			showEnvVarsInLog = 0;
