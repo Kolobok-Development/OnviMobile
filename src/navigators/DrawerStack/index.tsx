@@ -34,7 +34,6 @@ const DrawerStack = () => {
           drawerType: 'front',
           drawerStyle: {
             backgroundColor: theme.mainColor,
-            ...styles.drawer,
           },
         }}
         initialRouteName={'Главная'}
@@ -69,9 +68,6 @@ const DrawerStack = () => {
 };
 
 const styles = StyleSheet.create({
-  drawer: {
-    width: '65%',
-  },
   drawerContent: {
     flex: 1,
   },

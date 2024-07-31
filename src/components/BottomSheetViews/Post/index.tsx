@@ -17,7 +17,7 @@ import {Button} from '@styled/buttons';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {NewsPost} from '../../../api/AppContent/types';
 
-const Post = ({drawerNavigation}: any) => {
+const Post = () => {
   const route: any = useRoute();
 
   const [post, setPost] = useState<NewsPost | null>(null);
@@ -62,7 +62,8 @@ const Post = ({drawerNavigation}: any) => {
       contentContainerStyle={{...styles.container, backgroundColor: 'white'}}
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
-      <View style={{display: 'flex', flexDirection: 'column', paddingTop: dp(20)}}>
+      <View
+        style={{display: 'flex', flexDirection: 'column', paddingTop: dp(20)}}>
         {!post ? (
           <PostPlaceholder />
         ) : (
@@ -98,28 +99,56 @@ const Post = ({drawerNavigation}: any) => {
               </Markdown>
               <View
                 style={{
-                  justifyContent: 'space-evenly',
-                  alignItems: 'center',
                   flex: 1,
                   paddingTop: dp(20),
                   paddingBottom: dp(100),
+                  alignItems: 'center',
                 }}>
-                {post.attributes.button_title && (
+                {post.attributes.button_title ? (
+                  <View
+                    style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      justifyContent: 'space-evenly',
+                    }}>
+                    <Button
+                      label={post.attributes.button_title}
+                      width={125}
+                      height={dp(35)}
+                      onClick={() => {
+                        if (post.attributes.url) {
+                          Linking.openURL(post.attributes.url);
+                        } else if (post.attributes.screen_redirect) {
+                          //@ts-ignore
+                          navigation.navigate(
+                            post.attributes.screen_redirect,
+                            route.params,
+                          );
+                        }
+                      }}
+                      color="blue"
+                      fontSize={dp(12)}
+                    />
+                    <Button
+                      label={'Закрыть'}
+                      color={'lightGrey'}
+                      width={125}
+                      height={35}
+                      fontSize={dp(12)}
+                      onClick={() => {
+                        navigation.goBack();
+                      }}
+                    />
+                  </View>
+                ) : (
                   <Button
-                    label={post.attributes.button_title}
-                    width={200}
+                    label={'Закрыть'}
+                    color={'lightGrey'}
+                    width={150}
+                    height={50}
                     onClick={() => {
-                      if (post.attributes.url) {
-                        Linking.openURL(post.attributes.url);
-                      } else if (post.attributes.screen_redirect) {
-                        //@ts-ignore
-                        navigation.navigate(
-                          post.attributes.screen_redirect,
-                          route.params,
-                        );
-                      }
+                      navigation.goBack();
                     }}
-                    color="blue"
                   />
                 )}
               </View>
