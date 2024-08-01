@@ -112,7 +112,6 @@ const Main = ({drawerNavigation}: any) => {
   };
 
   useEffect(() => {
-    console.log(`NEARSETS: ${JSON.stringify(nearestCarWash)}`);
     findNearestCarWash();
   }, [state]);
 

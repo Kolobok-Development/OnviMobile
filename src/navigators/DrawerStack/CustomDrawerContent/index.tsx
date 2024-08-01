@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
 
@@ -12,6 +12,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
+import {useNavigationState} from '@react-navigation/native';
 
 interface CustomDrawerItemProps {
   label: string;
@@ -55,8 +56,11 @@ const CustomDrawerContent = ({
   const initialAvatar = user.avatar;
 
   const avatarValue = avatarSwitch(initialAvatar);
+  const route = navigation.getState().routes[navigation.getState().index].name;
 
-  const route = useRoute();
+  useEffect(() => {
+    console.log(route);
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -162,34 +166,28 @@ const CustomDrawerContent = ({
 
             <CustomDrawerItem
               label={'Главная'}
-              color={route.name === 'Главная' ? theme.primary : theme.textColor}
+              color={route === 'Главная' ? theme.primary : theme.textColor}
               onPress={() => {
                 navigation.navigate('Главная');
               }}
             />
             <CustomDrawerItem
               label={'Партнеры'}
-              color={
-                route.name === 'Партнеры' ? theme.primary : theme.textColor
-              }
+              color={route === 'Партнеры' ? theme.primary : theme.textColor}
               onPress={() => {
                 navigation.navigate('Партнеры');
               }}
             />
             <CustomDrawerItem
               label={'Промокод и скидки'}
-              color={
-                route.name === 'Промокоды' ? theme.primary : theme.textColor
-              }
+              color={route === 'Промокоды' ? theme.primary : theme.textColor}
               onPress={() => {
                 navigation.navigate('Промокоды');
               }}
             />
             <CustomDrawerItem
               label={'Настройки'}
-              color={
-                route.name === 'Настройки' ? theme.primary : theme.textColor
-              }
+              color={route === 'Настройки' ? theme.primary : theme.textColor}
               onPress={() => {
                 navigation.navigate('Настройки');
               }}
@@ -218,7 +216,7 @@ const CustomDrawerContent = ({
               width: dp(25),
               height: dp(25),
             }}
-            source={require('../../assets/icons/telegram.png')}
+            source={require('../../../assets/icons/telegram.png')}
           />
 
           <TouchableOpacity

@@ -33,6 +33,7 @@ import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 import { useIsFocused } from "@react-navigation/core";
 import { useAuth } from "@context/AuthContext";
+import { useNavigationState } from "@react-navigation/native";
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
@@ -151,7 +152,7 @@ const Home = ({navigation}: any) => {
         />
         <BottomSheet
           animateOnMount={!reduceMotion}
-          enableContentPanningGesture={state.isMainScreen}
+          enableContentPanningGesture={true}
           enableHandlePanningGesture={false}
           handleComponent={renderHandleComponent}
           ref={bottomSheetRef}

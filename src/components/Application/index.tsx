@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import {useAuth} from '@context/AuthContext';
 import {AuthStack} from '@navigators/AuthStack';
@@ -14,7 +14,7 @@ const Application = () => {
     return null;
   }
 
-  const { store } = context;
+  const {store} = context;
 
   return (
     <>
