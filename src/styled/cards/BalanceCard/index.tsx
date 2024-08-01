@@ -13,8 +13,6 @@ export interface IBalanceCardProps {
 }
 
 const BalanceCard = (option: IBalanceCardProps) => {
-
-
   return (
     <View style={styles.box}>
       <View style={styles.leftSide}>
@@ -30,7 +28,8 @@ const BalanceCard = (option: IBalanceCardProps) => {
         <Text style={styles.text}>{option.option.address}</Text>
       </View>
       <View style={styles.rightSide}>
-        <Text style={styles.rubles}>{option.option.operSum} ₽</Text>
+        <Text style={styles.rubles}>{option.option.operSumReal} ₽</Text>
+
         <View style={styles.balance}>
           {option.option.cashBackAmount && option.option.cashBackAmount > 0 ? (
             <CustomSwitch
@@ -47,7 +46,11 @@ const BalanceCard = (option: IBalanceCardProps) => {
           ) : (
             <CustomSwitch
               value={false}
-              inActiveText={'0'}
+              inActiveText={
+                option.option.operSumPoint == 0
+                  ? `${option.option.operSumPoint}`
+                  : `-${option.option.operSumPoint}`
+              }
               disabled={true}
               backgroundInActive="#000"
               circleImageInactive={require('../../../assets/icons/small-icon.png')}

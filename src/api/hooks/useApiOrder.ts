@@ -10,11 +10,21 @@ function useValidatePromoCode() {
       return validatePromoCode(data);
     },
     onError: error => {
+      const errorResponse = error.response?.data;
+      let message = 'Призошла ощибка повторите попытку чуть позже';
+      switch (parseInt(errorResponse.code)) {
+        case 8:
+          message =
+            'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+          break;
+        default:
+          message = 'Призошла ошибка, повторите попытку чуть позже.';
+      }
+
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не удалось применить промокод',
+        text1: message,
       });
-      console.log(JSON.stringify(error, null, 2));
     },
     onSuccess: (response: IValidatePromoCodeResponse) => {
       Toast.show({

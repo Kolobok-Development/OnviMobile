@@ -14,7 +14,6 @@ import MapboxGL, {
 
 import Marker from './Marker';
 
-import axios from 'axios';
 import {getCarWashes} from '../../api/AppContent/appContent.ts';
 import useStore from '../../state/store.ts';
 import {usePos} from '@hooks/useApiPos';
@@ -55,6 +54,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     console.log(posList);
   }, [posList]);
 
+  const [zoomedIn, setZoomedIn] = useState(false);
+
   const memoizedBusinesses = useMemo(
     () =>
       posList && posList.length
@@ -77,8 +78,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
 
-  const [userLocation, setUserLocation] =
-    useState<IUserLocation>(DEFAULT_COORDINATES);
+  const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -137,12 +137,25 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
-
-    cameraRef.current.setCamera({
-      centerCoordinate: [long, lat],
-      zoomLevel: 15,
-    });
+    setState((prevState: any) => ({
+      ...prevState,
+      userLocation: {latitude: lat, longitude: long},
+    }));
   };
+
+  useEffect(() => {
+    if (!zoomedIn && userLocation) {
+      setUserLocation({
+        latitude: userLocation.latitude,
+        longitude: userLocation.longitude,
+      });
+      cameraRef.current.setCamera({
+        centerCoordinate: [userLocation.longitude, userLocation.latitude],
+        zoomLevel: 10,
+      });
+      setZoomedIn(true);
+    }
+  }, [userLocation]);
 
   // @ts-ignore
   return (
@@ -161,7 +174,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           scaleBarEnabled={false}
           preferredFramesPerSecond={120}>
           <MapboxGL.Camera
-            centerCoordinate={[userLocation.longitude, userLocation.latitude]}
             ref={cameraRef}
             zoomLevel={100}
             pitch={1}
@@ -171,7 +183,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           />
           {memoizedBusinesses}
           <UserLocation
-            visible={false}
+            visible={hasLocationPermission}
+            showsUserHeadingIndicator={true}
             requestsAlwaysUse={true}
             onUpdate={onUserLocationUpdate}
             animated={true}

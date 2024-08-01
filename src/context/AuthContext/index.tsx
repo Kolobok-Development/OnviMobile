@@ -44,7 +44,6 @@ const saveUserSession = async (
       unqNumber: client?.cards?.unqNumber || existingData.unqNumber,
     };
 
-    console.log('new Data: ', newData);
     await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
   } catch (error) {
     console.error('Error saving user session:', error);
@@ -76,21 +75,19 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   const updateUser = async (partialNewState: IUserPartial) => {
-    if (partialNewState.avatar) {
-      try {
-        const existingSession = await EncryptedStorage.getItem('user_session');
-        let existingData: Record<string, any> = {};
-        if (existingSession) {
-          existingData = JSON.parse(existingSession);
-        }
-        const newData = {
-          ...existingData,
-          avatar: partialNewState.avatar,
-        };
-        await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
-      } catch (error) {
-        console.error('Error saving user session:', error);
+    try {
+      const existingSession = await EncryptedStorage.getItem('user_session');
+      let existingData: Record<string, any> = {};
+      if (existingSession) {
+        existingData = JSON.parse(existingSession);
       }
+      const newData = {
+        ...existingData,
+        avatar: partialNewState.avatar,
+      };
+      await EncryptedStorage.setItem('user_session', JSON.stringify(newData));
+    } catch (error) {
+      console.error('Error saving user session:', error);
     }
 
     const newState = {...user, ...partialNewState};
@@ -124,6 +121,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                   email: data.email,
                   name: data.name,
                   id: data.id,
+                  avatar: data.avatar ? data.avatar : 'both.jpg',
                   birthday: data.birthday,
                   tariff: tariff.cashBack,
                 });
@@ -134,9 +132,9 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           }
 
           if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
-            updateUser({
-              avatar: formatted.avatar,
-            });
+            // updateUser({
+            //   avatar: formatted.avatar,
+            // });
             await refreshToken(formatted);
             return;
           }
@@ -204,6 +202,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                 balance: data.balance,
                 email: data.email,
                 name: data.name,
+                avatar: data.avatar ? data.avatar : 'both.jpg',
                 id: data.id,
                 birthday: data.birthday,
                 tariff: tariff.cashBack,
@@ -239,6 +238,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         return data;
       })
       .catch((err: unknown) => {
+        console.log(JSON.stringify(err, null, 2));
         Toast.show({
           type: 'customErrorToast',
           text1: 'Не получилось отправить СМС сообщение.',
@@ -255,7 +255,8 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         .replace('-', '');
 
       const response = await login({otp: otp, phone: formatted});
-
+      //console.log('LOGGED IN')
+      //console.log(JSON.stringify(response, null, 2));
       if (response.type === 'login-success') {
         await saveUserSession(response.tokens, response.client);
 
@@ -273,6 +274,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
               email: data.email,
               name: data.name,
               id: data.id,
+              avatar: data.avatar ? data.avatar : 'both.jpg',
               birthday: data.birthday,
               tariff: tariff.cashBack,
             });
@@ -281,6 +283,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
       }
       return response.type;
     } catch (err) {
+      console.log(JSON.stringify(err, null, 2));
       Toast.show({
         type: 'customErrorToast',
         text1: 'Не получилось зайти в приложение!',
@@ -336,6 +339,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
               email: data.email,
               name: data.name,
               id: data.id,
+              avatar: data.avatar ? data.avatar : 'both.jpg',
               birthday: data.birthday,
               tariff: tariff.cashBack,
             });
@@ -348,7 +352,6 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         });
       }
     } catch (err) {
-      console.error(err);
       Toast.show({
         type: 'customErrorToast',
         text1: 'Не получилось зарегистрироваться!',
@@ -358,8 +361,8 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
   };
 
   async function loadUser() {
-    console.log('Called');
     await getMe().then(data => {
+      console.log(JSON.stringify(data, null, 2));
       getTariff().then(tariff => {
         updateUser({
           cards: data.cards,
@@ -368,6 +371,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           email: data.email,
           name: data.name,
           id: data.id,
+          avatar: data.avatar ? data.avatar : 'both.jpg',
           birthday: data.birthday,
           tariff: tariff.cashBack,
         });
@@ -392,9 +396,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
         avatar: '',
         tariff: null,
       });
-    } catch (err) {
-      console.log(err);
-    }
+    } catch (err) {}
   }
 
   if (store.loading) {

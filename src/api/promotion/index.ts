@@ -13,6 +13,6 @@ export async function apply(
     IUserApiResponse<IApplyPromotionResponse>
   >(PROMOTION.APPLY_URL, body);
 
-  console.log(response.config);
+  console.log(`RESPONSE --> ${JSON.stringify(response, null, 2)}`);
   return response.data.data;
 }

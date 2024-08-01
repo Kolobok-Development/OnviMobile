@@ -8,10 +8,25 @@ function useApplyPromotion() {
     mutationFn: (data: IApplyPromotionRequest) => {
       return apply(data);
     },
-    onError: () => {
+    onError: error => {
+      const errorResponse = error.response?.data;
+      let message = 'Призошла ощибка повторите попытку чуть позже';
+
+      switch (parseInt(errorResponse.code)) {
+        case 84:
+          message =
+            'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+          break;
+        case 88:
+          message = 'К сожалению данный промокод истек.';
+          break;
+        default:
+          message = 'Призошла ошибка, повторите попытку чуть позже.';
+      }
+
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Призошла ощибка повторите попытку чуть позже',
+        text1: message,
       });
     },
     onSuccess: () => {
