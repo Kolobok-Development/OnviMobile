@@ -16,6 +16,10 @@ import Marker from './Marker';
 
 import axios from 'axios';
 import {getCarWashes} from '../../api/AppContent/appContent.ts';
+import useStore from '../../state/store.ts';
+import {usePos} from '@hooks/useApiPos';
+import useSWR from 'swr';
+import {getPOSList} from '@services/api/pos';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
@@ -33,12 +37,28 @@ const DEFAULT_COORDINATES: IUserLocation = {
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {state, setState} = useAppState();
+
   const businesses = state.businesses;
+
+  const {posList, setPosList } = useStore();
+
+  useSWR(['getPOSList'], () => getPOSList({}), {
+    onError: error => {
+      console.error(error);
+    },
+    onSuccess: data => {
+      setPosList(data.businessesLocations);
+    },
+  });
+
+  useEffect(() => {
+    console.log(posList);
+  }, [posList]);
 
   const memoizedBusinesses = useMemo(
     () =>
-      businesses && businesses.length
-        ? businesses.map(business => {
+      posList && posList.length
+        ? posList.map(business => {
             return (
               <Marker
                 key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
@@ -50,7 +70,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             );
           })
         : [],
-    [businesses],
+    [posList],
   );
 
   //Location state
@@ -86,28 +106,28 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    try {
-      async function loadWashes() {
-        await getCarWashes({})
-          .then(data => {
-            if (data && data.businessesLocations) {
-              setState({
-                ...state,
-                businesses: data.businessesLocations,
-              });
-            }
-          })
-          .catch(err => console.log(`Error: ${err}`));
-      }
-
-      if (businesses.length === 0) {
-        loadWashes();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     async function loadWashes() {
+  //       await getCarWashes({})
+  //         .then(data => {
+  //           if (data && data.businessesLocations) {
+  //             setState({
+  //               ...state,
+  //               businesses: data.businessesLocations,
+  //             });
+  //           }
+  //         })
+  //         .catch(err => console.log(`Error: ${err}`));
+  //     }
+  //
+  //     if (businesses.length === 0) {
+  //       loadWashes();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   const onUserLocationUpdate = async (location: any) => {
     let lat = location.coords.latitude;
@@ -123,7 +143,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       zoomLevel: 15,
     });
   };
-
 
   // @ts-ignore
   return (
@@ -141,7 +160,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           zoomEnabled={true}
           scaleBarEnabled={false}
           preferredFramesPerSecond={120}>
-
           <MapboxGL.Camera
             centerCoordinate={[userLocation.longitude, userLocation.latitude]}
             ref={cameraRef}
@@ -167,7 +185,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
               radius: 25.0,
             }}
             visible={true}
-
           />
         </MapboxGL.MapView>
       </View>
