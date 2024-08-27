@@ -40,6 +40,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
 
   const [zoomedIn, setZoomedIn] = useState(false);
 
+  useEffect(() => {
+    console.log("businesses: ", posList?.length)
+  }, [posList])
+
   const memoizedBusinesses = useMemo(
     () =>
       posList && posList.length
