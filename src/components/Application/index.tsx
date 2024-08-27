@@ -1,6 +1,5 @@
 import React from 'react';
 
-import {useAuth} from '@context/AuthContext';
 import {AuthStack} from '@navigators/AuthStack';
 import {DrawerStack} from '@navigators/DrawerStack';
 import {AppProvider} from '@context/AppContext';
@@ -8,18 +7,15 @@ import {AppProvider} from '@context/AppContext';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '@styled/alerts/toasts';
 
-const Application = () => {
-  const context = useAuth();
-  if (!context) {
-    return null;
-  }
+import useStore from '../../state/store';
 
-  const {store} = context;
+const Application = () => {
+  const { accessToken } = useStore()
 
   return (
     <>
       <AppProvider>
-        {!store.accessToken ? <AuthStack /> : <DrawerStack />}
+        {!accessToken ? <AuthStack /> : <DrawerStack />}
         <Toast config={toastConfig} />
       </AppProvider>
     </>

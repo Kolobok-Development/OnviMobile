@@ -14,32 +14,20 @@ import MapboxGL, {
 
 import Marker from './Marker';
 
-import {getCarWashes} from '../../api/AppContent/appContent.ts';
 import useStore from '../../state/store.ts';
-import {usePos} from '@hooks/useApiPos';
 import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
+
+import { IUserLocation } from "../../state/app/AppSlice.ts"
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
 );
 
-interface IUserLocation {
-  latitude: number;
-  longitude: number;
-}
-
-const DEFAULT_COORDINATES: IUserLocation = {
-  latitude: 55.751244,
-  longitude: 37.618423,
-};
-
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const {state, setState} = useAppState();
+  const {setState} = useAppState();
 
-  const businesses = state.businesses;
-
-  const {posList, setPosList } = useStore();
+  const {posList, setPosList, location, setLocation } = useStore();
 
   useSWR(['getPOSList'], () => getPOSList({}), {
     onError: error => {
@@ -49,10 +37,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       setPosList(data.businessesLocations);
     },
   });
-
-  useEffect(() => {
-    console.log(posList);
-  }, [posList]);
 
   const [zoomedIn, setZoomedIn] = useState(false);
 
@@ -78,7 +62,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
 
-  const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
+  // const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -133,7 +117,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     let lat = location.coords.latitude;
     let long = location.coords.longitude;
     userLocationRef.current = {lat: lat, lon: long};
-    setUserLocation({
+    setLocation({
       latitude: lat,
       longitude: long,
     });
@@ -144,18 +128,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   };
 
   useEffect(() => {
-    if (!zoomedIn && userLocation) {
-      setUserLocation({
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-      });
+    if (!zoomedIn && location && typeof location.latitude !== "undefined" && typeof location.longitude !== "undefined") {
       cameraRef.current.setCamera({
-        centerCoordinate: [userLocation.longitude, userLocation.latitude],
+        centerCoordinate: [location.longitude, location.latitude],
         zoomLevel: 10,
       });
       setZoomedIn(true);
     }
-  }, [userLocation]);
+  }, [location]);
 
   // @ts-ignore
   return (
@@ -166,7 +146,15 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           width: Dimensions.get('screen').width,
           position: 'absolute',
         }}>
-        <MapboxGL.MapView
+          <MapboxGL.Camera
+            ref={cameraRef}
+            zoomLevel={100}
+            pitch={1}
+            animationMode="flyTo"
+            animationDuration={6000}
+            followUserLocation={false}
+          />
+        {/* <MapboxGL.MapView
           style={{
             flex: 1,
           }}
@@ -199,7 +187,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             }}
             visible={true}
           />
-        </MapboxGL.MapView>
+        </MapboxGL.MapView> */}
       </View>
     </>
   );

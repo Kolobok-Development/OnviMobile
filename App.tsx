@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
@@ -10,7 +10,9 @@ import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 
-import PushNotifications from '@services/PushNotifications';
+import PushNotifications from './src/services/push-notifications/PushNotifications'
+
+import useStore from './src/state/store';
 
 
 const queryClient = new QueryClient({
@@ -26,6 +28,11 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
+  const { loadUser } = useStore()
+
+  useEffect(() => {
+    loadUser()
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>

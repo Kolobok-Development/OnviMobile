@@ -13,7 +13,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // styled components
 import {Card} from '@styled/cards';
 
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../../state/store';
 
 import {useTheme} from '@context/ThemeProvider';
 
@@ -41,7 +41,7 @@ import { CustomModal } from "@styled/views/CustomModal";
 const WIDTH = Dimensions.get('screen').width;
 
 const Main = ({drawerNavigation}: any) => {
-  const {user}: any = useAuth();
+  const {user, loadUser} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
@@ -67,7 +67,6 @@ const Main = ({drawerNavigation}: any) => {
   };
 
   // UPDATE BALANCE
-  const {loadUser}: any = useAuth();
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -171,19 +170,6 @@ const Main = ({drawerNavigation}: any) => {
           </View>
         </SkeletonPlaceholder>
       </View>
-    );
-  };
-
-  const BalancePlaceHolder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={10}>
-        <View
-          style={{
-            width: dp(70),
-            height: dp(25),
-          }}
-        />
-      </SkeletonPlaceholder>
     );
   };
 

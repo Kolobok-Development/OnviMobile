@@ -1,16 +1,9 @@
 import axios from 'axios';
 
-
-import { useAuth } from '@context/AuthContext';
+import useStore from '../../state/store';
 
 // Validators
 import { isValidStorageData, hasAccessTokenCredentials } from '@context/AuthContext/index.validator';
-
-// Secure Storage
-import EncryptedStorage from 'react-native-encrypted-storage';
-
-// Interfaces
-import { IAuthContext, IEncryptedStorage } from '@context/AuthContext/index.interface';
 
 interface IConfigObject {
     baseURL?: string;
@@ -31,23 +24,17 @@ const useAxios = (url: string) => {
         }
     }
 
-    const { store, refreshToken } = useAuth() as IAuthContext;
+    const { refreshToken, mutateRefreshToken, accessToken, expiredDate } = useStore()
 
     const refresh: () => Promise<string | null> = async () => {
         try {
-          const encryptedStorage: string | null = await EncryptedStorage.getItem("user_session");
-
-          if (encryptedStorage) {
-            const formatted: IEncryptedStorage = await JSON.parse(encryptedStorage as string);
-
-            if (formatted) {
-              if (hasAccessTokenCredentials(formatted.refreshToken)) {
-                const token = await refreshToken(formatted);
+            if (hasAccessTokenCredentials(refreshToken)) {
+                const token = await mutateRefreshToken();
 
                 return token;
-              }
             }
-          }
+            
+            return null
         } catch (error) {
           console.log(`Error: ${error}`)
         }
@@ -60,9 +47,6 @@ const useAxios = (url: string) => {
     if (url) {
         config.baseURL = switchUrl(url);
     }
-
-    let accessToken = store.accessToken ? store.accessToken : null;
-    let expiredDate = store.expiredDate ? store.expiredDate : null;
 
     if (accessToken && expiredDate && isValidStorageData(accessToken, expiredDate)) {
         config.headers = {
