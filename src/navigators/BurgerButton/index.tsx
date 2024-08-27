@@ -8,9 +8,9 @@ import {dp} from "../../utils/dp";
 import {Menu} from "react-native-feather";
 import { ArrowLeft } from 'react-native-feather';
 
-import { useAppState } from '@context/AppContext';
-
 import { navigationRef } from '@navigators/BottomSheetStack';
+
+import useStore from '../../state/store';
 
 interface BurgerProps {
     bottomSheetIndex?: number;
@@ -21,10 +21,7 @@ interface BurgerProps {
 const BurgerButton = ({ bottomSheetIndex = 0, isDrawerStack = false, handleSheetChanges }: BurgerProps) => {
     const navigation = useNavigation<any>();
 
-    const { state } = useAppState()
-
-    const isMainScreen = state.isMainScreen
-
+    const { isMainScreen } = useStore()
     if (isDrawerStack){
         return (
             <View style={[

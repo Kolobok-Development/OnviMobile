@@ -41,13 +41,13 @@ import { CustomModal } from "@styled/views/CustomModal";
 const WIDTH = Dimensions.get('screen').width;
 
 const Main = ({drawerNavigation}: any) => {
-  const {user, loadUser} = useStore();
+  const {isBottomSheetOpen, loadUser, location} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
   const {state} = useAppState();
 
-  const isOpened = state.bottomSheetOpened;
+  const isOpened = isBottomSheetOpen
 
   const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
 
@@ -78,11 +78,10 @@ const Main = ({drawerNavigation}: any) => {
   //Near by carwash
   const [nearestCarWash, setNearestCarWash] = useState(null);
   const businesses = state.businesses;
-  const userLocation = state.userLocation;
   const [nearByModal, setNearByModal] = useState(false)
 
   const findNearestCarWash = () => {
-    if (!userLocation) {
+    if (!location) {
       return;
     }
 
@@ -97,8 +96,8 @@ const Main = ({drawerNavigation}: any) => {
       const cwLat = carWash.location.lat;
       const cwLon = carWash.location.lon;
       const distance = calculateDistance(
-        userLocation.longitude,
-        userLocation.latitude,
+        location.longitude,
+        location.latitude,
         cwLon,
         cwLat,
       );

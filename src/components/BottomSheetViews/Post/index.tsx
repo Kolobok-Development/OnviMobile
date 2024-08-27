@@ -17,15 +17,17 @@ import {Button} from '@styled/buttons';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {NewsPost} from '../../../api/AppContent/types';
 
+import useStore from "../../../state/store"
+
 const Post = () => {
   const route: any = useRoute();
 
   const [post, setPost] = useState<NewsPost | null>(null);
   const navigation = useNavigation();
 
-  const {state} = useAppState();
+  const { isBottomSheetOpen: isOpened } = useStore()
 
-  const isOpened = state.bottomSheetOpened;
+  const {state} = useAppState();
 
   useEffect(() => {
     if (route && route.params && route.params.data && route.params.data) {

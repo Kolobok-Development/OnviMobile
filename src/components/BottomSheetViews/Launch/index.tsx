@@ -27,6 +27,8 @@ import {ExpandableView} from '@styled/views/ExpandableView';
 import {Price} from '../../../api/AppContent/types';
 import LottieView from "lottie-react-native";
 
+import useStore from '../../../state/store';
+
 const Launch = () => {
   const {theme}: any = useTheme();
   const [value, setValue] = useState(50);
@@ -44,9 +46,10 @@ const Launch = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
+  const { isBottomSheetOpen } = useStore()
+
   const order = state.order;
-  const business = state.businesses;
-  const isOpened = state.bottomSheetOpened;
+  const isOpened = isBottomSheetOpen
 
   const onSelect = (name: string, price: number) => {
     setState({

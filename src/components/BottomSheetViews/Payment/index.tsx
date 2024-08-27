@@ -49,7 +49,7 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user, loadUser} = useStore();
+  const {user, loadUser, isBottomSheetOpen} = useStore();
   const navigation: any = useNavigation();
 
   const {state} = useAppState();
@@ -59,7 +59,7 @@ const Payment = () => {
   const [promocode, setPromocode] = useState<string>('');
   const [usedPoints, setUsedPoints] = useState(0);
 
-  const isOpened = state.bottomSheetOpened;
+  const isOpened = isBottomSheetOpen
   const order = state.order;
 
   const [discount, setDiscount] = useState(0);
