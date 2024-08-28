@@ -425,11 +425,11 @@ const Payment = () => {
                           )}`}
                           backgroundActive="#A3A3A6"
                           backgroundInActive="#000"
-                          circleImageActive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                          circleImageInactive={require('../../../assets/icons/small-icon.png')} // Replace with your image source
-                          circleSize={dp(18)} // Adjust the circle size as needed
-                          switchBorderRadius={20}
-                          width={dp(55)} // Adjust the switch width as needed
+                          circleImageActive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
+                          circleImageInactive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
+                          circleSize={dp(22)} // Adjust the circle size as needed
+                          switchBorderRadius={7}
+                          width={dp(60)} // Adjust the switch width as needed
                           textStyle={{fontSize: dp(13), color: 'white'}}
                         />
                       )}

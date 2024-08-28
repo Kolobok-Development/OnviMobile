@@ -10,7 +10,6 @@ import {
   FlatList,
 } from 'react-native';
 
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';

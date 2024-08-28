@@ -211,8 +211,8 @@ const Launch = () => {
           fontSize={moderateScale(22)}
           fontWeight={'400'}
           onClick={() => {
-            if (value <= 480) {
-              setValue(value + 20);
+            if (value <= 490) {
+              setValue(value + 10);
             }
           }}
         />
@@ -315,8 +315,8 @@ const Launch = () => {
           fontSize={moderateScale(22)}
           fontWeight={'400'}
           onClick={() => {
-            if (value >= 120) {
-              setValue(value - 20);
+            if (value >= 60) {
+              setValue(value - 10);
             }
           }}
         />

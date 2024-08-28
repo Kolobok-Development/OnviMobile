@@ -286,10 +286,10 @@ const Main = ({drawerNavigation}: any) => {
                 <Text
                   onPress={updateInfo}
                   style={{
-                    fontSize: dp(12),
-                    fontWeight: '600',
+                    fontSize: dp(10),
+                    fontWeight: '700',
                     color: 'white',
-                    letterSpacing: 0.2,
+                    letterSpacing: 0.5,
                     flexShrink: 1,
                   }}
                 >
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     padding: dp(16),
   },
   label: {
-    paddingBottom: dp(10),
+    paddingBottom: dp(8),
   },
   info: {
     display: 'flex',

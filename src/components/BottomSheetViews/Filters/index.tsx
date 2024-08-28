@@ -16,9 +16,9 @@ import {useBusiness} from '../../../api/hooks/useAppContent';
 import {useAppState} from '@context/AppContext';
 import {FiltersType} from '../../../types/models/FiltersType';
 import {cloneDeep} from 'lodash';
-import { filters } from "css-select";
+import {filters} from 'css-select';
 
-import { getCarWashes } from "../../../api/AppContent/appContent"
+import {getCarWashes} from '../../../api/AppContent/appContent';
 
 // Define types
 type Filter = {
@@ -112,11 +112,7 @@ const Filters = () => {
 
   const [columns, setColumns] = useState(3);
   //Query
-  const {
-    isFetching,
-    refetch,
-  } = useBusiness({filter: query}, false);
-
+  const {isFetching, refetch} = useBusiness({filter: query}, false);
 
   // Function to handle submit button press
   const handleSubmit = async () => {
@@ -135,19 +131,18 @@ const Filters = () => {
   };
 
   const reset = async () => {
-    const filtersQuery = generateQuery({})
-    setSelectedFilters({})
+    const filtersQuery = generateQuery({});
+    setSelectedFilters({});
     getCarWashes({filter: filtersQuery}).then((data: any) => {
-        setState({
-          ...state,
-          businesses: data.businessesLocations,
-          filters: {},
-        });
+      setState({
+        ...state,
+        businesses: data.businessesLocations,
+        filters: {},
+      });
 
-        navigation.navigate('Main');
-      
-    })
-  }
+      navigation.navigate('Main');
+    });
+  };
 
   const renderFilterItem = ({item}: {item: FilterItem}) => {
     const {sectionCode, filter} = item;
@@ -199,7 +194,6 @@ const Filters = () => {
         renderItem={renderSection}
         keyExtractor={section => section.title.code}
         contentContainerStyle={{
-          marginTop: dp(20),
           flex: 1,
           marginBottom: dp(60),
         }}
@@ -209,10 +203,11 @@ const Filters = () => {
           alignItems: 'center',
         }}
         ListFooterComponent={
-          <View style={{
-            display: "flex",
-            flexDirection: "row",
-          }}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+            }}>
             <Button
               label={'Сбросить'}
               color={'lightGrey'}
@@ -222,7 +217,7 @@ const Filters = () => {
               fontWeight={'600'}
               onClick={reset}
             />
-            <View style={{ width: dp(10) }}></View>
+            <View style={{width: dp(10)}} />
             <Button
               label={'Применить'}
               color={'blue'}
@@ -245,7 +240,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     backgroundColor: '#FFFFFF',
-    paddingTop: dp(15),
+    paddingTop: dp(10),
     paddingLeft: dp(22),
     paddingRight: dp(22),
     borderRadius: dp(38),

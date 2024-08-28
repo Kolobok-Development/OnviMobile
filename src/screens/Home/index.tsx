@@ -15,7 +15,7 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 import {useAppState} from '@context/AppContext';
 
-import { useReducedMotion } from 'react-native-reanimated';
+import {useReducedMotion} from 'react-native-reanimated';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
@@ -31,9 +31,9 @@ import {dp} from '../../utils/dp';
 
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
-import { useIsFocused } from "@react-navigation/core";
-import { useAuth } from "@context/AuthContext";
-import { useNavigationState } from "@react-navigation/native";
+import {useIsFocused} from '@react-navigation/core';
+import {useAuth} from '@context/AuthContext';
+import {useNavigationState} from '@react-navigation/native';
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
@@ -41,14 +41,13 @@ const Home = ({navigation}: any) => {
 
   const cameraRef = useRef<any>(null);
 
-
   const userLocationRef = useRef<any>(null);
 
   const bottomSheetRef = useRef(null);
 
   const {state} = useAppState();
 
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotion();
 
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
@@ -60,19 +59,22 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
-    console.log({lon:  userLocationRef.current.lon,
-      lat: userLocationRef.current.lat})
-    console.log('camera: ', [userLocationRef.current.lon,
-      userLocationRef.current.lat])
+    console.log({
+      lon: userLocationRef.current.lon,
+      lat: userLocationRef.current.lat,
+    });
+    console.log('camera: ', [
+      userLocationRef.current.lon,
+      userLocationRef.current.lat,
+    ]);
     cameraRef.current.setCamera({
       centerCoordinate: [
         userLocationRef.current.lon,
-        userLocationRef.current.lat
+        userLocationRef.current.lat,
       ],
-      zoomLevel: 10,
+      zoomLevel: 16,
     });
   };
-
 
   const renderHandleComponent = useCallback((props: any) => {
     const filters = state.filters;
@@ -179,7 +181,10 @@ const Home = ({navigation}: any) => {
         </BottomSheet>
 
         <View style={{...styles.burger}}>
-          <BurgerButton bottomSheetIndex={bottomSheetIndex} handleSheetChanges={handleSheetChanges} />
+          <BurgerButton
+            bottomSheetIndex={bottomSheetIndex}
+            handleSheetChanges={handleSheetChanges}
+          />
         </View>
         <View style={{...styles.balance}}>
           <Balance

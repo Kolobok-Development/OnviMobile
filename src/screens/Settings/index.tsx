@@ -43,7 +43,6 @@ export const avatarSwitch = (avatar: string) => {
 
 const Settings = () => {
   const {user, signOut, updateUser, loadUser}: any = useAuth();
-  const api = useAxios('CORE_URL');
   const navigation = useNavigation<any>();
   const {mutate, isPending} = useUpdateUser();
 
@@ -255,6 +254,7 @@ const Settings = () => {
         <View style={styles.header}>
           <BurgerButton isDrawerStack={true} />
           <Text style={styles.screenTitle}>Настройки</Text>
+          <View style={{width: dp(50)}} />
         </View>
         <View style={styles.container}>
           <View style={styles.profileCard}>
@@ -327,13 +327,30 @@ const Settings = () => {
               </View>
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Система</Text>
+              <Text style={styles.sectionTitle}>Приложение</Text>
               <View style={styles.sectionBody}>
                 <View style={styles.rowWrapper}>
                   <TouchableOpacity
                     style={[styles.row, styles.rowFirst]}
                     onPress={onAboutButtonHandle}>
                     <Text style={styles.rowLabel}>О приложении</Text>
+                    <Image
+                      style={{
+                        height: dp(24),
+                        width: dp(24),
+                        resizeMode: 'contain',
+                      }}
+                      source={require('../../assets/icons/arrow-up.png')}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.rowWrapper}>
+                  <TouchableOpacity
+                    style={[styles.row, styles.rowFirst]}
+                    onPress={() =>
+                      navigation.navigate('Правовые документы')
+                    }>
+                    <Text style={styles.rowLabel}>Правовые документы</Text>
                     <Image
                       style={{
                         height: dp(24),
@@ -399,11 +416,11 @@ const styles = StyleSheet.create({
     paddingLeft: dp(16),
     paddingTop: dp(16),
     paddingBottom: dp(3),
+    justifyContent: 'space-between',
   },
   screenTitle: {
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: dp(24),
-    marginLeft: dp(15),
     textAlignVertical: 'center',
     ...Platform.select({
       ios: {
@@ -411,7 +428,7 @@ const styles = StyleSheet.create({
       },
     }),
     color: '#000',
-    letterSpacing: 0.33,
+    letterSpacing: 0.2,
   },
   backButton: {
     alignSelf: 'flex-start',
@@ -580,7 +597,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.33,
   },
   sectionBody: {
-    borderRadius: dp(12),
+    borderRadius: dp(10),
     backgroundColor: '#F5F5F5',
     shadowColor: '#000',
     shadowOffset: {
@@ -596,6 +613,7 @@ const styles = StyleSheet.create({
     paddingLeft: dp(10),
     backgroundColor: '#fff',
     borderTopWidth: 1,
+    borderRadius: dp(10),
     borderColor: '#f0f0f0',
   },
   row: {

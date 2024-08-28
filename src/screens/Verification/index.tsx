@@ -1,5 +1,12 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Dimensions,
+  Image,
+  Vibration,
+} from 'react-native';
 import {Button} from '@styled/buttons';
 
 // Bottom Sheet Component
@@ -13,7 +20,8 @@ import {dp} from '../../utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
 import OTPTextView from 'react-native-otp-textinput';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {YELLOW} from '@utils/colors.ts';
+import {GREY, YELLOW} from '@utils/colors.ts';
+import CodeInput from '@styled/inputs/CodeInput';
 
 interface VerificationProps {
   route: any;
@@ -34,13 +42,15 @@ const Verification = ({route}: VerificationProps) => {
   //OTP
   const [otpInput, setOtpInput] = useState<string>('');
   const input = useRef<OTPTextView>(null);
+  const inputRef = useRef<any>(null);
   const updateOtpText = () => input.current?.setValue(otpInput);
 
-  const clear = () => input.current?.clear();
+  const clear = () => inputRef.current?.clear();
 
   const handleCellTextChange = async (text: string, i: number) => {
     if (i === 0) {
       const clippedText = await Clipboard.getString();
+      console.log(' CLIPBOARD ', clippedText);
       if (clippedText.slice(0, 1) === text) {
         input.current?.setValue(clippedText, true);
       }
@@ -61,6 +71,7 @@ const Verification = ({route}: VerificationProps) => {
       if (!res) {
         setLoading(false);
         setError(true);
+        Vibration.vibrate(100);
         clear();
       }
 
@@ -136,20 +147,33 @@ const Verification = ({route}: VerificationProps) => {
         <Text style={styles.descriptionText}>
           Код отправлен на {route.params.phone}
         </Text>
-        <OTPTextView
+        {/*<OTPTextView*/}
+        {/*  inputCount={4}*/}
+        {/*  ref={input}*/}
+        {/*  keyboardType="numeric"*/}
+        {/*  handleTextChange={setOtpInput}*/}
+        {/*  handleCellTextChange={handleCellTextChange}*/}
+        {/*  containerStyle={styles.textInputContainer}*/}
+        {/*  textInputStyle={{*/}
+        {/*    padding: dp(5),*/}
+        {/*    fontSize: dp(28),*/}
+        {/*  }}*/}
+        {/*  tintColor={YELLOW}*/}
+        {/*/>*/}
+        {/*<CodeInput error={error} setError={setError} verify={verifyCode} />*/}
+        <CodeInput
+          ref={inputRef}
           inputCount={4}
-          ref={input}
-          keyboardType="numeric"
+          defaultValue={''}
+          inputCellLength={1}
           handleTextChange={setOtpInput}
-          handleCellTextChange={handleCellTextChange}
-          containerStyle={styles.textInputContainer}
-          textInputStyle={{
-            padding: dp(5),
-            fontSize: dp(28),
-          }}
           tintColor={YELLOW}
+          offTintColor={GREY}
+          containerStyle={{
+            marginTop: '5%',
+          }}
+          handeCallTextChange={handleCellTextChange}
         />
-        {/* <CodeInput error={error} setError={setError} verify={verifyCode} /> */}
         <View style={{paddingTop: dp(100)}}>
           <Button
             label="Получить новый код"

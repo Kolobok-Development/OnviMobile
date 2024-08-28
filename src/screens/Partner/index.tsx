@@ -131,6 +131,7 @@ const Partner = () => {
               }}
             />
             <Text style={styles.screenTitle}>{partner?.attributes.name}</Text>
+            <View style={{width: dp(50)}} />
           </View>
           {partner ? (
             <View style={styles.content}>
@@ -211,13 +212,14 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     textAlign: 'center',
+    justifyContent: 'space-between',
   },
   screenTitle: {
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: dp(24),
-    marginLeft: dp(15),
     textAlignVertical: 'center',
     color: '#000',
+    letterSpacing: 0.2,
     ...Platform.select({
       ios: {
         lineHeight: dp(40),

@@ -168,7 +168,15 @@ const History = ({drawerNavigation}: any) => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Button
+        <Text
+          style={{
+            fontSize: dp(19),
+            fontWeight: '600',
+            letterSpacing: 0.5,
+          }}>
+          История заказов
+        </Text>
+        {/*<Button
           label="История"
           onClick={() => switchTab(false)}
           color={!tab ? 'blue' : 'lightGrey'}
@@ -176,8 +184,8 @@ const History = ({drawerNavigation}: any) => {
           height={43}
           fontSize={18}
           fontWeight="600"
-        />
-        <View style={{width: dp(3)}} />
+        />*/}
+        {/*<View style={{width: dp(3)}} />
         <View style={styles.notifications}>
           <Button
             label="Уведомления"
@@ -188,40 +196,28 @@ const History = ({drawerNavigation}: any) => {
             fontSize={18}
             fontWeight="600"
           />
-          {/*<NotificationCircle number={4} /> */}
-        </View>
+          <NotificationCircle number={4} />
+        </View>*/}
       </View>
       {isLoading ? (
         <HistoryPlaceholder />
       ) : (
         <>
-          {!tab ? (
-            <FlatList
-              data={data}
-              renderItem={order => (
-                <BalanceCard key={order.index} option={order.item} />
-              )}
-              refreshing={isLoading}
-              keyExtractor={(_order, index) => index.toString()}
-              onRefresh={refetch}
-              showsVerticalScrollIndicator={false}
-              ListEmptyComponent={() => (
-                <>
-                  <EmptyPlaceholder text="У вас пока нет заказов" />
-                </>
-              )}
-            />
-          ) : (
-            <ScrollView>
-              {[].length ? (
-                notifications.map((notification, index) => (
-                  <Notification key={index} option={notification} />
-                ))
-              ) : (
-                <EmptyPlaceholder text="У вас пока нет уведомлений. Они будут отображены здесь, когда появятся." />
-              )}
-            </ScrollView>
-          )}
+          <FlatList
+            data={data}
+            renderItem={order => (
+              <BalanceCard key={order.index} option={order.item} />
+            )}
+            refreshing={isLoading}
+            keyExtractor={(_order, index) => index.toString()}
+            onRefresh={refetch}
+            showsVerticalScrollIndicator={false}
+            ListEmptyComponent={() => (
+              <>
+                <EmptyPlaceholder text="У вас пока нет заказов" />
+              </>
+            )}
+          />
         </>
       )}
     </View>

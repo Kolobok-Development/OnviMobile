@@ -13,6 +13,9 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
 import {useNavigationState} from '@react-navigation/native';
+import {color} from 'ansi-fragments';
+import {Color} from 'ansi-fragments/build/fragments/Color';
+import {YELLOW} from '@utils/colors.ts';
 
 interface CustomDrawerItemProps {
   label: string;
@@ -58,10 +61,6 @@ const CustomDrawerContent = ({
   const avatarValue = avatarSwitch(initialAvatar);
   const route = navigation.getState().routes[navigation.getState().index].name;
 
-  useEffect(() => {
-    console.log(route);
-  }, []);
-
   return (
     <View style={{flex: 1}}>
       <DrawerContentScrollView scrollEnabled={false}>
@@ -78,17 +77,32 @@ const CustomDrawerContent = ({
             style={{
               flexDirection: 'row',
               paddingBottom: dp(15),
+              borderRadius: dp(10),
+              alignItems: 'center',
             }}
             onPress={() => navigation.navigate('Настройки')}>
             {/*Profile*/}
-            <Image
-              source={avatarValue}
+            <View
               style={{
-                width: dp(48),
-                height: dp(48),
-                marginTop: dp(40),
-              }}
-            />
+                shadowColor: '#494949',
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.11,
+                shadowRadius: 2.11,
+                elevation: 5,
+              }}>
+              <Image
+                source={avatarValue}
+                style={{
+                  width: dp(58),
+                  marginTop: dp(32),
+                  height: dp(58),
+                  borderRadius: dp(68),
+                }}
+              />
+            </View>
           </TouchableOpacity>
           {/*items*/}
           <View>
@@ -113,17 +127,17 @@ const CustomDrawerContent = ({
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   flexDirection: 'row',
-                  paddingBottom: dp(15),
+                  paddingBottom: dp(10),
                 }}
                 onPress={() => navigation.navigate('Настройки')}>
                 <Text
                   // eslint-disable-next-line react-native/no-inline-styles
                   style={{
-                    paddingTop: dp(24),
                     fontStyle: 'normal',
-                    fontSize: dp(24),
+                    fontSize: dp(20),
                     fontWeight: '600',
                     lineHeight: dp(23),
+                    letterSpacing: 0.43,
                     color: theme.textColor,
                   }}>
                   {user.name}
@@ -136,12 +150,12 @@ const CustomDrawerContent = ({
                   <Text
                     // eslint-disable-next-line react-native/no-inline-styles
                     style={{
-                      paddingTop: dp(8),
                       marginBottom: dp(45),
                       fontStyle: 'normal',
                       fontSize: dp(10),
-                      fontWeight: '600',
+                      fontWeight: '800',
                       lineHeight: dp(20),
+                      letterSpacing: 0.43,
                       color: '#BEBEBE',
                       width: '70%',
                     }}
@@ -152,13 +166,13 @@ const CustomDrawerContent = ({
               <Text
                 // eslint-disable-next-line react-native/no-inline-styles
                 style={{
-                  paddingTop: dp(8),
                   marginBottom: dp(45),
                   fontStyle: 'normal',
                   fontSize: dp(10),
-                  fontWeight: '600',
+                  fontWeight: '800',
                   lineHeight: dp(20),
                   color: '#BEBEBE',
+                  letterSpacing: 0.23,
                 }}>
                 {formatPhoneNumber(user.phone)}
               </Text>
@@ -179,7 +193,7 @@ const CustomDrawerContent = ({
               }}
             />
             <CustomDrawerItem
-              label={'Промокод и скидки'}
+              label={'Акции'}
               color={route === 'Промокоды' ? theme.primary : theme.textColor}
               onPress={() => {
                 navigation.navigate('Промокоды');

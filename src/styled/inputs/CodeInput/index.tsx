@@ -1,165 +1,221 @@
-import { GREY, YELLOW } from '../../../utils/colors'
-import React, { useEffect, useRef, useState } from 'react'
-import { View, StyleSheet, TextInput, Text } from 'react-native'
+import {GREY, YELLOW} from '../../../utils/colors';
+import React, {Component, createRef, useEffect, useRef, useState} from 'react';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Text,
+  ViewStyle,
+  TextStyle,
+} from 'react-native';
 
-import { dp } from "../../../utils/dp"
+import {dp} from '../../../utils/dp';
+import {join, set} from 'lodash';
 
-interface CodeInputProps {
-    verify: (code: string) => void
-    error: boolean
-    setError: any
+interface IState {
+  focus: number;
+  otpText: string[];
 }
 
-const CodeInput = ({ verify, error, setError } : CodeInputProps) => {
+interface OtpInputProps {
+  containerStyle?: ViewStyle;
+  inputCount: number;
+  tintColor: string;
+  offTintColor: string;
+  textInputStyle?: ViewStyle;
+  inputCellLength: number;
+  defaultValue: string;
+  handeCallTextChange?: (text: string, i: number) => void;
+  handleTextChange?: (text: string) => void;
+  onClear?: (clear: () => void) => void;
+}
 
-    const pin1Ref = useRef<any>(null)
-    const pin2Ref = useRef<any>(null)
-    const pin3Ref = useRef<any>(null)
-    const pin4Ref = useRef<any>(null)
+class CodeInput extends Component<OtpInputProps, IState> {
+  inputsRef: React.RefObject<TextInput>[] = [];
 
-    const [pin1, setPin1] = useState<null | string>(null)
-    const [pin2, setPin2] = useState<null | string>(null)
-    const [pin3, setPin3] = useState<null | string>(null)
-    const [pin4, setPin4] = useState<null | string>(null)
+  static defaultProps: Partial<OtpInputProps> = {
+    containerStyle: {},
+    inputCount: 4,
+    tintColor: 'red',
+    offTintColor: 'grey',
+    textInputStyle: {},
+    inputCellLength: 4,
+    defaultValue: '',
+    handeCallTextChange: () => {},
+    handleTextChange: () => {},
+  };
 
-    const submit = () => {
-        if (pin1 && pin2 && pin3 && pin4) {
-            const res: string = pin1 + pin2 + pin3 + pin4
+  constructor(props: OtpInputProps) {
+    super(props);
+    this.inputsRef = Array.from({length: props.inputCount}, () =>
+      createRef<TextInput>(),
+    );
+    this.state = {
+      focus: 0,
+      otpText: this.getOtpText(
+        props.inputCount,
+        props.inputCellLength,
+        props.defaultValue,
+      ),
+    };
+  }
 
-            verify(res)
-        }
+  getOtpText(inputCount: number, inputCl: number, text: string) {
+    let m = text.match(new RegExp('.{1,' + inputCl + '}', 'g')) || [];
+    return m.slice(0, inputCount);
+  }
+
+  onInputFocus = (i: number) => {
+    const prev = i - 1;
+    if (prev > -1 && !this.state.otpText[prev]) {
+      const previousInput = this.inputsRef[prev].current;
+      if (previousInput) {
+        previousInput.focus(); // Focus on the previous input
+        return;
+      }
+    }
+    this.setState({focus: i}); // Set focus to the current input
+  };
+
+  isValidInput = (text: string) => /^[0-9a-zA-Z]+$/.test(text);
+
+  onChangeText = (txt: string, i: number) => {
+    if (txt && !this.isValidInput(txt)) {
+      return;
     }
 
-    useEffect(() => {
-        if (pin4) {
-            submit()
-        }
-    }, [pin4])
+    const tempOtpText = [...this.state.otpText];
+    tempOtpText[i] = txt;
+    this.setState({otpText: tempOtpText});
 
-    const setColor = () => {
-        if (error) {
-            return "green"
-        }
+    this.props.handeCallTextChange && this.props.handeCallTextChange(txt, i);
 
-        return "black"
+    if (
+      txt.length === this.props.inputCellLength &&
+      i !== this.props.inputCount - 1
+    ) {
+      this.inputsRef[i + 1].current?.focus();
     }
+
+    this.props.handleTextChange &&
+      this.props.handleTextChange(tempOtpText.join(''));
+  };
+
+  onKeyPress = (e: any, i: number) => {
+    const val = this.state.otpText[i] || '';
+
+    if (e.nativeEvent.key !== 'Backspace' && i !== this.props.inputCount - 1) {
+      this.inputsRef[i + 1].current?.focus();
+      return;
+    }
+
+    if (e.nativeEvent.key === 'Backspace' && i !== 0) {
+      if (
+        !val.length &&
+        this.state.otpText[i - 1].length === this.props.inputCellLength
+      ) {
+        let temp = [...this.state.otpText];
+        temp[i - 1] = this.state.otpText[i - 1]
+          .split('')
+          .splice(0, this.state.otpText[i - 1].length - 1)
+          .join('');
+
+        this.setState({otpText: temp});
+        this.props.handleTextChange &&
+          this.props.handleTextChange(temp.join(''));
+        this.inputsRef[i - 1].current?.focus();
+      }
+    }
+  };
+
+  clear = () => {
+    this.setState(
+      {
+        otpText: [],
+      },
+      () => {
+        this.inputsRef[0].current?.focus();
+        this.props.handleTextChange && this.props.handleTextChange('');
+      },
+    );
+  };
+
+  render() {
+    const {
+      containerStyle,
+      inputCount,
+      tintColor,
+      offTintColor,
+      inputCellLength,
+    } = this.props;
+    const {focus} = this.state;
+
+    const TextInputComponents = Array.from({length: inputCount}).map((_, i) => {
+      const _inputStyles: TextStyle | ViewStyle = {
+        height: 55,
+        width: 55,
+        borderBottomWidth: 5,
+        margin: 5,
+        textAlign: 'center',
+        fontSize: 22,
+        fontWeight: '600',
+        color: 'black',
+        borderColor: offTintColor,
+      };
+
+      if (focus === i) {
+        _inputStyles.borderColor = tintColor;
+      }
+
+      return (
+        <View key={i} style={{position: 'relative'}}>
+          <TextInput
+            ref={this.inputsRef[i]}
+            style={_inputStyles}
+            value={this.state.otpText[i]}
+            keyboardType="number-pad"
+            maxLength={
+              this.state.otpText[i] === '' ? 4 : this.props.inputCellLength
+            }
+            autoCorrect={false}
+            autoFocus={i === 0}
+            onFocus={() => this.onInputFocus(i)}
+            onChangeText={txt => this.onChangeText(txt, i)}
+            onKeyPress={e => this.onKeyPress(e, i)}
+            multiline={false}
+            textContentType={'oneTimeCode'}
+            autoComplete={'sms-otp'}
+            caretHidden={true}
+          />
+          {(this.state.otpText[i] === undefined ||
+            this.state.otpText[i] === '') && (
+            <Text
+              style={{
+                position: 'absolute',
+                alignSelf: 'center',
+                transform: [{translateX: -2.5}, {translateY: -2.5}],
+                fontSize: 55,
+                color: offTintColor,
+              }}>
+              •
+            </Text>
+          )}
+        </View>
+      );
+    });
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', flexDirection: "row", justifyContent: "space-around" }}>
-            <View style={styles.textInputView}>
-                    <TextInput 
-                        keyboardType={"number-pad"}
-                        maxLength={1}
-                        onChangeText={(pin: string) => {
-                            if (error) {
-                                setError(false)
-                            }
-                            setPin1(pin)
-                            if (pin) {
-                                pin2Ref.current.focus()
-                            }
-                        }}
-                        style={{...styles.textInputText, color: YELLOW, borderBottomColor: !error ? (pin1 ? "#BFFA00" : "#A3A3A6") : "#FF0000" }}
-                        ref={pin1Ref}
-                        underlineColorAndroid="transparent"
-                    />
-            </View>
-            <View style={styles.textInputView}>
-                <TextInput 
-                    keyboardType={"number-pad"}
-                    maxLength={1}
-                    onChangeText={(pin) => {
-                        if (error) {
-                            setError(false)
-                        }
-                        setPin2(pin)
-                        if (pin) {
-                            pin3Ref.current.focus()
-                        } else {
-                            pin1Ref.current.focus()
-                        }
-                    }}
-                    onKeyPress={({nativeEvent}) => {
-                        if (nativeEvent.key === 'Backspace') {
-                             pin1Ref.current.focus()
-                        }
-                    }}
-                    style={{...styles.textInputText, color: YELLOW, borderBottomColor: !error ? (pin2 ? "#BFFA00" : "#A3A3A6") : "#FF0000" }}
-                    underlineColorAndroid="transparent"
-                    ref={pin2Ref}
-                />
-            </View>
-            <View style={styles.textInputView}>
-                <TextInput 
-                    keyboardType={"number-pad"}
-                    maxLength={1}
-                    onChangeText={(pin) => {
-                        if (error) {
-                            setError(false)
-                        }
-                        setPin3(pin)
-                        if (pin) {
-                            pin4Ref.current.focus()
-                        } else {
-                            pin2Ref.current.focus()
-                        }
-                    }}
-                    onKeyPress={({nativeEvent}) => {
-                        if (nativeEvent.key === 'Backspace') {
-                             pin2Ref.current.focus()
-                        }
-                    }}
-                    style={{...styles.textInputText, color: YELLOW, borderBottomColor: !error ? (pin3 ? "#BFFA00" : "#A3A3A6") : "#FF0000" }}
-                    underlineColorAndroid="transparent"
-                    ref={pin3Ref}
-                />
-            </View>
-            <View style={styles.textInputView}>
-                <TextInput 
-                    keyboardType={"number-pad"}
-                    maxLength={1}
-                    onChangeText={(pin) => {
-                        if (error) {
-                            setError(false)
-                        }
-                        setPin4(pin)
-                        if (!pin) {
-                            pin3Ref.current.focus()
-                        } 
-                    }}
-                    onKeyPress={({nativeEvent}) => {
-                        if (nativeEvent.key === 'Backspace') {
-                             pin3Ref.current.focus()
-                        }
-                    }}
-                    style={{...styles.textInputText, color: YELLOW, borderBottomColor: !error ? (pin4 ? "#BFFA00" : "#A3A3A6") : "#FF0000" }}
-                    underlineColorAndroid="transparent"
-                    ref={pin4Ref}
-                />
-            </View>
-        </View>
-    )
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignSelf: 'center',
+          ...containerStyle,
+        }}>
+        {TextInputComponents}
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-    textInputView: {
-        width: dp(50),
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: dp(120),
-    },
-    textInputText: {
-        marginTop: dp(20),
-        fontSize: dp(40),
-        textAlign: 'center',
-        justifyContent: 'center',
-        padding: 10,
-        borderBottomWidth: 1,
-    },
-    textInputTextActive: {
-        fontSize: dp(40),
-    }
-})
-
-export { CodeInput }
-
+export default CodeInput;

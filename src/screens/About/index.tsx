@@ -25,6 +25,7 @@ const About = () => {
             }}
           />
           <Text style={styles.screenTitle}>О Нас</Text>
+          <View style={{width: dp(50)}} />
         </View>
         <View style={styles.content}>
           <Image
@@ -79,18 +80,17 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: dp(16),
     flexDirection: 'column',
-    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',
     textAlign: 'center',
-    alignSelf: 'flex-start',
+    justifyContent: 'space-between',
   },
   screenTitle: {
-    fontWeight: '600',
+    fontWeight: '700',
     fontSize: dp(24),
-    marginLeft: dp(15),
     textAlignVertical: 'center',
+    letterSpacing: 0.2,
     color: '#000',
     ...Platform.select({
       ios: {

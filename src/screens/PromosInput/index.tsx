@@ -1,13 +1,14 @@
 import {
+  Platform,
   SafeAreaView,
   ScrollView,
-  StyleSheet,
+  StyleSheet, Text,
   TextInput,
-  View,
-} from 'react-native';
+  View
+} from "react-native";
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
-import {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
@@ -37,6 +38,8 @@ const PromosInput = () => {
                 navigation.navigate('Промокоды');
               }}
             />
+            <Text style={styles.screenTitle}>Промокод</Text>
+            <View style={{width: dp(50)}} />
           </View>
           <View style={styles.content}>
             <TextInput
@@ -90,6 +93,19 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     textAlign: 'center',
+    justifyContent: 'space-between',
+  },
+  screenTitle: {
+    fontWeight: '700',
+    fontSize: dp(24),
+    textAlignVertical: 'center',
+    color: '#000',
+    letterSpacing: 0.2,
+    ...Platform.select({
+      ios: {
+        lineHeight: dp(40),
+      },
+    }),
   },
   content: {
     flex: 1,
