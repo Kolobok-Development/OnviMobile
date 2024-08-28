@@ -4,8 +4,6 @@ import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
 
 import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
 
-import {useAppState} from '@context/AppContext';
-
 import MapboxGL, {
   UserLocation,
   LocationPuck,
@@ -25,7 +23,6 @@ MapboxGL.setAccessToken(
 );
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const {setState} = useAppState();
 
   const {posList, setPosList, location, setLocation } = useStore();
 
@@ -125,10 +122,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       latitude: lat,
       longitude: long,
     });
-    setState((prevState: any) => ({
-      ...prevState,
-      userLocation: {latitude: lat, longitude: long},
-    }));
+    // setState((prevState: any) => ({
+    //   ...prevState,
+    //   userLocation: {latitude: lat, longitude: long},
+    // }));
   };
 
   useEffect(() => {

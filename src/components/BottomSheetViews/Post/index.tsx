@@ -1,8 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, Image, Text, Linking} from 'react-native';
 
-import {useAppState} from '@context/AppContext';
-
 import {dp} from '../../../utils/dp';
 
 import {useRoute, useNavigation} from '@react-navigation/native';
@@ -26,8 +24,6 @@ const Post = () => {
   const navigation = useNavigation();
 
   const { isBottomSheetOpen: isOpened } = useStore()
-
-  const {state} = useAppState();
 
   useEffect(() => {
     if (route && route.params && route.params.data && route.params.data) {

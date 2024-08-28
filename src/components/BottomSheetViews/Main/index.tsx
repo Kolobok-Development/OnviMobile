@@ -22,7 +22,6 @@ import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 
 import {useAxios} from '@hooks/useAxios';
-import {useAppState} from '@context/AppContext';
 
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -41,11 +40,9 @@ import { CustomModal } from "@styled/views/CustomModal";
 const WIDTH = Dimensions.get('screen').width;
 
 const Main = ({drawerNavigation}: any) => {
-  const {isBottomSheetOpen, loadUser, location} = useStore();
+  const {isBottomSheetOpen, loadUser, location, posList} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
-
-  const {state} = useAppState();
 
   const isOpened = isBottomSheetOpen
 
@@ -77,7 +74,6 @@ const Main = ({drawerNavigation}: any) => {
 
   //Near by carwash
   const [nearestCarWash, setNearestCarWash] = useState(null);
-  const businesses = state.businesses;
   const [nearByModal, setNearByModal] = useState(false)
 
   const findNearestCarWash = () => {
@@ -85,14 +81,14 @@ const Main = ({drawerNavigation}: any) => {
       return;
     }
 
-    if (!businesses) {
+    if (!posList || !posList.length) {
       return;
     }
 
     let nearest = null;
     let minDistance = Infinity;
 
-    businesses.forEach(carWash => {
+    posList.forEach(carWash => {
       const cwLat = carWash.location.lat;
       const cwLon = carWash.location.lon;
       const distance = calculateDistance(
@@ -111,7 +107,7 @@ const Main = ({drawerNavigation}: any) => {
 
   useEffect(() => {
     findNearestCarWash();
-  }, [state]);
+  }, [posList]);
 
   const handleLaunchCarWash = () => {
     if (nearestCarWash) {

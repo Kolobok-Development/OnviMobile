@@ -65,7 +65,7 @@ const History = ({drawerNavigation}: any) => {
 
   const route: any = useRoute();
 
-  const initialAvatar = user.avatar || 'both.jpg';
+  const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
 
