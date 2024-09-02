@@ -12,7 +12,6 @@ import {WHITE} from '../../../utils/colors';
 import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {Tag} from '../../../api/AppContent/types';
-import { useAppState } from "@context/AppContext";
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);

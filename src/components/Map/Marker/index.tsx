@@ -6,6 +6,7 @@ import {useAppState} from '@context/AppContext';
 
 import Svg, {Path} from 'react-native-svg';
 import uuid from 'react-native-uuid';
+import useStore from "../../../state/store.ts";
 
 interface MarkerProps {
   coordinate: number[];
@@ -21,6 +22,8 @@ export default function Marker({
   locationRef,
 }: MarkerProps) {
   const {state, setState} = useAppState();
+
+  const { setSelectedPos, setSum } = useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
@@ -44,6 +47,8 @@ export default function Marker({
           }
 
           navigateBottomSheet('Business', businessObj);
+          setSelectedPos(business);
+          setSum(150);
           setState({
             ...state,
             order: {

@@ -10,11 +10,11 @@ import {
 import {Button} from '@styled/buttons';
 
 // Bottom Sheet Component
-import {Popup, PopupRefProps} from '@components/Popup';
+import { Popup, PopupRefProps } from '@components/Popup';
 
-import {useAuth} from '@context/AuthContext';
+import { useTheme } from '@context/ThemeProvider';
 
-import {useTheme} from '@context/ThemeProvider';
+import useStore from "../../state/store";
 
 import {dp} from '../../utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
@@ -30,12 +30,7 @@ interface VerificationProps {
 const Verification = ({route}: VerificationProps) => {
   const popRef = useRef<PopupRefProps>(null);
 
-  const context = useAuth();
-  if (!context) {
-    return null;
-  }
-
-  const {sendOtp, register, login} = context;
+  const {sendOtp, register, login} = useStore();
 
   const {theme} = useTheme() as any;
 
@@ -75,7 +70,9 @@ const Verification = ({route}: VerificationProps) => {
         clear();
       }
 
-      switch (res) {
+      console.log(res.type)
+
+      switch (res?.type) {
         case 'register-required':
           popRef.current?.scrollTo(-500);
           break;
@@ -205,7 +202,7 @@ const Verification = ({route}: VerificationProps) => {
             color="blue"
             onClick={() => {
               setLoading(true);
-              register(code, route.params.phone, true, true);
+              register(otpInput, route.params.phone, true, true);
               setLoading(false);
             }}
           />

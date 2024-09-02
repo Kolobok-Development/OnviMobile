@@ -10,14 +10,14 @@ import {
   Platform,
 } from 'react-native';
 
-import {NotificationCircle} from '@components/NotificationCircle';
-
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {dp} from '../../utils/dp';
 
 import {useTheme} from '@context/ThemeProvider';
-import {useAuth} from '@context/AuthContext';
+
+import useStore from '../../state/store';
+
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 
@@ -29,7 +29,7 @@ interface BalanceProps {
 const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
   const {theme}: any = useTheme();
 
-  const {user}: any = useAuth();
+  const { user } = useStore()
 
   const BalancePlaceHolder = () => {
     return (

@@ -13,7 +13,7 @@ import {StyleSheet} from 'react-native';
 import {useTheme} from '@context/ThemeProvider';
 import {Settings} from '@screens/Settings';
 import {About} from '@screens/About';
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../state/store';
 import {Partners} from '@screens/Partners';
 import {Partner} from '@screens/Partner';
 
@@ -25,7 +25,9 @@ import {Legals} from '@screens/Legals';
 
 const DrawerStack = () => {
   const {theme}: any = useTheme();
-  const {user}: any = useAuth();
+  const {user} = useStore();
+
+  console.log("user: ", user)
 
   return (
     <NavigationContainer independent={false}>

@@ -4,8 +4,6 @@ import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
 
 import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
 
-import {useAppState} from '@context/AppContext';
-
 import MapboxGL, {
   UserLocation,
   LocationPuck,
@@ -14,32 +12,39 @@ import MapboxGL, {
 
 import Marker from './Marker';
 
-import {getCarWashes} from '../../api/AppContent/appContent.ts';
+import useStore from '../../state/store.ts';
+import useSWR from 'swr';
+import {getPOSList} from '@services/api/pos';
+
+import { IUserLocation } from "../../state/app/AppSlice.ts"
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
-interface IUserLocation {
-  latitude: number;
-  longitude: number;
-}
-
-const DEFAULT_COORDINATES: IUserLocation = {
-  latitude: 55.751244,
-  longitude: 37.618423,
-};
-
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const {state, setState} = useAppState();
-  const businesses = state.businesses;
+
+  const {posList, setPosList, location, setLocation } = useStore();
+
+  useSWR(['getPOSList'], () => getPOSList({}), {
+    onError: error => {
+      console.error(error);
+    },
+    onSuccess: data => {
+      setPosList(data.businessesLocations);
+    },
+  });
 
   const [zoomedIn, setZoomedIn] = useState(false);
 
+  useEffect(() => {
+    console.log("businesses: ", posList?.length)
+  }, [posList])
+
   const memoizedBusinesses = useMemo(
     () =>
-      businesses && businesses.length
-        ? businesses.map(business => {
+      posList && posList.length
+        ? posList.map(business => {
             return (
               <Marker
                 key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
@@ -51,14 +56,14 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             );
           })
         : [],
-    [businesses],
+    [posList],
   );
 
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
 
-  const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
+  // const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -86,56 +91,52 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    try {
-      async function loadWashes() {
-        await getCarWashes({})
-          .then(data => {
-            if (data && data.businessesLocations) {
-              setState((prevState: any) => ({
-                ...prevState,
-                businesses: data.businessesLocations,
-              }));
-            }
-          })
-          .catch(err => console.log(`Error: ${err}`));
-      }
-
-      if (businesses.length === 0) {
-        loadWashes();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  // useEffect(() => {
+  //   try {
+  //     async function loadWashes() {
+  //       await getCarWashes({})
+  //         .then(data => {
+  //           if (data && data.businessesLocations) {
+  //             setState({
+  //               ...state,
+  //               businesses: data.businessesLocations,
+  //             });
+  //           }
+  //         })
+  //         .catch(err => console.log(`Error: ${err}`));
+  //     }
+  //
+  //     if (businesses.length === 0) {
+  //       loadWashes();
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, []);
 
   const onUserLocationUpdate = async (location: any) => {
     let lat = location.coords.latitude;
     let long = location.coords.longitude;
     userLocationRef.current = {lat: lat, lon: long};
-    setUserLocation({
+    setLocation({
       latitude: lat,
       longitude: long,
     });
-    setState((prevState: any) => ({
-      ...prevState,
-      userLocation: {latitude: lat, longitude: long},
-    }));
+    // setState((prevState: any) => ({
+    //   ...prevState,
+    //   userLocation: {latitude: lat, longitude: long},
+    // }));
   };
 
   useEffect(() => {
-    if (!zoomedIn && userLocation) {
-      setUserLocation({
-        latitude: userLocation.latitude,
-        longitude: userLocation.longitude,
-      });
+    if (!zoomedIn && location && typeof location.latitude !== "undefined" && typeof location.longitude !== "undefined") {
       cameraRef.current.setCamera({
-        centerCoordinate: [userLocation.longitude, userLocation.latitude],
+        centerCoordinate: [location.longitude, location.latitude],
         zoomLevel: 10,
       });
       setZoomedIn(true);
     }
-  }, [userLocation]);
+  }, [location]);
 
   // @ts-ignore
   return (
@@ -146,7 +147,15 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           width: Dimensions.get('screen').width,
           position: 'absolute',
         }}>
-        <MapboxGL.MapView
+          <MapboxGL.Camera
+            ref={cameraRef}
+            zoomLevel={100}
+            pitch={1}
+            animationMode="flyTo"
+            animationDuration={6000}
+            followUserLocation={false}
+          />
+        {/* <MapboxGL.MapView
           style={{
             flex: 1,
           }}
@@ -178,7 +187,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             }}
             visible={true}
           />
-        </MapboxGL.MapView>
+        </MapboxGL.MapView> */}
       </View>
     </>
   );

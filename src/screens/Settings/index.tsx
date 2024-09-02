@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import {dp} from '../../utils/dp';
 import React, {useMemo, useRef, useState} from 'react';
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../state/store';
 import {formatPhoneNumber} from '../../utils/phoneFormat';
 import {Button} from '@styled/buttons';
 import {LogOut} from 'react-native-feather';
@@ -42,14 +42,16 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, updateUser, loadUser}: any = useAuth();
+  const {user, signOut, loadUser}  = useStore();
+  const api = useAxios('CORE_URL');
+  const {updateUser }: any = useAuth();
   const navigation = useNavigation<any>();
   const {mutate, isPending} = useUpdateUser();
 
-  const initialUserName = user.name || '';
-  const initialEmail = user.email || '';
-  const initialPhone = user.phone || '';
-  const initialAvatar = user.avatar || 'both.jpg';
+  const initialUserName = user?.name || '';
+  const initialEmail = user?.email || '';
+  const initialPhone = user?.phone || '';
+  const initialAvatar = user?.avatar || 'both.jpg';
 
   const [editing, setEditing] = useState(false);
   const [userName, setUserName] = useState(initialUserName);

@@ -13,7 +13,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 // styled components
 import {Card} from '@styled/cards';
 
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../../state/store';
 
 import {useTheme} from '@context/ThemeProvider';
 
@@ -22,7 +22,6 @@ import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 
 import {useAxios} from '@hooks/useAxios';
-import {useAppState} from '@context/AppContext';
 
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -41,13 +40,11 @@ import { CustomModal } from "@styled/views/CustomModal";
 const WIDTH = Dimensions.get('screen').width;
 
 const Main = ({drawerNavigation}: any) => {
-  const {user}: any = useAuth();
+  const {isBottomSheetOpen, loadUser, location, posList} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const {state} = useAppState();
-
-  const isOpened = state.bottomSheetOpened;
+  const isOpened = isBottomSheetOpen
 
   const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
 
@@ -67,7 +64,6 @@ const Main = ({drawerNavigation}: any) => {
   };
 
   // UPDATE BALANCE
-  const {loadUser}: any = useAuth();
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -78,28 +74,26 @@ const Main = ({drawerNavigation}: any) => {
 
   //Near by carwash
   const [nearestCarWash, setNearestCarWash] = useState(null);
-  const businesses = state.businesses;
-  const userLocation = state.userLocation;
   const [nearByModal, setNearByModal] = useState(false)
 
   const findNearestCarWash = () => {
-    if (!userLocation) {
+    if (!location) {
       return;
     }
 
-    if (!businesses) {
+    if (!posList || !posList.length) {
       return;
     }
 
     let nearest = null;
     let minDistance = Infinity;
 
-    businesses.forEach(carWash => {
+    posList.forEach(carWash => {
       const cwLat = carWash.location.lat;
       const cwLon = carWash.location.lon;
       const distance = calculateDistance(
-        userLocation.longitude,
-        userLocation.latitude,
+        location.longitude,
+        location.latitude,
         cwLon,
         cwLat,
       );
@@ -113,7 +107,7 @@ const Main = ({drawerNavigation}: any) => {
 
   useEffect(() => {
     findNearestCarWash();
-  }, [state]);
+  }, [posList]);
 
   const handleLaunchCarWash = () => {
     if (nearestCarWash) {
@@ -171,19 +165,6 @@ const Main = ({drawerNavigation}: any) => {
           </View>
         </SkeletonPlaceholder>
       </View>
-    );
-  };
-
-  const BalancePlaceHolder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={10}>
-        <View
-          style={{
-            width: dp(70),
-            height: dp(25),
-          }}
-        />
-      </SkeletonPlaceholder>
     );
   };
 

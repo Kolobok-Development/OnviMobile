@@ -13,9 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-import {useAppState} from '@context/AppContext';
-
-import {useReducedMotion} from 'react-native-reanimated';
+import { useReducedMotion } from 'react-native-reanimated';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
@@ -31,9 +29,8 @@ import {dp} from '../../utils/dp';
 
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
-import {useIsFocused} from '@react-navigation/core';
-import {useAuth} from '@context/AuthContext';
-import {useNavigationState} from '@react-navigation/native';
+
+import useStore from "../../state/store"
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
@@ -45,9 +42,10 @@ const Home = ({navigation}: any) => {
 
   const bottomSheetRef = useRef(null);
 
-  const {state} = useAppState();
 
-  const reduceMotion = useReducedMotion();
+  const { filters } = useStore()
+
+  const reduceMotion = useReducedMotion()
 
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
@@ -76,9 +74,8 @@ const Home = ({navigation}: any) => {
     });
   };
 
-  const renderHandleComponent = useCallback((props: any) => {
-    const filters = state.filters;
 
+  const renderHandleComponent = useCallback((props: any) => {
     function extractValues(obj: any) {
       const values = [];
 
@@ -141,7 +138,7 @@ const Home = ({navigation}: any) => {
         </View>
       </BottomSheetHandle>
     );
-  }, []);
+  }, [filters]);
 
   return (
     <GestureHandlerRootView style={styles.master}>

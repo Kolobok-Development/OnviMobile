@@ -22,7 +22,8 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {Button} from '@styled/buttons';
 
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../../state/store';
+
 import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
@@ -48,7 +49,7 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user, loadUser}: any = useAuth();
+  const {user, loadUser, isBottomSheetOpen} = useStore();
   const navigation: any = useNavigation();
 
   const {state} = useAppState();
@@ -58,7 +59,7 @@ const Payment = () => {
   const [promocode, setPromocode] = useState<string>('');
   const [usedPoints, setUsedPoints] = useState(0);
 
-  const isOpened = state.bottomSheetOpened;
+  const isOpened = isBottomSheetOpen
   const order = state.order;
 
   const [discount, setDiscount] = useState(0);
@@ -98,6 +99,7 @@ const Payment = () => {
   };
 
   const createOrder = async () => {
+    if (!user) return
     try {
       setBtnLoader(true);
       const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
@@ -200,12 +202,13 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
+    if (!user) return
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
-    if (user.cards.balance >= leftToPay) {
+    if (user.cards!.balance >= leftToPay) {
       setUsedPoints(leftToPay);
     } else {
-      setUsedPoints(user.cards.balance);
+      setUsedPoints(user.cards!.balance);
     }
   };
 
@@ -348,7 +351,7 @@ const Payment = () => {
                     }}>
                     Ваш Cashback
                   </Text>
-                  {!user.tariff || user.tariff == 0 ? (
+                  {!user || !user.tariff || user.tariff == 0 ? (
                     <View>
                       <SkeletonPlaceholder borderRadius={10}>
                         <SkeletonPlaceholder.Item
@@ -393,7 +396,7 @@ const Payment = () => {
                       alignItems: 'center',
                     }}>
                     <TouchableOpacity onPress={applyPoints}>
-                      {!user.cards || !user.cards.balance == null ? (
+                      {!user || !user.cards || !user.cards.balance == null ? (
                         <View>
                           <SkeletonPlaceholder borderRadius={20}>
                             <SkeletonPlaceholder.Item

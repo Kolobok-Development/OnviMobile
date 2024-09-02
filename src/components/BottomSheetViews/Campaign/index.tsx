@@ -2,20 +2,20 @@ import {Image, Linking, StyleSheet, Text, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {useRoute} from '@react-navigation/native';
-import {useAppState} from '@context/AppContext';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import React, {useEffect, useState} from 'react';
-import {BackButton} from '@components/BackButton';
 import {Campaign as CampaignType} from '../../../api/AppContent/types';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
+import useStore from "../../../state/store"
+
 const Campaign = () => {
   const route: any = useRoute();
-  const {state} = useAppState();
 
-  const isOpened = state.bottomSheetOpened;
+  const { isBottomSheetOpen } = useStore()
+
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
 
@@ -53,7 +53,7 @@ const Campaign = () => {
     <BottomSheetScrollView
       contentContainerStyle={{...styles.container, backgroundColor: 'white'}}
       nestedScrollEnabled={true}
-      scrollEnabled={isOpened}>
+      scrollEnabled={isBottomSheetOpen}>
       <View
         style={{display: 'flex', flexDirection: 'column', marginTop: dp(20)}}>
         {!campaign ? (

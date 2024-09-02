@@ -1,22 +1,17 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import {Button} from '@styled/buttons';
 import {PhoneInp} from '@styled/inputs';
 
-import {useAuth} from '@context/AuthContext';
 import {useNavigation} from '@react-navigation/native';
 
 import {useTheme} from '@context/ThemeProvider';
 
 import {dp} from '../../utils/dp';
+import useStore from '../../state/store';
 
 const SignIn = () => {
-  const context = useAuth();
-  if (!context) {
-    return null;
-  }
-
-  const {sendOtp} = context;
+  const { sendOtp } = useStore()
 
   const {theme} = useTheme() as any;
 

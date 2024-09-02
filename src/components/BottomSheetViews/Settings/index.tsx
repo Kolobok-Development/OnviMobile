@@ -11,9 +11,8 @@ import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 
 import { useAxios } from '@hooks/useAxios';
 
-import { useAuth } from '@context/AuthContext';
+import useStore from '../../../state/store';
 
-import { IAuthContext } from '@context/AuthContext/index.interface';
 import {useNavigation, useRoute} from "@react-navigation/native";
 import {horizontalScale, moderateScale, verticalScale} from "../../../utils/metrics";
 
@@ -72,7 +71,8 @@ const Settings = () => {
     const [user, setUser] = useState<any>(null)
 
     const api = useAxios("CORE_URL")
-    const { signOut } = useAuth() as IAuthContext;
+
+    const { signOut } = useStore()
 
     const navigation: any = useNavigation()
     const route: any = useRoute();

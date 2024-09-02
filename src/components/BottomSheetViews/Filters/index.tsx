@@ -1,24 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
-  SectionList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {CheckBox} from '@styled/buttons/CheckBox';
 import {dp} from '../../../utils/dp';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from '@styled/buttons';
 import {useBusiness} from '../../../api/hooks/useAppContent';
-import {useAppState} from '@context/AppContext';
-import {FiltersType} from '../../../types/models/FiltersType';
-import {cloneDeep} from 'lodash';
-import {filters} from 'css-select';
+import { cloneDeep } from 'lodash';
 
-import {getCarWashes} from '../../../api/AppContent/appContent';
+import { getCarWashes } from "../../../api/AppContent/appContent"
+
+import useStore from "../../../state/store"
 
 // Define types
 type Filter = {
@@ -37,7 +33,7 @@ type FilterItem = {
   filter: Filter;
 };
 
-type SelectedFilters = {
+export type SelectedFilters = {
   [sectionCode: string]: string[];
 };
 
@@ -82,16 +78,13 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 };
 
 const Filters = () => {
-  //Global state
-  const {state, setState} = useAppState();
-  const fitlers = state.filters;
   const navigation: any = useNavigation();
 
+  const { filters, setFilters, posList, setPosList } = useStore()
+
   //Local filters
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(
-    cloneDeep(fitlers),
-  );
-  const query = generateQuery(selectedFilters);
+  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(filters);
+  const query = generateQuery(filters);
 
   // Function to handle filter selection
   const toggleFilter = (sectionCode: string, filterCode: string) => {
@@ -106,43 +99,39 @@ const Filters = () => {
       } else {
         updatedFilters[sectionCode].splice(index, 1); // Deselect filter
       }
+
       return updatedFilters;
     });
   };
 
-  const [columns, setColumns] = useState(3);
   //Query
-  const {isFetching, refetch} = useBusiness({filter: query}, false);
+  const {
+    isFetching,
+    refetch,
+  } = useBusiness({filter: query}, false);
+
 
   // Function to handle submit button press
   const handleSubmit = async () => {
-    // Clear selected filters state if needed
-    //setSubmit(true);
     refetch().then(data => {
       if (data.isSuccess && data.data) {
-        setState({
-          ...state,
-          businesses: data.data.businessesLocations,
-          filters: cloneDeep(selectedFilters),
-        });
+        setFilters(selectedFilters)
+        setPosList(data.data.businessesLocations)
         navigation.navigate('Main');
       }
     });
   };
 
   const reset = async () => {
-    const filtersQuery = generateQuery({});
-    setSelectedFilters({});
+    const filtersQuery = generateQuery({})
+    setSelectedFilters({})
     getCarWashes({filter: filtersQuery}).then((data: any) => {
-      setState({
-        ...state,
-        businesses: data.businessesLocations,
-        filters: {},
-      });
-
+      setFilters({})
+      setPosList(data.businessesLocations)
       navigation.navigate('Main');
-    });
-  };
+
+    })
+  }
 
   const renderFilterItem = ({item}: {item: FilterItem}) => {
     const {sectionCode, filter} = item;
@@ -176,7 +165,7 @@ const Filters = () => {
             filter,
           }))}
           renderItem={renderFilterItem}
-          numColumns={columns}
+          numColumns={3}
           keyExtractor={filterItem => filterItem.filter.code}
           columnWrapperStyle={{
             paddingTop: dp(10),

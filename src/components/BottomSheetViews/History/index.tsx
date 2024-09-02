@@ -20,8 +20,7 @@ import {WHITE} from '../../../utils/colors';
 
 import {Notification} from '@styled/cards/Notification';
 import {BalanceCard} from '@styled/cards/BalanceCard';
-
-import {useAuth} from '@context/AuthContext';
+import useStore from '../../../state/store';
 
 import {useRoute} from '@react-navigation/native';
 import {Settings} from 'react-native-feather';
@@ -29,7 +28,6 @@ import {Settings} from 'react-native-feather';
 import {avatarSwitch} from '@screens/Settings';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
-import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
@@ -57,7 +55,7 @@ const notifications = [
 const History = ({drawerNavigation}: any) => {
   const [tab, setTab] = useState(true);
 
-  const {user}: any = useAuth();
+  const { user } = useStore()
 
   const {data, isLoading, refetch} = useGetOrderHistory({size: 20, page: 1});
 
@@ -67,7 +65,7 @@ const History = ({drawerNavigation}: any) => {
 
   const route: any = useRoute();
 
-  const initialAvatar = user.avatar || 'both.jpg';
+  const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
 
