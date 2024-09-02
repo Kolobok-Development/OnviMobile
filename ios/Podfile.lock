@@ -20,11 +20,11 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
-  - FirebaseCoreExtension (10.24.0):
+  - FirebaseCoreExtension (10.29.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.24.0):
+  - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.24.0):
+  - FirebaseInstallations (10.29.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -45,43 +45,43 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.13.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Environment (7.13.0):
+  - GoogleUtilities/Environment (7.13.3):
     - GoogleUtilities/Privacy
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.13.0):
+  - GoogleUtilities/Logger (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Network (7.13.0):
+  - GoogleUtilities/Network (7.13.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Privacy
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.13.0)":
+  - "GoogleUtilities/NSData+zlib (7.13.3)":
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Privacy (7.13.0)
-  - GoogleUtilities/Reachability (7.13.0):
+  - GoogleUtilities/Privacy (7.13.3)
+  - GoogleUtilities/Reachability (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - GoogleUtilities/UserDefaults (7.13.0):
+  - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - hermes-engine (0.73.3):
     - hermes-engine/Pre-built (= 0.73.3)
   - hermes-engine/Pre-built (0.73.3)
   - libevent (2.1.12)
-  - MapboxCommon (23.8.6)
-  - MapboxCoreMaps (10.16.4):
-    - MapboxCommon (~> 23.8)
-  - MapboxMaps (10.16.4):
-    - MapboxCommon (= 23.8.6)
-    - MapboxCoreMaps (= 10.16.4)
+  - MapboxCommon (23.10.1)
+  - MapboxCoreMaps (10.18.0):
+    - MapboxCommon (~> 23.10)
+  - MapboxMaps (10.18.2):
+    - MapboxCommon (= 23.10.1)
+    - MapboxCoreMaps (= 10.18.0)
     - MapboxMobileEvents (= 1.0.10)
-    - Turf (~> 2.0)
+    - Turf (= 2.8.0)
   - MapboxMobileEvents (1.0.10)
   - MobileSdk (2.0.0)
   - MoneyAuth (6.1.0):
@@ -1166,14 +1166,14 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - rnmapbox-maps (10.1.9):
-    - MapboxMaps (~> 10.16.4)
+  - rnmapbox-maps (10.1.30):
+    - MapboxMaps (~> 10.18.2)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.1.9)
+    - rnmapbox-maps/DynamicLibrary (= 10.1.30)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.1.9):
-    - MapboxMaps (~> 10.16.4)
+  - rnmapbox-maps/DynamicLibrary (10.1.30):
+    - MapboxMaps (~> 10.18.2)
     - React
     - React-Core
     - Turf
@@ -1305,9 +1305,6 @@ SPEC REPOS:
     - YooMoneySessionProfiler
     - YooMoneyUI
   https://github.com/CocoaPods/Specs.git:
-    - SPaySDK
-    - YandexMobileMetrica
-  trunk:
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -1325,7 +1322,9 @@ SPEC REPOS:
     - nanopb
     - PromisesObjC
     - SocketRocket
+    - SPaySDK
     - Turf
+    - YandexMobileMetrica
 
 EXTERNAL SOURCES:
   boost:
@@ -1478,20 +1477,20 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: e47ea8c8f044c25e41a4fa5e8b7ff3923d3e0a94
   Firebase: 91fefd38712feb9186ea8996af6cbdef41473442
   FirebaseCore: 11dc8a16dfb7c5e3c3f45ba0e191a33ac4f50894
-  FirebaseCoreExtension: af5fd85e817ea9d19f9a2659a376cf9cf99f03c0
-  FirebaseCoreInternal: bcb5acffd4ea05e12a783ecf835f2210ce3dc6af
-  FirebaseInstallations: 8f581fca6478a50705d2bd2abd66d306e0f5736e
+  FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
+  FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
+  FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 4d52717dd820707cc4eadec5eb981b4832ec8d5d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   FunctionalSwift: b65b0a7ddde7f11a11e794f79a1e8009724ed0bd
   glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
-  GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
+  GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 5420539d016f368cd27e008f65f777abd6098c56
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  MapboxCommon: 90f76693dc02438acbb5ea9a5b266a4c0eb1c875
-  MapboxCoreMaps: 7b07d1ca8c454a4381daf09df901b9d6bf90bce0
-  MapboxMaps: cbb38845a9bf49b124f0e937975d560a4e01894e
+  MapboxCommon: 0ff437e44988da6856e280d00ffb266564ed0487
+  MapboxCoreMaps: f1bd9405f5b9d3e343f2fe4138775299699a22fb
+  MapboxMaps: e76b14f52c54c40b76ddecd04f40448e6f35a864
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
   MobileSdk: 827ec8a9ef58a60f35e920cebaecf74f20a250c4
   MoneyAuth: dedc9545fa857e7b489333e92403fe608585e518
@@ -1550,7 +1549,7 @@ SPEC CHECKSUMS:
   RNFBApp: 91311b27bc9a33e23b76a62825afd1635501018a
   RNFBMessaging: e86747e8bba79cb464f3f1f22aaae19f38ee7397
   RNGestureHandler: 28bdf9a766c081e603120f79e925b72817c751c6
-  rnmapbox-maps: 1cf95c55cff75168080ceabef1e498492dbe4740
+  rnmapbox-maps: 5cd3758abb84a6e9d6f674d899968d68d52a1c21
   RNPermissions: f418ac274bf5290e91b4a82d2dd98861a3667d35
   RNReanimated: 1873432b0b86d0224bbe19aacea7ad8eef4e7518
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
@@ -1567,6 +1566,6 @@ SPEC CHECKSUMS:
   YooMoneySessionProfiler: 1a19bed99feca98c04e2a906908f91a7d5db408d
   YooMoneyUI: 01f293ed3486e00c5244a5feded457e7cdc18074
 
-PODFILE CHECKSUM: 2d7f4a323edc1eadb777601a9876037f65de41bc
+PODFILE CHECKSUM: 2156aab0cd611626ba81dff6010f2fad9e234968
 
 COCOAPODS: 1.13.0

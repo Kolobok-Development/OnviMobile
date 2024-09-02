@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {Alert, Dimensions, StyleSheet, View} from 'react-native';
+import { Dimensions, LogBox, StyleSheet, View, YellowBox } from "react-native";
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ThemeProvider} from '@context/ThemeProvider';
 import {AuthProvider} from '@context/AuthContext';
@@ -9,11 +9,10 @@ import {Application} from '@components/Application';
 import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
-import FlashMessage, {showMessage, hideMessage} from 'react-native-flash-message';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 
 import NetInfo from '@react-native-community/netinfo';
-
-import PushNotifications from '@services/PushNotifications';
+import RemoteNotifications from '@services/PushNotifications';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,14 +34,11 @@ function App(): React.JSX.Element {
   }, [isConnected]);
 
   useEffect(() => {
-    console.log('CHECKING NETWORK');
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log(`Network state =? ${JSON.stringify(state)}`);
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);
 
       if (!networkState) {
-        console.log('NO Network');
         showMessage({
           message: 'Нет подключения к интернету',
           type: 'danger',
@@ -58,10 +54,9 @@ function App(): React.JSX.Element {
     };
   }, []);
 
-
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
-      <PushNotifications />
+      {/*<RemoteNotifications />*/}
       <ThemeProvider>
         <ThemeWrapper>
           <AuthProvider>

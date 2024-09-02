@@ -171,15 +171,19 @@ const Payment = () => {
         createOrderRequest.promoCodeId = data.id;
       }
 
-      createOrderApi(createOrderRequest).then(data => {
-        console.log(JSON.stringify(data, null, 2));
-        if (data.sendStatus === SendStatus.SUCCESS) {
-          loadUser().then(() => {
-            setOrderSatus(OrderStatus.END);
-            setBtnLoader(false);
-          });
-        }
-      });
+      createOrderApi(createOrderRequest)
+        .then(data => {
+          console.log(JSON.stringify(data, null, 2));
+          if (data.sendStatus === SendStatus.SUCCESS) {
+            loadUser().then(() => {
+              setOrderSatus(OrderStatus.END);
+              setBtnLoader(false);
+            });
+          }
+        })
+        .catch(error => {
+          console.log(JSON.stringify(error));
+        });
 
       setTimeout(() => {
         setOrderSatus(null);

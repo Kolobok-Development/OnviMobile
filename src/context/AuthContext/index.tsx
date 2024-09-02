@@ -322,6 +322,8 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
           });
         });
 
+      console.log(JSON.stringify(result));
+
       if (result && result.type === 'register-success') {
         await saveUserSession(result.tokens, result.client);
 

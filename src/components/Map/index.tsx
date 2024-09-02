@@ -17,7 +17,7 @@ import Marker from './Marker';
 import {getCarWashes} from '../../api/AppContent/appContent.ts';
 
 MapboxGL.setAccessToken(
-  'sk.eyJ1Ijoic2F2bmlrYXIiLCJhIjoiY2xtbnR3N2gzMHN3ZTJybzFua3dmMGt0ZCJ9.IIGLQeIqe1C906g788mRdg',
+  'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
 interface IUserLocation {
@@ -171,7 +171,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           />
           <LocationPuck
             puckBearing="heading"
-            scale={1}
             pulsing={{
               isEnabled: true,
               color: '#BFFA00',
