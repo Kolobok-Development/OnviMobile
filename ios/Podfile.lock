@@ -20,11 +20,11 @@ PODS:
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
-  - FirebaseCoreExtension (10.24.0):
+  - FirebaseCoreExtension (10.29.0):
     - FirebaseCore (~> 10.0)
-  - FirebaseCoreInternal (10.24.0):
+  - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseInstallations (10.24.0):
+  - FirebaseInstallations (10.29.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
@@ -45,47 +45,47 @@ PODS:
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/AppDelegateSwizzler (7.13.0):
+  - GoogleUtilities/AppDelegateSwizzler (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Logger
     - GoogleUtilities/Network
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Environment (7.13.0):
+  - GoogleUtilities/Environment (7.13.3):
     - GoogleUtilities/Privacy
     - PromisesObjC (< 3.0, >= 1.2)
-  - GoogleUtilities/Logger (7.13.0):
+  - GoogleUtilities/Logger (7.13.3):
     - GoogleUtilities/Environment
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Network (7.13.0):
+  - GoogleUtilities/Network (7.13.3):
     - GoogleUtilities/Logger
     - "GoogleUtilities/NSData+zlib"
     - GoogleUtilities/Privacy
     - GoogleUtilities/Reachability
-  - "GoogleUtilities/NSData+zlib (7.13.0)":
+  - "GoogleUtilities/NSData+zlib (7.13.3)":
     - GoogleUtilities/Privacy
-  - GoogleUtilities/Privacy (7.13.0)
-  - GoogleUtilities/Reachability (7.13.0):
+  - GoogleUtilities/Privacy (7.13.3)
+  - GoogleUtilities/Reachability (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
-  - GoogleUtilities/UserDefaults (7.13.0):
+  - GoogleUtilities/UserDefaults (7.13.3):
     - GoogleUtilities/Logger
     - GoogleUtilities/Privacy
   - hermes-engine (0.73.3):
     - hermes-engine/Pre-built (= 0.73.3)
   - hermes-engine/Pre-built (0.73.3)
   - libevent (2.1.12)
-  - MapboxCommon (23.8.6)
-  - MapboxCoreMaps (10.16.4):
-    - MapboxCommon (~> 23.8)
-  - MapboxMaps (10.16.4):
-    - MapboxCommon (= 23.8.6)
-    - MapboxCoreMaps (= 10.16.4)
+  - MapboxCommon (23.9.1)
+  - MapboxCoreMaps (10.16.6):
+    - MapboxCommon (~> 23.9)
+  - MapboxMaps (10.16.6):
+    - MapboxCommon (= 23.9.1)
+    - MapboxCoreMaps (= 10.16.6)
     - MapboxMobileEvents (= 1.0.10)
-    - Turf (~> 2.0)
+    - Turf (= 2.7.0)
   - MapboxMobileEvents (1.0.10)
-  - MMKV (1.3.5):
-    - MMKVCore (~> 1.3.5)
-  - MMKVCore (1.3.5)
+  - MMKV (1.3.9):
+    - MMKVCore (~> 1.3.9)
+  - MMKVCore (1.3.9)
   - MobileSdk (2.0.0)
   - MoneyAuth (6.1.0):
     - FunctionalSwift (~> 1.8)
@@ -974,11 +974,12 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - react-native-netinfo (11.3.2):
   - react-native-mmkv (2.12.2):
     - glog
     - MMKV (>= 1.3.3)
     - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - react-native-netinfo (11.3.2):
     - React-Core
   - react-native-safe-area-context (4.8.2):
     - React-Core
@@ -1199,7 +1200,7 @@ PODS:
     - React-Core
   - SocketRocket (0.6.1)
   - SPaySDK (1.0.9)
-  - Turf (2.8.0)
+  - Turf (2.7.0)
   - YandexMobileMetrica/Dynamic (4.5.2):
     - YandexMobileMetrica/Dynamic/Core (= 4.5.2)
     - YandexMobileMetrica/Dynamic/Crashes (= 4.5.2)
@@ -1263,8 +1264,8 @@ DEPENDENCIES:
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
-  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1313,11 +1314,6 @@ SPEC REPOS:
     - YooMoneySessionProfiler
     - YooMoneyUI
   https://github.com/CocoaPods/Specs.git:
-    - MMKV
-    - MMKVCore
-    - SPaySDK
-    - YandexMobileMetrica
-  trunk:
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -1332,6 +1328,8 @@ SPEC REPOS:
     - MapboxCoreMaps
     - MapboxMaps
     - MapboxMobileEvents
+    - MMKV
+    - MMKVCore
     - nanopb
     - PromisesObjC
     - SocketRocket
@@ -1401,10 +1399,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-encrypted-storage"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
-  react-native-netinfo:
-    :path: "../node_modules/@react-native-community/netinfo"
   react-native-mmkv:
     :path: "../node_modules/react-native-mmkv"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-webview:
@@ -1492,23 +1490,23 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: e47ea8c8f044c25e41a4fa5e8b7ff3923d3e0a94
   Firebase: 91fefd38712feb9186ea8996af6cbdef41473442
   FirebaseCore: 11dc8a16dfb7c5e3c3f45ba0e191a33ac4f50894
-  FirebaseCoreExtension: af5fd85e817ea9d19f9a2659a376cf9cf99f03c0
-  FirebaseCoreInternal: bcb5acffd4ea05e12a783ecf835f2210ce3dc6af
-  FirebaseInstallations: 8f581fca6478a50705d2bd2abd66d306e0f5736e
+  FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
+  FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
+  FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 4d52717dd820707cc4eadec5eb981b4832ec8d5d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   FunctionalSwift: b65b0a7ddde7f11a11e794f79a1e8009724ed0bd
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
-  GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
+  GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 5420539d016f368cd27e008f65f777abd6098c56
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  MapboxCommon: 90f76693dc02438acbb5ea9a5b266a4c0eb1c875
-  MapboxCoreMaps: 7b07d1ca8c454a4381daf09df901b9d6bf90bce0
-  MapboxMaps: cbb38845a9bf49b124f0e937975d560a4e01894e
+  MapboxCommon: 20466d839cc43381c44df09d19f7f794b55b9a93
+  MapboxCoreMaps: c21f433decbb295874f0c2464e492166db813b56
+  MapboxMaps: c3b36646b9038706bbceb5de203bcdd0f411e9d0
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
-  MMKV: 506311d0494023c2f7e0b62cc1f31b7370fa3cfb
-  MMKVCore: 9e2e5fd529b64a9fe15f1a7afb3d73b2e27b4db9
+  MMKV: 817ba1eea17421547e01e087285606eb270a8dcb
+  MMKVCore: af055b00e27d88cd92fad301c5fecd1ff9b26dd9
   MobileSdk: 827ec8a9ef58a60f35e920cebaecf74f20a250c4
   MoneyAuth: dedc9545fa857e7b489333e92403fe608585e518
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
@@ -1536,8 +1534,8 @@ SPEC CHECKSUMS:
   React-Mapbuffer: ac7eff7bcdb1716d18eb7b305ee8c43a9a1ed7c8
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-geolocation: e50b98fa3c6ad907154470e4302c82e9a59013df
-  react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-mmkv: 6d738233c99440c39ef88c3a080b0af80265a72a
+  react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-webview: 1f6c37318115b6e96285e0b06770307d9a751bb8
   React-nativeconfig: 4662ac75a0a77789c9ed896ed77baa1a25cdf006
@@ -1567,16 +1565,16 @@ SPEC CHECKSUMS:
   RNFBApp: 91311b27bc9a33e23b76a62825afd1635501018a
   RNFBMessaging: e86747e8bba79cb464f3f1f22aaae19f38ee7397
   RNGestureHandler: 28bdf9a766c081e603120f79e925b72817c751c6
-  rnmapbox-maps: 5cd3758abb84a6e9d6f674d899968d68d52a1c21
+  rnmapbox-maps: 1cf95c55cff75168080ceabef1e498492dbe4740
   RNPermissions: f418ac274bf5290e91b4a82d2dd98861a3667d35
   RNReanimated: 1873432b0b86d0224bbe19aacea7ad8eef4e7518
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
   RNSVG: ba3e7232f45e34b7b47e74472386cf4e1a676d0a
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   SPaySDK: 1015f868b6e9255457704cd6a3d051829263661a
-  Turf: aa2ede4298009639d10db36aba1a7ebaad072a5e
+  Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
   YandexMobileMetrica: f5368ee93f286c793d73b58da00929babfc897c1
-  Yoga: ff0382b894475dba0b4d2a5fda860bfee5a9afad
+  Yoga: 08cd7601462818c4985bda7b205b9e6a92a7e66a
   YooKassaPayments: b2a8cde4c2eeac5f8b5b73131fdb7ff17ffc09f0
   YooKassaPaymentsApi: a13865624dc72513416ee73b80b8fe5682b9525a
   YooKassaWalletApi: cbb352525bfe89fd2ad52635062f79f8bbbc23ec
@@ -1584,6 +1582,6 @@ SPEC CHECKSUMS:
   YooMoneySessionProfiler: 1a19bed99feca98c04e2a906908f91a7d5db408d
   YooMoneyUI: 01f293ed3486e00c5244a5feded457e7cdc18074
 
-PODFILE CHECKSUM: 2156aab0cd611626ba81dff6010f2fad9e234968
+PODFILE CHECKSUM: 2d7f4a323edc1eadb777601a9876037f65de41bc
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.13.0

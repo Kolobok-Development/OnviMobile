@@ -16,15 +16,14 @@ import useStore from '../../state/store.ts';
 import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
 
-import { IUserLocation } from "../../state/app/AppSlice.ts"
+import {IUserLocation} from '../../state/app/AppSlice.ts';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-
-  const {posList, setPosList, location, setLocation } = useStore();
+  const {posList, setPosList, location, setLocation} = useStore();
 
   useSWR(['getPOSList'], () => getPOSList({}), {
     onError: error => {
@@ -38,8 +37,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const [zoomedIn, setZoomedIn] = useState(false);
 
   useEffect(() => {
-    console.log("businesses: ", posList?.length)
-  }, [posList])
+    console.log('businesses: ', posList?.length);
+  }, [posList]);
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -129,7 +128,12 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   };
 
   useEffect(() => {
-    if (!zoomedIn && location && typeof location.latitude !== "undefined" && typeof location.longitude !== "undefined") {
+    if (
+      !zoomedIn &&
+      location &&
+      typeof location.latitude !== 'undefined' &&
+      typeof location.longitude !== 'undefined'
+    ) {
       cameraRef.current.setCamera({
         centerCoordinate: [location.longitude, location.latitude],
         zoomLevel: 10,
@@ -147,20 +151,21 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           width: Dimensions.get('screen').width,
           position: 'absolute',
         }}>
-          <MapboxGL.Camera
-            ref={cameraRef}
-            zoomLevel={100}
-            pitch={1}
-            animationMode="flyTo"
-            animationDuration={6000}
-            followUserLocation={false}
-          />
-        {/* <MapboxGL.MapView
+        <MapboxGL.Camera
+          ref={cameraRef}
+          zoomLevel={100}
+          pitch={1}
+          animationMode="flyTo"
+          animationDuration={6000}
+          followUserLocation={false}
+        />
+        <MapboxGL.MapView
           style={{
             flex: 1,
           }}
           zoomEnabled={true}
           scaleBarEnabled={false}
+          styleURL={'mapbox://styles/mapbox/light-v11'}
           preferredFramesPerSecond={120}>
           <MapboxGL.Camera
             ref={cameraRef}
@@ -187,7 +192,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             }}
             visible={true}
           />
-        </MapboxGL.MapView> */}
+        </MapboxGL.MapView>
       </View>
     </>
   );

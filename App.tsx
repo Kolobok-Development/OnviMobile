@@ -16,7 +16,6 @@ import RemoteNotifications from '@services/PushNotifications';
 
 import useStore from './src/state/store';
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -37,7 +36,7 @@ function App(): React.JSX.Element {
   }, [isConnected]);
 
   useEffect(() => {
-    loadUser()
+    loadUser();
     const unsubscribe = NetInfo.addEventListener(state => {
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);
@@ -56,10 +55,8 @@ function App(): React.JSX.Element {
     return () => {
       unsubscribe();
     };
-
   }, []);
-  const { loadUser } = useStore()
-
+  const {loadUser} = useStore();
 
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
