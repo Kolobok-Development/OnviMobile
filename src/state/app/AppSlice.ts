@@ -1,4 +1,4 @@
-import {StoreSlice} from '../store.ts';
+import { StoreSlice } from '../store.ts';
 
 import { SelectedFilters } from '@components/BottomSheetViews/Filters/index.tsx';
 

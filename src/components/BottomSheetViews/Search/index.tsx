@@ -33,10 +33,9 @@ const Search = () => {
 
   const {
     isLoading,
-    isFetching,
     data,
-    refetch: getBusinesses,
-  } = useBusiness({search});
+    mutate: getBusinesses,
+  } = useBusiness({search}, true);
 
   const SearchPlaceholder = () => {
     return (
@@ -130,7 +129,7 @@ const Search = () => {
         }}
       />
       <View>
-        {isLoading || isFetching ? (
+        {isLoading ? (
           <SearchPlaceholder />
         ) : (
           <>

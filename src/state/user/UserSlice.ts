@@ -47,10 +47,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   setLoading: (loading) => set({ loading }),
 
   mutateRefreshToken: async () => {
+    console.log("i am trying to refresh : )")
     try {
       const { refreshToken } = get();
+
+      console.log('refreshToken: ',refreshToken)
+
       if (refreshToken) {
         const response = await refresh({ refreshToken });
+        console.log("response: ", response)
         if (response) {
           await LocalStorage.set('user_session', JSON.stringify({
             refreshToken,
@@ -234,6 +239,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
             tariff: tariff.cashBack
           }});
         } else if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
+          console.log("I am trying to refresh token!")
           await get().mutateRefreshToken()
         } else {
           set({ loading: false });
@@ -246,5 +252,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
     }
   }
 });
+
 
 export default createUserSlice;

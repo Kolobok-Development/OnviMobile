@@ -1,8 +1,10 @@
 import axios, {InternalAxiosRequestConfig} from 'axios';
 import {STRAPI_URL} from '@env';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import {IEncryptedStorage} from '@context/AuthContext/index.interface';
 const PREFIX = '/api/v2/';
+
+import { getToken } from '../state/store';
+
+import { isValidStorageData } from '@context/AuthContext/index.validator';
 
 const userApiInstance = axios.create({
   baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
@@ -12,17 +14,18 @@ const userApiInstance = axios.create({
 const _retriveConfigWithAuthorization = async (
   config: InternalAxiosRequestConfig<any>,
 ) => {
+  console.log("retrieve config with authorization: ", config)
   try {
-    const credentials: string | null = await EncryptedStorage.getItem(
-      'user_session',
-    );
 
-    if (credentials !== null) {
-      const formatted: IEncryptedStorage = await JSON.parse(
-        credentials as string,
-      );
+    const accessToken = getToken().accessToken
+    const expiredDate = getToken().expiredDate
+    const refresh = getToken().mutateRefreshToken
 
-      config.headers.Authorization = `Bearer ${formatted.accessToken}`;
+
+    if (accessToken && expiredDate && isValidStorageData(accessToken, expiredDate)) {
+        config.headers.Authorization = `Bearer ${accessToken}`;
+    } else {
+      await refresh()
     }
   } catch (e) {
     console.log(e);

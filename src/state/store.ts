@@ -48,3 +48,12 @@ const useStore = create<StoreState>()(
 );
 
 export default useStore;
+
+
+export const getToken = () => {
+  return {
+    accessToken: useStore.getState().accessToken,
+    expiredDate: useStore.getState().expiredDate,
+    mutateRefreshToken: useStore.getState().mutateRefreshToken
+  }
+};

@@ -14,7 +14,6 @@ import PushNotifications from './src/services/push-notifications/PushNotificatio
 
 import useStore from './src/state/store';
 
-
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,6 +30,7 @@ function App(): React.JSX.Element {
   const { loadUser } = useStore()
 
   useEffect(() => {
+    console.log("hello world")
     loadUser()
   }, [])
 

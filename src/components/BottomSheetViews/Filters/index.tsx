@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   StyleSheet,
@@ -80,7 +80,7 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 const Filters = () => {
   const navigation: any = useNavigation();
 
-  const { filters, setFilters, posList, setPosList } = useStore()
+  const { filters, setFilters, setPosList } = useStore()
 
   //Local filters
   const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(filters);
@@ -106,20 +106,22 @@ const Filters = () => {
 
   //Query
   const {
-    isFetching,
-    refetch,
-  } = useBusiness({filter: query}, false);
+    isLoading,
+    mutate,
+  } = useBusiness({filter: query}, true);
 
 
   // Function to handle submit button press
   const handleSubmit = async () => {
-    refetch().then(data => {
-      if (data.isSuccess && data.data) {
+    mutate().then(data => {
+      if (data) {
         setFilters(selectedFilters)
-        setPosList(data.data.businessesLocations)
+        setPosList(data.businessesLocations)
         navigation.navigate('Main');
       }
-    });
+    }).catch((err) => {
+      console.log("err: ", err)
+    })
   };
 
   const reset = async () => {
@@ -215,7 +217,7 @@ const Filters = () => {
               fontSize={dp(15)}
               fontWeight={'600'}
               onClick={handleSubmit}
-              showLoading={isFetching}
+              showLoading={isLoading}
             />
           </View>
         }
