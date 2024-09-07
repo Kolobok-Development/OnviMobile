@@ -15,7 +15,6 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
-import {useAppState} from '@context/AppContext';
 import {useRoute} from '@react-navigation/native';
 
 //@ts-ignore
@@ -25,11 +24,13 @@ import {dp} from '../../../utils/dp';
 import {useBusiness} from '../../../api/hooks/useAppContent';
 import {CarWashLocation} from '../../../api/AppContent/types';
 
+import useStore from '../../../state/store';
+
 const Search = () => {
   const [search, setSearch] = useState('');
   const route: any = useRoute();
 
-  const {state, setState} = useAppState();
+  const { setOrderDetails } = useStore()
 
   const {
     isLoading,
@@ -96,10 +97,7 @@ const Search = () => {
 
   const onClick = (carwash: any) => {
     navigateBottomSheet('Business', carwash);
-    setState({
-      ...state,
-      order: {},
-    });
+    setOrderDetails({})
     route.params.bottomSheetRef.current?.snapToPosition('42%');
     route.params.cameraRef.current.moveTo(
       [carwash.location.lon, carwash.location.lat],

@@ -7,8 +7,6 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {dp} from '../../../utils/dp';
 import {Button} from '@styled/buttons';
 
-import {useAppState} from '@context/AppContext';
-
 import {ScrollView} from 'react-native-gesture-handler';
 import {FilterList} from '@components/FiltersList';
 
@@ -25,7 +23,6 @@ import {
 } from '../../../utils/metrics';
 import {ExpandableView} from '@styled/views/ExpandableView';
 import {Price} from '../../../api/AppContent/types';
-import LottieView from "lottie-react-native";
 
 import useStore from '../../../state/store';
 
@@ -33,8 +30,6 @@ const Launch = () => {
   const {theme}: any = useTheme();
   const [value, setValue] = useState(50);
   const measureTypeData = ['рубли'];
-
-  const {state, setState} = useAppState();
 
   const colors: Array<'yellow' | 'blue' | 'grey' | 'black'> = [
     'yellow',
@@ -46,24 +41,21 @@ const Launch = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
-  const { isBottomSheetOpen } = useStore()
+  const { isBottomSheetOpen, setOrderDetails, orderDetails } = useStore()
 
-  const order = state.order;
+  const order = orderDetails;
   const isOpened = isBottomSheetOpen
 
   const onSelect = (name: string, price: number) => {
-    setState({
-      ...state,
-      order: {
-        ...order,
-        sum: price,
-        name: name,
-      },
-    });
+    setOrderDetails({
+      ...orderDetails,
+      sum: price,
+      name: name
+    })
     navigation.navigate('Payment', route.params);
   };
 
-  if (order?.type === 'Portal') {
+  if (orderDetails?.type === 'Portal') {
     return (
       <BottomSheetScrollView
         contentContainerStyle={{
@@ -77,21 +69,18 @@ const Launch = () => {
           navigation={navigation}
           position={'95%'}
           type="box"
-          box={order?.box}
+          box={orderDetails?.bayNumber ?? 0}
           callback={() => {
-            setState({
-              ...state,
-              order: {
-                ...order,
-                sum: null,
-                name: null,
-                box: null,
-              },
-            });
+            setOrderDetails({
+              ...orderDetails,
+              sum: null,
+              name: null,
+              bayNumber: null
+            })
           }}
         />
         <ScrollView style={{paddingBottom: verticalScale(100)}}>
-          {order.prices.map((price: Price, i: number) => (
+          {orderDetails && orderDetails.prices && orderDetails.prices.length && orderDetails.prices?.map((price: Price, i: number) => (
             <View key={price.id}>
               <ExpandableView
                 color={colors[i]}
@@ -167,17 +156,14 @@ const Launch = () => {
         navigation={navigation}
         position={'95%'}
         type="box"
-        box={order?.box}
+        box={order?.bayNumber ?? 0}
         callback={() => {
-          setState({
-            ...state,
-            order: {
-              ...order,
-              sum: null,
-              name: null,
-              box: null,
-            },
-          });
+          setOrderDetails({
+            ...orderDetails,
+            sum: null,
+            name: null,
+            bayNumber: null
+          })
         }}
       />
       <View
@@ -336,13 +322,10 @@ const Launch = () => {
           label="Оплатить"
           onClick={() => {
             let cost = value ? value : 150;
-            setState({
-              ...state,
-              order: {
-                ...order,
-                sum: cost,
-              },
-            });
+            setOrderDetails({
+              ...orderDetails,
+              sum: cost
+            })
             navigation.navigate('Payment', route.params);
           }}
           color="blue"

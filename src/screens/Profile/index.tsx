@@ -2,22 +2,22 @@ import React from 'react';
 
 import { View, Text } from 'react-native';
 
-import { useAppState } from '@context/AppContext';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
+import useStore from '../../state/store';
+
 const Profile = () => {
-    const { state, setState } = useAppState()
+    const { setOrderDetails, orderDetails } = useStore()
+
     return (
     <>
     <View>
                 <Text>Profile</Text>
                 <TouchableOpacity style={{width: 100, height: 100, backgroundColor: 'red'}} onPress={() => {
-                    setState({
-                        ...state,
-                        order: {
-                            orderDate: (new Date()).toISOString,
-                            sum: 100
-                        }
+                    setOrderDetails({
+                        ...orderDetails,
+                        sum: 100,
+                        orderDate: (new Date()).toISOString()
                     })
                 }} />
             </View>

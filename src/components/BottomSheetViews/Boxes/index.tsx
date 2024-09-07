@@ -7,19 +7,17 @@ import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
 import {BoxesSlide} from '@components/Boxes/BoxesSlide';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {useAppState} from '@context/AppContext';
-
 import {dp} from '../../../utils/dp';
 import {Price} from '../../../api/AppContent/types';
 import {CheckBox} from '@styled/buttons/CheckBox';
+
+import useStore from '../../../state/store';
 
 const Boxes = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
-  const {state, setState} = useAppState();
-
-  const order = state.order;
+  const { setOrderDetails, orderDetails } = useStore()
 
   return (
     <GHScrollView
@@ -35,13 +33,9 @@ const Boxes = () => {
           <BusinessHeader
             type="empty"
             navigation={navigation}
-            callback={() =>
-              setState({
-                ...state,
-                order: {
-                  ...order,
-                  box: null,
-                },
+            callback={() => setOrderDetails({
+                ...orderDetails,
+                bayNumber: null
               })
             }
             position="60%"
