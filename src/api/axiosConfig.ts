@@ -19,13 +19,10 @@ const _retriveConfigWithAuthorization = async (
 
     const accessToken = getToken().accessToken
     const expiredDate = getToken().expiredDate
-    const refresh = getToken().mutateRefreshToken
 
 
     if (accessToken && expiredDate && isValidStorageData(accessToken, expiredDate)) {
         config.headers.Authorization = `Bearer ${accessToken}`;
-    } else {
-      await refresh()
     }
   } catch (e) {
     console.log(e);

@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ThemeProvider} from '@context/ThemeProvider';
-import {AuthProvider} from '@context/AuthContext';
+
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from '@components/Application';
 import ThemeWrapper from '@components/ThemeWrapper';
@@ -39,7 +39,7 @@ function App(): React.JSX.Element {
       <PushNotifications />
       <ThemeProvider>
         <ThemeWrapper>
-          <AuthProvider>
+          
             <IntlProvider locale={'ru'}>
               <GestureHandlerRootView style={{flex: 1}}>
                 <SafeAreaView style={styles.container}>
@@ -49,7 +49,7 @@ function App(): React.JSX.Element {
                 </SafeAreaView>
               </GestureHandlerRootView>
             </IntlProvider>
-          </AuthProvider>
+          
         </ThemeWrapper>
       </ThemeProvider>
     </QueryClientProvider>
