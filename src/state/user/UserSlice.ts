@@ -17,12 +17,10 @@ export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
   accessToken: string | null;
-  refreshToken: string | null;
   expiredDate: string | null;
   loading: boolean;
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
-  setRefreshToken: (refreshToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setLoading: (loading: boolean) => void;
   mutateRefreshToken: () => Promise<string | null>;
@@ -37,13 +35,11 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   isAuthenticated: false,
   user: null,
   accessToken: null,
-  refreshToken: null,
   expiredDate: null,
   loading: true,
 
   setUser: (user) => set({ user }),
   setAccessToken: (accessToken) => set({ accessToken }),
-  setRefreshToken: (refreshToken) => set({ refreshToken }),
   setExpiredDate: (expiredDate) => set({ expiredDate }),
   setLoading: (loading) => set({ loading }),
 
@@ -68,6 +64,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           });
           await get().loadUser();
         }
+      } else {
+        return null
       }
 
       return existingData.refreshToken 
