@@ -57,7 +57,7 @@ const History = ({drawerNavigation}: any) => {
 
   const { user } = useStore()
 
-  const {data, isLoading, refetch} = useGetOrderHistory({size: 20, page: 1});
+  const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
 
   const switchTab = (val: boolean) => {
     setTab(val);
@@ -208,7 +208,7 @@ const History = ({drawerNavigation}: any) => {
             )}
             refreshing={isLoading}
             keyExtractor={(_order, index) => index.toString()}
-            onRefresh={refetch}
+            onRefresh={mutate}
             showsVerticalScrollIndicator={false}
             ListEmptyComponent={() => (
               <>

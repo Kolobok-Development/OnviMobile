@@ -24,17 +24,14 @@ const useAxios = (url: string) => {
         }
     }
 
-    const { refreshToken, mutateRefreshToken, accessToken, expiredDate } = useStore()
+    const { mutateRefreshToken, accessToken, expiredDate } = useStore()
 
     const refresh: () => Promise<string | null> = async () => {
         try {
-            if (hasAccessTokenCredentials(refreshToken)) {
-                const token = await mutateRefreshToken();
-
-                return token;
-            }
             
-            return null
+            const token = await mutateRefreshToken();
+
+            return token;
         } catch (error) {
           console.log(`Error: ${error}`)
         }

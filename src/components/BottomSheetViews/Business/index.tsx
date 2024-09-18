@@ -11,24 +11,23 @@ import {dp} from '../../../utils/dp';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 
-import {useAppState} from '@context/AppContext';
+import useStore from '../../../state/store';
+
+import { OrderDetailsType } from 'src/state/order/OrderSlice';
 
 const Business = () => {
   const route: any = useRoute();
 
-  const {state, setState} = useAppState();
-  const order = state.order;
+  const { setOrderDetails, orderDetails } = useStore()
+
 
   const selectCarwash = (carwash: any) => {
-    setState({
-      ...state,
-      order: {
-        ...order,
-        id: carwash.id,
-        type: carwash.type,
-        name: carwash.name,
-      },
-    });
+    setOrderDetails({
+      ...orderDetails,
+      posId: carwash.id,
+      type: carwash.type,
+      name: carwash.name
+    } as OrderDetailsType)
 
     navigateBottomSheet('BusinessInfo', carwash);
     route.params.bottomSheetRef.current?.snapToPosition('60%');

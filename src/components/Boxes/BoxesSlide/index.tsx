@@ -6,11 +6,11 @@ import {horizontalScale} from '../../../utils/metrics';
 
 import {ScrollView} from 'react-native-gesture-handler';
 
-import {useAppState} from '@context/AppContext';
-
 import {dp} from '../../../utils/dp';
 
 import {Box} from '@components/Boxes/Box';
+
+import useStore from "../../../state/store";
 
 const width = Dimensions.get('window').width;
 
@@ -21,11 +21,10 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const {state, setState} = useAppState();
-  const order = state.order;
+  const { orderDetails, setOrderDetails } = useStore()
 
 
-  const [active, setActive] = useState(order?.box);
+  const [active, setActive] = useState(orderDetails.bayNumber);
 
   return (
     <ScrollView
@@ -45,13 +44,10 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
             label={box.number}
             onClick={() => {
               setActive(key);
-              setState({
-                ...state,
-                order: {
-                  ...order,
-                  box: box.number,
-                  prices: params.price,
-                },
+              setOrderDetails({
+                ...orderDetails,
+                bayNumber: box.number,
+                prices: params.price,
               });
 
               if (key !== undefined) {

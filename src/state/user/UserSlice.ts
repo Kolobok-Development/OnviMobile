@@ -10,18 +10,17 @@ import { sendOtp, login, register, refresh } from '../../api/auth/index';
 import {getMe, getTariff} from '../../api/user';
 import Toast from 'react-native-toast-message';
 
-import { isValidStorageData, hasAccessTokenCredentials } from '../../context/AuthContext/index.validator.ts';
+import { isValidStorageData, hasAccessTokenCredentials } from '@context/AuthContext/index.validator';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
   accessToken: string | null;
-  refreshToken: string | null;
   expiredDate: string | null;
   loading: boolean;
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
-  setRefreshToken: (refreshToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setLoading: (loading: boolean) => void;
   mutateRefreshToken: () => Promise<string | null>;
@@ -36,24 +35,25 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   isAuthenticated: false,
   user: null,
   accessToken: null,
-  refreshToken: null,
   expiredDate: null,
   loading: true,
 
   setUser: (user) => set({ user }),
   setAccessToken: (accessToken) => set({ accessToken }),
-  setRefreshToken: (refreshToken) => set({ refreshToken }),
   setExpiredDate: (expiredDate) => set({ expiredDate }),
   setLoading: (loading) => set({ loading }),
 
   mutateRefreshToken: async () => {
     try {
-      const { refreshToken } = get();
-      if (refreshToken) {
-        const response = await refresh({ refreshToken });
+      const existingSession = await EncryptedStorage.getItem('user_session');
+      let existingData: Record<string, any> = {};
+      if (existingSession) {
+        existingData = JSON.parse(existingSession);
+      }
+      if (existingData.refreshToken) {
+        const response = await refresh({ refreshToken: existingData.refreshToken });
         if (response) {
           await LocalStorage.set('user_session', JSON.stringify({
-            refreshToken,
             accessToken: response.accessToken,
             expiredDate: new Date(response.accessTokenExp).toISOString()
           }));
@@ -64,9 +64,11 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           });
           await get().loadUser();
         }
+      } else {
+        return null
       }
 
-      return refreshToken 
+      return existingData.refreshToken 
     } catch (error) {
       console.log('Error refreshing token:', error);
       set({ loading: false });
@@ -79,7 +81,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
     try {
       const formattedPhone = phone.replace(/[ \(\)-]+/g, '');
       const response = await login({ phone: formattedPhone, otp });
-      console.log(response)
 
       if (response.type === "register-required") {
         return response
@@ -88,14 +89,19 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       if (response.type === 'login-success') {
         const { tokens } = response;
         if (!tokens) return null
+
+        const refreshToken = tokens.refreshToken;
+
+        await EncryptedStorage.setItem('user_session', JSON.stringify({
+          refreshToken: refreshToken
+        }));
+
         await LocalStorage.set('user_session', JSON.stringify({
-          refreshToken: tokens.refreshToken,
           accessToken: tokens.accessToken,
           expiredDate: new Date(tokens.accessTokenExp).toISOString()
         }));
         set({
           accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           expiredDate: new Date(tokens.accessTokenExp).toISOString(),
           isAuthenticated: true,
           loading: false
@@ -125,10 +131,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   register: async (otp, phone, isTermsAccepted = true, isPromoTermsAccepted = true) => {
     try {
       const formattedPhone = phone.replace(/[ \(\)-]+/g, '');
-      console.log({  phone: formattedPhone,
-        otp,
-        isTermsAccepted,
-        isPromoTermsAccepted})
       const response = await register({
         phone: formattedPhone,
         otp,
@@ -136,18 +138,21 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         isPromoTermsAccepted
       });
 
-      console.log("response: ", response)
-
       if (response.type === 'register-success') {
         const { tokens } = response;
+
+        const refreshToken = tokens.refreshToken;
+
+        await EncryptedStorage.setItem('user_session', JSON.stringify({
+          refreshToken: refreshToken
+        }));
+
         await LocalStorage.set('user_session', JSON.stringify({
-          refreshToken: tokens.refreshToken,
           accessToken: tokens.accessToken,
           expiredDate: new Date(tokens.accessTokenExp).toISOString()
         }));
         set({
           accessToken: tokens.accessToken,
-          refreshToken: tokens.refreshToken,
           expiredDate: new Date(tokens.accessTokenExp).toISOString(),
           isAuthenticated: true,
           loading: false
@@ -200,11 +205,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   signOut: async () => {
     try {
       await LocalStorage.delete('user_session');
+
+      await EncryptedStorage.setItem('user_session', JSON.stringify({
+        refreshToken: null
+      }));
+
       set({
         isAuthenticated: false,
         user: null,
         accessToken: null,
-        refreshToken: null,
         expiredDate: null
       });
     } catch (error) {
@@ -215,12 +224,19 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   loadUser: async () => {
     try {
       const userSession = await LocalStorage.getString('user_session');
+
+      const existingSession = await EncryptedStorage.getItem('user_session');
+
+      let existingData: Record<string, any> = {};
+      if (existingSession) {
+        existingData = JSON.parse(existingSession);
+      }
+
       if (userSession) {
         const formatted: Record<string, any> = JSON.parse(userSession);
         if (formatted && isValidStorageData(formatted.accessToken, formatted.expiredDate)) {
           set({
             accessToken: formatted.accessToken,
-            refreshToken: formatted.refreshToken,
             expiredDate: formatted.expiredDate,
             isAuthenticated: true,
             loading: false
@@ -233,7 +249,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
             ...data,
             tariff: tariff.cashBack
           }});
-        } else if (formatted && hasAccessTokenCredentials(formatted.refreshToken)) {
+        } else if (formatted && hasAccessTokenCredentials(existingData.refreshToken)) {
+          console.log("I am trying to refresh token!")
           await get().mutateRefreshToken()
         } else {
           set({ loading: false });

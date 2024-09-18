@@ -34,7 +34,6 @@ const RootStack = createNativeStackNavigator();
 // Navigation Ref
 import {createNavigationContainerRef} from '@react-navigation/native';
 
-import {useAppState} from '@context/AppContext';
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
 import useStore from "../../state/store"

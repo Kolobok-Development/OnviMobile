@@ -9,69 +9,63 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from 'react-native';
-import {dp} from '../../utils/dp';
-import React, {useMemo, useRef, useState} from 'react';
-import useStore from '../../state/store';
-import {formatPhoneNumber} from '../../utils/phoneFormat';
-import {Button} from '@styled/buttons';
-import {LogOut} from 'react-native-feather';
-import BottomSheet, {BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
-import {BurgerButton} from '@navigators/BurgerButton';
-import {useAxios} from '@hooks/useAxios';
-import Switch from '@styled/buttons/CustomSwitch';
-import {useUpdateUser} from '../../api/hooks/useApiUser.ts';
-import {AvatarEnum} from '../../types/AvatarEnum.ts';
+} from 'react-native'
+
+import { dp } from '../../utils/dp'
+import React, { useMemo, useRef, useState } from 'react'
+import useStore from '../../state/store'
+import { formatPhoneNumber } from '../../utils/phoneFormat'
+import { Button } from '@styled/buttons'
+import { LogOut } from 'react-native-feather'
+import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { useNavigation } from '@react-navigation/native'
+import { BurgerButton } from '@navigators/BurgerButton'
+import Switch from '@styled/buttons/CustomSwitch'
+import { AvatarEnum } from '../../types/AvatarEnum.ts'
+import { update } from '../../api/user/index.ts'
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
     case 'both.jpg':
-      return require('../../assets/avatars/both.jpg');
-      break;
+      return require('../../assets/avatars/both.jpg')
     case 'female.jpg':
-      return require('../../assets/avatars/female.jpg');
-      break;
+      return require('../../assets/avatars/female.jpg')
     case 'male.jpg':
-      return require('../../assets/avatars/male.jpg');
-      break;
+      return require('../../assets/avatars/male.jpg')
     default:
-      return require('../../assets/avatars/both.jpg');
-      break;
+      return require('../../assets/avatars/both.jpg')
   }
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser}  = useStore();
-  const api = useAxios('CORE_URL');
-  const {updateUser }: any = useAuth();
-  const navigation = useNavigation<any>();
-  const {mutate, isPending} = useUpdateUser();
+  const { user, signOut, loadUser } = useStore()
+  const navigation = useNavigation<any>()
+  const [isLoading, setIsLoading] = useState(false)
 
-  const initialUserName = user?.name || '';
-  const initialEmail = user?.email || '';
-  const initialPhone = user?.phone || '';
-  const initialAvatar = user?.avatar || 'both.jpg';
+  const initialUserName = user?.name || ''
+  const initialEmail = user?.email || ''
+  const initialPhone = user?.phone || ''
+  const initialAvatar = user?.avatar || 'both.jpg'
 
-  const [editing, setEditing] = useState(false);
-  const [userName, setUserName] = useState(initialUserName);
-  const [email, setEmail] = useState(initialEmail);
-  const [phone, setPhone] = useState(initialPhone);
-  const [toggle, setToggle] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false)
+  const [userName, setUserName] = useState(initialUserName)
+  const [email, setEmail] = useState(initialEmail)
+  const [phone, setPhone] = useState(initialPhone)
+  const [toggle, setToggle] = useState(false)
 
-  const [selectedAvatar, setSelectedAvatar] = useState<string>(initialAvatar);
+  const [selectedAvatar, setSelectedAvatar] = useState<string>(initialAvatar)
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ['80%'], []);
+  const bottomSheetRef = useRef<BottomSheet>(null)
+  const snapPoints = useMemo(() => ['80%'], [])
 
   const handleClosePress = () => {
-    setEditing(false);
+    setEditing(false)
     // @ts-ignore
     bottomSheetRef.current.close();
   };
 
   const saveUserDate = async () => {
+    setIsLoading(true)
     try {
       const avatarMapping: {[key in AvatarEnum]?: number} = {
         [AvatarEnum.ONE]: 1,
@@ -79,44 +73,47 @@ const Settings = () => {
         [AvatarEnum.THREE]: 3,
       };
 
-      const avatar: number = avatarMapping[selectedAvatar];
+      const avatar: number = avatarMapping[selectedAvatar]
 
-      const userData: {name?: string; email?: string; avatar?: number} = {};
+      const userData: {name?: string; email?: string; avatar?: number} = {}
 
       if (userName) {
-        userData.name = userName;
+        userData.name = userName
       }
       if (email) {
-        userData.email = email;
+        userData.email = email
       }
       if (avatar !== undefined) {
-        userData.avatar = avatar;
+        userData.avatar = avatar
       }
 
-      mutate(userData, {
-        onSuccess: async () => {
-          await loadUser();
-          setEditing(false);
-        },
-      });
+      update(userData).then(async() => {
+        await loadUser()
+        setEditing(false)
+        setIsLoading(false)
+      }).catch((err) => {
+        console.log("Error updating: ", err.message)
+        setIsLoading(false)
+      })
+
     } catch (error: any) {
-      setLoading(false);
+      setIsLoading(false);
       setEditing(false);
     }
   };
 
   const onAboutButtonHandle = () => {
-    navigation.navigate('О приложении');
+    navigation.navigate('О приложении')
   };
 
   const renderOverlay = () => {
     if (editing) {
-      return <View style={styles.overlay} />;
+      return <View style={styles.overlay} />
     }
     return null;
   };
 
-  const avatarValue = avatarSwitch(selectedAvatar);
+  const avatarValue = avatarSwitch(selectedAvatar)
 
   const editingMode = () => {
     return (
@@ -241,9 +238,9 @@ const Settings = () => {
             height={dp(40)}
             fontSize={dp(16)}
             fontWeight={'600'}
-            disabled={isPending}
+            disabled={isLoading}
             onClick={saveUserDate}
-            showLoading={isPending}
+            showLoading={isLoading}
           />
         </View>
       </BottomSheet>
@@ -638,6 +635,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
   },
-});
+})
 
-export {Settings};
+export { Settings }

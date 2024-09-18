@@ -20,7 +20,11 @@ import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistor
 import {PromoCard} from '@components/PromoCard';
 
 const Promos = () => {
-  const {isLoading, data, refetch} = useGetCampaignHistory();
+  const {isLoading, data, mutate, error} = useGetCampaignHistory();
+
+  useEffect(() => {
+    console.log("promos: ", data)
+  }, [error])
 
   const navigation = useNavigation<any>();
 
@@ -120,7 +124,7 @@ const Promos = () => {
                       key={promo.item.promotionId.toString()}
                     />
                   )}
-                  onRefresh={refetch}
+                  onRefresh={mutate}
                   refreshing={isLoading}
                   keyExtractor={(promo: IGetPromoHistoryResponse) =>
                     promo.promotionId.toString()

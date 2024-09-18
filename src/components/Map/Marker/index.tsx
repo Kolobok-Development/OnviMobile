@@ -2,10 +2,8 @@ import MapboxGL from '@rnmapbox/maps';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import calculateDistance from '../../../utils/calculateDistance';
-import {useAppState} from '@context/AppContext';
 
 import Svg, {Path} from 'react-native-svg';
-import uuid from 'react-native-uuid';
 import useStore from "../../../state/store.ts";
 
 interface MarkerProps {
@@ -21,9 +19,8 @@ export default function Marker({
   bottomSheetRef,
   locationRef,
 }: MarkerProps) {
-  const {state, setState} = useAppState();
 
-  const { setSelectedPos, setSum } = useStore();
+  const { setSelectedPos, setSum, orderDetails, setOrderDetails } = useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
@@ -49,12 +46,10 @@ export default function Marker({
           navigateBottomSheet('Business', businessObj);
           setSelectedPos(business);
           setSum(150);
-          setState({
-            ...state,
-            order: {
-              sum: 150,
-            },
-          });
+          setOrderDetails({
+            ...orderDetails,
+            sum: 150
+          })
           bottomSheetRef.current?.snapToPosition('60%');
         }}>
         <Svg

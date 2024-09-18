@@ -113,6 +113,7 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
             });
 
             getMe().then(data => {
+              console.log("me data: ", data)
               getTariff().then(tariff => {
                 updateUser({
                   cards: data.cards,
@@ -125,7 +126,9 @@ const AuthProvider: React.FC<{children: ReactNode}> = ({children}) => {
                   birthday: data.birthday,
                   tariff: tariff.cashBack,
                 });
-              });
+              }).catch((err) => {
+                console.log("me data error:", err)
+              })
             });
 
             return;

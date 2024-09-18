@@ -15,7 +15,6 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
 import {useNavigation} from '@react-navigation/native';
-import {useAppState} from '@context/AppContext';
 import {dp} from '../../../utils/dp';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -49,10 +48,8 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user, loadUser, isBottomSheetOpen} = useStore();
+  const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
   const navigation: any = useNavigation();
-
-  const {state} = useAppState();
 
   const [btnLoader, setBtnLoader] = useState(false);
 
@@ -60,7 +57,7 @@ const Payment = () => {
   const [usedPoints, setUsedPoints] = useState(0);
 
   const isOpened = isBottomSheetOpen
-  const order = state.order;
+  const order = orderDetails
 
   const [discount, setDiscount] = useState(0);
 
@@ -93,24 +90,27 @@ const Payment = () => {
   const applyPromocode = async () => {
     const body: IValidatePromoCodeRequest = {
       promoCode: promocode,
-      carWashId: Number(order.id),
+      carWashId: Number(order.posId),
     };
     mutate(body);
   };
 
   const createOrder = async () => {
     if (!user) return
+
+    if (!order.posId || !order.bayNumber) return
+
     try {
       setBtnLoader(true);
       const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
       const storeId: string = '168905';
-      const discountSum: number = (order.sum * discount) / 100;
-      const realSum: number = Math.max(order.sum - discountSum - usedPoints, 1);
+      const discountSum: number = (order.sum! * discount) / 100;
+      const realSum: number = Math.max(order.sum! - discountSum - usedPoints, 1);
       const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
       const bayStatus = await pingPos({
-        carWashId: order.id,
-        bayNumber: order.box,
+        carWashId: order.posId,
+        bayNumber: order.bayNumber,
       });
 
       if (bayStatus.status !== 'Free') {
@@ -164,8 +164,8 @@ const Payment = () => {
         transactionId: paymentId,
         sum: realSum,
         rewardPointsUsed: pointsSum,
-        carWashId: Number(order.id),
-        bayNumber: Number(order.box),
+        carWashId: Number(order.posId),
+        bayNumber: Number(order.bayNumber),
       };
 
       if (data?.id && promocode) {
@@ -202,7 +202,7 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user) return
+    if (!user || !order.sum) return
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {
@@ -294,7 +294,7 @@ const Payment = () => {
               type="box"
               navigation={navigation}
               position={'95%'}
-              box={order?.box}
+              box={order?.bayNumber ?? 0}
             />
             <Text style={styles.title}>Оплата</Text>
             <GHScrollView
@@ -368,7 +368,7 @@ const Payment = () => {
                         fontWeight: '700',
                         fontSize: dp(16),
                       }}>
-                      {Math.round((order.sum * user.tariff) / 100)} ₽
+                      {order.sum ? Math.round((order.sum * user.tariff) / 100) : 0} ₽
                     </Text>
                   )}
                 </View>
