@@ -4,9 +4,9 @@ import {CarWash, CarWashLocation} from '../../api/AppContent/types.ts';
 export interface PosSlice {
   posList: CarWashLocation[];
   setPosList: (values: CarWashLocation[]) => void;
-  selectedPos: CarWash;
+  selectedPos: CarWash | null;
   setSelectedPos: (value: CarWash) => void;
-  nearByPos: CarWash;
+  nearByPos: CarWash | null;
   setNearByPos: (value: CarWash) => void;
 }
 
@@ -14,11 +14,11 @@ const createPoSSlice: StoreSlice<PosSlice> = set => ({
   posList: [],
   setPosList: (values: any[]) => set(state => ({...state, posList: values})),
 
-  selectedPos: {},
+  selectedPos: null,
   setSelectedPos: (value: any) =>
     set(state => ({...state, selectedPos: value})),
 
-  nearByPos: {},
+  nearByPos: null,
   setNearByPos: (value: any) => set(state => ({...state, nearByPos: value})),
 });
 

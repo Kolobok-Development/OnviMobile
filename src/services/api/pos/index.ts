@@ -1,30 +1,18 @@
 import {BusinessSuccessRequestPayload} from '../../../api/AppContent/types.ts';
-import {fetcher} from '@utils/fetcher.ts';
+import {appContent} from '../../../api/clients/AppContent';
 
 enum POS {
   GET_POS_LIST = '/api/carwash',
 }
 
-async function getPOSList(query: {
+export async function getPOSList(query: {
   [key: string]: string;
 }): Promise<BusinessSuccessRequestPayload> {
-  // Construct the URL with query parameters
-  const queryParams = new URLSearchParams(query);
-  const fullUrl = `${POS.GET_POS_LIST}?${queryParams.toString()}`;
-
-  // Make the fetch request
-  const response = await fetcher(
-    fullUrl,
+  const response = await appContent.get<BusinessSuccessRequestPayload>(
+    POS.GET_POS_LIST,
     {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      params: query,
     },
-    'appApi',
   );
-
-  return response;
+  return response.data;
 }
-
-export {getPOSList};

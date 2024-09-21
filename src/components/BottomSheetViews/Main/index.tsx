@@ -34,17 +34,15 @@ import {Campaign} from '../../../api/AppContent/types';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
-import Geolocation from '@react-native-community/geolocation';
 import { CustomModal } from "@styled/views/CustomModal";
 
-const WIDTH = Dimensions.get('screen').width;
 
-const Main = ({drawerNavigation}: any) => {
+const Main = () => {
   const {isBottomSheetOpen, loadUser, location, posList} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
-  const isOpened = isBottomSheetOpen
+  const isOpened = isBottomSheetOpen;
 
   const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
 

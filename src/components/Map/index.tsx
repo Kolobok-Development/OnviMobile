@@ -1,22 +1,11 @@
 import React, {useState, useEffect, useMemo} from 'react';
-
 import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
-
-import {API_URL, PUBLIC_URL, STRAPI_URL} from '@env';
-
-import MapboxGL, {
-  UserLocation,
-  LocationPuck,
-  UserTrackingMode,
-} from '@rnmapbox/maps';
-
+import MapboxGL, {UserLocation, LocationPuck} from '@rnmapbox/maps';
 import Marker from './Marker';
-
 import useStore from '../../state/store.ts';
 import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
-
-import {IUserLocation} from '../../state/app/AppSlice.ts';
+import {throttle} from 'lodash';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
@@ -25,20 +14,21 @@ MapboxGL.setAccessToken(
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   const {posList, setPosList, location, setLocation} = useStore();
 
-  useSWR(['getPOSList'], () => getPOSList({}), {
-    onError: error => {
-      console.error(error);
-    },
-    onSuccess: data => {
-      setPosList(data.businessesLocations);
-    },
+  const {error, data} = useSWR(['getPOSList'], () => getPOSList({}), {
+    revalidateOnFocus: false,
   });
 
-  const [zoomedIn, setZoomedIn] = useState(false);
-
   useEffect(() => {
-    console.log('businesses: ', posList?.length);
-  }, [posList]);
+    if (data && data.businessesLocations) {
+      setPosList(data.businessesLocations);
+    }
+  }, [data]);
+
+  if (error) {
+    console.error('Error fetching POS List:', error); // Log error for debugging
+  }
+
+  const [zoomedIn, setZoomedIn] = useState(false);
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -61,8 +51,6 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
     useState<boolean>(false);
-
-  // const [userLocation, setUserLocation] = useState<IUserLocation | null>(null);
 
   //Permission Request
   // Check and request location permissions
@@ -90,42 +78,12 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     requestLocationPermission();
   }, []);
 
-  // useEffect(() => {
-  //   try {
-  //     async function loadWashes() {
-  //       await getCarWashes({})
-  //         .then(data => {
-  //           if (data && data.businessesLocations) {
-  //             setState({
-  //               ...state,
-  //               businesses: data.businessesLocations,
-  //             });
-  //           }
-  //         })
-  //         .catch(err => console.log(`Error: ${err}`));
-  //     }
-  //
-  //     if (businesses.length === 0) {
-  //       loadWashes();
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, []);
-
-  const onUserLocationUpdate = async (location: any) => {
+  const onUserLocationUpdateThrottled = throttle(location => {
     let lat = location.coords.latitude;
     let long = location.coords.longitude;
     userLocationRef.current = {lat: lat, lon: long};
-    setLocation({
-      latitude: lat,
-      longitude: long,
-    });
-    // setState((prevState: any) => ({
-    //   ...prevState,
-    //   userLocation: {latitude: lat, longitude: long},
-    // }));
-  };
+    setLocation({latitude: lat, longitude: long});
+  }, 1000);
 
   useEffect(() => {
     if (
@@ -180,7 +138,7 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
             visible={hasLocationPermission}
             showsUserHeadingIndicator={true}
             requestsAlwaysUse={true}
-            onUpdate={onUserLocationUpdate}
+            onUpdate={onUserLocationUpdateThrottled}
             animated={true}
           />
           <LocationPuck

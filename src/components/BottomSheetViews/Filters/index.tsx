@@ -1,20 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from '@styled/buttons';
 import {useBusiness} from '../../../api/hooks/useAppContent';
-import { cloneDeep } from 'lodash';
+import {cloneDeep} from 'lodash';
 
-import { getCarWashes } from "../../../api/AppContent/appContent"
+import {getCarWashes} from '../../../api/AppContent/appContent';
 
-import useStore from "../../../state/store"
+import useStore from '../../../state/store';
 
 // Define types
 type Filter = {
@@ -80,10 +74,11 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 const Filters = () => {
   const navigation: any = useNavigation();
 
-  const { filters, setFilters, setPosList } = useStore()
+  const {filters, setFilters, setPosList} = useStore();
 
   //Local filters
-  const [selectedFilters, setSelectedFilters] = useState<SelectedFilters>(filters);
+  const [selectedFilters, setSelectedFilters] =
+    useState<SelectedFilters>(filters);
   const query = generateQuery(filters);
 
   // Function to handle filter selection
@@ -105,35 +100,32 @@ const Filters = () => {
   };
 
   //Query
-  const {
-    isLoading,
-    mutate,
-  } = useBusiness({filter: query}, true);
-
+  const {isLoading, mutate} = useBusiness({filter: query}, true);
 
   // Function to handle submit button press
   const handleSubmit = async () => {
-    mutate().then(data => {
-      if (data) {
-        setFilters(selectedFilters)
-        setPosList(data.businessesLocations)
-        navigation.navigate('Main');
-      }
-    }).catch((err) => {
-      console.log("err: ", err)
-    })
+    mutate()
+      .then(data => {
+        if (data) {
+          setFilters(selectedFilters);
+          setPosList(data.businessesLocations);
+          navigation.navigate('Main');
+        }
+      })
+      .catch(err => {
+        console.log('err: ', err);
+      });
   };
 
   const reset = async () => {
-    const filtersQuery = generateQuery({})
-    setSelectedFilters({})
+    const filtersQuery = generateQuery({});
+    setSelectedFilters({});
     getCarWashes({filter: filtersQuery}).then((data: any) => {
-      setFilters({})
-      setPosList(data.businessesLocations)
+      setFilters({});
+      setPosList(data.businessesLocations);
       navigation.navigate('Main');
-
-    })
-  }
+    });
+  };
 
   const renderFilterItem = ({item}: {item: FilterItem}) => {
     const {sectionCode, filter} = item;

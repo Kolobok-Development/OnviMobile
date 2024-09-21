@@ -13,7 +13,7 @@ import {ScrollView} from 'react-native-gesture-handler';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-import { useReducedMotion } from 'react-native-reanimated';
+import {useReducedMotion} from 'react-native-reanimated';
 
 // Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
@@ -30,7 +30,7 @@ import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 
-import useStore from "../../state/store"
+import useStore from '../../state/store';
 
 const Home = ({navigation}: any) => {
   const [visible, setVisible] = useState(false);
@@ -42,10 +42,9 @@ const Home = ({navigation}: any) => {
 
   const bottomSheetRef = useRef(null);
 
+  const {filters} = useStore();
 
-  const { filters } = useStore()
-
-  const reduceMotion = useReducedMotion()
+  const reduceMotion = useReducedMotion();
 
   // variables
   const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
@@ -57,14 +56,6 @@ const Home = ({navigation}: any) => {
   }, []);
 
   const findMe = async () => {
-    console.log({
-      lon: userLocationRef.current.lon,
-      lat: userLocationRef.current.lat,
-    });
-    console.log('camera: ', [
-      userLocationRef.current.lon,
-      userLocationRef.current.lat,
-    ]);
     cameraRef.current.setCamera({
       centerCoordinate: [
         userLocationRef.current.lon,
@@ -74,71 +65,73 @@ const Home = ({navigation}: any) => {
     });
   };
 
+  const renderHandleComponent = useCallback(
+    (props: any) => {
+      function extractValues(obj: any) {
+        const values = [];
 
-  const renderHandleComponent = useCallback((props: any) => {
-    function extractValues(obj: any) {
-      const values = [];
-
-      for (const key in obj) {
-        if (typeof obj[key] === 'object') {
-          for (const innerKey in obj[key]) {
-            values.push(obj[key][innerKey]);
+        for (const key in obj) {
+          if (typeof obj[key] === 'object') {
+            for (const innerKey in obj[key]) {
+              values.push(obj[key][innerKey]);
+            }
           }
         }
+
+        return values;
       }
 
-      return values;
-    }
+      const extractedFilters = useCallback(() => {
+        return extractValues(filters);
+      }, [filters]);
 
-    const extractedFilters = useCallback(() => {
-      return extractValues(filters);
-    }, [filters]);
-
-    return (
-      <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
-        <View
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <View style={{flex: 1, alignSelf: 'flex-end'}}>
-            <ScrollView
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollViewContent}>
-              {extractedFilters().map((value, index) => (
-                <View
-                  key={index}
-                  style={{...styles.box, width: value.length * dp(10)}}>
-                  <Text
-                    style={{
-                      color: '#ffffff',
-                      fontSize: dp(12),
-                      fontWeight: '600',
-                    }}>
-                    {value}
-                  </Text>
-                </View>
-              ))}
-            </ScrollView>
+      return (
+        <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
+            <View style={{flex: 1, alignSelf: 'flex-end'}}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.scrollViewContent}>
+                {extractedFilters().map((value, index) => (
+                  <View
+                    key={index}
+                    style={{...styles.box, width: value.length * dp(10)}}>
+                    <Text
+                      style={{
+                        color: '#ffffff',
+                        fontSize: dp(12),
+                        fontWeight: '600',
+                      }}>
+                      {value}
+                    </Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+            <View>
+              <TouchableOpacity
+                style={{...styles.findMe}}
+                onPress={async () => {
+                  await findMe();
+                }}>
+                <Navigation fill={'white'} color={'white'} />
+              </TouchableOpacity>
+            </View>
           </View>
-          <View>
-            <TouchableOpacity
-              style={{...styles.findMe}}
-              onPress={async () => {
-                await findMe();
-              }}>
-              <Navigation fill={'white'} color={'white'} />
-            </TouchableOpacity>
+          <View style={styles.lineContainer}>
+            <View style={styles.line} />
           </View>
-        </View>
-        <View style={styles.lineContainer}>
-          <View style={styles.line} />
-        </View>
-      </BottomSheetHandle>
-    );
-  }, [filters]);
+        </BottomSheetHandle>
+      );
+    },
+    [filters],
+  );
 
   return (
     <GestureHandlerRootView style={styles.master}>
