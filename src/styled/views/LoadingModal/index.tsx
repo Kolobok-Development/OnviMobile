@@ -1,6 +1,7 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Modal, StyleProp, StyleSheet, Text, View, ViewStyle} from "react-native";
-import {dp} from "../../../utils/dp";
+import React, { useEffect, useState } from 'react';
+import { Image, StyleProp, StyleSheet, Text, View, ViewStyle } from "react-native";
+import { dp } from "../../../utils/dp";
+import Modal from '@styled/Modal';
 
 interface ILoadingModal {
     isVisible: boolean;
@@ -64,7 +65,9 @@ const LoadingModal = (props: ILoadingModal) => {
             animationType='fade'
             transparent={true}
             visible={props.isVisible}
-            statusBarTranslucent={true}>
+            statusBarTranslucent={true}
+            onClose={() => {}}
+        >
             <View style={styles.container}>
                 <View style={[styles.modalView, { backgroundColor: loaderState.state === 'end' ? '#BFFA00' : props.color}]}>
                     <Image

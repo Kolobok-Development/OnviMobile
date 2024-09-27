@@ -16,7 +16,6 @@ const _retriveConfigWithAuthorization = async (
 ) => {
   console.log("retrieve config with authorization: ", config)
   try {
-
     const accessToken = getToken().accessToken
     const expiredDate = getToken().expiredDate
 

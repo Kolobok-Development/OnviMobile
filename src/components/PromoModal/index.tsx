@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import {Modal, View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import {Button} from "@styled/buttons";
 import {dp} from "../../utils/dp";
 import {X} from "react-native-feather";
+
+import Modal from '@styled/Modal';
 
 export interface IInputData {
     placeholder: string;
@@ -49,7 +51,7 @@ const PromoModal: React.FC<IPromoModalProps> = ({
     };
 
     return (
-        <Modal visible={isVisible} animationType="slide" transparent={true}>
+        <Modal visible={isVisible ?? false} animationType="slide" transparent={true} onClose={onClose}>
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <View style={styles.header}>

@@ -1,5 +1,7 @@
 import React, {useState} from 'react';
-import {Text, View, Image, StyleSheet, Modal} from 'react-native';
+import {Text, View, Image, StyleSheet} from 'react-native';
+
+import Modal from '@styled/Modal';
 
 import {Button} from '@styled/buttons';
 
@@ -40,10 +42,9 @@ const BusinessInfo = () => {
         visible={modalVisible}
         animationType="fade"
         transparent={true}
-        onRequestClose={() => setModalVisible(true)}>
+        onClose={() => setModalVisible(false)}>
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            {/* <ThinkEmojie width={dp(45)} height={dp(45)}/> */}
             <Image
               source={require('../../../assets/emojies/thinking.png')}
               style={{width: dp(40), height: dp(40), resizeMode: 'contain'}}

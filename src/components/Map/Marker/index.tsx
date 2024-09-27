@@ -19,7 +19,6 @@ export default function Marker({
   bottomSheetRef,
   locationRef,
 }: MarkerProps) {
-
   const { setSelectedPos, setSum, orderDetails, setOrderDetails } = useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {

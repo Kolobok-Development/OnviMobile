@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Modal, StyleProp, StyleSheet, Text, TextInput, View, ViewStyle} from "react-native";
-import {dp} from "../../../utils/dp";
-import {ThinkEmojie} from "../../../assets";
-import {Button} from "@styled/buttons";
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { dp } from "../../../utils/dp";
+import { Button } from "@styled/buttons";
+import Modal from '@styled/Modal';
 
 interface ILoadingModal {
     isVisible: boolean;
@@ -25,7 +25,9 @@ const InputModal = (props: ILoadingModal) => {
             animationType='fade'
             transparent={true}
             visible={modalVisible}
-            statusBarTranslucent={true}>
+            statusBarTranslucent={true}
+            onClose={() => setModalVisible(false)}
+        >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
                     <Text style={styles.modalTitle}>{props.title}</Text>

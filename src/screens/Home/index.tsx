@@ -1,4 +1,4 @@
-import {useRef, useState, useMemo, useCallback, useEffect} from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 
 import {
   View,
@@ -65,6 +65,7 @@ const Home = ({navigation}: any) => {
     });
   };
 
+  // renderHamdleComponent выделить в отдельный компонент
   const renderHandleComponent = useCallback(
     (props: any) => {
       function extractValues(obj: any) {

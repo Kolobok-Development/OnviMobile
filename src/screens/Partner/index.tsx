@@ -49,10 +49,6 @@ const Partner = () => {
 
   // Function to handle confirming modal action
   const handleConfirm = (inputValue: any) => {
-    // Handle the action based on the input value (e.g., send it to the server)
-    console.log('Input Value:', inputValue);
-
-    // Close the modal
     closeModal();
   };
 

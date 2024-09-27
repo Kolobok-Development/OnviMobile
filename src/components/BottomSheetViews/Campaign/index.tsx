@@ -1,13 +1,13 @@
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
-import {dp} from '../../../utils/dp';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import {useRoute} from '@react-navigation/native';
+import { Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { dp } from '../../../utils/dp';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useRoute } from '@react-navigation/native';
 
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import React, {useEffect, useState} from 'react';
-import {Campaign as CampaignType} from '../../../api/AppContent/types';
+import React, { useEffect, useState } from 'react';
+import { Campaign as CampaignType } from '../../../api/AppContent/types';
 import Markdown from 'react-native-markdown-display';
-import {Button} from '@styled/buttons';
+import { Button } from '@styled/buttons';
 
 import useStore from "../../../state/store"
 

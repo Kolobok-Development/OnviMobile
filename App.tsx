@@ -11,8 +11,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 
-import NetInfo from '@react-native-community/netinfo';
-import RemoteNotifications from '@services/PushNotifications';
+// import NetInfo from '@react-native-community/netinfo';
+// import RemoteNotifications from '@services/PushNotifications';
 
 import useStore from './src/state/store';
 
@@ -34,24 +34,24 @@ function App(): React.JSX.Element {
 
   useEffect(() => {
     loadUser();
-    const unsubscribe = NetInfo.addEventListener(state => {
-      const networkState = state.isConnected ? state.isConnected : false;
-      setConnected(networkState);
+    // const unsubscribe = NetInfo.addEventListener(state => {
+    //   const networkState = state.isConnected ? state.isConnected : false;
+    //   setConnected(networkState);
 
-      if (!networkState) {
-        showMessage({
-          message: 'Нет подключения к интернету',
-          type: 'danger',
-          autoHide: true,
-          icon: 'danger',
-          duration: 3000,
-        });
-      }
-    });
+    //   if (!networkState) {
+    //     showMessage({
+    //       message: 'Нет подключения к интернету',
+    //       type: 'danger',
+    //       autoHide: true,
+    //       icon: 'danger',
+    //       duration: 3000,
+    //     });
+    //   }
+    // });
 
-    return () => {
-      unsubscribe();
-    };
+    // return () => {
+    //   unsubscribe();
+    // };
   }, []);
 
 

@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {dp} from '../../utils/dp';
+import { dp } from '../../utils/dp';
 import React from 'react';
-import {useNavigation} from '@react-navigation/core';
-import {BackButton} from '@components/BackButton';
+import { useNavigation } from '@react-navigation/core';
+import { BackButton } from '@components/BackButton';
 
 const About = () => {
   const navigation = useNavigation<any>();
