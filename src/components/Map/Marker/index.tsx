@@ -19,7 +19,7 @@ export default function Marker({
   bottomSheetRef,
   locationRef,
 }: MarkerProps) {
-  const { setSelectedPos, setSum, orderDetails, setOrderDetails } = useStore();
+  const { setSelectedPos, setSum, orderDetails, setOrderDetails, setBusiness } = useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
@@ -42,12 +42,21 @@ export default function Marker({
             businessObj.close = true;
           }
 
-          navigateBottomSheet('Business', businessObj);
+          setBusiness(businessObj)
+          navigateBottomSheet('Business', {});
           setSelectedPos(business);
           setSum(150);
           setOrderDetails({
-            ...orderDetails,
-            sum: 150
+            posId: 0,
+            sum: 150,
+            bayNumber: null,
+            promoCodeId: null,
+            rewardPointsUsed: null,
+            type: null,
+            name: null,
+            prices: [],
+            order:  null,
+            orderDate: null
           })
           bottomSheetRef.current?.snapToPosition('60%');
         }}>

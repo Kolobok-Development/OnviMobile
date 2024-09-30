@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {dp} from '../../utils/dp';
 
@@ -13,54 +13,20 @@ import {
 } from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
 import {PromoCard} from '@components/PromoCard';
 
+import PromosPlaceholder from './PromosPlaceholder';
+
 const Promos = () => {
   const {isLoading, data, mutate, error} = useGetCampaignHistory();
-
-  useEffect(() => {
-    console.log("promos: ", data)
-  }, [error])
 
   const navigation = useNavigation<any>();
 
   const handlePromoInput = () => {
     navigation.navigate('Ввод Промокода');
-  };
-
-  const PromosPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
   };
 
   return (

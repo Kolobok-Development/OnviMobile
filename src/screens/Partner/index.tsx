@@ -10,14 +10,14 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {dp} from '../../utils/dp';
-import {BurgerButton} from '@navigators/BurgerButton';
 import {Partner as PartnerType} from '../../api/AppContent/types';
 import Markdown from 'react-native-markdown-display';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {Button} from '@styled/buttons';
 import PromoModal, {IPromoModalProps, IInputData} from '@components/PromoModal';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
+
+import PartnerPlaceholder from './PartnerPlaceholder';
 
 const Partner = () => {
   const route: any = useRoute();
@@ -33,15 +33,6 @@ const Partner = () => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log(modalData);
-    console.log(modalVisible);
-  }, [modalData]);
-  // Function to open the modal
-  const openModal = () => {
-    setModalVisible(true);
-  };
-
   // Function to close the modal
   const closeModal = () => {
     setModalVisible(false);
@@ -50,34 +41,6 @@ const Partner = () => {
   // Function to handle confirming modal action
   const handleConfirm = (inputValue: any) => {
     closeModal();
-  };
-
-  const PartnerPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(15)}
-            width={'100%'}
-            height={dp(190)}
-            borderRadius={dp(10)}
-            alignSelf="flex-start"
-            marginBottom={dp(10)}
-          />
-          <Text style={{marginTop: 6, fontSize: 14, lineHeight: 18}}>
-            Hello world
-          </Text>
-          <Text
-            style={{marginTop: 6, fontSize: 14, lineHeight: 18, width: '50%'}}>
-            Hello world
-          </Text>
-          <Text
-            style={{marginTop: 6, fontSize: 14, lineHeight: 18, width: '25%'}}>
-            Hello world
-          </Text>
-        </View>
-      </SkeletonPlaceholder>
-    );
   };
 
   const renderCustomModal = () => {

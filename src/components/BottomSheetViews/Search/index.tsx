@@ -10,8 +10,6 @@ import {
   FlatList,
 } from 'react-native';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {useRoute} from '@react-navigation/native';
@@ -25,48 +23,19 @@ import {CarWashLocation} from '../../../api/AppContent/types';
 
 import useStore from '../../../state/store';
 
+import SearchPlaceholder from './SearchPlaceholder';
+
 const Search = () => {
   const [search, setSearch] = useState('');
   const route: any = useRoute();
 
-  const { setOrderDetails } = useStore()
+  const { setOrderDetails, setBusiness } = useStore()
 
   const {
     isLoading,
     data,
     mutate: getBusinesses,
   } = useBusiness({search}, true);
-
-  const SearchPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(10)}
-            width={'95%'}
-            height={dp(50)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'95%'}
-            height={dp(50)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'95%'}
-            height={dp(50)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
-  };
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
     return (
@@ -95,8 +64,20 @@ const Search = () => {
   );
 
   const onClick = (carwash: any) => {
-    navigateBottomSheet('Business', carwash);
-    setOrderDetails({})
+    navigateBottomSheet('Business', {});
+    setBusiness(carwash)
+    setOrderDetails({
+      posId: 0,
+      sum: 0,
+      bayNumber: null,
+      promoCodeId: null,
+      rewardPointsUsed: null,
+      type: null,
+      name: null,
+      prices: [],
+      order:  null,
+      orderDate: null
+    })
     route.params.bottomSheetRef.current?.snapToPosition('42%');
     route.params.cameraRef.current.moveTo(
       [carwash.location.lon, carwash.location.lat],

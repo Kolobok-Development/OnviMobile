@@ -12,10 +12,11 @@ import {horizontalScale, moderateScale} from '../../../utils/metrics';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {NewsPost} from '../../../api/AppContent/types';
 
 import useStore from "../../../state/store"
+
+import PostPlaceholder from './PostPlaceholder';
 
 const Post = () => {
   const route: any = useRoute();
@@ -30,30 +31,6 @@ const Post = () => {
       setPost(route.params.data);
     }
   }, []);
-
-  const PostPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(150)}
-            borderRadius={dp(25)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
-  };
 
   return (
     <BottomSheetScrollView

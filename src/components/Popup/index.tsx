@@ -4,8 +4,6 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
-import { useTheme } from '@context/ThemeProvider';
-
 import { WHITE } from '../../utils/colors';
 
 const height = Dimensions.get('screen').height;
@@ -26,8 +24,6 @@ export type PopupRefProps = {
 const Popup = React.forwardRef<PopupRefProps, PopupProps>(({children, background}, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
-
-    const theme: any = useTheme()
 
     const scrollTo = useCallback((destination: number) => {
         'worklet';

@@ -16,57 +16,6 @@ import useStore from '../../../state/store';
 import {useNavigation, useRoute} from "@react-navigation/native";
 import {horizontalScale, moderateScale, verticalScale} from "../../../utils/metrics";
 
-const height = dp(Dimensions.get('screen').height);
-const MID_TRANSLATE_Y = -height / 1.5 + dp(50)
-
-const notifications = [
-    {
-        read: false,
-        title: "Ваш личный промик",
-        text: "Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров",
-        date: "17.05.2023"
-    },
-    {
-        read: false,
-        title: "Ваш личный промик",
-        text: "Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров",
-        date: "17.05.2023"
-    },
-    {
-        read: true,
-        title: "Ваш личный промик",
-        text: "Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров",
-        date: "17.05.2023"
-    },
-]
-
-const balances = [
-     {
-        positive: false,
-        title: "Мой-ка DS!",
-        text: "г. Воронеж, ул. Брусилова 4е",
-        date: "17.05.2023",
-        rubles: -450,
-        bonuses: -50
-    },
-    {
-        positive: false,
-        title: "Мой-ка DS!",
-        text: "г. Воронеж, ул. Брусилова 4е",
-        date: "17.05.2023",
-        rubles: -450,
-        bonuses: -50
-    },
-    {
-        positive: true,
-        title: "Мой-ка DS!",
-        text: "г. Воронеж, ул. Брусилова 4е",
-        date: "17.05.2023",
-        rubles: 450,
-        bonuses: 50
-    },
-]
-
 const Settings = () => {
     const [user, setUser] = useState<any>(null)
 
@@ -75,14 +24,8 @@ const Settings = () => {
     const { signOut } = useStore()
 
     const navigation: any = useNavigation()
-    const route: any = useRoute();
-
     const updateInfo = async () => {
-        // console.log("Wait")
-
-
-        const data = await api.get("/account/me").then((data) => {
-            // console.log(data.data.data.name)
+        await api.get("/account/me").then((data) => {
             setUser(data.data.data)
         }).catch(err => console.log(err.response))
     }

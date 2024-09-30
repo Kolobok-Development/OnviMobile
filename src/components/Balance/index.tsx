@@ -1,5 +1,4 @@
-import {BLACK} from '../../utils/colors';
-import React, {useState} from 'react';
+import React from 'react';
 
 import {
   TouchableOpacity,
@@ -18,7 +17,7 @@ import {useTheme} from '@context/ThemeProvider';
 
 import useStore from '../../state/store';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import BalancePlaceholder from './BalancePlaceholder';
 
 
 interface BalanceProps {
@@ -31,26 +30,10 @@ const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
 
   const { user } = useStore()
 
-  const BalancePlaceHolder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={60} highlightColor={'#BFFA00'}>
-        <View
-          style={{
-            width: dp(80),
-            height: dp(40),
-            marginTop: dp(15),
-            marginRight: dp(10),
-            display: bottomSheetIndex > 2 ? 'none' : 'flex',
-          }}
-        />
-      </SkeletonPlaceholder>
-    );
-  };
-
   return (
     <>
-      {!user || !user.cards ? (
-        <BalancePlaceHolder />
+      {(!user || !user.cards) ? (
+        <BalancePlaceholder bottomSheetIndex={bottomSheetIndex} />
       ) : (
         <View
           style={[

@@ -2,7 +2,6 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
-  useState,
   useRef,
 } from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
@@ -16,8 +15,6 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
-  useDerivedValue,
-  useAnimatedReaction,
 } from 'react-native-reanimated';
 
 import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
@@ -46,8 +43,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
   ({children, background}, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
-
-    // React to changes in active.value
 
     const activeRef = useRef(false);
 
@@ -94,14 +89,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
           activeRef.current = true;
         }
       });
-
-    const scrollToTop = () => {
-      scrollTo(MAX_TRANSLATE_Y);
-    };
-
-    const scrollToBottom = () => {
-      scrollTo(MIN_TRANSLATE_Y);
-    };
 
     useEffect(() => {
       scrollTo(-height / 3);

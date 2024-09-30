@@ -9,16 +9,10 @@ import {
   FlatList,
 } from 'react-native';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
-import {ScrollView} from 'react-native-gesture-handler';
-
 import {dp} from '../../../utils/dp';
 
-import {Button} from '@styled/buttons';
 import {WHITE} from '../../../utils/colors';
 
-import {Notification} from '@styled/cards/Notification';
 import {BalanceCard} from '@styled/cards/BalanceCard';
 import useStore from '../../../state/store';
 
@@ -31,26 +25,7 @@ import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
-const notifications = [
-  {
-    read: false,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-  {
-    read: false,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-  {
-    read: true,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-];
+import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 
 const History = ({drawerNavigation}: any) => {
   const [tab, setTab] = useState(true);
@@ -58,10 +33,6 @@ const History = ({drawerNavigation}: any) => {
   const { user } = useStore()
 
   const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
-
-  const switchTab = (val: boolean) => {
-    setTab(val);
-  };
 
   const route: any = useRoute();
 
@@ -83,37 +54,6 @@ const History = ({drawerNavigation}: any) => {
       setTab(false);
     }
   }, [route.params.type]);
-
-  const HistoryPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
-  };
 
   return (
     <View style={styles.container}>

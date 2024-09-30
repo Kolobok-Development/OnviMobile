@@ -38,7 +38,7 @@ import calculateDistance from '@utils/calculateDistance.ts';
 import { Button } from '@styled/buttons';
 import Modal from '@styled/Modal';
 
-
+import CampaignPlaceholder from './CampaignPlaceholder';
 
 const Main = () => {
   const {isBottomSheetOpen, loadUser, location, posList} = useStore();
@@ -145,24 +145,6 @@ const Main = () => {
                 minHeight={dp(120)}
               />
             </View>
-          </View>
-        </SkeletonPlaceholder>
-      </View>
-    );
-  };
-
-  const CampaignPlaceholder = () => {
-    return (
-      <View>
-        <SkeletonPlaceholder borderRadius={4}>
-          <View>
-            <SkeletonPlaceholder.Item
-              marginTop={dp(16)}
-              width={'100%'}
-              height={dp(180)}
-              borderRadius={dp(25)}
-              alignSelf="center"
-            />
           </View>
         </SkeletonPlaceholder>
       </View>
