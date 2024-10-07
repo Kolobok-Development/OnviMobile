@@ -9,7 +9,6 @@ const Drawer = createDrawerNavigator();
 import {Home} from '@screens/Home';
 import {Promos} from '@screens/Promos';
 
-import {StyleSheet} from 'react-native';
 import {useTheme} from '@context/ThemeProvider';
 import {Settings} from '@screens/Settings';
 import {About} from '@screens/About';
@@ -26,8 +25,6 @@ import {Legals} from '@screens/Legals';
 const DrawerStack = () => {
   const {theme}: any = useTheme();
   const {user} = useStore();
-
-  console.log("user: ", user)
 
   return (
     <NavigationContainer independent={false}>
@@ -72,11 +69,5 @@ const DrawerStack = () => {
     </NavigationContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-  },
-});
 
 export {DrawerStack};

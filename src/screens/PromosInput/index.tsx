@@ -2,10 +2,11 @@ import {
   Platform,
   SafeAreaView,
   ScrollView,
-  StyleSheet, Text,
+  StyleSheet,
+  Text,
   TextInput,
-  View
-} from "react-native";
+  View,
+} from 'react-native';
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
 import React, {useEffect, useState} from 'react';
@@ -20,9 +21,9 @@ const PromosInput = () => {
 
   useEffect(() => {
     if (error) {
-      setCode("")
+      setCode('');
     }
-  }, [error])
+  }, [error]);
 
   const clearInput = () => {
     setCode('');

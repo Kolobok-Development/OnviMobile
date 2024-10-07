@@ -2,9 +2,9 @@ import axios, {InternalAxiosRequestConfig} from 'axios';
 import {STRAPI_URL} from '@env';
 const PREFIX = '/api/v2/';
 
-import { getToken } from '../state/store';
+import {getToken} from '../state/store';
 
-import { isValidStorageData } from '@context/AuthContext/index.validator';
+import {isValidStorageData} from '@context/AuthContext/index.validator';
 
 const userApiInstance = axios.create({
   baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
@@ -14,14 +14,17 @@ const userApiInstance = axios.create({
 const _retriveConfigWithAuthorization = async (
   config: InternalAxiosRequestConfig<any>,
 ) => {
-  console.log("retrieve config with authorization: ", config)
+  console.log('retrieve config with authorization: ', config);
   try {
-    const accessToken = getToken().accessToken
-    const expiredDate = getToken().expiredDate
+    const accessToken = getToken().accessToken;
+    const expiredDate = getToken().expiredDate;
 
-
-    if (accessToken && expiredDate && isValidStorageData(accessToken, expiredDate)) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+    if (
+      accessToken &&
+      expiredDate &&
+      isValidStorageData(accessToken, expiredDate)
+    ) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
     }
   } catch (e) {
     console.log(e);

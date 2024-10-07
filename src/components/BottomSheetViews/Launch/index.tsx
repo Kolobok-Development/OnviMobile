@@ -9,27 +9,23 @@ const Launch = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
-  const { isBottomSheetOpen, setOrderDetails, orderDetails } = useStore()
+  const {isBottomSheetOpen, setOrderDetails, orderDetails} = useStore();
 
-  const isOpened = isBottomSheetOpen
+  const isOpened = isBottomSheetOpen;
 
   const onSelect = (name: string, price: number) => {
     setOrderDetails({
       ...orderDetails,
       sum: price,
-      name: name
-    })
+      name: name,
+    });
     navigation.navigate('Payment', route.params);
   };
 
   if (orderDetails?.type === 'Portal') {
-    return (
-      <PortalLaunch isOpened={isOpened} onSelect={onSelect} />
-    );
+    return <PortalLaunch isOpened={isOpened} onSelect={onSelect} />;
   }
-  return (
-    <DefaultLaunch />
-  );
+  return <DefaultLaunch />;
 };
 
 export {Launch};

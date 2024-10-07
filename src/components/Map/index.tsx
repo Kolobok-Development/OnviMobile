@@ -12,11 +12,11 @@ MapboxGL.setAccessToken(
 );
 
 const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const { posList, setPosList, location, setLocation } = useStore();
+  const {posList, setPosList, location, setLocation} = useStore();
 
-  const { error, data } = useSWR(['getPOSList'], () => getPOSList({}), {
+  const {error, data} = useSWR(['getPOSList'], () => getPOSList({}), {
     revalidateOnFocus: false,
-  })
+  });
 
   useEffect(() => {
     if (data && data.businessesLocations) {
@@ -46,11 +46,11 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           })
         : [],
     [posList],
-  )
+  );
 
   //Location state
   const [hasLocationPermission, setHasLocationPermission] =
-    useState<boolean>(false)
+    useState<boolean>(false);
 
   //Permission Request
   // Check and request location permissions
@@ -73,10 +73,10 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           error,
         );
       }
-    }
+    };
 
     requestLocationPermission();
-  }, [])
+  }, []);
 
   const onUserLocationUpdateThrottled = throttle(location => {
     let lat = location.coords.latitude;

@@ -29,13 +29,9 @@ const Search = () => {
   const [search, setSearch] = useState('');
   const route: any = useRoute();
 
-  const { setOrderDetails, setBusiness } = useStore()
+  const {setOrderDetails, setBusiness} = useStore();
 
-  const {
-    isLoading,
-    data,
-    mutate: getBusinesses,
-  } = useBusiness({search}, true);
+  const {isLoading, data, mutate: getBusinesses} = useBusiness({search}, true);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
     return (
@@ -65,7 +61,7 @@ const Search = () => {
 
   const onClick = (carwash: any) => {
     navigateBottomSheet('Business', {});
-    setBusiness(carwash)
+    setBusiness(carwash);
     setOrderDetails({
       posId: 0,
       sum: 0,
@@ -75,9 +71,9 @@ const Search = () => {
       type: null,
       name: null,
       prices: [],
-      order:  null,
-      orderDate: null
-    })
+      order: null,
+      orderDate: null,
+    });
     route.params.bottomSheetRef.current?.snapToPosition('42%');
     route.params.cameraRef.current.moveTo(
       [carwash.location.lon, carwash.location.lat],

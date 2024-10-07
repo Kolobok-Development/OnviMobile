@@ -4,7 +4,7 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import calculateDistance from '../../../utils/calculateDistance';
 
 import Svg, {Path} from 'react-native-svg';
-import useStore from "../../../state/store.ts";
+import useStore from '../../../state/store.ts';
 
 interface MarkerProps {
   coordinate: number[];
@@ -19,7 +19,8 @@ export default function Marker({
   bottomSheetRef,
   locationRef,
 }: MarkerProps) {
-  const { setSelectedPos, setSum, orderDetails, setOrderDetails, setBusiness } = useStore();
+  const {setSelectedPos, setSum, orderDetails, setOrderDetails, setBusiness} =
+    useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
@@ -42,7 +43,7 @@ export default function Marker({
             businessObj.close = true;
           }
 
-          setBusiness(businessObj)
+          setBusiness(businessObj);
           navigateBottomSheet('Business', {});
           setSelectedPos(business);
           setSum(150);
@@ -55,9 +56,9 @@ export default function Marker({
             type: null,
             name: null,
             prices: [],
-            order:  null,
-            orderDate: null
-          })
+            order: null,
+            orderDate: null,
+          });
           bottomSheetRef.current?.snapToPosition('60%');
         }}>
         <Svg

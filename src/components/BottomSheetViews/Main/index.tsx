@@ -35,7 +35,7 @@ import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
 
-import { Button } from '@styled/buttons';
+import {Button} from '@styled/buttons';
 import Modal from '@styled/Modal';
 
 import CampaignPlaceholder from './CampaignPlaceholder';
@@ -75,7 +75,7 @@ const Main = () => {
 
   //Near by carwash
   const [nearestCarWash, setNearestCarWash] = useState(null);
-  const [nearByModal, setNearByModal] = useState(false)
+  const [nearByModal, setNearByModal] = useState(false);
 
   const findNearestCarWash = () => {
     if (!location) {
@@ -182,16 +182,31 @@ const Main = () => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
-        <Modal visible={nearByModal} onClose={() => setNearByModal(false)} animationType="none">
+        <Modal
+          visible={nearByModal}
+          onClose={() => setNearByModal(false)}
+          animationType="none">
           <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    <Text style={styles.modalText}>{"Предоставьте доступ к геолокации или выберите мойку на карте 🚗"}</Text>
-                    <View style={styles.actionButtons}>
-                        <View>
-                            <Button onClick={() => setNearByModal(false)} label={"Закрыть"} color="blue" width={129} height={42} fontSize={18} fontWeight="600" />
-                        </View>
-                    </View>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>
+                {
+                  'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
+                }
+              </Text>
+              <View style={styles.actionButtons}>
+                <View>
+                  <Button
+                    onClick={() => setNearByModal(false)}
+                    label={'Закрыть'}
+                    color="blue"
+                    width={129}
+                    height={42}
+                    fontSize={18}
+                    fontWeight="600"
+                  />
                 </View>
+              </View>
+            </View>
           </View>
         </Modal>
         <Card>
@@ -249,7 +264,7 @@ const Main = () => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                handleLaunchCarWash()
+                handleLaunchCarWash();
               }}>
               <View style={styles.label}>
                 <Text
@@ -266,8 +281,7 @@ const Main = () => {
                     color: 'white',
                     letterSpacing: 0.5,
                     flexShrink: 1,
-                  }}
-                >
+                  }}>
                   {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
                 </Text>
                 <Image
@@ -492,8 +506,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-
-  
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -501,34 +513,34 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-      backgroundColor: 'white',
-      padding: 20,
-      borderRadius: 38,
-      width: dp(341),
-      height: dp(222),
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: "center",
-      justifyContent: 'center'
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 38,
+    width: dp(341),
+    height: dp(222),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modalTitle: {
-      fontWeight: "600",
-      fontSize: dp(24),
-      paddingBottom: dp(3)
+    fontWeight: '600',
+    fontSize: dp(24),
+    paddingBottom: dp(3),
   },
   modalText: {
-      fontSize: dp(16),
-      paddingTop: dp(16),
-      fontWeight: "600",
-      textAlign: 'center',
-      color: "#000"
+    fontSize: dp(16),
+    paddingTop: dp(16),
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#000',
   },
   actionButtons: {
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
-      paddingTop: dp(27)
-  }
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: dp(27),
+  },
 });
 
 export {Main};

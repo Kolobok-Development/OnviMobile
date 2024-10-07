@@ -8,11 +8,9 @@ import {
   View,
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
-import {BurgerButton} from '@navigators/BurgerButton';
 import React from 'react';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
-import Switch from '@styled/buttons/CustomSwitch';
 
 const Legals = () => {
   const navigation = useNavigation<any>();
@@ -35,7 +33,9 @@ const Legals = () => {
                 <TouchableOpacity
                   style={[styles.row, styles.rowFirst]}
                   onPress={() => {}}>
-                  <Text style={styles.rowLabel}>Политика конфедициальности</Text>
+                  <Text style={styles.rowLabel}>
+                    Политика конфедициальности
+                  </Text>
                   <Image
                     style={{
                       height: dp(24),
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   content: {
-    marginTop: '10%'
+    marginTop: '10%',
   },
   screenTitle: {
     fontWeight: '700',

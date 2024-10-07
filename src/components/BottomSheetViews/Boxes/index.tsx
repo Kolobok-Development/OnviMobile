@@ -17,7 +17,7 @@ const Boxes = () => {
   const navigation: any = useNavigation();
   const route: any = useRoute();
 
-  const { setOrderDetails, orderDetails } = useStore()
+  const {setOrderDetails, orderDetails} = useStore();
 
   return (
     <GHScrollView
@@ -33,9 +33,10 @@ const Boxes = () => {
           <BusinessHeader
             type="empty"
             navigation={navigation}
-            callback={() => setOrderDetails({
+            callback={() =>
+              setOrderDetails({
                 ...orderDetails,
-                bayNumber: null
+                bayNumber: null,
               })
             }
             position="60%"

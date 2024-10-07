@@ -1,21 +1,21 @@
-import { Image, Linking, StyleSheet, Text, View } from 'react-native';
-import { dp } from '../../../utils/dp';
-import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
-import { useRoute } from '@react-navigation/native';
+import {Image, Linking, StyleSheet, Text, View} from 'react-native';
+import {dp} from '../../../utils/dp';
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {useRoute} from '@react-navigation/native';
 
-import React, { useEffect, useState } from 'react';
-import { Campaign as CampaignType } from '../../../api/AppContent/types';
+import React, {useEffect, useState} from 'react';
+import {Campaign as CampaignType} from '../../../api/AppContent/types';
 import Markdown from 'react-native-markdown-display';
-import { Button } from '@styled/buttons';
+import {Button} from '@styled/buttons';
 
-import useStore from "../../../state/store"
+import useStore from '../../../state/store';
 
 import CampaignPlaceholder from './CampaignPlaceholder';
 
 const Campaign = () => {
   const route: any = useRoute();
 
-  const { isBottomSheetOpen } = useStore()
+  const {isBottomSheetOpen} = useStore();
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
 

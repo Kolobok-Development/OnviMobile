@@ -21,7 +21,7 @@ import {PromoCard} from '@components/PromoCard';
 import PromosPlaceholder from './PromosPlaceholder';
 
 const Promos = () => {
-  const {isLoading, data, mutate, error} = useGetCampaignHistory();
+  const {isLoading, data, mutate} = useGetCampaignHistory();
 
   const navigation = useNavigation<any>();
 

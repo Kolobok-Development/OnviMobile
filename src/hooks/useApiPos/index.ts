@@ -9,6 +9,5 @@ export function usePos(query: {[key: string]: string}) {
     onSuccess: data => {
       return data;
     },
-
   });
 }

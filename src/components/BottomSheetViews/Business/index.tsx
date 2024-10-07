@@ -1,33 +1,32 @@
 import React from 'react';
-import { Text, View, Image, Dimensions, StyleSheet } from 'react-native';
+import {Text, View, Image, Dimensions, StyleSheet} from 'react-native';
 
 // styled components
-import { Card } from '@styled/cards';
+import {Card} from '@styled/cards';
 
-import { useRoute } from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 
-import { dp } from '../../../utils/dp';
+import {dp} from '../../../utils/dp';
 
-import { navigateBottomSheet } from '@navigators/BottomSheetStack';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import useStore from '../../../state/store';
 
-import { OrderDetailsType } from 'src/state/order/OrderSlice';
+import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
 const Business = () => {
   const route: any = useRoute();
 
-  const { setOrderDetails, orderDetails, business } = useStore()
-
+  const {setOrderDetails, orderDetails, business} = useStore();
 
   const selectCarwash = (carwash: any) => {
     setOrderDetails({
       ...orderDetails,
       posId: carwash.id,
       type: carwash.type,
-      name: carwash.name
-    } as OrderDetailsType)
+      name: carwash.name,
+    } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', carwash);
     route.params.bottomSheetRef.current?.snapToPosition('60%');

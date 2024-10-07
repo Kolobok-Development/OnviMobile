@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { dp } from '../../utils/dp';
+import {dp} from '../../utils/dp';
 import React from 'react';
-import { useNavigation } from '@react-navigation/core';
-import { BackButton } from '@components/BackButton';
+import {useNavigation} from '@react-navigation/core';
+import {BackButton} from '@components/BackButton';
 
 const About = () => {
   const navigation = useNavigation<any>();
@@ -67,7 +67,13 @@ const About = () => {
             padding: dp(10),
           }}
           onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
-          <Text style={{fontSize: dp(14), color: '#000000', fontWeight: '600', letterSpacing: 0.22}}>
+          <Text
+            style={{
+              fontSize: dp(14),
+              color: '#000000',
+              fontWeight: '600',
+              letterSpacing: 0.22,
+            }}>
             Написать в поддержку
           </Text>
         </TouchableOpacity>

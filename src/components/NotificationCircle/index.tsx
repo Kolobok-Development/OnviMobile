@@ -1,38 +1,39 @@
-import React from "react"
+import React from 'react';
 
-import { View, Text, StyleSheet } from "react-native"
+import {View, Text, StyleSheet} from 'react-native';
 
-import { dp } from "../../utils/dp"
+import {dp} from '../../utils/dp';
 
 interface NotificationCircleProps {
-    number: number
+  number: number;
 }
 
-const NotificationCircle = ({ number } : NotificationCircleProps) => {
-    return <View style={styles.circle}>
-        <Text style={styles.text}>{number}</Text>
+const NotificationCircle = ({number}: NotificationCircleProps) => {
+  return (
+    <View style={styles.circle}>
+      <Text style={styles.text}>{number}</Text>
     </View>
-}
+  );
+};
 
 const styles = StyleSheet.create({
-    circle: {
-        backgroundColor: '#BFFA00',
-        width: dp(18),
-        height: dp(18),
-        boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
-        borderRadius: 45,
-        right: -dp(2),
-        top: -dp(2),
-        display: "flex",
-        justifyContent: "center",
-        alignItems: 'center',
-        position: "absolute"
+  circle: {
+    backgroundColor: '#BFFA00',
+    width: dp(18),
+    height: dp(18),
+    boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
+    borderRadius: 45,
+    right: -dp(2),
+    top: -dp(2),
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'absolute',
+  },
+  text: {
+    fontSize: dp(13),
+    fontWeight: '600',
+  },
+});
 
-    },
-    text: {
-        fontSize: dp(13),
-        fontWeight: "600"
-    }
-})
-
-export { NotificationCircle }
+export {NotificationCircle};

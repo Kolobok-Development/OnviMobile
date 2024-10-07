@@ -1,11 +1,5 @@
-import React, { Component, createRef } from 'react';
-import {
-  View,
-  TextInput,
-  Text,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
+import React, {Component, createRef} from 'react';
+import {View, TextInput, Text, ViewStyle, TextStyle} from 'react-native';
 
 interface IState {
   focus: number;

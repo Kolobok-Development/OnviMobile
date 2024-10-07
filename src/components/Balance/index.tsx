@@ -19,7 +19,6 @@ import useStore from '../../state/store';
 
 import BalancePlaceholder from './BalancePlaceholder';
 
-
 interface BalanceProps {
   bottomSheetIndex: number;
   bottomSheetRef: any;
@@ -28,11 +27,11 @@ interface BalanceProps {
 const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
   const {theme}: any = useTheme();
 
-  const { user } = useStore()
+  const {user} = useStore();
 
   return (
     <>
-      {(!user || !user.cards) ? (
+      {!user || !user.cards ? (
         <BalancePlaceholder bottomSheetIndex={bottomSheetIndex} />
       ) : (
         <View

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import {Button} from '@styled/buttons';
 import {PhoneInp} from '@styled/inputs';
@@ -11,7 +11,7 @@ import {dp} from '../../utils/dp';
 import useStore from '../../state/store';
 
 const SignIn = () => {
-  const { sendOtp } = useStore()
+  const {sendOtp} = useStore();
 
   const {theme} = useTheme() as any;
 

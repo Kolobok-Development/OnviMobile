@@ -1,8 +1,4 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 import {useRoute} from '@react-navigation/native';
 
@@ -56,7 +52,7 @@ const BusinessHeader = ({
         </View>
       );
     } else {
-      return <></>
+      return <></>;
     }
   };
 

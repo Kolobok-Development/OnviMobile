@@ -56,8 +56,8 @@ const Payment = () => {
   const [promocode, setPromocode] = useState<string>('');
   const [usedPoints, setUsedPoints] = useState(0);
 
-  const isOpened = isBottomSheetOpen
-  const order = orderDetails
+  const isOpened = isBottomSheetOpen;
+  const order = orderDetails;
 
   const [discount, setDiscount] = useState(0);
 
@@ -96,16 +96,19 @@ const Payment = () => {
   };
 
   const createOrder = async () => {
-    if (!user) return
+    if (!user) return;
 
-    if (!order.posId || !order.bayNumber) return
+    if (!order.posId || !order.bayNumber) return;
 
     try {
       setBtnLoader(true);
       const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
       const storeId: string = '168905';
       const discountSum: number = (order.sum! * discount) / 100;
-      const realSum: number = Math.max(order.sum! - discountSum - usedPoints, 1);
+      const realSum: number = Math.max(
+        order.sum! - discountSum - usedPoints,
+        1,
+      );
       const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
       const bayStatus = await pingPos({
@@ -202,7 +205,7 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user || !order.sum) return
+    if (!user || !order.sum) return;
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {
@@ -368,7 +371,10 @@ const Payment = () => {
                         fontWeight: '700',
                         fontSize: dp(16),
                       }}>
-                      {order.sum ? Math.round((order.sum * user.tariff) / 100) : 0} ₽
+                      {order.sum
+                        ? Math.round((order.sum * user.tariff) / 100)
+                        : 0}{' '}
+                      ₽
                     </Text>
                   )}
                 </View>

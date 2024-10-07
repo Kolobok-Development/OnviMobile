@@ -50,7 +50,5 @@ export async function refresh(
     IUserApiResponse<IRefreshResponse>
   >(AUTH.REFRESH_URL, body);
 
-  console.log("что это: ", response)
-
   return response.data.data;
 }

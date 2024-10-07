@@ -14,7 +14,7 @@ import {Button} from '@styled/buttons';
 
 import {NewsPost} from '../../../api/AppContent/types';
 
-import useStore from "../../../state/store"
+import useStore from '../../../state/store';
 
 import PostPlaceholder from './PostPlaceholder';
 
@@ -24,7 +24,7 @@ const Post = () => {
   const [post, setPost] = useState<NewsPost | null>(null);
   const navigation = useNavigation();
 
-  const { isBottomSheetOpen: isOpened } = useStore()
+  const {isBottomSheetOpen: isOpened} = useStore();
 
   useEffect(() => {
     if (route && route.params && route.params.data && route.params.data) {

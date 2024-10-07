@@ -30,7 +30,7 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 const History = ({drawerNavigation}: any) => {
   const [tab, setTab] = useState(true);
 
-  const { user } = useStore()
+  const {user} = useStore();
 
   const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
 
