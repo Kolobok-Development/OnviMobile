@@ -70,8 +70,6 @@ const Verification = ({route}: VerificationProps) => {
         clear();
       }
 
-      console.log(res.type);
-
       switch (res?.type) {
         case 'register-required':
           popRef.current?.scrollTo(-500);

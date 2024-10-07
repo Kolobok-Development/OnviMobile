@@ -55,7 +55,7 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient} contextSharing={true}>
+    <QueryClientProvider client={queryClient}>
       {/*<RemoteNotifications />*/}
       <ThemeProvider>
         <ThemeWrapper>

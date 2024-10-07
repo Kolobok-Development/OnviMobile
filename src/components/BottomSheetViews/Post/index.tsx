@@ -95,7 +95,7 @@ const Post = () => {
                           Linking.openURL(post.attributes.url);
                         } else if (post.attributes.screen_redirect) {
                           //@ts-ignore
-                          navigation.navigate(
+                          (navigation as any).navigate(
                             post.attributes.screen_redirect,
                             route.params,
                           );

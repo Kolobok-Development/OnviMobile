@@ -1,6 +1,12 @@
 import React from 'react';
 
-import {TouchableOpacity, Text, StyleSheet} from 'react-native';
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 
 import {dp} from '../../../utils/dp';
 import {
@@ -11,11 +17,7 @@ import {
 
 interface IBox {
   label: string;
-  labelStyles?: {
-    fontSize: number;
-    fontWeight: string;
-    color: string;
-  };
+  labelStyles?: StyleProp<TextStyle>;
   onClick?: any;
   disabled?: boolean;
   active: boolean;
@@ -49,7 +51,7 @@ const Box: React.FC<IBox> = ({
         height,
         borderRadius,
       }}>
-      <Text style={{...labelStyles}}>{label}</Text>
+      <Text style={labelStyles}>{label}</Text>
     </TouchableOpacity>
   );
 };

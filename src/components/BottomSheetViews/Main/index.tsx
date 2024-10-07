@@ -31,6 +31,7 @@ import {useRoute} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
 import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
+// @ts-ignore
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
@@ -39,6 +40,8 @@ import {Button} from '@styled/buttons';
 import Modal from '@styled/Modal';
 
 import CampaignPlaceholder from './CampaignPlaceholder';
+
+import {CarWashLocation} from '../../../api/AppContent/types';
 
 const Main = () => {
   const {isBottomSheetOpen, loadUser, location, posList} = useStore();
@@ -74,7 +77,9 @@ const Main = () => {
   }, [isFocused]);
 
   //Near by carwash
-  const [nearestCarWash, setNearestCarWash] = useState(null);
+  const [nearestCarWash, setNearestCarWash] = useState<CarWashLocation | null>(
+    null,
+  );
   const [nearByModal, setNearByModal] = useState(false);
 
   const findNearestCarWash = () => {

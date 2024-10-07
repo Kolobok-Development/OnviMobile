@@ -60,12 +60,10 @@ const Filter = (props: IFilterProp) => {
         <Text style={styles.itemTitle}>{item.name}</Text>
         <CheckBox
           key={item.code}
-          color={'primary'}
-          shape={'box'}
-          value={selectedFilters.some(filter => {
+          checked={selectedFilters.some(filter => {
             return filter.id == title.id && filter.values.includes(item.code);
           })}
-          onChange={newValue => onFilterSelected(title.id, item.code)}
+          onClick={newValue => onFilterSelected(title.id, item.code)}
         />
       </View>
     );

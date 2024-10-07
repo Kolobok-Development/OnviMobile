@@ -10,7 +10,7 @@ function useValidatePromoCode() {
       return validatePromoCode(data);
     },
     onError: error => {
-      const errorResponse = error.response?.data;
+      const errorResponse = (error as any).response?.data;
       let message = 'Призошла ощибка повторите попытку чуть позже';
       switch (parseInt(errorResponse.code)) {
         case 8:

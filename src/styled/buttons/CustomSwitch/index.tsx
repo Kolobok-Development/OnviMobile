@@ -259,9 +259,15 @@ const Switch = (IProps: SwitchProps): JSX.Element => {
             circleStyle,
           ]}>
           {value ? (
-            <Image source={circleImageActive} style={styles.circleImage} />
+            <Image
+              source={circleImageActive as any}
+              style={styles.circleImage}
+            />
           ) : (
-            <Image source={circleImageInactive} style={styles.circleImage} />
+            <Image
+              source={circleImageInactive as any}
+              style={styles.circleImage}
+            />
           )}
         </Animated.View>
       </Animated.View>

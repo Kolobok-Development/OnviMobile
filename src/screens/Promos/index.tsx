@@ -23,6 +23,9 @@ import PromosPlaceholder from './PromosPlaceholder';
 const Promos = () => {
   const {isLoading, data, mutate} = useGetCampaignHistory();
 
+  // Check if data is defined and is an array
+  const orderData = Array.isArray(data) ? data : [];
+
   const navigation = useNavigation<any>();
 
   const handlePromoInput = () => {
@@ -76,7 +79,7 @@ const Promos = () => {
                 <PromosPlaceholder />
               ) : (
                 <FlatList
-                  data={data}
+                  data={orderData}
                   renderItem={promo => (
                     <PromoCard
                       title={promo.item.title}

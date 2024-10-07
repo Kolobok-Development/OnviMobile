@@ -34,6 +34,9 @@ const History = ({drawerNavigation}: any) => {
 
   const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
 
+  // Check if data is defined and is an array
+  const orderData = Array.isArray(data) ? data : [];
+
   const route: any = useRoute();
 
   const initialAvatar = user?.avatar || 'both.jpg';
@@ -142,7 +145,7 @@ const History = ({drawerNavigation}: any) => {
       ) : (
         <>
           <FlatList
-            data={data}
+            data={orderData}
             renderItem={order => (
               <BalanceCard key={order.index} option={order.item} />
             )}
