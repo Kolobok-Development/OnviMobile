@@ -27,7 +27,9 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 
-const History = ({drawerNavigation}: any) => {
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+
+const History = () => {
   const [tab, setTab] = useState(true);
 
   const {user} = useStore();
@@ -37,7 +39,7 @@ const History = ({drawerNavigation}: any) => {
   // Check if data is defined and is an array
   const orderData = Array.isArray(data) ? data : [];
 
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'History'>>();
 
   const initialAvatar = user?.avatar || 'both.jpg';
 

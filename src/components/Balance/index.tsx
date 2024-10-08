@@ -25,7 +25,7 @@ interface BalanceProps {
 }
 
 const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
-  const {theme}: any = useTheme();
+  const {theme} = useTheme();
 
   const {user} = useStore();
 

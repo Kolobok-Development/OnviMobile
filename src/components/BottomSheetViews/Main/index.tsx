@@ -43,10 +43,12 @@ import CampaignPlaceholder from './CampaignPlaceholder';
 
 import {CarWashLocation} from '../../../api/AppContent/types';
 
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+
 const Main = () => {
   const {isBottomSheetOpen, loadUser, location, posList} = useStore();
-  const {theme}: any = useTheme();
-  const route: any = useRoute();
+  const {theme} = useTheme();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
   const isOpened = isBottomSheetOpen;
 
@@ -228,7 +230,7 @@ const Main = () => {
                 navigateBottomSheet('Search', {
                   type: 'search',
                 });
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                route.params.bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Search
                 stroke={'#000000'}
@@ -251,7 +253,7 @@ const Main = () => {
               style={{}}
               onPress={() => {
                 navigateBottomSheet('Filters', {});
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                route.params.bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Image
                 source={require('../../../assets/icons/filterIcon.png')}

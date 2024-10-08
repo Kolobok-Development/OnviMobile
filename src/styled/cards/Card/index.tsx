@@ -9,7 +9,7 @@ interface ICard {
 }
 
 const Card: React.FC<ICard> = ({children}: ICard) => {
-  const {theme} = useTheme() as any;
+  const {theme} = useTheme();
 
   return (
     <View style={{...styles.container, backgroundColor: theme.mainColor}}>

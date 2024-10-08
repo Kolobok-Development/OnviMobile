@@ -17,12 +17,16 @@ import {NewsPost} from '../../../api/AppContent/types';
 import useStore from '../../../state/store';
 
 import PostPlaceholder from './PostPlaceholder';
+import {
+  GeneralBottomSheetNavigationProp,
+  GeneralBottomSheetRouteProp,
+} from 'src/types/BottomSheetNavigation';
 
 const Post = () => {
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Post'>>();
 
   const [post, setPost] = useState<NewsPost | null>(null);
-  const navigation = useNavigation();
+  const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Post'>>();
 
   const {isBottomSheetOpen: isOpened} = useStore();
 

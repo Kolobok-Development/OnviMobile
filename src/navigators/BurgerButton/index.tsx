@@ -18,12 +18,14 @@ interface BurgerProps {
   handleSheetChanges?: (index: number) => void;
 }
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const BurgerButton = ({
   bottomSheetIndex = 0,
   isDrawerStack = false,
   handleSheetChanges,
 }: BurgerProps) => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
   const {isMainScreen} = useStore();
   if (isDrawerStack) {

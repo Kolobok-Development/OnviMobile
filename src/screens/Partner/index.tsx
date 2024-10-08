@@ -19,9 +19,11 @@ import {useNavigation} from '@react-navigation/core';
 
 import PartnerPlaceholder from './PartnerPlaceholder';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const Partner = () => {
   const route: any = useRoute();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнер'>>();
 
   const [partner, setPartner] = useState<PartnerType | null>(null);
   const [modalVisible, setModalVisible] = useState(false);

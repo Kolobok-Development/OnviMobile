@@ -23,7 +23,7 @@ import {CustomDrawerContent} from './CustomDrawerContent';
 import {Legals} from '@screens/Legals';
 
 const DrawerStack = () => {
-  const {theme}: any = useTheme();
+  const {theme} = useTheme();
   const {user} = useStore();
 
   return (

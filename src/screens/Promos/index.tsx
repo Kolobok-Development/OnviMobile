@@ -20,13 +20,15 @@ import {PromoCard} from '@components/PromoCard';
 
 import PromosPlaceholder from './PromosPlaceholder';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const Promos = () => {
   const {isLoading, data, mutate} = useGetCampaignHistory();
 
   // Check if data is defined and is an array
   const orderData = Array.isArray(data) ? data : [];
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
   const handlePromoInput = () => {
     navigation.navigate('Ввод Промокода');

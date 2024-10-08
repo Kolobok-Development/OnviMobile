@@ -25,9 +25,11 @@ import useStore from '../../../state/store';
 
 import SearchPlaceholder from './SearchPlaceholder';
 
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+
 const Search = () => {
   const [search, setSearch] = useState('');
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Search'>>();
 
   const {setOrderDetails, setBusiness} = useStore();
 
@@ -74,7 +76,7 @@ const Search = () => {
       order: null,
       orderDate: null,
     });
-    route.params.bottomSheetRef.current?.snapToPosition('42%');
+    route.params.bottomSheetRef?.current?.snapToPosition('42%');
     route.params.cameraRef.current.moveTo(
       [carwash.location.lon, carwash.location.lat],
       1,

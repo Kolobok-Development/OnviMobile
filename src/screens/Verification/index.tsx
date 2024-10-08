@@ -32,7 +32,7 @@ const Verification = ({route}: VerificationProps) => {
 
   const {sendOtp, register, login} = useStore();
 
-  const {theme} = useTheme() as any;
+  const {theme} = useTheme();
 
   //OTP
   const [otpInput, setOtpInput] = useState<string>('');

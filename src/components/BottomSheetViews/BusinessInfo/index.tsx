@@ -15,16 +15,22 @@ import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {Tag} from '../../../api/AppContent/types';
 
+import {
+  GeneralBottomSheetNavigationProp,
+  GeneralBottomSheetRouteProp,
+} from 'src/types/BottomSheetNavigation';
+
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const route: any = useRoute();
-  const navigation: any = useNavigation();
+  const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'BusinessInfo'>>();
 
   const modalCallback = () => {
     if (true) {
       navigateBottomSheet('Boxes', route.params);
-      route.params.bottomSheetRef.current?.snapToPosition('95%');
+      route.params.bottomSheetRef?.current?.snapToPosition('95%');
     } else {
       setModalVisible(false);
     }
@@ -33,7 +39,7 @@ const BusinessInfo = () => {
   const forceForward = () => {
     setModalVisible(false);
     navigateBottomSheet('Boxes', route.params);
-    route.params.bottomSheetRef.current?.snapToPosition('95%');
+    route.params.bottomSheetRef?.current?.snapToPosition('95%');
   };
 
   return (
@@ -86,7 +92,8 @@ const BusinessInfo = () => {
           flexWrap: 'wrap',
           paddingTop: dp(10),
         }}>
-        {route.params.tags.length > 0 &&
+        {route.params.tags &&
+          route.params.tags.length > 0 &&
           route.params.tags.map((tag: Tag, index: number) => (
             <View style={{padding: dp(2)}}>
               <CheckBox

@@ -13,9 +13,14 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 
 import useStore from '../../../state/store';
 
+import {
+  GeneralBottomSheetNavigationProp,
+  GeneralBottomSheetRouteProp,
+} from 'src/types/BottomSheetNavigation';
+
 const Boxes = () => {
-  const navigation: any = useNavigation();
-  const route: any = useRoute();
+  const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
 
   const {setOrderDetails, orderDetails} = useStore();
 
@@ -64,7 +69,8 @@ const Boxes = () => {
           </View>
 
           <View style={styles.services}>
-            {route.params.price.length > 0 &&
+            {route.params.price &&
+              route.params.price.length > 0 &&
               route.params.price.map((price: Price, index: number) => (
                 <View style={{padding: dp(2)}}>
                   <CheckBox

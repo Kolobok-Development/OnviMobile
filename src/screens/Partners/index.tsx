@@ -21,8 +21,10 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 import PartnersPlaceholder from './PartnersPlaceholder';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const Partners = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнеры'>>();
 
   const {isLoading, data: partnersData} = usePartners();
 

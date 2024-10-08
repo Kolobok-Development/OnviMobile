@@ -10,6 +10,8 @@ import {getCarWashes} from '../../../api/AppContent/appContent';
 
 import useStore from '../../../state/store';
 
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 // Define types
 type Filter = {
   code: string;
@@ -72,7 +74,8 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 };
 
 const Filters = () => {
-  const navigation: any = useNavigation();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Filters'>>();
 
   const {filters, setFilters, setPosList} = useStore();
 
@@ -109,7 +112,7 @@ const Filters = () => {
         if (data) {
           setFilters(selectedFilters);
           setPosList(data.businessesLocations);
-          navigation.navigate('Main');
+          navigation.navigate('Main', {});
         }
       })
       .catch(err => {
@@ -123,7 +126,7 @@ const Filters = () => {
     getCarWashes({filter: filtersQuery}).then((data: any) => {
       setFilters({});
       setPosList(data.businessesLocations);
-      navigation.navigate('Main');
+      navigation.navigate('Main', {});
     });
   };
 

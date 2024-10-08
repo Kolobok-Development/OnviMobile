@@ -12,8 +12,11 @@ import React from 'react';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const Legals = () => {
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<GeneralDrawerNavigationProp<'Правовые документы'>>();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>

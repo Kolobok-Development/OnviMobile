@@ -15,8 +15,10 @@ import useStore from '../../../state/store';
 
 import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+
 const Business = () => {
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
 
   const {setOrderDetails, orderDetails, business} = useStore();
 
@@ -29,7 +31,7 @@ const Business = () => {
     } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', carwash);
-    route.params.bottomSheetRef.current?.snapToPosition('60%');
+    route.params.bottomSheetRef?.current?.snapToPosition('60%');
   };
 
   return (

@@ -3,10 +3,10 @@ import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
 
 const Loader = () => {
-  const {theme}: any = useTheme();
+  const {theme} = useTheme();
 
   return (
-    <View style={{...styles.containter, ...theme.mainColor}}>
+    <View style={{...styles.containter, ...{mainColor: theme.mainColor}}}>
       <Image source={require('../../assets/icons/long-icon.png')} />
     </View>
   );

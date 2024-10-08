@@ -24,6 +24,8 @@ import {useNavigation} from '@react-navigation/native';
 // types
 import {Price} from '../../../../api/AppContent/types';
 
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 interface PortalLaunchProps {
   isOpened: boolean;
   onSelect: (name: string, price: number) => void;
@@ -39,8 +41,9 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
     'black',
   ];
 
-  const {theme}: any = useTheme();
-  const navigation = useNavigation();
+  const {theme} = useTheme();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
 
   return (
     <BottomSheetScrollView

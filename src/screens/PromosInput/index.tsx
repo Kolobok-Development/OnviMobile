@@ -14,9 +14,12 @@ import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
 import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const PromosInput = () => {
   const [code, setCode] = useState('');
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<GeneralDrawerNavigationProp<'Ввод Промокода'>>();
   const {mutate: applyPromo, isPending, error} = useApplyPromotion();
 
   useEffect(() => {

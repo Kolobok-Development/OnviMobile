@@ -19,7 +19,9 @@ import {useAxios} from '@hooks/useAxios';
 
 import useStore from '../../../state/store';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 import {
   horizontalScale,
   moderateScale,
@@ -33,7 +35,8 @@ const Settings = () => {
 
   const {signOut} = useStore();
 
-  const navigation: any = useNavigation();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Settings'>>();
   const updateInfo = async () => {
     await api
       .get('/account/me')

@@ -6,7 +6,7 @@ import {dp} from '../../../utils/dp';
 import {Button} from '@styled/buttons';
 
 const AddCard = () => {
-  const {theme}: any = useTheme();
+  const {theme} = useTheme();
 
   const [expiration, setExpiration] = useState('');
 

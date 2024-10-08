@@ -25,13 +25,19 @@ import useStore from '../../../../state/store';
 // types
 import {Button} from '@styled/buttons';
 
+import {
+  GeneralBottomSheetNavigationProp,
+  GeneralBottomSheetRouteProp,
+} from 'src/types/BottomSheetNavigation';
+
 export default function DefaultLaunch() {
-  const {theme}: any = useTheme();
+  const {theme} = useTheme();
   const [value, setValue] = useState(50);
   const measureTypeData = ['рубли'];
 
-  const navigation: any = useNavigation();
-  const route: any = useRoute();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Launch'>>();
 
   const {isBottomSheetOpen, setOrderDetails, orderDetails} = useStore();
 

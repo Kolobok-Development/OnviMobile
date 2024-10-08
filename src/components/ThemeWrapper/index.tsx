@@ -1,9 +1,9 @@
 import {useTheme} from '@context/ThemeProvider';
 
 const ThemeWrapper = ({children}: any) => {
-  const {isThemeLoading} = useTheme() as any;
+  const {isLoadingTheme} = useTheme();
 
-  if (isThemeLoading) {
+  if (isLoadingTheme) {
     return null;
   } else {
     return children;

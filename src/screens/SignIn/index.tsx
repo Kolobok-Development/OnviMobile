@@ -13,7 +13,7 @@ import useStore from '../../state/store';
 const SignIn = () => {
   const {sendOtp} = useStore();
 
-  const {theme} = useTheme() as any;
+  const {theme} = useTheme();
 
   const navigation = useNavigation<any>();
 

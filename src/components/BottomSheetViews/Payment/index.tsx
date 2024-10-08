@@ -41,6 +41,8 @@ import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
 import {X} from 'react-native-feather';
 import {GREY} from '@utils/colors.ts';
 
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -49,7 +51,8 @@ enum OrderStatus {
 
 const Payment = () => {
   const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
-  const navigation: any = useNavigation();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Payment'>>();
 
   const [btnLoader, setBtnLoader] = useState(false);
 

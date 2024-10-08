@@ -24,6 +24,8 @@ import Switch from '@styled/buttons/CustomSwitch';
 import {AvatarEnum} from '../../types/AvatarEnum.ts';
 import {update} from '../../api/user/index.ts';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
     case 'both.jpg':
@@ -39,7 +41,7 @@ export const avatarSwitch = (avatar: string) => {
 
 const Settings = () => {
   const {user, signOut, loadUser} = useStore();
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
   const [isLoading, setIsLoading] = useState(false);
 
   const initialUserName = user?.name || '';
