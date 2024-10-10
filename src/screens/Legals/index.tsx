@@ -8,11 +8,10 @@ import {
   View,
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
-import {BurgerButton} from '@navigators/BurgerButton';
 import React from 'react';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
-import Switch from '@styled/buttons/CustomSwitch';
+import {openWebURL} from '@utils/openWebUrl.ts';
 
 const Legals = () => {
   const navigation = useNavigation<any>();
@@ -34,8 +33,14 @@ const Legals = () => {
               <View style={styles.rowWrapper}>
                 <TouchableOpacity
                   style={[styles.row, styles.rowFirst]}
-                  onPress={() => {}}>
-                  <Text style={styles.rowLabel}>Политика конфедициальности</Text>
+                  onPress={() => {
+                    openWebURL(
+                      'https://docs.google.com/document/d/1H5DFxDJfFBxK6wNK3iIydC9Qp1zaQsuSxZkjaPcCVyc/edit?usp=sharing',
+                    );
+                  }}>
+                  <Text style={styles.rowLabel}>
+                    Политика конфедициальности
+                  </Text>
                   <Image
                     style={{
                       height: dp(24),
@@ -49,7 +54,11 @@ const Legals = () => {
               <View style={styles.rowWrapper}>
                 <TouchableOpacity
                   style={[styles.row, styles.rowFirst]}
-                  onPress={() => {}}>
+                  onPress={() =>
+                    openWebURL(
+                      'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
+                    )
+                  }>
                   <Text style={styles.rowLabel}>Программа лояльнсти</Text>
                   <Image
                     style={{
@@ -81,7 +90,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   content: {
-    marginTop: '10%'
+    marginTop: '10%',
   },
   screenTitle: {
     fontWeight: '700',

@@ -30,34 +30,17 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-
-const notifications = [
-  {
-    read: false,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-  {
-    read: false,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-  {
-    read: true,
-    title: 'Ваш личный промик',
-    text: 'Идейные соображения высшего порядка, а также рамки и место обучения кадро Идейные соображения высшего порядка, а также рамки и место обучения кадров',
-    date: '17.05.2023',
-  },
-];
+import useSWR from 'swr';
+import {getOrderHistory} from '@services/api/user';
 
 const History = ({drawerNavigation}: any) => {
   const [tab, setTab] = useState(true);
 
-  const { user } = useStore()
+  const {user} = useStore();
 
-  const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
+  const {data, isLoading, mutate} = useSWR(['getOrderHistory'], () =>
+    getOrderHistory({size: 20, page: 1}),
+  );
 
   const switchTab = (val: boolean) => {
     setTab(val);
@@ -68,10 +51,6 @@ const History = ({drawerNavigation}: any) => {
   const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
-
-  useEffect(() => {
-    console.log(`ORDER => ${JSON.stringify(data)}`);
-  }, []);
 
   useEffect(() => {
     if (

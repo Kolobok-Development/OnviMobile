@@ -14,19 +14,14 @@ import {
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
 import {PromoCard} from '@components/PromoCard';
 
 const Promos = () => {
-  const {isLoading, data, mutate, error} = useGetCampaignHistory();
-
-  useEffect(() => {
-    console.log("promos: ", data)
-  }, [error])
 
   const navigation = useNavigation<any>();
+  const isLoading = false;
 
   const handlePromoInput = () => {
     navigation.navigate('Ввод Промокода');
@@ -99,7 +94,7 @@ const Promos = () => {
             </TouchableOpacity>
           </View>
           <View style={styles.cuponContainer}>
-            <Text style={styles.sectionTitle}>История</Text>
+            <Text style={styles.sectionTitle}>Мои бонусы</Text>
             <View
               style={{
                 display: 'flex',
@@ -110,7 +105,7 @@ const Promos = () => {
                 <PromosPlaceholder />
               ) : (
                 <FlatList
-                  data={data}
+                  data={[]}
                   renderItem={promo => (
                     <PromoCard
                       title={promo.item.title}
@@ -124,14 +119,14 @@ const Promos = () => {
                       key={promo.item.promotionId.toString()}
                     />
                   )}
-                  onRefresh={mutate}
-                  refreshing={isLoading}
+                  // onRefresh={mutate}
+                  // refreshing={isLoading}
                   keyExtractor={(promo: IGetPromoHistoryResponse) =>
                     promo.promotionId.toString()
                   }
                   ListEmptyComponent={() => (
                     <View>
-                      <EmptyPlaceholder text="У вас нет использованных акций" />
+                      <EmptyPlaceholder text="У вас нет активных бонусов" />
                     </View>
                   )}
                 />

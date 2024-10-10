@@ -9,6 +9,9 @@ import {cloneDeep} from 'lodash';
 import {getCarWashes} from '../../../api/AppContent/appContent';
 
 import useStore from '../../../state/store';
+import useSWR from 'swr';
+import {getPOSList} from '@services/api/pos';
+import useSWRMutation from 'swr/mutation';
 
 // Define types
 type Filter = {
@@ -79,7 +82,6 @@ const Filters = () => {
   //Local filters
   const [selectedFilters, setSelectedFilters] =
     useState<SelectedFilters>(filters);
-  const query = generateQuery(filters);
 
   // Function to handle filter selection
   const toggleFilter = (sectionCode: string, filterCode: string) => {
@@ -100,21 +102,25 @@ const Filters = () => {
   };
 
   //Query
-  const {isLoading, mutate} = useBusiness({filter: query}, true);
+  const {trigger, isMutating} = useSWRMutation(
+    'getPosList', // Key for caching
+    (key, {arg}: {arg: string} ) => getPOSList({filter: arg}), // Fetcher function with arguments
+  );
+
+  // const {isLoading, mutate} = useBusiness({filter: query}, true);
 
   // Function to handle submit button press
   const handleSubmit = async () => {
-    mutate()
-      .then(data => {
-        if (data) {
-          setFilters(selectedFilters);
-          setPosList(data.businessesLocations);
-          navigation.navigate('Main');
-        }
-      })
-      .catch(err => {
-        console.log('err: ', err);
-      });
+    try {
+      const data = await trigger(generateQuery(selectedFilters)); // Pass the query as an argument
+      if (data) {
+        setFilters(selectedFilters);
+        setPosList(data.businessesLocations);
+        navigation.navigate('Main');
+      }
+    } catch (err) {
+      console.log('Error fetching data:', err);
+    }
   };
 
   const reset = async () => {
@@ -209,7 +215,7 @@ const Filters = () => {
               fontSize={dp(15)}
               fontWeight={'600'}
               onClick={handleSubmit}
-              showLoading={isLoading}
+              showLoading={isMutating}
             />
           </View>
         }

@@ -13,21 +13,20 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 
 import useStore from '../../../state/store';
 
-import { OrderDetailsType } from 'src/state/order/OrderSlice';
+import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
 const Business = () => {
   const route: any = useRoute();
 
-  const { setOrderDetails, orderDetails } = useStore()
-
+  const {setOrderDetails, orderDetails} = useStore();
 
   const selectCarwash = (carwash: any) => {
     setOrderDetails({
       ...orderDetails,
       posId: carwash.id,
       type: carwash.type,
-      name: carwash.name
-    } as OrderDetailsType)
+      name: carwash.name,
+    } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', carwash);
     route.params.bottomSheetRef.current?.snapToPosition('60%');

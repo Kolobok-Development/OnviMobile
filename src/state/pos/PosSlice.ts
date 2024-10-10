@@ -12,7 +12,10 @@ export interface PosSlice {
 
 const createPoSSlice: StoreSlice<PosSlice> = set => ({
   posList: [],
-  setPosList: (values: any[]) => set(state => ({...state, posList: values})),
+  setPosList: (values: any[]) =>
+    set(state => {
+      return {...state, posList: values};
+    }),
 
   selectedPos: null,
   setSelectedPos: (value: any) =>

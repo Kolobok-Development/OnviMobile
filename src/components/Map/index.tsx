@@ -7,6 +7,10 @@ import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
 import {throttle} from 'lodash';
 
+/*
+  TODO:
+   1. Hide API KEY to config
+ */
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );

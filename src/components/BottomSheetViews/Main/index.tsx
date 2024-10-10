@@ -7,72 +7,46 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
-// styled components
 import {Card} from '@styled/cards';
-
 import useStore from '../../../state/store';
-
 import {useTheme} from '@context/ThemeProvider';
-
 import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
-
 import {dp} from '../../../utils/dp';
-
-import {useAxios} from '@hooks/useAxios';
-
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-
 import {useRoute} from '@react-navigation/native';
-
 import {Search} from 'react-native-feather';
-import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
-import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
-import { CustomModal } from "@styled/views/CustomModal";
-
+import {CustomModal} from '@styled/views/CustomModal';
+import useSWR from 'swr';
+import {getCampaignList} from '@services/api/campaign';
+import {getNewsList} from '@services/api/news';
 
 const Main = () => {
-  const {isBottomSheetOpen, loadUser, location, posList} = useStore();
+  const {isBottomSheetOpen, location, posList} = useStore();
   const {theme}: any = useTheme();
   const route: any = useRoute();
 
   const isOpened = isBottomSheetOpen;
 
-  const {isLoading: campaignLoading, data: campaignData} = useCampaigns();
+  // API Calls
+  const {isLoading: campaignLoading, data: campaignData} = useSWR(
+    ['getCampaignList'],
+    () => getCampaignList('*'),
+  );
 
   const {
     isLoading: newsLoading,
     data: newsData,
     error: newsError,
-  } = useNewsPosts();
+  } = useSWR(['getNewsList'], () => getNewsList('*'));
 
-  const api = useAxios('CORE_URL');
-
-  const updateInfo = async () => {
-    const data = await api
-      .get('/account/me')
-      .then(data => {})
-      .catch(err => console.log(err.response));
-  };
-
-  // UPDATE BALANCE
-  const isFocused = useIsFocused();
-
-  useEffect(() => {
-    if (isFocused) {
-      loadUser();
-    }
-  }, [isFocused]);
-
-  //Near by carwash
+  //Search near by POS
   const [nearestCarWash, setNearestCarWash] = useState(null);
-  const [nearByModal, setNearByModal] = useState(false)
+  const [nearByModal, setNearByModal] = useState(false);
 
   const findNearestCarWash = () => {
     if (!location) {
@@ -197,7 +171,14 @@ const Main = () => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
-        <CustomModal isVisible={nearByModal} text={'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'} onClick={() => setNearByModal(false)} btnText={'Закрыть'} />
+        <CustomModal
+          isVisible={nearByModal}
+          text={
+            'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
+          }
+          onClick={() => setNearByModal(false)}
+          btnText={'Закрыть'}
+        />
         <Card>
           <View style={{...styles.row, marginBottom: dp(16)}}>
             <TouchableOpacity
@@ -253,25 +234,23 @@ const Main = () => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                handleLaunchCarWash()
+                handleLaunchCarWash();
               }}>
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Запустить
+                  Моемся
                 </Text>
               </View>
               <View style={styles.info}>
                 <Text
-                  onPress={updateInfo}
                   style={{
                     fontSize: dp(10),
                     fontWeight: '700',
                     color: 'white',
                     letterSpacing: 0.5,
                     flexShrink: 1,
-                  }}
-                >
+                  }}>
                   {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
                 </Text>
                 <Image
@@ -288,23 +267,23 @@ const Main = () => {
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Партнеры
+                  Друзя по пузырикам
                 </Text>
               </View>
-              <View style={{...styles.info, justifyContent: 'flex-start'}}>
-                <Image
-                  source={require('../../../assets/icons/magnitIcon.png')}
-                  style={{width: dp(32), height: dp(32), marginRight: dp(10)}}
-                />
-                <Image
-                  source={require('../../../assets/icons/dodoIcon.png')}
-                  style={{width: dp(32), height: dp(32), marginRight: dp(10)}}
-                />
-                <Image
-                  source={require('../../../assets/icons/OgonIcon.png')}
-                  style={{width: dp(32), height: dp(32)}}
-                />
-              </View>
+              {/*<View style={{...styles.info, justifyContent: 'flex-start'}}>*/}
+              {/*  <Image*/}
+              {/*    source={require('../../../assets/icons/magnitIcon.png')}*/}
+              {/*    style={{width: dp(32), height: dp(32), marginRight: dp(10)}}*/}
+              {/*  />*/}
+              {/*  <Image*/}
+              {/*    source={require('../../../assets/icons/dodoIcon.png')}*/}
+              {/*    style={{width: dp(32), height: dp(32), marginRight: dp(10)}}*/}
+              {/*  />*/}
+              {/*  <Image*/}
+              {/*    source={require('../../../assets/icons/OgonIcon.png')}*/}
+              {/*    style={{width: dp(32), height: dp(32)}}*/}
+              {/*  />*/}
+              {/*</View>*/}
             </TouchableOpacity>
           </View>
         </Card>
@@ -316,7 +295,7 @@ const Main = () => {
                 fontSize: dp(24),
                 fontWeight: '600',
               }}>
-              Свежие новости
+              Чем моечка живет...
             </Text>
           </View>
           {newsLoading || newsError ? (
@@ -325,18 +304,18 @@ const Main = () => {
             <>
               {newsData && (
                 <View style={styles.news}>
-                  {newsData.data[0] && (
+                  {newsData[0] && (
                     <View style={styles.leftNewsColumn}>
                       <TouchableOpacity
                         style={{flex: 1}}
                         onPress={() =>
                           navigateBottomSheet('Post', {
-                            data: newsData.data[0],
+                            data: newsData[0],
                           })
                         }>
                         <Image
                           source={{
-                            uri: newsData.data[0].attributes.vertical_image.data
+                            uri: newsData[0].attributes.vertical_image.data
                               .attributes.url,
                           }}
                           style={styles.vertical}
@@ -346,33 +325,33 @@ const Main = () => {
                   )}
 
                   <View style={styles.rightNewsColumn}>
-                    {newsData.data[1] && (
+                    {newsData[1] && (
                       <TouchableOpacity
                         onPress={() =>
                           navigateBottomSheet('Post', {
-                            data: newsData.data[1],
+                            data: newsData[1],
                           })
                         }>
                         <Image
                           source={{
-                            uri: newsData.data[1].attributes.horizontal_image
-                              .data.attributes.url,
+                            uri: newsData[1].attributes.horizontal_image.data
+                              .attributes.url,
                           }}
                           style={styles.vertical}
                         />
                       </TouchableOpacity>
                     )}
-                    {newsData.data[2] && (
+                    {newsData[2] && (
                       <TouchableOpacity
                         onPress={() =>
                           navigateBottomSheet('Post', {
-                            data: newsData.data[2],
+                            data: newsData[2],
                           })
                         }>
                         <Image
                           source={{
-                            uri: newsData.data[2].attributes.horizontal_image
-                              .data.attributes.url,
+                            uri: newsData[2].attributes.horizontal_image.data
+                              .attributes.url,
                           }}
                           style={styles.vertical}
                         />
@@ -398,7 +377,7 @@ const Main = () => {
                     //defaultScrollOffsetValue={scrollOffsetValue}
                     autoPlay={true}
                     autoPlayInterval={3000}
-                    data={campaignData.data}
+                    data={campaignData}
                     pagingEnabled={true}
                     renderItem={renderCampaignItem}
                   />

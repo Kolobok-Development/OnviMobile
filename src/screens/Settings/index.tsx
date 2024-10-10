@@ -22,7 +22,10 @@ import {useNavigation} from '@react-navigation/native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import Switch from '@styled/buttons/CustomSwitch';
 import {AvatarEnum} from '../../types/AvatarEnum.ts';
-import {update} from '../../api/user/index.ts';
+import {update} from '@services/api/user';
+import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequest.ts';
+import useSWRMutation from 'swr/mutation';
+import Toast from 'react-native-toast-message';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
@@ -38,9 +41,8 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser} = useStore();
+  const {user, signOut, loadUser, deleteUser} = useStore();
   const navigation = useNavigation<any>();
-  const [isLoading, setIsLoading] = useState(false);
 
   const initialUserName = user?.name || '';
   const initialEmail = user?.email || '';
@@ -58,6 +60,19 @@ const Settings = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['80%'], []);
 
+  const {trigger, isMutating} = useSWRMutation(
+    'updateUserData',
+    (key, {arg}: {arg: IUpdateAccountRequest}) => update(arg),
+    {
+      onError: err => {
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Не получилось обновить данные...',
+        });
+      },
+    },
+  );
+
   const handleClosePress = () => {
     setEditing(false);
     // @ts-ignore
@@ -65,7 +80,6 @@ const Settings = () => {
   };
 
   const saveUserDate = async () => {
-    setIsLoading(true);
     try {
       const avatarMapping: {[key in AvatarEnum]?: number} = {
         [AvatarEnum.ONE]: 1,
@@ -86,19 +100,15 @@ const Settings = () => {
       if (avatar !== undefined) {
         userData.avatar = avatar;
       }
-
-      update(userData)
-        .then(async () => {
-          await loadUser();
-          setEditing(false);
-          setIsLoading(false);
-        })
-        .catch(err => {
-          console.log('Error updating: ', err.message);
-          setIsLoading(false);
-        });
+      trigger(userData).then(async () => {
+        await loadUser();
+        setEditing(false);
+      });
     } catch (error: any) {
-      setIsLoading(false);
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Не получилось обновить данные...',
+      });
       setEditing(false);
     }
   };
@@ -239,9 +249,9 @@ const Settings = () => {
             height={dp(40)}
             fontSize={dp(16)}
             fontWeight={'600'}
-            disabled={isLoading}
+            disabled={isMutating}
             onClick={saveUserDate}
-            showLoading={isLoading}
+            showLoading={isMutating}
           />
         </View>
       </BottomSheet>
@@ -380,7 +390,7 @@ const Settings = () => {
             </View>
           </View>
           <View style={styles.footerBtns}>
-            <TouchableOpacity style={styles.btnDelete}>
+            <TouchableOpacity style={styles.btnDelete} onPress={deleteUser}>
               <Text
                 style={{fontSize: dp(10), fontWeight: '400', color: '#AFAEAE'}}>
                 УДАЛИТЬ АККАУНТ

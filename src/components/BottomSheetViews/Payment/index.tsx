@@ -29,17 +29,17 @@ import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
-
 import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {create as createOrderApi, pingPos} from '../../../api/order';
-import {create} from '../../../api/payment';
-import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
 import {X} from 'react-native-feather';
 import {GREY} from '@utils/colors.ts';
+import useSWRMutation from 'swr/mutation';
+import { create as orderCreate, pingPos, validatePromoCode } from "@services/api/order";
+import Toast from 'react-native-toast-message';
+import { createPayment, getCredentials } from "@services/api/payment";
 
 enum OrderStatus {
   START = 'start',
@@ -56,8 +56,8 @@ const Payment = () => {
   const [promocode, setPromocode] = useState<string>('');
   const [usedPoints, setUsedPoints] = useState(0);
 
-  const isOpened = isBottomSheetOpen
-  const order = orderDetails
+  const isOpened = isBottomSheetOpen;
+  const order = orderDetails;
 
   const [discount, setDiscount] = useState(0);
 
@@ -66,18 +66,10 @@ const Payment = () => {
 
   const [promoError, setPromoError] = useState<string | null>(null);
 
-  const {
-    mutate,
-    isPending,
-    data,
-    error: promocodeError,
-  } = useValidatePromoCode();
-
-  useEffect(() => {
-    if (promocodeError) {
-      setPromocode('');
-    }
-  }, [promocodeError]);
+  const {data, trigger, isMutating} = useSWRMutation(
+    'validatePromoCode',
+    (key, {arg}: {arg: IValidatePromoCodeRequest}) => validatePromoCode(arg),
+  );
 
   useEffect(() => {
     if (data?.discount && showPromocodeModal) {
@@ -85,27 +77,55 @@ const Payment = () => {
       setShowPromocodeModal(false);
       setPromoError(null);
     }
-  }, [data]);
+  }, [data, showPromocodeModal]);
 
   const applyPromocode = async () => {
-    const body: IValidatePromoCodeRequest = {
+    const body = {
       promoCode: promocode,
       carWashId: Number(order.posId),
     };
-    mutate(body);
+    try {
+      await trigger(body);
+      setPromoError(null);
+    } catch (error: any) {
+      const errorResponse = error.response?.data;
+      let message = 'Призошла ощибка повторите попытку чуть позже';
+      switch (parseInt(errorResponse.code)) {
+        case 8:
+          message =
+            'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+          break;
+        default:
+          message = 'Призошла ошибка, повторите попытку чуть позже.';
+      }
+
+      Toast.show({
+        type: 'customErrorToast',
+        text1: message,
+      });
+    }
   };
 
   const createOrder = async () => {
-    if (!user) return
+    if (!user) {
+      return;
+    }
 
-    if (!order.posId || !order.bayNumber) return
+    if (!order.posId || !order.bayNumber) {
+      return;
+    }
 
     try {
       setBtnLoader(true);
-      const apiKey: string = 'live_MTY4OTA1wrqkTr02LhhiyI4db69pN15QUFq3o_4qf_g';
-      const storeId: string = '168905';
+      const paymentConfig = await getCredentials();
+
+      const apiKey: string = paymentConfig.apiKey;
+      const storeId: string = paymentConfig.storeId;
       const discountSum: number = (order.sum! * discount) / 100;
-      const realSum: number = Math.max(order.sum! - discountSum - usedPoints, 1);
+      const realSum: number = Math.max(
+        order.sum! - discountSum - usedPoints,
+        1,
+      );
       const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
 
       const bayStatus = await pingPos({
@@ -119,7 +139,7 @@ const Payment = () => {
         return;
       }
 
-      // Start tokenization and await the result
+      //Start tokenization and await the result
       const paymentConfigParams: PaymentConfig = {
         clientApplicationKey: apiKey, // string
         shopId: storeId, // string
@@ -147,7 +167,7 @@ const Payment = () => {
 
       setOrderSatus(OrderStatus.START);
 
-      const payment = await create({
+      const payment = await createPayment({
         paymentToken: token,
         amount: realSum.toString(),
         description: paymentConfigParams.subtitle,
@@ -173,7 +193,7 @@ const Payment = () => {
         createOrderRequest.promoCodeId = data.id;
       }
 
-      createOrderApi(createOrderRequest)
+      orderCreate(createOrderRequest)
         .then(data => {
           console.log(JSON.stringify(data, null, 2));
           if (data.sendStatus === SendStatus.SUCCESS) {
@@ -202,7 +222,9 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user || !order.sum) return
+    if (!user || !order.sum) {
+      return;
+    }
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {
@@ -286,7 +308,7 @@ const Payment = () => {
             handleSearchChange={handleSearchChange}
             apply={() => debouncedSearch(promocode)}
             promocodeError={promoError}
-            fetching={isPending}
+            fetching={isMutating}
           />
         ) : (
           <>
@@ -368,7 +390,10 @@ const Payment = () => {
                         fontWeight: '700',
                         fontSize: dp(16),
                       }}>
-                      {order.sum ? Math.round((order.sum * user.tariff) / 100) : 0} ₽
+                      {order.sum
+                        ? Math.round((order.sum * user.tariff) / 100)
+                        : 0}{' '}
+                      ₽
                     </Text>
                   )}
                 </View>

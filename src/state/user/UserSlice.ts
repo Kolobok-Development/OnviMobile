@@ -15,6 +15,7 @@ import {
   hasAccessTokenCredentials,
 } from '@context/AuthContext/index.validator';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import {deleteAccount} from '@services/api/user';
 
 export interface UserSlice {
   isAuthenticated: boolean;
@@ -37,6 +38,7 @@ export interface UserSlice {
   sendOtp: (phone: string) => Promise<void>;
   signOut: () => Promise<void>;
   loadUser: () => Promise<void>;
+  deleteUser: () => Promise<void>;
 }
 
 const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
@@ -304,6 +306,33 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       }
     } catch (error) {
       console.log('Load user error:', error);
+    }
+  },
+
+  deleteUser: async () => {
+    try {
+      const status = await deleteAccount();
+
+      if (status == 200) {
+        await LocalStorage.delete('user_session');
+
+        await EncryptedStorage.setItem(
+          'user_session',
+          JSON.stringify({
+            refreshToken: null,
+          }),
+        );
+
+        set({
+          isAuthenticated: false,
+          user: null,
+          accessToken: null,
+          expiredDate: null,
+        });
+      }
+    } catch (error: any) {
+      console.log(JSON.stringify(error, null, 2));
+      console.log('Delete account error:', error);
     }
   },
 });

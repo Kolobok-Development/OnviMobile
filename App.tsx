@@ -30,7 +30,7 @@ const queryClient = new QueryClient({
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const { loadUser } = useStore()
+  const {loadUser} = useStore();
 
   useEffect(() => {
     loadUser();
@@ -54,24 +54,21 @@ function App(): React.JSX.Element {
     };
   }, []);
 
-
   return (
     <QueryClientProvider client={queryClient} contextSharing={true}>
       {/*<RemoteNotifications />*/}
       <ThemeProvider>
         <ThemeWrapper>
-
-            <IntlProvider locale={'ru'}>
-              <GestureHandlerRootView style={{flex: 1}}>
-                <SafeAreaView style={styles.container}>
-                  <View style={{height: Dimensions.get('window').height}}>
-                    {!isConnected && <FlashMessage position="top" />}
-                    <Application />
-                  </View>
-                </SafeAreaView>
-              </GestureHandlerRootView>
-            </IntlProvider>
-
+          <IntlProvider locale={'ru'}>
+            <GestureHandlerRootView style={{flex: 1}}>
+              <SafeAreaView style={styles.container}>
+                <View style={{height: Dimensions.get('window').height}}>
+                  {!isConnected && <FlashMessage position="top" />}
+                  <Application />
+                </View>
+              </SafeAreaView>
+            </GestureHandlerRootView>
+          </IntlProvider>
         </ThemeWrapper>
       </ThemeProvider>
     </QueryClientProvider>
