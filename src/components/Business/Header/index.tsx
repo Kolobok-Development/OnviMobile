@@ -1,17 +1,6 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
-
-import {useState} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 
 import {useRoute} from '@react-navigation/native';
-
-import {Button} from '@styled/buttons';
 
 import {dp} from '../../../utils/dp';
 
@@ -40,49 +29,9 @@ const BusinessHeader = ({
 }: BusinessHeader) => {
   const route: any = useRoute();
 
-  // const makeAYandexRoute = () => {
-  //       const url = `yandexnavi://build_route_on_map?lat_to=${String(route.params.location.lat)}&lon_to=${String(route.params.location.lon)}`;
-  //       const key = 'a357185e-8ab9-4f04-b3b0-b26c56871365';
-  //       const client = 'SavniKamos77';
-
-  //       sign(url, client, key)
-  //       .then((signedUrl) => {
-  //         Linking.openURL(signedUrl);
-  //       })
-  //       .catch((error) => {
-  //         // open without sinature
-  //         setModalVisible(false)
-  //         Linking.openURL(url);
-  //         Toast.show({
-  //           type: 'error',
-  //           text1: 'Не получилось построить маршрут!',
-  //         });
-  //       });
-  // };
-
-  const [modalVisible, setModalVisible] = useState(false);
-
   const rightItem = () => {
     if (type === 'empty') {
       return <></>;
-    } else if (type === 'navigate') {
-      return (
-        <>
-        {/* <View
-          style={{
-            flex: 1,
-            display: 'flex',
-            alignItems: 'flex-end',
-          }}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Image
-              source={require('../../../assets/icons/routeIcon.png')}
-              style={styles.circleImage}
-            />
-          </TouchableOpacity>
-        </View> */}
-        </>
-      );
     } else if (type === 'box') {
       return (
         <View style={{}}>
@@ -102,53 +51,14 @@ const BusinessHeader = ({
           />
         </View>
       );
+    } else {
+      return <></>;
     }
   };
 
   return (
     <>
-      <Modal
-        visible={modalVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setModalVisible(true)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Image
-              source={require('../../../assets/emojies/car.png')}
-              style={styles.carImage}
-            />
-
-            <Text style={styles.modalTitle}>Построить маршрут</Text>
-
-            {/* <View style={styles.actionButtons}>
-              <Button
-                onClick={makeAYandexRoute}
-                label="Яндекс"
-                color="blue"
-                height={50}
-                fontSize={18}
-                fontWeight="600"
-              />
-            </View> */}
-
-            <View style={styles.actionButtons}>
-              <Button
-                onClick={() => setModalVisible(false)}
-                label="Назад"
-                color="blue"
-                height={50}
-                fontSize={18}
-                fontWeight="600"
-              />
-            </View>
-          </View>
-        </View>
-      </Modal>
       <View style={styles.header}>
-        {/* <View style={{paddingRight: dp(10)}}>
-                <BackButton callback={callback} position={position} />
-            </View> */}
         <View style={{flex: 5}}>
           <Text style={styles.title}>{route.params.name}</Text>
           <Text style={styles.text}>{route.params.address}</Text>

@@ -1,6 +1,6 @@
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {dp} from '@utils/dp';
-import { CSSProperties } from "react";
+import {CSSProperties} from 'react';
 
 interface IAvatar {
   source: any;
@@ -26,7 +26,7 @@ const Avatar: React.FC<IAvatar> = ({
           height,
         },
         styles.container,
-        style
+        style,
       ]}>
       <Image source={source} style={[styles.image]} />
     </TouchableOpacity>

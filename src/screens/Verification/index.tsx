@@ -10,11 +10,11 @@ import {
 import {Button} from '@styled/buttons';
 
 // Bottom Sheet Component
-import { Popup, PopupRefProps } from '@components/Popup';
+import {Popup, PopupRefProps} from '@components/Popup';
 
-import { useTheme } from '@context/ThemeProvider';
+import {useTheme} from '@context/ThemeProvider';
 
-import useStore from "../../state/store";
+import useStore from '../../state/store';
 
 import {dp} from '../../utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
@@ -32,7 +32,7 @@ const Verification = ({route}: VerificationProps) => {
 
   const {sendOtp, register, login} = useStore();
 
-  const {theme} = useTheme() as any;
+  const {theme} = useTheme();
 
   //OTP
   const [otpInput, setOtpInput] = useState<string>('');
@@ -69,8 +69,6 @@ const Verification = ({route}: VerificationProps) => {
         Vibration.vibrate(100);
         clear();
       }
-
-      console.log(res.type)
 
       switch (res?.type) {
         case 'register-required':

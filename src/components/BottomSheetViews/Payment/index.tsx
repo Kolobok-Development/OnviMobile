@@ -29,8 +29,12 @@ import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
 import {confirmPayment, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
+
 import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+import {create as createOrderApi, pingPos} from '../../../api/order';
+import {create} from '../../../api/payment';
+import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
@@ -41,6 +45,8 @@ import { create as orderCreate, pingPos, validatePromoCode } from "@services/api
 import Toast from 'react-native-toast-message';
 import { createPayment, getCredentials } from "@services/api/payment";
 
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -49,7 +55,8 @@ enum OrderStatus {
 
 const Payment = () => {
   const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
-  const navigation: any = useNavigation();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Payment'>>();
 
   const [btnLoader, setBtnLoader] = useState(false);
 
@@ -107,13 +114,9 @@ const Payment = () => {
   };
 
   const createOrder = async () => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
 
-    if (!order.posId || !order.bayNumber) {
-      return;
-    }
+    if (!order.posId || !order.bayNumber) return;
 
     try {
       setBtnLoader(true);
@@ -222,9 +225,7 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user || !order.sum) {
-      return;
-    }
+    if (!user || !order.sum) return;
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {

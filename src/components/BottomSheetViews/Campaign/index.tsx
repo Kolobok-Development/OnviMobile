@@ -3,19 +3,21 @@ import {dp} from '../../../utils/dp';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {useRoute} from '@react-navigation/native';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import React, {useEffect, useState} from 'react';
 import {Campaign as CampaignType} from '../../../api/AppContent/types';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
-import useStore from "../../../state/store"
+import useStore from '../../../state/store';
+
+import CampaignPlaceholder from './CampaignPlaceholder';
+
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const Campaign = () => {
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();
 
-  const { isBottomSheetOpen } = useStore()
-
+  const {isBottomSheetOpen} = useStore();
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
 
@@ -24,30 +26,6 @@ const Campaign = () => {
       setCampaign(route.params.data);
     }
   }, []);
-
-  const CampaignPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(150)}
-            borderRadius={dp(25)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
-  };
 
   return (
     <BottomSheetScrollView

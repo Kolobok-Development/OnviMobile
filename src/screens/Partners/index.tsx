@@ -16,48 +16,20 @@ import {BurgerButton} from '@navigators/BurgerButton';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {useNavigation} from '@react-navigation/native';
 import {usePartners} from '../../api/hooks/useAppContent';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {Partner} from '../../api/AppContent/types';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
+import PartnersPlaceholder from './PartnersPlaceholder';
+
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const Partners = () => {
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнеры'>>();
 
   const {isLoading, data: partnersData} = usePartners();
 
   const handlePartnerPress = (data: Partner) => {
     navigation.navigate('Партнер', {data: data});
-  };
-
-  const PartnersPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
   };
 
   const renderItem = ({item}: {item: Partner}) => {

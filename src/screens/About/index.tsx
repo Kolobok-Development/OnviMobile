@@ -13,8 +13,11 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {BackButton} from '@components/BackButton';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const About = () => {
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<GeneralDrawerNavigationProp<'О приложении'>>();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
@@ -67,7 +70,13 @@ const About = () => {
             padding: dp(10),
           }}
           onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
-          <Text style={{fontSize: dp(14), color: '#000000', fontWeight: '600', letterSpacing: 0.22}}>
+          <Text
+            style={{
+              fontSize: dp(14),
+              color: '#000000',
+              fontWeight: '600',
+              letterSpacing: 0.22,
+            }}>
             Написать в поддержку
           </Text>
         </TouchableOpacity>

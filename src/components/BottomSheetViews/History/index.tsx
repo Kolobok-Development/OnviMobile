@@ -9,16 +9,10 @@ import {
   FlatList,
 } from 'react-native';
 
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-
-import {ScrollView} from 'react-native-gesture-handler';
-
 import {dp} from '../../../utils/dp';
 
-import {Button} from '@styled/buttons';
 import {WHITE} from '../../../utils/colors';
 
-import {Notification} from '@styled/cards/Notification';
 import {BalanceCard} from '@styled/cards/BalanceCard';
 import useStore from '../../../state/store';
 
@@ -30,10 +24,14 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+
+import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
-const History = ({drawerNavigation}: any) => {
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+
+const History = () => {
   const [tab, setTab] = useState(true);
 
   const {user} = useStore();
@@ -42,11 +40,10 @@ const History = ({drawerNavigation}: any) => {
     getOrderHistory({size: 20, page: 1}),
   );
 
-  const switchTab = (val: boolean) => {
-    setTab(val);
-  };
+  // Check if data is defined and is an array
+  const orderData = Array.isArray(data) ? data : [];
 
-  const route: any = useRoute();
+  const route = useRoute<GeneralBottomSheetRouteProp<'History'>>();
 
   const initialAvatar = user?.avatar || 'both.jpg';
 
@@ -62,37 +59,6 @@ const History = ({drawerNavigation}: any) => {
       setTab(false);
     }
   }, [route.params.type]);
-
-  const HistoryPlaceholder = () => {
-    return (
-      <SkeletonPlaceholder borderRadius={4}>
-        <View>
-          <SkeletonPlaceholder.Item
-            marginTop={dp(30)}
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-          <SkeletonPlaceholder.Item
-            width={'100%'}
-            height={dp(80)}
-            borderRadius={dp(10)}
-            alignSelf="center"
-            marginBottom={dp(10)}
-          />
-        </View>
-      </SkeletonPlaceholder>
-    );
-  };
 
   return (
     <View style={styles.container}>
@@ -181,7 +147,7 @@ const History = ({drawerNavigation}: any) => {
       ) : (
         <>
           <FlatList
-            data={data}
+            data={orderData}
             renderItem={order => (
               <BalanceCard key={order.index} option={order.item} />
             )}

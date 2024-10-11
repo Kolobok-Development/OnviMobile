@@ -15,10 +15,12 @@ import useStore from '../../../state/store';
 
 import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
-const Business = () => {
-  const route: any = useRoute();
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
-  const {setOrderDetails, orderDetails} = useStore();
+const Business = () => {
+  const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
+
+  const {setOrderDetails, orderDetails, business} = useStore();
 
   const selectCarwash = (carwash: any) => {
     setOrderDetails({
@@ -29,13 +31,13 @@ const Business = () => {
     } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', carwash);
-    route.params.bottomSheetRef.current?.snapToPosition('60%');
+    route.params.bottomSheetRef?.current?.snapToPosition('60%');
   };
 
   return (
     <View style={styles.container}>
       <Card>
-        {route.params.carwashes.map((carwash: any, index: number) => {
+        {business?.carwashes.map((carwash: any, index: number) => {
           return (
             <View style={styles.button} key={'carwash-' + index}>
               <View

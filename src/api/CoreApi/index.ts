@@ -1,9 +1,9 @@
-import axios from "axios";
-import useStore from "../../state/store";
+import axios from 'axios';
+import useStore from '../../state/store';
 
-import { CORE_URL } from '@env';
+import {CORE_URL} from '@env';
 
-const { accessToken } = useStore()
+const {accessToken} = useStore();
 
 const coreApi = axios.create({
   baseURL: CORE_URL,
@@ -11,4 +11,4 @@ const coreApi = axios.create({
 
 coreApi.defaults.headers.common['access-token'] = accessToken;
 
-export { coreApi };
+export {coreApi};

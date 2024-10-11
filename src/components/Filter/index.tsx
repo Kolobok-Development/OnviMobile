@@ -1,86 +1,90 @@
-import React, { useState } from "react";
-import {SectionList, StyleSheet, View, Text, SafeAreaView} from "react-native";
-import {CheckBox} from "@styled/buttons/CheckBox";
+import React, {useState} from 'react';
+import {SectionList, StyleSheet, View, Text, SafeAreaView} from 'react-native';
+import {CheckBox} from '@styled/buttons/CheckBox';
 
 interface IFilterProp {
-  data: IData[]
+  data: IData[];
 }
 
 interface IData {
-    title: any,
-    data: any[]
+  title: any;
+  data: any[];
 }
 
 interface ISelectedFilter {
-    id: number,
-    values: string[],
+  id: number;
+  values: string[];
 }
-
 
 const Filter = (props: IFilterProp) => {
-    const [selectedFilters, setSelectedFilters] = useState<any[]>([]);
+  const [selectedFilters, setSelectedFilters] = useState<any[]>([]);
 
-    const onFilterSelected = (id: number, value: string) => {
-        const selectedItem: ISelectedFilter = {
-            id: id,
-            values: [value]
+  const onFilterSelected = (id: number, value: string) => {
+    const selectedItem: ISelectedFilter = {
+      id: id,
+      values: [value],
+    };
+    let currentState = [...selectedFilters];
+    if (
+      selectedFilters.some(filter => {
+        return filter.id == id && filter.values.includes(value);
+      })
+    ) {
+      currentState.filter(item => {
+        if (item.id == id) {
+          item.values.splice(item.values.indexOf(value), 1);
         }
-        let currentState = [...selectedFilters];
-        if (selectedFilters.some((filter) => { return filter.id == id && filter.values.includes(value)})){
-            currentState.filter((item) => {
-                if (item.id == id) {
-                    item.values.splice(item.values.indexOf(value), 1)
-                }
-            })
-        }else if (!selectedFilters.some((filter) => { return  filter.id == id})){
-            currentState = [...currentState, selectedItem]
-        } else {
-            currentState.filter((item) => {
-                if (item.id == id) {
-                    item.values.push(value)
-                }
-            })
-
+      });
+    } else if (
+      !selectedFilters.some(filter => {
+        return filter.id == id;
+      })
+    ) {
+      currentState = [...currentState, selectedItem];
+    } else {
+      currentState.filter(item => {
+        if (item.id == id) {
+          item.values.push(value);
         }
-
-
-        setSelectedFilters(currentState);
+      });
     }
 
+    setSelectedFilters(currentState);
+  };
 
-    // @ts-ignore
-    const renderList = ({ item, section }) => {
-        const { title, ...rest } = section;
-        return (
-            <View style={styles.item}>
-                <Text style={styles.itemTitle}>{item.name}</Text>
-                <CheckBox
-                    key={item.code}
-                    color={"primary"}
-                    shape={"box"}
-                    value={selectedFilters.some((filter) => { return filter.id == title.id && filter.values.includes(item.code)})}
-                    onChange={(newValue) => onFilterSelected(title.id, item.code)}/>
-            </View>
-        )
-    }
+  // @ts-ignore
+  const renderList = ({item, section}) => {
+    const {title, ...rest} = section;
+    return (
+      <View style={styles.item}>
+        <Text style={styles.itemTitle}>{item.name}</Text>
+        <CheckBox
+          key={item.code}
+          checked={selectedFilters.some(filter => {
+            return filter.id == title.id && filter.values.includes(item.code);
+          })}
+          onClick={newValue => onFilterSelected(title.id, item.code)}
+        />
+      </View>
+    );
+  };
 
   return (
-      <SafeAreaView style={styles.container}>
-        <SectionList sections={props.data}
-                     keyExtractor={(item, index) => item.code}
-                     renderSectionHeader={({section: {title}}) => (
-                         <Text style={styles.header} key={title.id}>{title.name}</Text>
-                     )}
-                     renderItem={renderList}
-                     ItemSeparatorComponent={() => (
-                         <View style={styles.itemDevider}></View>
-                     )}
-
-
-                     />
-      </SafeAreaView>
-  )
-}
+    <SafeAreaView style={styles.container}>
+      <SectionList
+        sections={props.data}
+        keyExtractor={(item, index) => item.code}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={styles.header} key={title.id}>
+            {title.name}
+          </Text>
+        )}
+        renderItem={renderList}
+        ItemSeparatorComponent={() => <View style={styles.itemDevider}></View>}
+      />
+    </SafeAreaView>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -102,14 +106,14 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
   },
   itemTitle: {
-      fontSize: 16,
-      fontWeight: '300',
+    fontSize: 16,
+    fontWeight: '300',
   },
   itemDevider: {
-      height: 1,
-      backgroundColor: '#dedede',
-      marginBottom: 10
-  }
+    height: 1,
+    backgroundColor: '#dedede',
+    marginBottom: 10,
+  },
 });
 
-export { Filter }
+export {Filter};

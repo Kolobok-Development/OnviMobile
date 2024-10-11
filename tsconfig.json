@@ -14,9 +14,22 @@
       "@mutations/*": ["src/services/api/mutations/*"],
       "@queries/*": ["src/services/api/queries/*"],
       "@utils/*": ["src/utils/*"],
+      "react-native-reanimated-carousel/src/Carousel.tsx": [
+        "./src/types/declarations.d.ts"
+      ]
     },
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "noEmit": true
   },
-  "exclude": ["node_modules"],
-  "include": ["**/*.ts", "**/*.tsx"]
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx", // Include your source files
+    "declarations.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts"
+  ]
 }

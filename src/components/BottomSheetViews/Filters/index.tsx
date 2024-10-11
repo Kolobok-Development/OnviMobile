@@ -13,6 +13,8 @@ import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
 import useSWRMutation from 'swr/mutation';
 
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+
 // Define types
 type Filter = {
   code: string;
@@ -75,7 +77,8 @@ const generateQuery = (selectedFilters: SelectedFilters): string => {
 };
 
 const Filters = () => {
-  const navigation: any = useNavigation();
+  const navigation =
+    useNavigation<GeneralBottomSheetNavigationProp<'Filters'>>();
 
   const {filters, setFilters, setPosList} = useStore();
 
@@ -116,7 +119,7 @@ const Filters = () => {
       if (data) {
         setFilters(selectedFilters);
         setPosList(data.businessesLocations);
-        navigation.navigate('Main');
+        navigation.navigate('Main', {});
       }
     } catch (err) {
       console.log('Error fetching data:', err);
@@ -129,7 +132,7 @@ const Filters = () => {
     getCarWashes({filter: filtersQuery}).then((data: any) => {
       setFilters({});
       setPosList(data.businessesLocations);
-      navigation.navigate('Main');
+      navigation.navigate('Main', {});
     });
   };
 

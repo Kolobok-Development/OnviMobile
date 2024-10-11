@@ -2,11 +2,11 @@ import React, {useEffect, useState} from 'react';
 
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import {ThemeProvider} from '@context/ThemeProvider';
+import {ThemeProvider} from './src/context/ThemeProvider';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Application} from '@components/Application';
-import ThemeWrapper from '@components/ThemeWrapper';
+import {Application} from './src/components/Application';
+// import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
@@ -55,21 +55,19 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient} contextSharing={true}>
+    <QueryClientProvider client={queryClient}>
       {/*<RemoteNotifications />*/}
       <ThemeProvider>
-        <ThemeWrapper>
-          <IntlProvider locale={'ru'}>
-            <GestureHandlerRootView style={{flex: 1}}>
-              <SafeAreaView style={styles.container}>
-                <View style={{height: Dimensions.get('window').height}}>
-                  {!isConnected && <FlashMessage position="top" />}
-                  <Application />
-                </View>
-              </SafeAreaView>
-            </GestureHandlerRootView>
-          </IntlProvider>
-        </ThemeWrapper>
+        <IntlProvider locale={'ru'}>
+          <GestureHandlerRootView style={{flex: 1}}>
+            <SafeAreaView style={styles.container}>
+              <View style={{height: Dimensions.get('window').height}}>
+                {!isConnected && <FlashMessage position="top" />}
+                <Application />
+              </View>
+            </SafeAreaView>
+          </GestureHandlerRootView>
+        </IntlProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );

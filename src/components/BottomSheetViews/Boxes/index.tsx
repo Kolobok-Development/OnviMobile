@@ -13,11 +13,16 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 
 import useStore from '../../../state/store';
 
-const Boxes = () => {
-  const navigation: any = useNavigation();
-  const route: any = useRoute();
+import {
+  GeneralBottomSheetNavigationProp,
+  GeneralBottomSheetRouteProp,
+} from 'src/types/BottomSheetNavigation';
 
-  const { setOrderDetails, orderDetails } = useStore()
+const Boxes = () => {
+  const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
+
+  const {setOrderDetails, orderDetails} = useStore();
 
   return (
     <GHScrollView
@@ -33,9 +38,10 @@ const Boxes = () => {
           <BusinessHeader
             type="empty"
             navigation={navigation}
-            callback={() => setOrderDetails({
+            callback={() =>
+              setOrderDetails({
                 ...orderDetails,
-                bayNumber: null
+                bayNumber: null,
               })
             }
             position="60%"
@@ -63,7 +69,8 @@ const Boxes = () => {
           </View>
 
           <View style={styles.services}>
-            {route.params.price.length > 0 &&
+            {route.params.price &&
+              route.params.price.length > 0 &&
               route.params.price.map((price: Price, index: number) => (
                 <View style={{padding: dp(2)}}>
                   <CheckBox

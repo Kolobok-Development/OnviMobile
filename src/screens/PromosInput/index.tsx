@@ -18,9 +18,12 @@ import {apply} from '@services/api/promotion';
 import {IApplyPromotionRequest} from '../../types/api/promotion/req/IApplyPromotionRequest.ts';
 import Toast from 'react-native-toast-message';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const PromosInput = () => {
   const [code, setCode] = useState('');
-  const navigation = useNavigation<any>();
+  const navigation =
+    useNavigation<GeneralDrawerNavigationProp<'Ввод Промокода'>>();
 
   const {trigger, isMutating} = useSWRMutation(
     'applyUserPromo',

@@ -3,7 +3,7 @@ import {BLACK, BLUE, GREY, WHITE, YELLOW, DARKGREY} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {ArrowUpRight} from 'react-native-feather';
 import React from 'react';
-import { FormattedDate } from "react-intl";
+import {FormattedDate} from 'react-intl';
 
 type PromoCardProps = {
   title: string;
@@ -22,7 +22,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
 }) => {
   const getColor = () => {
     if (new Date() > date) {
-      return DARKGREY
+      return DARKGREY;
     }
     switch (color) {
       case 'blue':
@@ -51,9 +51,13 @@ const PromoCard: React.FC<PromoCardProps> = ({
           }}>
           {headerText}
         </Text>
-        {new Date() > date ? <View style={styles.expiredBadge}>
-          <Text style={styles.expiredBadgeText}>Закончился</Text>
-        </View> : <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />}
+        {new Date() > date ? (
+          <View style={styles.expiredBadge}>
+            <Text style={styles.expiredBadgeText}>Закончился</Text>
+          </View>
+        ) : (
+          <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />
+        )}
       </View>
       <View style={styles.content}>
         <Text
@@ -73,7 +77,15 @@ const PromoCard: React.FC<PromoCardProps> = ({
             justifyContent: 'space-between',
           }}>
           <View style={styles.date}>
-            <Text style={{fontWeight: '500', fontSize: dp(11)}}>👉до <FormattedDate value={date} year="numeric" month="long" day="numeric" /></Text>
+            <Text style={{fontWeight: '500', fontSize: dp(11)}}>
+              👉до{' '}
+              <FormattedDate
+                value={date}
+                year="numeric"
+                month="long"
+                day="numeric"
+              />
+            </Text>
           </View>
           <Text
             style={{
@@ -136,10 +148,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(164, 37, 22)',
   },
   expiredBadgeText: {
-    color: "#FFF",
-    fontSize: 13
-  }
+    color: '#FFF',
+    fontSize: 13,
+  },
 });
-
 
 export {PromoCard};

@@ -4,12 +4,14 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import calculateDistance from '../../../utils/calculateDistance';
 
 import Svg, {Path} from 'react-native-svg';
-import useStore from "../../../state/store.ts";
+import useStore from '../../../state/store.ts';
+
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface MarkerProps {
   coordinate: number[];
   business: any;
-  bottomSheetRef: any;
+  bottomSheetRef: React.RefObject<BottomSheetMethods>;
   locationRef: any;
 }
 
@@ -19,8 +21,8 @@ export default function Marker({
   bottomSheetRef,
   locationRef,
 }: MarkerProps) {
-
-  const { setSelectedPos, setSum, orderDetails, setOrderDetails } = useStore();
+  const {setSelectedPos, setSum, orderDetails, setOrderDetails, setBusiness} =
+    useStore();
 
   if (coordinate && coordinate[0] && coordinate[1]) {
     return (
@@ -43,13 +45,22 @@ export default function Marker({
             businessObj.close = true;
           }
 
-          navigateBottomSheet('Business', businessObj);
+          setBusiness(businessObj);
+          navigateBottomSheet('Business', {});
           setSelectedPos(business);
           setSum(150);
           setOrderDetails({
-            ...orderDetails,
-            sum: 150
-          })
+            posId: 0,
+            sum: 150,
+            bayNumber: null,
+            promoCodeId: null,
+            rewardPointsUsed: null,
+            type: null,
+            name: null,
+            prices: [],
+            order: null,
+            orderDate: null,
+          });
           bottomSheetRef.current?.snapToPosition('60%');
         }}>
         <Svg

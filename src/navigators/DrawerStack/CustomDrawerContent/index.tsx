@@ -1,10 +1,8 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
 
 import {DrawerContentScrollView} from '@react-navigation/drawer';
-
-import {useRoute} from '@react-navigation/native';
 
 import {dp} from '../../../utils/dp';
 
@@ -12,10 +10,6 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
-import {useNavigationState} from '@react-navigation/native';
-import {color} from 'ansi-fragments';
-import {Color} from 'ansi-fragments/build/fragments/Color';
-import {YELLOW} from '@utils/colors.ts';
 
 interface CustomDrawerItemProps {
   label: string;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from 'react';
 
 import {StyleSheet, Dimensions, View} from 'react-native';
 
@@ -10,7 +10,7 @@ import {dp} from '../../../utils/dp';
 
 import {Box} from '@components/Boxes/Box';
 
-import useStore from "../../../state/store";
+import useStore from '../../../state/store';
 
 const width = Dimensions.get('window').width;
 
@@ -21,8 +21,7 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const { orderDetails, setOrderDetails } = useStore()
-
+  const {orderDetails, setOrderDetails} = useStore();
 
   const [active, setActive] = useState(orderDetails.bayNumber);
 

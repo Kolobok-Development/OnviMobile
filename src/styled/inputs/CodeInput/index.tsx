@@ -1,16 +1,5 @@
-import {GREY, YELLOW} from '../../../utils/colors';
-import React, {Component, createRef, useEffect, useRef, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  ViewStyle,
-  TextStyle,
-} from 'react-native';
-
-import {dp} from '../../../utils/dp';
-import {join, set} from 'lodash';
+import React, {Component, createRef} from 'react';
+import {View, TextInput, Text, ViewStyle, TextStyle} from 'react-native';
 
 interface IState {
   focus: number;

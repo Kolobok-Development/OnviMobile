@@ -1,5 +1,7 @@
 import {StoreSlice} from '../store.ts';
-import { Price } from "../../api/AppContent/types.ts"
+import {Price} from '../../api/AppContent/types.ts';
+
+import {CarWashLocation} from '../../api/AppContent/types.ts';
 
 export type OrderDetailsType = {
   posId?: null | number;
@@ -7,20 +9,23 @@ export type OrderDetailsType = {
   bayNumber?: number | null;
   promoCodeId?: number | null;
   rewardPointsUsed?: null | number;
-  type?: null | string
-  name?: null | string
-  prices?: Price[]
-  order?: number | null
-  orderDate: string | null
-}
+  type?: null | string;
+  name?: null | string;
+  prices?: Price[];
+  order?: number | null;
+  orderDate?: string | null;
+};
 
 export interface OrderSlice {
   name: string;
   setName: (name: string) => void;
   sum: number;
   setSum: (sum: number) => void;
-  orderDetails: OrderDetailsType
+  orderDetails: OrderDetailsType;
   setOrderDetails: (orderDetails: OrderDetailsType) => void;
+
+  business: (CarWashLocation & {close: boolean}) | null;
+  setBusiness: (valud: (CarWashLocation & {close: boolean}) | null) => void;
 }
 
 const createOrderSlice: StoreSlice<OrderSlice> = set => ({
@@ -38,11 +43,15 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
     rewardPointsUsed: null,
     type: null,
     name: null,
-    price: [],
-    order:  null,
-    orderDate: null
+    prices: [],
+    order: null,
+    orderDate: null,
   },
-  setOrderDetails: (orderDetails: OrderDetailsType) => set(state => ({...state, orderDetails})),
+  setOrderDetails: (orderDetails: OrderDetailsType) =>
+    set(state => ({...state, orderDetails})),
+  business: null,
+  setBusiness: (value: (CarWashLocation & {close: boolean}) | null) =>
+    set(state => ({...state, business: value})),
 });
 
 export default createOrderSlice;

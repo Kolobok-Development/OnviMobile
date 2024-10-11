@@ -1,4 +1,4 @@
-import {useRef, useState, useMemo, useCallback, useEffect} from 'react';
+import {useRef, useState, useMemo, useCallback} from 'react';
 
 import {
   View,
@@ -23,7 +23,12 @@ import {Balance} from '@components/Balance';
 import {Map} from '@components/Map';
 
 // Bottom Sheet Navigator
-import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
+import BottomSheet, {
+  BottomSheetHandle,
+  BottomSheetProps,
+} from '@gorhom/bottom-sheet';
+
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 import {dp} from '../../utils/dp';
 
@@ -40,7 +45,7 @@ const Home = ({navigation}: any) => {
 
   const userLocationRef = useRef<any>(null);
 
-  const bottomSheetRef = useRef(null);
+  const bottomSheetRef = useRef<BottomSheetMethods>(null);
 
   const {filters} = useStore();
 
@@ -65,6 +70,7 @@ const Home = ({navigation}: any) => {
     });
   };
 
+  // renderHamdleComponent выделить в отдельный компонент
   const renderHandleComponent = useCallback(
     (props: any) => {
       function extractValues(obj: any) {

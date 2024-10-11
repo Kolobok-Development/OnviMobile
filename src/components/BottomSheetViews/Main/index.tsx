@@ -7,28 +7,50 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
+
+// styled components
 import {Card} from '@styled/cards';
+
 import useStore from '../../../state/store';
+
 import {useTheme} from '@context/ThemeProvider';
+
 import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
+
 import {dp} from '../../../utils/dp';
+
+import {useAxios} from '@hooks/useAxios';
+
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+
 import {useRoute} from '@react-navigation/native';
+
 import {Search} from 'react-native-feather';
+import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
 import {Campaign} from '../../../api/AppContent/types';
+// @ts-ignore
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
 import {CustomModal} from '@styled/views/CustomModal';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
+import Modal from '@styled/Modal';
+
+import CampaignPlaceholder from './CampaignPlaceholder';
+
+import {CarWashLocation} from '../../../api/AppContent/types';
+
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const Main = () => {
-  const {isBottomSheetOpen, location, posList} = useStore();
-  const {theme}: any = useTheme();
-  const route: any = useRoute();
+  const {isBottomSheetOpen, loadUser, location, posList} = useStore();
+  const {theme} = useTheme();
+  const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
   const isOpened = isBottomSheetOpen;
 
@@ -122,24 +144,6 @@ const Main = () => {
     );
   };
 
-  const CampaignPlaceholder = () => {
-    return (
-      <View>
-        <SkeletonPlaceholder borderRadius={4}>
-          <View>
-            <SkeletonPlaceholder.Item
-              marginTop={dp(16)}
-              width={'100%'}
-              height={dp(180)}
-              borderRadius={dp(25)}
-              alignSelf="center"
-            />
-          </View>
-        </SkeletonPlaceholder>
-      </View>
-    );
-  };
-
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
       data,
@@ -171,14 +175,33 @@ const Main = () => {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
-        <CustomModal
-          isVisible={nearByModal}
-          text={
+        <Modal
+          visible={nearByModal}
+          onClose={() => setNearByModal(false)}
+          animationType="none">
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalText}>
+                {
             'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
-          }
-          onClick={() => setNearByModal(false)}
-          btnText={'Закрыть'}
-        />
+                }
+              </Text>
+              <View style={styles.actionButtons}>
+                <View>
+                  <Button
+                    onClick={() => setNearByModal(false)}
+          label={'Закрыть'}
+        color="blue"
+                    width={129}
+                    height={42}
+                    fontSize={18}
+                    fontWeight="600"
+                  />
+                </View>
+              </View>
+            </View>
+          </View>
+        </Modal>
         <Card>
           <View style={{...styles.row, marginBottom: dp(16)}}>
             <TouchableOpacity
@@ -193,7 +216,7 @@ const Main = () => {
                 navigateBottomSheet('Search', {
                   type: 'search',
                 });
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                route.params.bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Search
                 stroke={'#000000'}
@@ -216,7 +239,7 @@ const Main = () => {
               style={{}}
               onPress={() => {
                 navigateBottomSheet('Filters', {});
-                route.params.bottomSheetRef.current?.snapToPosition('95%');
+                route.params.bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Image
                 source={require('../../../assets/icons/filterIcon.png')}
@@ -267,7 +290,7 @@ const Main = () => {
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Друзя по пузырикам
+                  Партнеры
                 </Text>
               </View>
               {/*<View style={{...styles.info, justifyContent: 'flex-start'}}>*/}
@@ -295,7 +318,7 @@ const Main = () => {
                 fontSize: dp(24),
                 fontWeight: '600',
               }}>
-              Чем моечка живет...
+              Свежие новости
             </Text>
           </View>
           {newsLoading || newsError ? (
@@ -473,6 +496,42 @@ const styles = StyleSheet.create({
   campaigns: {
     width: width,
     justifyContent: 'center',
+  },
+
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 38,
+    width: dp(341),
+    height: dp(222),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalTitle: {
+    fontWeight: '600',
+    fontSize: dp(24),
+    paddingBottom: dp(3),
+  },
+  modalText: {
+    fontSize: dp(16),
+    paddingTop: dp(16),
+    fontWeight: '600',
+    textAlign: 'center',
+    color: '#000',
+  },
+  actionButtons: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: dp(27),
   },
 });
 

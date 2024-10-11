@@ -27,6 +27,8 @@ import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequ
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
     case 'both.jpg':
@@ -41,13 +43,17 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser, deleteUser} = useStore();
-  const navigation = useNavigation<any>();
+  const {user, signOut, loadUser} = useStore();
+  const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
+
 
   const initialUserName = user?.name || '';
   const initialEmail = user?.email || '';
   const initialPhone = user?.phone || '';
-  const initialAvatar = user?.avatar || 'both.jpg';
+  const initialAvatar = (user?.avatar || 'both.jpg') as
+    | 'both.jpg'
+    | 'female.jpg'
+    | 'male.jpg';
 
   const [editing, setEditing] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
@@ -55,7 +61,9 @@ const Settings = () => {
   const [phone, setPhone] = useState(initialPhone);
   const [toggle, setToggle] = useState(false);
 
-  const [selectedAvatar, setSelectedAvatar] = useState<string>(initialAvatar);
+  const [selectedAvatar, setSelectedAvatar] = useState<
+    'both.jpg' | 'female.jpg' | 'male.jpg'
+  >(initialAvatar);
 
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['80%'], []);
@@ -87,7 +95,11 @@ const Settings = () => {
         [AvatarEnum.THREE]: 3,
       };
 
-      const avatar: number = avatarMapping[selectedAvatar];
+      const avatar = avatarMapping[selectedAvatar];
+
+      console.log('avatarMapping: ', avatarMapping);
+      console.log('selectedAvatar: ', selectedAvatar);
+      console.log('avatar: ', avatar);
 
       const userData: {name?: string; email?: string; avatar?: number} = {};
 

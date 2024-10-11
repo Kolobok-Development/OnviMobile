@@ -36,7 +36,8 @@ import {createNavigationContainerRef} from '@react-navigation/native';
 
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
-import useStore from "../../state/store"
+import useStore from '../../state/store';
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 export const navigationRef = createNavigationContainerRef<any>();
 
@@ -46,16 +47,25 @@ const navigateBottomSheet = (name: string, params: any) => {
   }
 };
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
+interface BottomSheetStackInterface {
+  bottomSheetRef: React.RefObject<BottomSheetMethods>;
+  active: boolean;
+  drawerNavigation: GeneralDrawerNavigationProp<any>;
+  cameraRef: any;
+}
+
 const BottomSheetStack = ({
   bottomSheetRef,
   active,
   drawerNavigation,
   cameraRef,
-}: any) => {
-  const { setIsBottomSheetOpen, setIsMainScreen } = useStore()
+}: BottomSheetStackInterface) => {
+  const {setIsBottomSheetOpen, setIsMainScreen} = useStore();
 
   useEffect(() => {
-    setIsBottomSheetOpen(active)
+    setIsBottomSheetOpen(active);
   }, [active]);
 
   return (
@@ -71,9 +81,9 @@ const BottomSheetStack = ({
             navigationState.routes[navigationState?.routes.length - 1].name ===
               'Main'
           ) {
-            setIsMainScreen(true)
+            setIsMainScreen(true);
           } else {
-            setIsMainScreen(false)
+            setIsMainScreen(false);
           }
         }}>
         <RootStack.Navigator

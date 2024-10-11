@@ -3,7 +3,13 @@ import {darkTheme, defaultTheme} from './../../utils/theme';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const ThemeContext = createContext({});
+interface ThemeContextType {
+  theme: typeof defaultTheme | typeof darkTheme;
+  isLoadingTheme: boolean;
+  updateTheme: (currentThemeMode: string) => void;
+}
+
+const ThemeContext = createContext<ThemeContextType>(null!);
 
 interface ThemeProviderProps {
   children: any;
