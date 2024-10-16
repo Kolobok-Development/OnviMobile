@@ -12,7 +12,7 @@ function useApplyPromotion() {
       const errorResponse = (error as any).response?.data;
       let message = 'Призошла ощибка повторите попытку чуть позже';
 
-      switch (parseInt(errorResponse.code)) {
+      switch (parseInt(errorResponse.code, 10)) {
         case 84:
           message =
             'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';

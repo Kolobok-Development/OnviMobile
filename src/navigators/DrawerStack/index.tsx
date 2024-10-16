@@ -21,6 +21,7 @@ import {PromosInput} from '@screens/PromosInput';
 //CustomDrawerContent
 import {CustomDrawerContent} from './CustomDrawerContent';
 import {Legals} from '@screens/Legals';
+import {DrawerNavProp} from '../../types/DrawerNavigation';
 
 const DrawerStack = () => {
   const {theme} = useTheme();
@@ -37,12 +38,13 @@ const DrawerStack = () => {
           },
         }}
         initialRouteName={'Главная'}
+        /* eslint-disable-next-line react/no-unstable-nested-components */
         drawerContent={props => {
           return (
             <>
               {user && (
                 <CustomDrawerContent
-                  navigation={props.navigation}
+                  navigation={props.navigation as unknown as DrawerNavProp}
                   theme={theme}
                   user={user}
                 />

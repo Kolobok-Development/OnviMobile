@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {useNavigation} from '@react-navigation/native';
@@ -108,10 +108,10 @@ const Filters = () => {
   // Function to handle submit button press
   const handleSubmit = async () => {
     mutate()
-      .then(data => {
-        if (data) {
+      .then(dataRes => {
+        if (dataRes) {
           setFilters(selectedFilters);
-          setPosList(data.businessesLocations);
+          setPosList(dataRes.businessesLocations);
           navigation.navigate('Main', {});
         }
       })
@@ -123,9 +123,9 @@ const Filters = () => {
   const reset = async () => {
     const filtersQuery = generateQuery({});
     setSelectedFilters({});
-    getCarWashes({filter: filtersQuery}).then((data: any) => {
+    getCarWashes({filter: filtersQuery}).then((dataRes: any) => {
       setFilters({});
-      setPosList(data.businessesLocations);
+      setPosList(dataRes.businessesLocations);
       navigation.navigate('Main', {});
     });
   };

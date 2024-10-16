@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {dp} from '@utils/dp';
 import {CSSProperties} from 'react';

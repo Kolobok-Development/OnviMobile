@@ -14,7 +14,6 @@ import {
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {useNavigation} from '@react-navigation/native';
 import {dp} from '../../../utils/dp';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -41,8 +40,6 @@ import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
 import {X} from 'react-native-feather';
 import {GREY} from '@utils/colors.ts';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
-
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -51,8 +48,6 @@ enum OrderStatus {
 
 const Payment = () => {
   const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
-  const navigation =
-    useNavigation<GeneralBottomSheetNavigationProp<'Payment'>>();
 
   const [btnLoader, setBtnLoader] = useState(false);
 
@@ -99,9 +94,13 @@ const Payment = () => {
   };
 
   const createOrder = async () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
-    if (!order.posId || !order.bayNumber) return;
+    if (!order.posId || !order.bayNumber) {
+      return;
+    }
 
     try {
       setBtnLoader(true);
@@ -180,17 +179,17 @@ const Payment = () => {
       }
 
       createOrderApi(createOrderRequest)
-        .then(data => {
+        .then(dataRes => {
           console.log(JSON.stringify(data, null, 2));
-          if (data.sendStatus === SendStatus.SUCCESS) {
+          if (dataRes.sendStatus === SendStatus.SUCCESS) {
             loadUser().then(() => {
               setOrderSatus(OrderStatus.END);
               setBtnLoader(false);
             });
           }
         })
-        .catch(error => {
-          console.log(JSON.stringify(error));
+        .catch(err => {
+          console.log(JSON.stringify(err));
         });
 
       setTimeout(() => {
@@ -198,8 +197,8 @@ const Payment = () => {
         navigateBottomSheet('Main', {});
         // route.params.bottomSheetRef.current.scrollTo(MIN_TRANSLATE_Y)
       }, 5000);
-    } catch (error) {
-      console.log('Error:', JSON.stringify(error));
+    } catch (err) {
+      console.log('Error:', JSON.stringify(err));
       setOrderSatus(null);
       setBtnLoader(false);
       setError('Что то пошло не так ...');
@@ -208,7 +207,9 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user || !order.sum) return;
+    if (!user || !order.sum) {
+      return;
+    }
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {
@@ -222,7 +223,7 @@ const Payment = () => {
 
   // Debounce function for search
   const debounce = (func: any, delay: number) => {
-    return function (...args: any) {
+    return function () {
       clearTimeout(debounceTimeout.current);
 
       debounceTimeout.current = setTimeout(() => {
@@ -290,18 +291,13 @@ const Payment = () => {
             }}
             promocode={promocode}
             handleSearchChange={handleSearchChange}
-            apply={() => debouncedSearch(promocode)}
+            apply={() => debouncedSearch()}
             promocodeError={promoError}
             fetching={isPending}
           />
         ) : (
           <>
-            <BusinessHeader
-              type="box"
-              navigation={navigation}
-              position={'95%'}
-              box={order?.bayNumber ?? 0}
-            />
+            <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
             <Text style={styles.title}>Оплата</Text>
             <GHScrollView
               showsVerticalScrollIndicator={false}
@@ -357,7 +353,7 @@ const Payment = () => {
                     }}>
                     Ваш Cashback
                   </Text>
-                  {!user || !user.tariff || user.tariff == 0 ? (
+                  {!user || !user.tariff || user.tariff === 0 ? (
                     <View>
                       <SkeletonPlaceholder borderRadius={10}>
                         <SkeletonPlaceholder.Item

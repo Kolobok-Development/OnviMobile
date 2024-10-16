@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Dimensions,
@@ -30,8 +30,6 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const History = () => {
-  const [tab, setTab] = useState(true);
-
   const {user} = useStore();
 
   const {data, isLoading, mutate} = useGetOrderHistory({size: 20, page: 1});
@@ -44,21 +42,6 @@ const History = () => {
   const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
-
-  useEffect(() => {
-    console.log(`ORDER => ${JSON.stringify(data)}`);
-  }, []);
-
-  useEffect(() => {
-    if (
-      route &&
-      route.params &&
-      route.params.type &&
-      route.params.type === 'history'
-    ) {
-      setTab(false);
-    }
-  }, [route.params.type]);
 
   return (
     <View style={styles.container}>
@@ -155,6 +138,7 @@ const History = () => {
             keyExtractor={(_order, index) => index.toString()}
             onRefresh={mutate}
             showsVerticalScrollIndicator={false}
+            /* eslint-disable-next-line react/no-unstable-nested-components */
             ListEmptyComponent={() => (
               <>
                 <EmptyPlaceholder text="У вас пока нет заказов" />

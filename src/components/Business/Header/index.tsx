@@ -13,20 +13,11 @@ import {
 } from '../../../utils/metrics';
 
 interface BusinessHeader {
-  navigation: any;
   type?: 'navigate' | 'empty' | 'box';
   box?: number;
-  callback?: () => void;
-  position?: string;
 }
 
-const BusinessHeader = ({
-  navigation,
-  type,
-  box,
-  callback,
-  position,
-}: BusinessHeader) => {
+const BusinessHeader = ({type, box}: BusinessHeader) => {
   const route: any = useRoute();
 
   const rightItem = () => {

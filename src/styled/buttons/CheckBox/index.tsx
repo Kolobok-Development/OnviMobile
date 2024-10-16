@@ -12,7 +12,6 @@ interface ICheckboxButtonProps {
   checked?: boolean;
   text?: string;
   disable?: boolean;
-  width?: number;
   height?: number;
   borderRadius?: number;
   backgroundColor?: string;
@@ -25,7 +24,6 @@ interface ICheckboxButtonProps {
 const CheckBox: React.FC<ICheckboxButtonProps> = ({
   checked = false,
   text,
-  width,
   height,
   borderRadius,
   backgroundColor,

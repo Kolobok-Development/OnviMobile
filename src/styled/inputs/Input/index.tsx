@@ -25,7 +25,6 @@ interface IInput {
 
 const Input: React.FC<IInput> = ({
   label,
-  type = 'text',
   value = '',
   setValue,
   placeholder = '',
@@ -34,8 +33,6 @@ const Input: React.FC<IInput> = ({
   style,
 }) => {
   const [inputStyles, setInputStyles] = useState<any>({});
-
-  const [error, setError] = useState<boolean>(false);
 
   useEffect(() => {
     let stls = {};
@@ -72,10 +69,8 @@ const Input: React.FC<IInput> = ({
         <TextInput
           value={value}
           style={
-            error && value
-              ? StyleSheet.create(
-                  Object.assign(inputStyles, {...styles['error']}),
-                )
+            value
+              ? StyleSheet.create(Object.assign(inputStyles, {...styles.error}))
               : (StyleSheet.create({...inputStyles}) as StyleProp<ViewStyle>)
           }
           placeholder={placeholder}

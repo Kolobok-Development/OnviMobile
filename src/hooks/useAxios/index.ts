@@ -3,10 +3,7 @@ import axios from 'axios';
 import useStore from '../../state/store';
 
 // Validators
-import {
-  isValidStorageData,
-  hasAccessTokenCredentials,
-} from '@context/AuthContext/index.validator';
+import {isValidStorageData} from '@context/AuthContext/index.validator';
 
 interface IConfigObject {
   baseURL?: string;
@@ -16,8 +13,8 @@ interface IConfigObject {
 }
 
 const useAxios = (url: string) => {
-  const switchUrl = (url: string) => {
-    switch (url) {
+  const switchUrl = (val: string) => {
+    switch (val) {
       case 'CORE_URL':
         return 'http://213.189.201.57/api/v2';
       case 'USER_URL':
@@ -68,7 +65,7 @@ const useAxios = (url: string) => {
       const refToken = await refresh();
 
       if (refToken && req && req.headers) {
-        req.headers['Authorization'] = `Bearer ${accessToken}`;
+        req.headers.Authorization = `Bearer ${accessToken}`;
       }
 
       return req;

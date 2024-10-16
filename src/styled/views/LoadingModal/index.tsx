@@ -30,8 +30,6 @@ enum loadingState {
 }
 
 const LoadingModal = (props: ILoadingModal) => {
-  const [textState, setTextState] = useState('');
-  const [imageState, setImageState] = useState('');
   const [loaderState, setLoaderState] = useState({
     text: props.stageText.start,
     imageUri: loadingState.start,

@@ -63,10 +63,7 @@ const Main = () => {
   const api = useAxios('CORE_URL');
 
   const updateInfo = async () => {
-    const data = await api
-      .get('/account/me')
-      .then(data => {})
-      .catch(err => console.log(err.response));
+    await api.get('/account/me').catch(err => console.log(err.response));
   };
 
   // UPDATE BALANCE
@@ -124,38 +121,6 @@ const Main = () => {
     } else {
       setNearByModal(true);
     }
-  };
-
-  const PostsPlaceholder = () => {
-    return (
-      <View>
-        <SkeletonPlaceholder borderRadius={4}>
-          <View style={styles.news}>
-            <View style={styles.leftNewsColumn}>
-              <SkeletonPlaceholder.Item
-                flex={1}
-                borderWidth={26}
-                marginTop={dp(16)}
-              />
-            </View>
-            <View style={styles.rightNewsColumn}>
-              <SkeletonPlaceholder.Item
-                flex={1}
-                marginTop={dp(16)}
-                borderRadius={25}
-                minHeight={dp(120)}
-              />
-              <SkeletonPlaceholder.Item
-                flex={1}
-                marginTop={dp(16)}
-                borderRadius={25}
-                minHeight={dp(120)}
-              />
-            </View>
-          </View>
-        </SkeletonPlaceholder>
-      </View>
-    );
   };
 
   const handleCampaignItemPress = (data: Campaign) => {
@@ -426,6 +391,38 @@ const Main = () => {
         </Card>
       </View>
     </BottomSheetScrollView>
+  );
+};
+
+const PostsPlaceholder = () => {
+  return (
+    <View>
+      <SkeletonPlaceholder borderRadius={4}>
+        <View style={styles.news}>
+          <View style={styles.leftNewsColumn}>
+            <SkeletonPlaceholder.Item
+              flex={1}
+              borderWidth={26}
+              marginTop={dp(16)}
+            />
+          </View>
+          <View style={styles.rightNewsColumn}>
+            <SkeletonPlaceholder.Item
+              flex={1}
+              marginTop={dp(16)}
+              borderRadius={25}
+              minHeight={dp(120)}
+            />
+            <SkeletonPlaceholder.Item
+              flex={1}
+              marginTop={dp(16)}
+              borderRadius={25}
+              minHeight={dp(120)}
+            />
+          </View>
+        </View>
+      </SkeletonPlaceholder>
+    </View>
   );
 };
 

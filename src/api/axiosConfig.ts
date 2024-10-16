@@ -37,7 +37,7 @@ const getConfigWithHeaders = async (
   config: InternalAxiosRequestConfig<any>,
 ) => {
   config.headers['Content-Type'] = 'application/json';
-  config.headers['Accept'] = 'application/json';
+  config.headers.Accept = 'application/json';
   config.headers['Access-Control-Allow-Origin'] = '*';
   return _retriveConfigWithAuthorization(config);
 };

@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {
-  View,
-  Dimensions,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 
 import {dp} from '../../../utils/dp';
 

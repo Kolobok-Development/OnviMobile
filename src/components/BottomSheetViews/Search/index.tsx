@@ -55,7 +55,7 @@ const Search = () => {
   };
 
   const doSearch = useCallback(
-    debounce(async (val: string) => {
+    debounce(async () => {
       await getBusinesses();
     }, 1300),
     [],
@@ -91,7 +91,7 @@ const Search = () => {
         value={search}
         onChangeText={val => {
           setSearch(val);
-          doSearch(val);
+          doSearch();
         }}
         style={{
           backgroundColor: 'rgba(245, 245, 245, 1)',

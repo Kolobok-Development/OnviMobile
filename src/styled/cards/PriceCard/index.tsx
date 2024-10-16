@@ -15,7 +15,6 @@ interface PriceCardProps {
   name: string;
   description: string;
   cost: number;
-  costType: 'Fix' | 'PerMinute';
   color?: 'blue' | 'grey' | 'yellow';
   onSelect: (name: string, price: number) => void;
 }
@@ -24,7 +23,6 @@ const PriceCard = ({
   name,
   description,
   cost,
-  costType,
   color = 'blue',
   onSelect,
 }: PriceCardProps) => {

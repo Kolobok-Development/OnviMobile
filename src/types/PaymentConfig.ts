@@ -1,5 +1,5 @@
-import { PaymentMethodTypesEnum } from "./PaymentType";
-import { GooglePaymentMethodTypesEnum } from "./GooglePaymentMethodTypes";
+import {PaymentMethodTypesEnum} from './PaymentType';
+import {GooglePaymentMethodTypesEnum} from './GooglePaymentMethodTypes';
 
 export interface PaymentConfig {
   clientApplicationKey: string;

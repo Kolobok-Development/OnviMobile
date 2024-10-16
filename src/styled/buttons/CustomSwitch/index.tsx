@@ -3,7 +3,6 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
   I18nManager,
-  View,
   Image,
   TextStyle,
   ViewStyle, // Import Image
@@ -181,97 +180,90 @@ const Switch = (IProps: SwitchProps): JSX.Element => {
     }
   }, [disabled]);
 
-  const Button = (props: any) => {
-    if (typeof onValueChange === 'function' && !disabled) {
-      return (
-        <TouchableWithoutFeedback
-          {...props}
-          onPress={() => onValueChange(!value)}
-        />
-      );
-    }
-    return <View {...props} />;
-  };
-
-  // @ts-ignore
-  // @ts-ignore
   return (
-    <Button>
-      <Animated.View
-        style={[
-          styles.switch,
-          {
-            borderRadius: isNumbre(switchBorderRadius, 30),
-            width: defaultWidth,
-          },
-          switchStyle,
-          defaultPadding,
-          switchAnimatedStyle,
-        ]}>
-        <Animated.View
-          style={[
-            styles.switchTextView,
-            styles.center,
-            {
-              width:
-                defaultWidth +
-                (defaultPadding.paddingLeft + defaultPadding.paddingRight) / 2,
-              backgroundColor: backgroundActive,
-            },
-            textStyleViewActive,
-          ]}>
-          <Animated.Text
+    <>
+      {typeof onValueChange === 'function' && !disabled ? (
+        <TouchableWithoutFeedback onPress={() => onValueChange(!value)}>
+          <Animated.View
             style={[
-              styles.textStyle,
-              textStyle,
-              {left: -(defaultCircleSize / 2)},
+              styles.switch,
+              {
+                borderRadius: isNumbre(switchBorderRadius, 30),
+                width: defaultWidth,
+              },
+              switchStyle,
+              defaultPadding,
+              switchAnimatedStyle,
             ]}>
-            {activeText}
-          </Animated.Text>
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.switchTextView,
-            styles.center,
-            {
-              width: defaultWidth,
-              backgroundColor: backgroundInActive,
-            },
-            textStyleViewInActive,
-          ]}>
-          <Animated.Text
-            style={[
-              styles.textStyle,
-              textStyle,
-              {left: defaultCircleSize / 2},
-            ]}>
-            {inActiveText}
-          </Animated.Text>
-        </Animated.View>
-        <Animated.View
-          style={[
-            styles.circleStyle,
-            {
-              width: defaultCircleSize,
-              height: defaultCircleSize,
-              borderRadius: isNumbre(switchBorderRadius, 30),
-            },
-            circleStyle,
-          ]}>
-          {value ? (
-            <Image
-              source={circleImageActive as any}
-              style={styles.circleImage}
-            />
-          ) : (
-            <Image
-              source={circleImageInactive as any}
-              style={styles.circleImage}
-            />
-          )}
-        </Animated.View>
-      </Animated.View>
-    </Button>
+            <Animated.View
+              style={[
+                styles.switchTextView,
+                styles.center,
+                {
+                  width:
+                    defaultWidth +
+                    (defaultPadding.paddingLeft + defaultPadding.paddingRight) /
+                      2,
+                  backgroundColor: backgroundActive,
+                },
+                textStyleViewActive,
+              ]}>
+              <Animated.Text
+                style={[
+                  styles.textStyle,
+                  textStyle,
+                  {left: -(defaultCircleSize / 2)},
+                ]}>
+                {activeText}
+              </Animated.Text>
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.switchTextView,
+                styles.center,
+                {
+                  width: defaultWidth,
+                  backgroundColor: backgroundInActive,
+                },
+                textStyleViewInActive,
+              ]}>
+              <Animated.Text
+                style={[
+                  styles.textStyle,
+                  textStyle,
+                  {left: defaultCircleSize / 2},
+                ]}>
+                {inActiveText}
+              </Animated.Text>
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.circleStyle,
+                {
+                  width: defaultCircleSize,
+                  height: defaultCircleSize,
+                  borderRadius: isNumbre(switchBorderRadius, 30),
+                },
+                circleStyle,
+              ]}>
+              {value ? (
+                <Image
+                  source={circleImageActive as any}
+                  style={styles.circleImage}
+                />
+              ) : (
+                <Image
+                  source={circleImageInactive as any}
+                  style={styles.circleImage}
+                />
+              )}
+            </Animated.View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      ) : (
+        <></>
+      )}
+    </>
   );
 };
 

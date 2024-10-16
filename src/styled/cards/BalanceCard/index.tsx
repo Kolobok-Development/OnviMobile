@@ -47,7 +47,7 @@ const BalanceCard = (option: IBalanceCardProps) => {
             <CustomSwitch
               value={false}
               inActiveText={
-                option.option.operSumPoint == 0
+                Number(option.option.operSumPoint) === 0
                   ? `${option.option.operSumPoint}`
                   : `-${option.option.operSumPoint}`
               }

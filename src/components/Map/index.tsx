@@ -67,20 +67,17 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           );
         } else {
         }
-      } catch (error) {
-        console.error(
-          'Error checking or requesting location permission:',
-          error,
-        );
+      } catch (err: any) {
+        console.error('Error checking or requesting location permission:', err);
       }
     };
 
     requestLocationPermission();
   }, []);
 
-  const onUserLocationUpdateThrottled = throttle(location => {
-    let lat = location.coords.latitude;
-    let long = location.coords.longitude;
+  const onUserLocationUpdateThrottled = throttle(trhottleLocation => {
+    let lat = trhottleLocation.coords.latitude;
+    let long = trhottleLocation.coords.longitude;
     userLocationRef.current = {lat: lat, lon: long};
     setLocation({latitude: lat, longitude: long});
   }, 1000);

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
@@ -9,7 +9,7 @@ import {Application} from './src/components/Application';
 // import ThemeWrapper from '@components/ThemeWrapper';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+// import FlashMessage from 'react-native-flash-message';
 
 // import NetInfo from '@react-native-community/netinfo';
 // import RemoteNotifications from '@services/PushNotifications';
@@ -29,7 +29,7 @@ const queryClient = new QueryClient({
 });
 
 function App(): React.JSX.Element {
-  const [isConnected, setConnected] = useState(true);
+  // const [isConnected, setConnected] = useState(true);
   const {loadUser} = useStore();
 
   useEffect(() => {
@@ -62,7 +62,7 @@ function App(): React.JSX.Element {
           <GestureHandlerRootView style={{flex: 1}}>
             <SafeAreaView style={styles.container}>
               <View style={{height: Dimensions.get('window').height}}>
-                {!isConnected && <FlashMessage position="top" />}
+                {/* {!isConnected && <FlashMessage position="top" />} */}
                 <Application />
               </View>
             </SafeAreaView>

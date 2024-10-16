@@ -22,5 +22,4 @@ export interface IUserPartial {
   avatar?: string | null;
   balance?: number | null;
   tariff?: number | null;
-
 }

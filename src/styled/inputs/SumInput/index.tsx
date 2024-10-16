@@ -1,10 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React from 'react';
 import {
   GestureResponderEvent,
   PanResponder,
   PanResponderGestureState,
   StyleSheet,
-  Text,
   View,
   Animated as RNAnimated,
 } from 'react-native';
@@ -25,9 +24,8 @@ interface ISumInput {
   value?: number;
   onChange?: (value: number) => void;
   onComplete?: (value: number) => void;
-  fillColor?: string;
   inputBackgroundColor?: string;
-  shadowProps?: {
+  shadowProps: {
     shadowColor: string;
     shadowOffset: {
       width: number;
@@ -48,9 +46,8 @@ const SumInput: React.FC<ISumInput> = ({
   value: currentValue = 0,
   onChange = () => {},
   onComplete = () => {},
-  fillColor = '#77ADE6',
   inputBackgroundColor = '#FFFFFF',
-  shadowProps = {},
+  shadowProps,
 }) => {
   const calculateBaseStyles = () => ({
     width,
@@ -63,8 +60,7 @@ const SumInput: React.FC<ISumInput> = ({
     borderRadius,
   ]);
 
-  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} =
-    shadowProps || {};
+  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} = shadowProps;
 
   const calculateShadowStyles = () => ({
     shadowColor,
@@ -86,8 +82,8 @@ const SumInput: React.FC<ISumInput> = ({
    * @param minValue
    * @param maxValue
    */
-  const _clamp = (newValue: number, minValue: number, maxValue: number) => {
-    return Math.min(Math.max(newValue, minValue), maxValue);
+  const _clamp = (newValue: number, min: number, max: number) => {
+    return Math.min(Math.max(newValue, min), max);
   };
 
   /**

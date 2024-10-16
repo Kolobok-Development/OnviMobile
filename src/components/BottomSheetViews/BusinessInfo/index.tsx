@@ -5,7 +5,7 @@ import Modal from '@styled/Modal';
 
 import {Button} from '@styled/buttons';
 
-import {useRoute, useNavigation} from '@react-navigation/native';
+import {useRoute} from '@react-navigation/native';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {dp} from '../../../utils/dp';
@@ -15,17 +15,12 @@ import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {Tag} from '../../../api/AppContent/types';
 
-import {
-  GeneralBottomSheetNavigationProp,
-  GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
-  const navigation =
-    useNavigation<GeneralBottomSheetNavigationProp<'BusinessInfo'>>();
 
   const modalCallback = () => {
     if (true) {
@@ -84,7 +79,7 @@ const BusinessInfo = () => {
         </View>
       </Modal>
       <View style={{paddingTop: dp(15)}} />
-      <BusinessHeader navigation={navigation} position="60%" type="navigate" />
+      <BusinessHeader type="navigate" />
       <View
         style={{
           display: 'flex',

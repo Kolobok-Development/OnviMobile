@@ -100,11 +100,9 @@ const Promos = () => {
                   keyExtractor={(promo: IGetPromoHistoryResponse) =>
                     promo.promotionId.toString()
                   }
-                  ListEmptyComponent={() => (
-                    <View>
-                      <EmptyPlaceholder text="У вас нет использованных акций" />
-                    </View>
-                  )}
+                  ListEmptyComponent={
+                    <EmptyPlaceholder text="У вас нет использованных акций" />
+                  }
                 />
               )}
             </View>
