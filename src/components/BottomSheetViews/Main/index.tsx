@@ -12,43 +12,28 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 // styled components
 import {Card} from '@styled/cards';
-
 import useStore from '../../../state/store';
-
 import {useTheme} from '@context/ThemeProvider';
-
 import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
-
 import {dp} from '../../../utils/dp';
-
-import {useAxios} from '@hooks/useAxios';
-
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-
 import {useRoute} from '@react-navigation/native';
-
 import {Search} from 'react-native-feather';
-import {useCampaigns, useNewsPosts} from '../../../api/hooks/useAppContent';
-import {Campaign} from '../../../api/AppContent/types';
 // @ts-ignore
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
-import {useIsFocused} from '@react-navigation/core';
 import calculateDistance from '@utils/calculateDistance.ts';
-import {CustomModal} from '@styled/views/CustomModal';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import Modal from '@styled/Modal';
-
 import CampaignPlaceholder from './CampaignPlaceholder';
-
-import {CarWashLocation} from '../../../api/AppContent/types';
-
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {Button} from '@styled/buttons';
+import { Campaign } from "../../../types/api/app/types.ts";
 
 const Main = () => {
-  const {isBottomSheetOpen, loadUser, location, posList} = useStore();
+  const {isBottomSheetOpen, location, posList} = useStore();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -183,15 +168,15 @@ const Main = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalText}>
                 {
-            'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
+                  'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
                 }
               </Text>
               <View style={styles.actionButtons}>
                 <View>
                   <Button
                     onClick={() => setNearByModal(false)}
-          label={'Закрыть'}
-        color="blue"
+                    label={'Закрыть'}
+                    color="blue"
                     width={129}
                     height={42}
                     fontSize={18}

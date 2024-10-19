@@ -26,7 +26,6 @@ import {BusinessInfo} from '@components/BottomSheetViews/BusinessInfo';
 import {Boxes} from '@components/BottomSheetViews/Boxes';
 import {Payment} from '@components/BottomSheetViews';
 import {AddCard} from '@components/BottomSheetViews/AddCard';
-import {Settings} from '@components/BottomSheetViews/Settings';
 import {Post} from '@components/BottomSheetViews/Post';
 
 const RootStack = createNativeStackNavigator();
@@ -154,11 +153,6 @@ const BottomSheetStack = ({
           <RootStack.Screen
             name="AddCard"
             component={AddCard}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
-          />
-          <RootStack.Screen
-            name="Settings"
-            component={Settings}
             initialParams={{bottomSheetRef: bottomSheetRef}}
           />
           <RootStack.Screen

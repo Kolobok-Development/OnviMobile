@@ -13,12 +13,12 @@ import {WHITE} from '../../../utils/colors';
 
 import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
-import {Tag} from '../../../api/AppContent/types';
 
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
 } from 'src/types/BottomSheetNavigation';
+import { Tag } from "../../../types/api/app/types.ts";
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);

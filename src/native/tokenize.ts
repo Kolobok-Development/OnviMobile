@@ -17,8 +17,6 @@ const tokenize = (params: PaymentConfig): Promise<TokenizationResult> => {
           resolve(result);
         } else {
           if (error) {
-            console.log('ERROR TOKENEZATION');
-            console.log(error);
             reject({code: error.code, message: error.message});
           } else {
             reject(new Error('Unknown error occurred during tokenization.'));

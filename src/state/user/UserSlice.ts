@@ -5,27 +5,27 @@ import {ILoginResponse} from '../../types/api/auth/res/ILoginResponse';
 import {IRegisterResponse} from '../../types/api/auth/res/IRegisterResponse';
 
 import LocalStorage from '@services/local-storage';
-
-import {sendOtp, login, register, refresh} from '../../api/auth/index';
-import {getMe, getTariff} from '../../api/user';
 import Toast from 'react-native-toast-message';
 
 import {
   isValidStorageData,
   hasAccessTokenCredentials,
-} from '@context/AuthContext/index.validator';
+} from '@services/validation/index.validator.ts';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import {deleteAccount} from '@services/api/user';
+import {deleteAccount, getMe, getTariff} from '@services/api/user';
+import {login, refresh, register, sendOtp} from '@services/api/auth';
 
 export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
   accessToken: string | null;
   expiredDate: string | null;
+  fcmToken: string | null;
   loading: boolean;
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
+  setFcmToken: (fcmToken: string | null) => void;
   setLoading: (loading: boolean) => void;
   mutateRefreshToken: () => Promise<string | null>;
   login: (phone: string, otp: string) => Promise<ILoginResponse | null>;
@@ -44,6 +44,7 @@ export interface UserSlice {
 const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   isAuthenticated: false,
   user: null,
+  fcmToken: null,
   accessToken: null,
   expiredDate: null,
   loading: true,
@@ -52,7 +53,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   setAccessToken: accessToken => set({accessToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
   setLoading: loading => set({loading}),
-
+  setFcmToken: fcmToken => set({fcmToken}),
   mutateRefreshToken: async () => {
     try {
       const existingSession = await EncryptedStorage.getItem('user_session');
@@ -286,6 +287,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           const data = await getMe();
           const tariff = await getTariff();
 
+          console.log('UPDATING USER DATA _________');
+          console.log(JSON.stringify(data, null, 2));
           set({
             user: {
               ...data,

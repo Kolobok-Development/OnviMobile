@@ -1,9 +1,9 @@
-import {appContent} from '../../../api/clients/AppContent';
 import {
   NewsPost,
   NewsPostsSuccessRequestPayload,
   NewsPostSuccessRequestPayload,
-} from '../../../api/AppContent/types.ts';
+} from '../../../types/api/app/types.ts';
+import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
 enum NEWS {
   GET_NEWS_LIST = 'api/posts',
@@ -25,7 +25,7 @@ export async function getNewsList(
     }
   }
 
-  const response = await appContent.get<NewsPostsSuccessRequestPayload>(
+  const response = await contentApiInstance.get<NewsPostsSuccessRequestPayload>(
     NEWS.GET_NEWS_LIST,
     {params},
   );
@@ -49,7 +49,7 @@ export async function getNewsById(
     }
   }
 
-  const response = await appContent.get<NewsPostSuccessRequestPayload>(
+  const response = await contentApiInstance.get<NewsPostSuccessRequestPayload>(
     NEWS.GET_NEWS_BY_ID + `/${id}`,
     {params},
   );

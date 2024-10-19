@@ -15,18 +15,23 @@ import {
 import {BurgerButton} from '@navigators/BurgerButton';
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {useNavigation} from '@react-navigation/native';
-import {usePartners} from '../../api/hooks/useAppContent';
-import {Partner} from '../../api/AppContent/types';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 import PartnersPlaceholder from './PartnersPlaceholder';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import useSWR from 'swr';
+import {getPartners} from '@services/api/partners';
+import {Partner} from '../../types/api/app/types.ts';
 
 const Partners = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнеры'>>();
 
-  const {isLoading, data: partnersData} = usePartners();
+  const {
+    isLoading,
+    data: partnersData,
+    mutate,
+  } = useSWR('getPartnerList', () => getPartners('*'));
 
   const handlePartnerPress = (data: Partner) => {
     navigation.navigate('Партнер', {data: data});
@@ -82,9 +87,11 @@ const Partners = () => {
         ) : (
           <View style={styles.content}>
             <FlatList
-              data={partnersData?.data}
+              data={partnersData}
               renderItem={renderItem}
               keyExtractor={(item: Partner) => item.id.toString()}
+              onRefresh={mutate}
+              refreshing={isLoading}
               ListEmptyComponent={() => (
                 <View>
                   <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />

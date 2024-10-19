@@ -12,7 +12,6 @@ import {horizontalScale, moderateScale} from '../../../utils/metrics';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
-import {NewsPost} from '../../../api/AppContent/types';
 
 import useStore from '../../../state/store';
 
@@ -21,6 +20,7 @@ import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
 } from 'src/types/BottomSheetNavigation';
+import {NewsPost} from '../../../types/api/app/types.ts';
 
 const Post = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Post'>>();

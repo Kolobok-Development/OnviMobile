@@ -1,9 +1,9 @@
-import {appContent} from '../../../api/clients/AppContent';
 import {
   Partner,
   PartnersSuccessRequestPayload,
   PartnerSuccessRequestPayload,
-} from '../../../api/AppContent/types.ts';
+} from '../../../types/api/app/types.ts';
+import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
 enum PARTNER {
   GET_PARTNER_LIST = 'api/partners',
@@ -25,7 +25,7 @@ export async function getPartners(
     }
   }
 
-  const response = await appContent.get<PartnersSuccessRequestPayload>(
+  const response = await contentApiInstance.get<PartnersSuccessRequestPayload>(
     PARTNER.GET_PARTNER_LIST,
     {params}, // Axios will handle the query string
   );
@@ -49,7 +49,7 @@ export async function getPartner(
     }
   }
 
-  const response = await appContent.get<PartnerSuccessRequestPayload>(
+  const response = await contentApiInstance.get<PartnerSuccessRequestPayload>(
     `${PARTNER.GET_PARTNER_BY_ID}/${id}`, // Construct the URL with the ID
     {params}, // Axios will handle the query string
   );

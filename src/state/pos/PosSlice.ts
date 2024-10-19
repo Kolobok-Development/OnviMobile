@@ -1,5 +1,5 @@
 import {StoreSlice} from '../store.ts';
-import {CarWash, CarWashLocation} from '../../api/AppContent/types.ts';
+import {CarWash, CarWashLocation} from '../../types/api/app/types.ts';
 
 export interface PosSlice {
   posList: CarWashLocation[];

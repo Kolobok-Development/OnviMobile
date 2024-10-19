@@ -3,7 +3,7 @@ import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 import {ArrowUpRight} from 'react-native-feather';
-import {Price} from '../../../api/AppContent/types';
+import { Price } from "../../../types/api/app/types.ts";
 
 type AccordionItemPros = PropsWithChildren<{
   data: Price;

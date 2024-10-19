@@ -1,7 +1,5 @@
 import {StoreSlice} from '../store.ts';
-import {Price} from '../../api/AppContent/types.ts';
-
-import {CarWashLocation} from '../../api/AppContent/types.ts';
+import {CarWashLocation, Price} from '../../types/api/app/types.ts';
 
 export type OrderDetailsType = {
   posId?: null | number;

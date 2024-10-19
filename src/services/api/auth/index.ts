@@ -1,6 +1,5 @@
 import {ISendOtpRequest} from '../../../types/api/auth/req/ISendOtpRequest.ts';
 import {ISendOtpResponse} from '../../../types/api/auth/res/ISendOtpResponse.ts';
-import {userApiInstance} from '../../../api/axiosConfig.ts';
 import {IUserApiResponse} from '../../../types/api/common/IUserApiResponse.ts';
 import {ILoginRequest} from '../../../types/api/auth/req/ILoginRequest.ts';
 import {ILoginResponse} from '../../../types/api/auth/res/ILoginResponse.ts';
@@ -8,6 +7,7 @@ import {IRegisterRequest} from '../../../types/api/auth/req/IRegisterRequest.ts'
 import {IRegisterResponse} from '../../../types/api/auth/res/IRegisterResponse.ts';
 import {IRefreshRequest} from '../../../types/api/auth/req/IRefreshRequest.ts';
 import {IRefreshResponse} from '../../../types/api/auth/res/IRefreshResponse.ts';
+import { userApiInstance } from "@services/api/axiosConfig.ts";
 
 enum AUTH {
   SEND_OTP_URL = 'auth/send/otp',

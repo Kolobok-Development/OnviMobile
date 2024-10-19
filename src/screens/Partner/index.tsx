@@ -10,7 +10,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useRoute} from '@react-navigation/native';
 import {dp} from '../../utils/dp';
-import {Partner as PartnerType} from '../../api/AppContent/types';
+import {Partner as PartnerType} from '../../types/api/app/types';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 import PromoModal, {IPromoModalProps, IInputData} from '@components/PromoModal';

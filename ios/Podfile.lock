@@ -1,4 +1,5 @@
 PODS:
+  - BEMCheckBox (1.4.1)
   - boost (1.83.0)
   - BVLinearGradient (2.8.3):
     - React-Core
@@ -74,12 +75,12 @@ PODS:
     - hermes-engine/Pre-built (= 0.73.3)
   - hermes-engine/Pre-built (0.73.3)
   - libevent (2.1.12)
-  - MapboxCommon (23.9.1)
-  - MapboxCoreMaps (10.16.6):
+  - MapboxCommon (23.9.2)
+  - MapboxCoreMaps (10.17.0):
     - MapboxCommon (~> 23.9)
-  - MapboxMaps (10.16.6):
-    - MapboxCommon (= 23.9.1)
-    - MapboxCoreMaps (= 10.16.6)
+  - MapboxMaps (10.17.0):
+    - MapboxCommon (= 23.9.2)
+    - MapboxCoreMaps (= 10.17.0)
     - MapboxMobileEvents (= 1.0.10)
     - Turf (= 2.7.0)
   - MapboxMobileEvents (1.0.10)
@@ -1156,11 +1157,16 @@ PODS:
     - React-perflogger (= 0.73.3)
   - RNCAsyncStorage (1.21.0):
     - React-Core
+  - RNCCheckbox (0.5.17):
+    - BEMCheckBox (~> 1.4)
+    - React-Core
   - RNCClipboard (1.14.1):
     - React-Core
   - RNCMaskedView (0.3.1):
     - React-Core
   - RNCPicker (2.6.1):
+    - React-Core
+  - RNDeviceInfo (13.1.0):
     - React-Core
   - RNFBApp (19.2.2):
     - Firebase/CoreOnly (= 10.24.0)
@@ -1174,14 +1180,14 @@ PODS:
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
-  - rnmapbox-maps (10.1.9):
-    - MapboxMaps (~> 10.16.4)
+  - rnmapbox-maps (10.1.24):
+    - MapboxMaps (~> 10.17.0)
     - React
     - React-Core
-    - rnmapbox-maps/DynamicLibrary (= 10.1.9)
+    - rnmapbox-maps/DynamicLibrary (= 10.1.24)
     - Turf
-  - rnmapbox-maps/DynamicLibrary (10.1.9):
-    - MapboxMaps (~> 10.16.4)
+  - rnmapbox-maps/DynamicLibrary (10.1.24):
+    - MapboxMaps (~> 10.17.0)
     - React
     - React-Core
     - Turf
@@ -1289,9 +1295,11 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
+  - "RNCCheckbox (from `../node_modules/@react-native-community/checkbox`)"
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - "RNCPicker (from `../node_modules/@react-native-picker/picker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -1314,6 +1322,7 @@ SPEC REPOS:
     - YooMoneySessionProfiler
     - YooMoneyUI
   https://github.com/CocoaPods/Specs.git:
+    - BEMCheckBox
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -1449,12 +1458,16 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNCAsyncStorage:
     :path: "../node_modules/@react-native-async-storage/async-storage"
+  RNCCheckbox:
+    :path: "../node_modules/@react-native-community/checkbox"
   RNCClipboard:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNCPicker:
     :path: "../node_modules/@react-native-picker/picker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBMessaging:
@@ -1483,6 +1496,7 @@ CHECKOUT OPTIONS:
     :tag: 6.13.0
 
 SPEC CHECKSUMS:
+  BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
@@ -1496,14 +1510,14 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 4d52717dd820707cc4eadec5eb981b4832ec8d5d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   FunctionalSwift: b65b0a7ddde7f11a11e794f79a1e8009724ed0bd
-  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
+  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 5420539d016f368cd27e008f65f777abd6098c56
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  MapboxCommon: 20466d839cc43381c44df09d19f7f794b55b9a93
-  MapboxCoreMaps: c21f433decbb295874f0c2464e492166db813b56
-  MapboxMaps: c3b36646b9038706bbceb5de203bcdd0f411e9d0
+  MapboxCommon: 768660d6fca8193529ecf82eb6f5f9ae7a5acdf9
+  MapboxCoreMaps: be412ff97b16aa7820922c818115a9a0d8211caa
+  MapboxMaps: 87ef0003e6db46e45e7a16939f29ae87e38e7ce2
   MapboxMobileEvents: de50b3a4de180dd129c326e09cd12c8adaaa46d6
   MMKV: 817ba1eea17421547e01e087285606eb270a8dcb
   MMKVCore: af055b00e27d88cd92fad301c5fecd1ff9b26dd9
@@ -1559,13 +1573,15 @@ SPEC CHECKSUMS:
   React-utils: 2d25ca0a6e635c095bc5e67ac1202c7939ec4af3
   ReactCommon: 8564d71cf76b1715740cb8bdc5b382d1ddd12dd1
   RNCAsyncStorage: 618d03a5f52fbccb3d7010076bc54712844c18ef
+  RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
   RNCClipboard: 0a720adef5ec193aa0e3de24c3977222c7e52a37
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNCPicker: b18aaf30df596e9b1738e7c1f9ee55402a229dca
+  RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFBApp: 91311b27bc9a33e23b76a62825afd1635501018a
   RNFBMessaging: e86747e8bba79cb464f3f1f22aaae19f38ee7397
   RNGestureHandler: 28bdf9a766c081e603120f79e925b72817c751c6
-  rnmapbox-maps: 1cf95c55cff75168080ceabef1e498492dbe4740
+  rnmapbox-maps: 94805ca4f7c55c8d110f8c390253d6417c8db2a9
   RNPermissions: f418ac274bf5290e91b4a82d2dd98861a3667d35
   RNReanimated: 1873432b0b86d0224bbe19aacea7ad8eef4e7518
   RNScreens: 2b73f5eb2ac5d94fbd61fa4be0bfebd345716825
@@ -1574,7 +1590,7 @@ SPEC CHECKSUMS:
   SPaySDK: 1015f868b6e9255457704cd6a3d051829263661a
   Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
   YandexMobileMetrica: f5368ee93f286c793d73b58da00929babfc897c1
-  Yoga: ff0382b894475dba0b4d2a5fda860bfee5a9afad
+  Yoga: 08cd7601462818c4985bda7b205b9e6a92a7e66a
   YooKassaPayments: b2a8cde4c2eeac5f8b5b73131fdb7ff17ffc09f0
   YooKassaPaymentsApi: a13865624dc72513416ee73b80b8fe5682b9525a
   YooKassaWalletApi: cbb352525bfe89fd2ad52635062f79f8bbbc23ec
@@ -1584,4 +1600,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2d7f4a323edc1eadb777601a9876037f65de41bc
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.13.0

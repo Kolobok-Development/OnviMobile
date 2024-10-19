@@ -1,9 +1,9 @@
-import {appContent} from '../../../api/clients/AppContent';
 import {
   Campaign,
   CampaignsSuccessRequestPayload,
   CampaignSuccessRequestPayload,
-} from '../../../api/AppContent/types.ts';
+} from '../../../types/api/app/types.ts';
+import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
 enum CAMPAIGN {
   GET_CAMPAIGN_LIST = 'api/sampaigns',
@@ -25,7 +25,7 @@ export async function getCampaignList(
     }
   }
 
-  const response = await appContent.get<CampaignsSuccessRequestPayload>(
+  const response = await contentApiInstance.get<CampaignsSuccessRequestPayload>(
     CAMPAIGN.GET_CAMPAIGN_LIST,
     {params},
   );
@@ -49,7 +49,7 @@ export async function getCampaignById(
     }
   }
 
-  const response = await appContent.get<CampaignSuccessRequestPayload>(
+  const response = await contentApiInstance.get<CampaignSuccessRequestPayload>(
     CAMPAIGN.GET_CAMPAIGN_BY_ID + `/${id}`,
     {params},
   );

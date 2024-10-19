@@ -3,28 +3,20 @@ import {useEffect, useState} from 'react';
 import messaging, {
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
+import useStore from '../../state/store.ts';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {
-  console.log(
-    'Message handled in the background!',
-    JSON.stringify(remoteMessage, null, 2),
-  );
-});
+messaging().setBackgroundMessageHandler(async remoteMessage => {});
 
 const RemoteNotifications = () => {
   const [enabled, setEnabled] = useState(false);
-  const [token, setToken] = useState('');
+  const {setFcmToken} = useStore();
 
   useEffect(() => {
-    console.log('INITIALIZING NOTIFICATION SERVICE ---->');
     async function requestUserPermission() {
       const authStatus = await messaging().requestPermission();
       const enabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-
-      console.log('AUTHORIZED NOTIFICATION STATUS ---->', authStatus);
-      console.log('PROVISIONAL NOTIFICATION STATUS ---->', enabled);
 
       if (enabled) {
         setEnabled(true);
@@ -55,24 +47,16 @@ const RemoteNotifications = () => {
       return;
     }
 
-    console.log(JSON.stringify(remoteMessage, null, 2));
-
     if (remoteMessage.data?.postId) {
       // navigate to this post... - we need to think about it...
     }
   };
 
   const getDeviceToken = async () => {
-    console.log('GENERATING TOKEN...');
     await messaging().registerDeviceForRemoteMessages();
     const newToken = await messaging().getToken();
-    console.log(`NEW TOKEN ----> ${newToken}`);
-    setToken(newToken);
+    setFcmToken(newToken);
   };
-
-  useEffect(() => {
-    console.log('Notification Token ===> :  ', token);
-  }, [token]);
 
   return null;
 };

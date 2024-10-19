@@ -9,10 +9,9 @@ import {
 } from 'react-native';
 import {dp} from '@utils/dp';
 import {BackButton} from '@components/BackButton';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button} from '@styled/buttons/Button';
 import {useNavigation} from '@react-navigation/core';
-import {useApplyPromotion} from '../../api/hooks/useApiPromotion';
 import useSWRMutation from 'swr/mutation';
 import {apply} from '@services/api/promotion';
 import {IApplyPromotionRequest} from '../../types/api/promotion/req/IApplyPromotionRequest.ts';

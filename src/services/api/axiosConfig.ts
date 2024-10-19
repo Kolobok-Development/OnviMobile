@@ -2,9 +2,8 @@ import axios, {InternalAxiosRequestConfig} from 'axios';
 import {STRAPI_URL} from '@env';
 const PREFIX = '/api/v2/';
 
-import {getToken} from '../state/store';
-
-import {isValidStorageData} from '@context/AuthContext/index.validator';
+import {isValidStorageData} from '@services/validation/index.validator.ts';
+import {getToken} from '../../state/store.ts';
 
 const userApiInstance = axios.create({
   baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,

@@ -22,6 +22,9 @@ import OTPTextView from 'react-native-otp-textinput';
 import Clipboard from '@react-native-clipboard/clipboard';
 import {GREY, YELLOW} from '@utils/colors.ts';
 import CodeInput from '@styled/inputs/CodeInput';
+import CheckBox from '@react-native-community/checkbox';
+import {openWebURL} from '@utils/openWebUrl.ts';
+import {OtpInput} from 'react-native-otp-entry';
 
 interface VerificationProps {
   route: any;
@@ -56,6 +59,10 @@ const Verification = ({route}: VerificationProps) => {
   const [error, setError] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  //Registration
+  const [isPersonalDataCollectionAccepted, setPersonalDataCollectionAccepted] =
+    useState(true);
 
   const verifyCode = async (otp: string) => {
     setLoading(true);
@@ -156,18 +163,42 @@ const Verification = ({route}: VerificationProps) => {
         {/*  tintColor={YELLOW}*/}
         {/*/>*/}
         {/*<CodeInput error={error} setError={setError} verify={verifyCode} />*/}
-        <CodeInput
-          ref={inputRef}
-          inputCount={4}
-          defaultValue={''}
-          inputCellLength={1}
-          handleTextChange={setOtpInput}
-          tintColor={YELLOW}
-          offTintColor={GREY}
-          containerStyle={{
-            marginTop: '5%',
+        {/*<CodeInput*/}
+        {/*  ref={inputRef}*/}
+        {/*  inputCount={4}*/}
+        {/*  defaultValue={''}*/}
+        {/*  inputCellLength={4}*/}
+        {/*  handleTextChange={setOtpInput}*/}
+        {/*  tintColor={YELLOW}*/}
+        {/*  offTintColor={GREY}*/}
+        {/*  containerStyle={{*/}
+        {/*    marginTop: '5%',*/}
+        {/*  }}*/}
+        {/*  handeCallTextChange={handleCellTextChange}*/}
+        {/*/>*/}
+        <OtpInput
+          numberOfDigits={4}
+          focusColor={YELLOW}
+          onFilled={otp => setOtpInput(otp)}
+          textInputProps={{
+            accessibilityLabel: 'One-Time Password',
           }}
-          handeCallTextChange={handleCellTextChange}
+          type={'numeric'}
+          theme={{
+            containerStyle: {
+              flexDirection: 'row',
+              paddingLeft: dp(20),
+              paddingRight: dp(40),
+              marginTop: dp(20),
+              justifyContent: 'space-evenly',
+              alignItems: 'center',
+              flex: 1,
+            },
+            pinCodeContainerStyle: {
+              width: dp(60),
+              height: '55%',
+            },
+          }}
         />
         <View style={{paddingTop: dp(100)}}>
           <Button
@@ -189,7 +220,13 @@ const Verification = ({route}: VerificationProps) => {
       <View style={styles.bottomContainer} />
       <Popup background="white" ref={popRef}>
         <View style={styles.popupHeader}>
-          <Image source={require('../../assets/icons/terms.png')} />
+          <CheckBox
+            value={isPersonalDataCollectionAccepted}
+            onValueChange={newValue =>
+              setPersonalDataCollectionAccepted(newValue)
+            }
+            style={styles.checkbox}
+          />
           <Text style={styles.termsText}>
             Даю согласие на обработку персональных данных
           </Text>
@@ -198,6 +235,7 @@ const Verification = ({route}: VerificationProps) => {
           <Button
             label="ЗАРЕГИСТРИРОВАТЬСЯ"
             color="blue"
+            disabled={!isPersonalDataCollectionAccepted}
             onClick={() => {
               setLoading(true);
               register(otpInput, route.params.phone, true, true);
@@ -214,7 +252,12 @@ const Verification = ({route}: VerificationProps) => {
           </View>
           <View style={styles.infoLine}>
             <Text
-              style={{...styles.termsText, textDecorationLine: 'underline'}}>
+              style={{...styles.termsText, textDecorationLine: 'underline'}}
+              onPress={() =>
+                openWebURL(
+                  'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
+                )
+              }>
               программы лояльности
             </Text>
           </View>
@@ -309,6 +352,7 @@ const styles = StyleSheet.create({
     width: '65%',
     gap: 10,
   },
+  checkbox: {},
 });
 
 export {Verification};

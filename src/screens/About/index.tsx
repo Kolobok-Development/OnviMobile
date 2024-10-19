@@ -38,7 +38,7 @@ const About = () => {
           <Text style={{...styles.title}}>Onvi</Text>
           <View style={styles.section}>
             <Text style={{...styles.sectionTitle}}>Версия приложения</Text>
-            <Text style={{...styles.text}}>1.0.4</Text>
+            <Text style={{...styles.text}}>1.0.0</Text>
           </View>
           <View style={styles.section}>
             <Text style={{...styles.sectionTitle}}>
@@ -69,7 +69,7 @@ const About = () => {
             elevation: 2,
             padding: dp(10),
           }}
-          onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
+          onPress={() => Linking.openURL('https://t.me/OnviSupportBot')}>
           <Text
             style={{
               fontSize: dp(14),

@@ -1,6 +1,5 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-
-import {Partner} from 'src/api/AppContent/types';
+import {Partner} from './api/app/types.ts';
 
 export type DrawerParamList = {
   Главная: undefined; // No params needed for Home

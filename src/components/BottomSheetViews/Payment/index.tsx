@@ -32,18 +32,19 @@ import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
 import {PaymentConfig} from 'src/types/PaymentConfig';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {create as createOrderApi, pingPos} from '../../../api/order';
-import {create} from '../../../api/payment';
-import {useValidatePromoCode} from '../../../api/hooks/useApiOrder.ts';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
 import {X} from 'react-native-feather';
 import {GREY} from '@utils/colors.ts';
 import useSWRMutation from 'swr/mutation';
-import { create as orderCreate, pingPos, validatePromoCode } from "@services/api/order";
+import {
+  create as orderCreate,
+  pingPos,
+  validatePromoCode,
+} from '@services/api/order';
 import Toast from 'react-native-toast-message';
-import { createPayment, getCredentials } from "@services/api/payment";
+import {createPayment, getCredentials} from '@services/api/payment';
 
 import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
 
@@ -84,7 +85,7 @@ const Payment = () => {
       setShowPromocodeModal(false);
       setPromoError(null);
     }
-  }, [data, showPromocodeModal]);
+  }, [data]);
 
   const applyPromocode = async () => {
     const body = {
@@ -114,16 +115,20 @@ const Payment = () => {
   };
 
   const createOrder = async () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
-    if (!order.posId || !order.bayNumber) return;
+    if (!order.posId || !order.bayNumber) {
+      return;
+    }
 
     try {
       setBtnLoader(true);
       const paymentConfig = await getCredentials();
 
-      const apiKey: string = paymentConfig.apiKey;
-      const storeId: string = paymentConfig.storeId;
+      const apiKey: string = paymentConfig.apiKey.toString();
+      const storeId: string = paymentConfig.storeId.toString();
       const discountSum: number = (order.sum! * discount) / 100;
       const realSum: number = Math.max(
         order.sum! - discountSum - usedPoints,
@@ -161,7 +166,6 @@ const Payment = () => {
       };
 
       const {token, paymentMethodType} = await tokenize(paymentConfigParams);
-
       if (!token) {
         setError('Что то пошло не так ...');
         setBtnLoader(false);
@@ -198,7 +202,6 @@ const Payment = () => {
 
       orderCreate(createOrderRequest)
         .then(data => {
-          console.log(JSON.stringify(data, null, 2));
           if (data.sendStatus === SendStatus.SUCCESS) {
             loadUser().then(() => {
               setOrderSatus(OrderStatus.END);
@@ -213,10 +216,8 @@ const Payment = () => {
       setTimeout(() => {
         setOrderSatus(null);
         navigateBottomSheet('Main', {});
-        // route.params.bottomSheetRef.current.scrollTo(MIN_TRANSLATE_Y)
       }, 5000);
     } catch (error) {
-      console.log('Error:', JSON.stringify(error));
       setOrderSatus(null);
       setBtnLoader(false);
       setError('Что то пошло не так ...');
@@ -225,7 +226,9 @@ const Payment = () => {
   };
 
   const applyPoints = () => {
-    if (!user || !order.sum) return;
+    if (!user || !order.sum) {
+      return;
+    }
     let leftToPay = order.sum - (order.sum * discount) / 100;
 
     if (user.cards!.balance >= leftToPay) {

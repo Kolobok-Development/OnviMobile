@@ -22,9 +22,10 @@ import {dp} from '../../../../utils/dp';
 import {useNavigation} from '@react-navigation/native';
 
 // types
-import {Price} from '../../../../api/AppContent/types';
+
 
 import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+import { Price } from "../../../../types/api/app/types.ts";
 
 interface PortalLaunchProps {
   isOpened: boolean;

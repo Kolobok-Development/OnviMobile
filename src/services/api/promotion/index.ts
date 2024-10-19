@@ -1,7 +1,7 @@
 import {IApplyPromotionRequest} from '../../../types/api/promotion/req/IApplyPromotionRequest.ts';
 import {IApplyPromotionResponse} from '../../../types/api/promotion/res/IApplyPromotionResponse.ts';
-import {userApiInstance} from '../../../api/axiosConfig.ts';
 import {IUserApiResponse} from '../../../types/api/common/IUserApiResponse.ts';
+import {userApiInstance} from '@services/api/axiosConfig.ts';
 
 enum PROMOTION {
   APPLY_URL = '/promotion/apply',

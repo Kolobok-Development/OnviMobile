@@ -228,7 +228,7 @@ const CustomDrawerContent = ({
           />
 
           <TouchableOpacity
-            onPress={() => Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')}>
+            onPress={() => Linking.openURL('https://t.me/OnviSupportBot')}>
             <Text
               // eslint-disable-next-line react-native/no-inline-styles
               style={{

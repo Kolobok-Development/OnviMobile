@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
-import {useGetCampaignHistory} from '../../api/hooks/useApiUser';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
 import {PromoCard} from '@components/PromoCard';
@@ -23,7 +22,6 @@ import PromosPlaceholder from './PromosPlaceholder';
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 const Promos = () => {
-
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
   const isLoading = false;

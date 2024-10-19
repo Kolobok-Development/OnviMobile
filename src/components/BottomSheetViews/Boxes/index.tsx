@@ -8,7 +8,6 @@ import {BoxesSlide} from '@components/Boxes/BoxesSlide';
 import {BusinessHeader} from '@components/Business/Header';
 
 import {dp} from '../../../utils/dp';
-import {Price} from '../../../api/AppContent/types';
 import {CheckBox} from '@styled/buttons/CheckBox';
 
 import useStore from '../../../state/store';
@@ -17,6 +16,7 @@ import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
 } from 'src/types/BottomSheetNavigation';
+import { Price } from "../../../types/api/app/types.ts";
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();

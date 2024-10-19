@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import {dp} from '../../utils/dp';
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 import useStore from '../../state/store';
 import {formatPhoneNumber} from '../../utils/phoneFormat';
 import {Button} from '@styled/buttons';
@@ -22,7 +22,7 @@ import {useNavigation} from '@react-navigation/native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import Switch from '@styled/buttons/CustomSwitch';
 import {AvatarEnum} from '../../types/AvatarEnum.ts';
-import {update} from '@services/api/user';
+import {update, updateAllowNotificationSending} from '@services/api/user';
 import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequest.ts';
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
@@ -43,9 +43,8 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser} = useStore();
+  const {user, signOut, loadUser, deleteUser} = useStore();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
-
 
   const initialUserName = user?.name || '';
   const initialEmail = user?.email || '';
@@ -59,7 +58,7 @@ const Settings = () => {
   const [userName, setUserName] = useState(initialUserName);
   const [email, setEmail] = useState(initialEmail);
   const [phone, setPhone] = useState(initialPhone);
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState((user?.isNotifications ?? 0) === 1);
 
   const [selectedAvatar, setSelectedAvatar] = useState<
     'both.jpg' | 'female.jpg' | 'male.jpg'
@@ -80,6 +79,17 @@ const Settings = () => {
       },
     },
   );
+
+  const {trigger: notificationTrigger, isMutating: isNotifcationMutating} =
+    useSWRMutation('updateNotificationStatys', (key, {arg}: {arg: boolean}) =>
+      updateAllowNotificationSending(arg),
+    );
+
+  useEffect(() => {
+    notificationTrigger(toggle)
+      .then(() => console.log('Success'))
+      .catch(err => console.log(err));
+  }, [toggle]);
 
   const handleClosePress = () => {
     setEditing(false);
@@ -333,6 +343,7 @@ const Settings = () => {
                     <Switch
                       value={toggle}
                       onValueChange={() => setToggle(!toggle)}
+                      disabled={isNotifcationMutating}
                       activeText={''}
                       inActiveText={''}
                       backgroundActive="#000"
@@ -385,7 +396,7 @@ const Settings = () => {
                   <TouchableOpacity
                     style={[styles.row, styles.rowFirst]}
                     onPress={() =>
-                      Linking.openURL('https://t.me/+zW5dp29k0LYxZTUy')
+                      Linking.openURL('https://t.me/OnviSupportBot')
                     }>
                     <Text style={styles.rowLabel}>Сообщить о проблеме</Text>
                     <Image

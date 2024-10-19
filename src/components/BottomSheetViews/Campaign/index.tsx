@@ -4,7 +4,7 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {useRoute} from '@react-navigation/native';
 
 import React, {useEffect, useState} from 'react';
-import {Campaign as CampaignType} from '../../../api/AppContent/types';
+import {Campaign as CampaignType} from '../../../types/api/app/types.ts';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 

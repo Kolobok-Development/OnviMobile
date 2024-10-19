@@ -1,5 +1,5 @@
-import {BusinessSuccessRequestPayload} from '../../../api/AppContent/types.ts';
-import {appContent} from '../../../api/clients/AppContent';
+import {BusinessSuccessRequestPayload} from 'src/types/api/app/types';
+import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
 enum POS {
   GET_POS_LIST = '/api/carwash',
@@ -8,7 +8,7 @@ enum POS {
 export async function getPOSList(query: {
   [key: string]: string;
 }): Promise<BusinessSuccessRequestPayload> {
-  const response = await appContent.get<BusinessSuccessRequestPayload>(
+  const response = await contentApiInstance.get<BusinessSuccessRequestPayload>(
     POS.GET_POS_LIST,
     {
       params: query,

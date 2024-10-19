@@ -1,15 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {useNavigation} from '@react-navigation/native';
 import {Button} from '@styled/buttons';
-import {useBusiness} from '../../../api/hooks/useAppContent';
 import {cloneDeep} from 'lodash';
-
-import {getCarWashes} from '../../../api/AppContent/appContent';
-
 import useStore from '../../../state/store';
-import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
 import useSWRMutation from 'swr/mutation';
 
@@ -129,7 +124,7 @@ const Filters = () => {
   const reset = async () => {
     const filtersQuery = generateQuery({});
     setSelectedFilters({});
-    getCarWashes({filter: filtersQuery}).then((data: any) => {
+    getPOSList({filter: filtersQuery}).then((data: any) => {
       setFilters({});
       setPosList(data.businessesLocations);
       navigation.navigate('Main', {});

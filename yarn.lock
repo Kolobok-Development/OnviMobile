@@ -1641,6 +1641,11 @@
   resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.14.1.tgz#835f82fc86881a0808a8405f2576617bb5383554"
   integrity sha512-SM3el0A28SwoeJljVNhF217o0nI4E7RfalLmuRQcT1/7tGcxUjgFa3jyrEndYUct8/uxxK5EUNGUu1YEDqzxqw==
 
+"@react-native-community/checkbox@^0.5.17":
+  version "0.5.17"
+  resolved "https://registry.yarnpkg.com/@react-native-community/checkbox/-/checkbox-0.5.17.tgz#80dd335ca5c61ac2ca4525a21d8fef3f7a021ef7"
+  integrity sha512-ZZx/eOH3SIxBg+hvA2zRd7lX5zPQEWcZU8C8Dn7WLdpJkiTkPmIUDFHWrmzxCnwZcyoD+BIt6gUZPKGGb9WmeQ==
+
 "@react-native-community/cli-clean@12.3.2":
   version "12.3.2"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-clean/-/cli-clean-12.3.2.tgz#d4f1730c3d22d816b4d513d330d5f3896a3f5921"
@@ -2061,10 +2066,10 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@rnmapbox/maps@10.1.9":
-  version "10.1.9"
-  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.1.9.tgz#a376e4e183de6668ab271f8cdb3c0a03d644c8e8"
-  integrity sha512-ahup003PT3z2zymlV8g5Bs9Ht/fMrugz00AomZ787iJzl6J5FcKJ9/6ZpMj5Rra7dpRoUi6r35SljC/F0XZ8Sw==
+"@rnmapbox/maps@10.1.24":
+  version "10.1.24"
+  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.1.24.tgz#9f9c2d9df96a900d5eb4de012509084135d13574"
+  integrity sha512-3l3WV8rnK28InMl5rVjtO4XxK/x2aHV4qDp3BGlNU8a+lCIF0fR3Dw3ChukgV2dszxjS7pX6OHtmkng6yoc0Tw==
   dependencies:
     "@turf/along" "6.5.0"
     "@turf/distance" "6.5.0"
@@ -6668,6 +6673,11 @@ react-native-country-picker-modal@^2.0.0:
     prop-types "15.7.2"
     react-async-hook "3.6.1"
 
+react-native-device-info@^13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/react-native-device-info/-/react-native-device-info-13.1.0.tgz#e5076088e7f1eddba5cf5693ab46210946382e3f"
+  integrity sha512-tje+yRDG4ue2K7uC862IhxX7wFoufwozSdqLuzLKA8X1b4zgfF6iXId0Da8c2qS6FtaMr+vTsBFrY7Gxo1wTew==
+
 react-native-dotenv@^3.4.9:
   version "3.4.9"
   resolved "https://registry.yarnpkg.com/react-native-dotenv/-/react-native-dotenv-3.4.9.tgz#621c5b0c1d0c5c7f569bfe5a1d804bec7885c010"
@@ -6747,6 +6757,11 @@ react-native-mmkv@^2.12.2:
   version "2.12.2"
   resolved "https://registry.yarnpkg.com/react-native-mmkv/-/react-native-mmkv-2.12.2.tgz#4bba0f5f04e2cf222494cce3a9794ba6a4894dee"
   integrity sha512-6058Aq0p57chPrUutLGe9fYoiDVDNMU2PKV+lLFUJ3GhoHvUrLdsS1PDSCLr00yqzL4WJQ7TTzH+V8cpyrNcfg==
+
+react-native-otp-entry@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.yarnpkg.com/react-native-otp-entry/-/react-native-otp-entry-1.7.2.tgz#4d0d2d255b8b3f7c99fcc414acd9b19b4737d862"
+  integrity sha512-95QQjBl79E/GKNBg9hY3Vib4L25hBEPm4uOX1WA3hc2SJo0dFWn0hUMgtAnCeZdm1MYJQwvpBwTE1IwbuixPRA==
 
 react-native-otp-textinput@^1.1.6:
   version "1.1.6"

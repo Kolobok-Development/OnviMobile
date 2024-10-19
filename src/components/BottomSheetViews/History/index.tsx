@@ -21,7 +21,6 @@ import {Settings} from 'react-native-feather';
 
 import {avatarSwitch} from '@screens/Settings';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
-import {useGetOrderHistory} from '../../../api/hooks/useApiUser.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 

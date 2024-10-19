@@ -1,5 +1,4 @@
-import {IUser} from '../../../types/models/User.ts';
-import {userApiInstance} from '../../../api/axiosConfig.ts';
+import {IUser, Meta} from '../../../types/models/User.ts';
 import {IUserApiResponse} from '../../../types/api/common/IUserApiResponse.ts';
 import {IGetTariffResponse} from '../../../types/api/user/res/IGetTariffResponse.ts';
 import {IGetAccountHistoryRequestParams} from '../../../types/api/user/req/IGetAccountHistoryRequestParams.ts';
@@ -7,6 +6,9 @@ import {IGetHistoryResponse} from '../../../types/api/user/res/IGetHistoryRespon
 import {IGetPromoHistoryResponse} from '../../../types/api/user/res/IGetPromoHistoryResponse.ts';
 import {IUpdateAccountRequest} from '../../../types/api/user/req/IUpdateAccountRequest.ts';
 import {IUpdateAccountResponse} from '../../../types/api/user/res/IUpdateAccountResponse.ts';
+import {userApiInstance} from '@services/api/axiosConfig.ts';
+import {ICreateUserMetaRequest} from '../../../types/api/user/req/ICreateUserMetaRequest.ts';
+import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMetaRequest.ts';
 
 enum ACCOUNT {
   GET_MET_URL = '/account/me',
@@ -14,6 +16,9 @@ enum ACCOUNT {
   GET_TARIFF_URL = '/account/tariff',
   GET_PROMOTION_HISTORY_URL = '/account/promotion',
   UPDATE_ACCOUNT_URL = '/account',
+  UPDATE_NOTIFICATION_URL = '/account/notifications',
+  CREATE_ACCOUNT_META = '/account/meta/create',
+  UPDATE_ACCOUNT_META = '/account/meta/update',
 }
 
 export async function getMe(): Promise<IUser> {
@@ -56,6 +61,43 @@ export async function update(body: IUpdateAccountRequest): Promise<number> {
   >(ACCOUNT.UPDATE_ACCOUNT_URL, body);
 
   return response.status;
+}
+
+export async function updateAllowNotificationSending(
+  notification: boolean,
+): Promise<void> {
+  await userApiInstance.patch(ACCOUNT.UPDATE_NOTIFICATION_URL, {notification});
+}
+
+export async function createUserMeta(data: Meta): Promise<any> {
+  const body: ICreateUserMetaRequest = {
+    clientId: data.clientId,
+    deviceId: data.deviceId,
+    model: data.model,
+    name: data.name,
+    platform: data.platform,
+    platformVersion: data.platformVersion,
+    manufacturer: data.manufacturer,
+    appToken: data.appToken,
+  };
+  const response = await userApiInstance.post(
+    ACCOUNT.CREATE_ACCOUNT_META,
+    body,
+  );
+  console.log(JSON.stringify(response, null, 2));
+  return response;
+}
+
+export async function updateUserMeta(data: Meta): Promise<any> {
+  const body: IUpdateUserMetaRequest = {
+    ...data,
+  };
+  const response = await userApiInstance.post(
+    ACCOUNT.UPDATE_ACCOUNT_META,
+    body,
+  );
+  console.log(JSON.stringify(response, null, 2));
+  return response;
 }
 
 export async function deleteAccount(): Promise<number> {

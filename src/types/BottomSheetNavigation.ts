@@ -1,9 +1,7 @@
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-
-// Define your root param list
-import {Price, Tag, Campaign, NewsPost} from '../api/AppContent/types';
+import {Campaign, NewsPost, Price, Tag} from './api/app/types.ts';
 
 export type RootStackParamList = {
   Main: {
