@@ -31,8 +31,6 @@ import {getOrderHistory} from '@services/api/user';
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const History = () => {
-  const [tab, setTab] = useState(true);
-
   const {user} = useStore();
 
   const {data, isLoading, mutate} = useSWR(['getOrderHistory'], () =>
@@ -47,17 +45,6 @@ const History = () => {
   const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
-
-  useEffect(() => {
-    if (
-      route &&
-      route.params &&
-      route.params.type &&
-      route.params.type === 'history'
-    ) {
-      setTab(false);
-    }
-  }, [route.params.type]);
 
   return (
     <View style={styles.container}>
@@ -154,6 +141,7 @@ const History = () => {
             keyExtractor={(_order, index) => index.toString()}
             onRefresh={mutate}
             showsVerticalScrollIndicator={false}
+            /* eslint-disable-next-line react/no-unstable-nested-components */
             ListEmptyComponent={() => (
               <>
                 <EmptyPlaceholder text="У вас пока нет заказов" />

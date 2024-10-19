@@ -27,23 +27,23 @@ const Filter = (props: IFilterProp) => {
     let currentState = [...selectedFilters];
     if (
       selectedFilters.some(filter => {
-        return filter.id == id && filter.values.includes(value);
+        return filter.id === id && filter.values.includes(value);
       })
     ) {
       currentState.filter(item => {
-        if (item.id == id) {
+        if (item.id === id) {
           item.values.splice(item.values.indexOf(value), 1);
         }
       });
     } else if (
       !selectedFilters.some(filter => {
-        return filter.id == id;
+        return filter.id === id;
       })
     ) {
       currentState = [...currentState, selectedItem];
     } else {
       currentState.filter(item => {
-        if (item.id == id) {
+        if (item.id === id) {
           item.values.push(value);
         }
       });
@@ -54,16 +54,16 @@ const Filter = (props: IFilterProp) => {
 
   // @ts-ignore
   const renderList = ({item, section}) => {
-    const {title, ...rest} = section;
+    const {title} = section;
     return (
       <View style={styles.item}>
         <Text style={styles.itemTitle}>{item.name}</Text>
         <CheckBox
           key={item.code}
           checked={selectedFilters.some(filter => {
-            return filter.id == title.id && filter.values.includes(item.code);
+            return filter.id === title.id && filter.values.includes(item.code);
           })}
-          onClick={newValue => onFilterSelected(title.id, item.code)}
+          onClick={() => onFilterSelected(title.id, item.code)}
         />
       </View>
     );
@@ -73,13 +73,14 @@ const Filter = (props: IFilterProp) => {
     <SafeAreaView style={styles.container}>
       <SectionList
         sections={props.data}
-        keyExtractor={(item, index) => item.code}
+        keyExtractor={item => item.code}
         renderSectionHeader={({section: {title}}) => (
           <Text style={styles.header} key={title.id}>
             {title.name}
           </Text>
         )}
         renderItem={renderList}
+        /* eslint-disable-next-line react/no-unstable-nested-components */
         ItemSeparatorComponent={() => <View style={styles.itemDevider}></View>}
       />
     </SafeAreaView>

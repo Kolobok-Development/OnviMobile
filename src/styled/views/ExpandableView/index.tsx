@@ -1,5 +1,5 @@
 import React, {PropsWithChildren, useState} from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 import {ArrowUpRight} from 'react-native-feather';

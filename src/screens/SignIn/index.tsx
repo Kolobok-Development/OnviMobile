@@ -47,11 +47,7 @@ const SignIn = () => {
           Мы отправили на него код активации
         </Text>
 
-        <PhoneInp
-          phoneNumber={phone}
-          setPhoneNumber={setPhone}
-          label="Телефон"
-        />
+        <PhoneInp phoneNumber={phone} setPhoneNumber={setPhone} />
         <View style={{paddingTop: dp(100)}}>
           <Button
             label="ДАЛЬШЕ"

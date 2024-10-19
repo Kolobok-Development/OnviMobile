@@ -63,7 +63,6 @@ const PromoModal: React.FC<IPromoModalProps> = ({
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <View style={styles.header}>
-            <View></View>
             <Text style={styles.modalTitle}>{title}</Text>
             <TouchableOpacity onPress={onClose}>
               <X stroke={'rgba(0, 0, 0, 0.5)'} />

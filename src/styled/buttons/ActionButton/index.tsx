@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {dp} from '../../../utils/dp';
 import {StyleSheet, TouchableOpacity, View, Text} from 'react-native';
 import {Minus, Plus} from 'react-native-feather';

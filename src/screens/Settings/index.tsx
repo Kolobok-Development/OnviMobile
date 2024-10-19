@@ -57,7 +57,6 @@ const Settings = () => {
   const [editing, setEditing] = useState(false);
   const [userName, setUserName] = useState(initialUserName);
   const [email, setEmail] = useState(initialEmail);
-  const [phone, setPhone] = useState(initialPhone);
   const [toggle, setToggle] = useState((user?.isNotifications ?? 0) === 1);
 
   const [selectedAvatar, setSelectedAvatar] = useState<
@@ -240,7 +239,7 @@ const Settings = () => {
             <Text style={{padding: dp(10)}}>📞</Text>
             <BottomSheetTextInput
               editable={false}
-              value={formatPhoneNumber(phone)}
+              value={formatPhoneNumber(initialPhone)}
               placeholder={'Почта'}
               style={{
                 ...styles.bottomSheetTextInput,
@@ -295,7 +294,7 @@ const Settings = () => {
               {userName}
             </Text>
             <Text style={{...styles.text, marginTop: dp(5)}}>
-              {formatPhoneNumber(phone)}
+              {formatPhoneNumber(initialPhone)}
             </Text>
             <Text style={{...styles.text}}>{email}</Text>
             <View

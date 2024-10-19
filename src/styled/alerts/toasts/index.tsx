@@ -1,8 +1,10 @@
+import React from 'react';
+
 import {ToastConfig, ToastConfigParams} from 'react-native-toast-message';
 import {Text, View} from 'react-native';
 
 export const toastConfig: ToastConfig = {
-  customBaseToast: ({text1, props}: ToastConfigParams<any>) => (
+  customBaseToast: ({text1}: ToastConfigParams<any>) => (
     <View
       style={{
         display: 'flex',
@@ -24,7 +26,7 @@ export const toastConfig: ToastConfig = {
       </Text>
     </View>
   ),
-  customSuccessToast: ({text1, props}: ToastConfigParams<any>) => (
+  customSuccessToast: ({text1}: ToastConfigParams<any>) => (
     <View
       style={{
         display: 'flex',
@@ -81,7 +83,7 @@ export const toastConfig: ToastConfig = {
       )}
     </View>
   ),
-  customInfoToast: ({text1, props}: ToastConfigParams<any>) => (
+  customInfoToast: ({text1}: ToastConfigParams<any>) => (
     <View
       style={{
         display: 'flex',

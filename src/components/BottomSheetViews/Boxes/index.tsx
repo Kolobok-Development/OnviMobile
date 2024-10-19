@@ -10,8 +10,6 @@ import {BusinessHeader} from '@components/Business/Header';
 import {dp} from '../../../utils/dp';
 import {CheckBox} from '@styled/buttons/CheckBox';
 
-import useStore from '../../../state/store';
-
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
@@ -21,8 +19,6 @@ import { Price } from "../../../types/api/app/types.ts";
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
-
-  const {setOrderDetails, orderDetails} = useStore();
 
   return (
     <GHScrollView
@@ -35,17 +31,7 @@ const Boxes = () => {
             paddingLeft: dp(22),
             paddingRight: dp(22),
           }}>
-          <BusinessHeader
-            type="empty"
-            navigation={navigation}
-            callback={() =>
-              setOrderDetails({
-                ...orderDetails,
-                bayNumber: null,
-              })
-            }
-            position="60%"
-          />
+          <BusinessHeader type="empty" />
 
           <View style={styles.middle}>
             <Text style={styles.middleText}>Выберите</Text>

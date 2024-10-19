@@ -14,3 +14,5 @@ export type DrawerParamList = {
 
 export type GeneralDrawerNavigationProp<T extends keyof DrawerParamList> =
   DrawerNavigationProp<DrawerParamList, T>;
+
+export type DrawerNavProp = DrawerNavigationProp<DrawerParamList>;

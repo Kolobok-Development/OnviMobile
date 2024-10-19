@@ -14,7 +14,6 @@ import {
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {useNavigation} from '@react-navigation/native';
 import {dp} from '../../../utils/dp';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -56,8 +55,6 @@ enum OrderStatus {
 
 const Payment = () => {
   const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
-  const navigation =
-    useNavigation<GeneralBottomSheetNavigationProp<'Payment'>>();
 
   const [btnLoader, setBtnLoader] = useState(false);
 
@@ -209,8 +206,8 @@ const Payment = () => {
             });
           }
         })
-        .catch(error => {
-          console.log(JSON.stringify(error));
+        .catch(err => {
+          console.log(JSON.stringify(err));
         });
 
       setTimeout(() => {
@@ -242,7 +239,7 @@ const Payment = () => {
 
   // Debounce function for search
   const debounce = (func: any, delay: number) => {
-    return function (...args: any) {
+    return function () {
       clearTimeout(debounceTimeout.current);
 
       debounceTimeout.current = setTimeout(() => {
@@ -310,18 +307,13 @@ const Payment = () => {
             }}
             promocode={promocode}
             handleSearchChange={handleSearchChange}
-            apply={() => debouncedSearch(promocode)}
+            apply={() => debouncedSearch()}
             promocodeError={promoError}
             fetching={isMutating}
           />
         ) : (
           <>
-            <BusinessHeader
-              type="box"
-              navigation={navigation}
-              position={'95%'}
-              box={order?.bayNumber ?? 0}
-            />
+            <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
             <Text style={styles.title}>Оплата</Text>
             <GHScrollView
               showsVerticalScrollIndicator={false}
@@ -377,7 +369,7 @@ const Payment = () => {
                     }}>
                     Ваш Cashback
                   </Text>
-                  {!user || !user.tariff || user.tariff == 0 ? (
+                  {!user || !user.tariff || user.tariff === 0 ? (
                     <View>
                       <SkeletonPlaceholder borderRadius={10}>
                         <SkeletonPlaceholder.Item

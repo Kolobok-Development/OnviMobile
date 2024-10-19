@@ -109,7 +109,7 @@ const Search = () => {
   };
 
   const doSearch = useCallback(
-    debounce(async (val: string) => {
+    debounce(async () => {
       const res = await trigger({search: val});
 
       if (res?.businessesLocations?.length > 0) {

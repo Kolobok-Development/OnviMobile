@@ -53,20 +53,7 @@ export default function DefaultLaunch() {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{paddingTop: dp(15)}} />
-      <BusinessHeader
-        navigation={navigation}
-        position={'95%'}
-        type="box"
-        box={order?.bayNumber ?? 0}
-        callback={() => {
-          setOrderDetails({
-            ...orderDetails,
-            sum: null,
-            name: null,
-            bayNumber: null,
-          });
-        }}
-      />
+      <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
       <View
         style={{
           display: 'flex',

@@ -97,38 +97,6 @@ const Main = () => {
     }
   };
 
-  const PostsPlaceholder = () => {
-    return (
-      <View>
-        <SkeletonPlaceholder borderRadius={4}>
-          <View style={styles.news}>
-            <View style={styles.leftNewsColumn}>
-              <SkeletonPlaceholder.Item
-                flex={1}
-                borderWidth={26}
-                marginTop={dp(16)}
-              />
-            </View>
-            <View style={styles.rightNewsColumn}>
-              <SkeletonPlaceholder.Item
-                flex={1}
-                marginTop={dp(16)}
-                borderRadius={25}
-                minHeight={dp(120)}
-              />
-              <SkeletonPlaceholder.Item
-                flex={1}
-                marginTop={dp(16)}
-                borderRadius={25}
-                minHeight={dp(120)}
-              />
-            </View>
-          </View>
-        </SkeletonPlaceholder>
-      </View>
-    );
-  };
-
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
       data,
@@ -396,6 +364,38 @@ const Main = () => {
         </Card>
       </View>
     </BottomSheetScrollView>
+  );
+};
+
+const PostsPlaceholder = () => {
+  return (
+    <View>
+      <SkeletonPlaceholder borderRadius={4}>
+        <View style={styles.news}>
+          <View style={styles.leftNewsColumn}>
+            <SkeletonPlaceholder.Item
+              flex={1}
+              borderWidth={26}
+              marginTop={dp(16)}
+            />
+          </View>
+          <View style={styles.rightNewsColumn}>
+            <SkeletonPlaceholder.Item
+              flex={1}
+              marginTop={dp(16)}
+              borderRadius={25}
+              minHeight={dp(120)}
+            />
+            <SkeletonPlaceholder.Item
+              flex={1}
+              marginTop={dp(16)}
+              borderRadius={25}
+              minHeight={dp(120)}
+            />
+          </View>
+        </View>
+      </SkeletonPlaceholder>
+    </View>
   );
 };
 

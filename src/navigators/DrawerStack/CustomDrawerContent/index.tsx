@@ -11,6 +11,8 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
 
+import {DrawerNavProp} from '../../../types/DrawerNavigation';
+
 interface CustomDrawerItemProps {
   label: string;
   color: string;
@@ -18,7 +20,7 @@ interface CustomDrawerItemProps {
 }
 
 interface CustomDrawerContentProps {
-  navigation: any;
+  navigation: DrawerNavProp;
   theme: any;
   user: any;
 }
@@ -26,14 +28,12 @@ interface CustomDrawerContentProps {
 const CustomDrawerItem = ({label, color, onPress}: CustomDrawerItemProps) => {
   return (
     <TouchableOpacity
-      // eslint-disable-next-line react-native/no-inline-styles
       style={{
         flexDirection: 'row',
         paddingBottom: dp(15),
       }}
       onPress={onPress}>
       <Text
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           color: color,
           fontWeight: '500',
@@ -59,7 +59,6 @@ const CustomDrawerContent = ({
     <View style={{flex: 1}}>
       <DrawerContentScrollView scrollEnabled={false}>
         <View
-          // eslint-disable-next-line react-native/no-inline-styles
           style={{
             flex: 1,
             alignItems: 'flex-start',
@@ -67,7 +66,6 @@ const CustomDrawerContent = ({
             paddingLeft: dp(20),
           }}>
           <TouchableOpacity
-            // eslint-disable-next-line react-native/no-inline-styles
             style={{
               flexDirection: 'row',
               paddingBottom: dp(15),
@@ -104,7 +102,6 @@ const CustomDrawerContent = ({
               <View style={{paddingTop: dp(20)}}>
                 <SkeletonPlaceholder borderRadius={4}>
                   <Text
-                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       paddingTop: dp(24),
                       fontStyle: 'normal',
@@ -118,14 +115,12 @@ const CustomDrawerContent = ({
               </View>
             ) : (
               <TouchableOpacity
-                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   flexDirection: 'row',
                   paddingBottom: dp(10),
                 }}
                 onPress={() => navigation.navigate('Настройки')}>
                 <Text
-                  // eslint-disable-next-line react-native/no-inline-styles
                   style={{
                     fontStyle: 'normal',
                     fontSize: dp(20),
@@ -142,7 +137,6 @@ const CustomDrawerContent = ({
               <View style={{paddingTop: dp(18)}}>
                 <SkeletonPlaceholder borderRadius={4}>
                   <Text
-                    // eslint-disable-next-line react-native/no-inline-styles
                     style={{
                       marginBottom: dp(45),
                       fontStyle: 'normal',
@@ -158,7 +152,6 @@ const CustomDrawerContent = ({
               </View>
             ) : (
               <Text
-                // eslint-disable-next-line react-native/no-inline-styles
                 style={{
                   marginBottom: dp(45),
                   fontStyle: 'normal',
@@ -204,7 +197,6 @@ const CustomDrawerContent = ({
         </View>
       </DrawerContentScrollView>
       <View
-        // eslint-disable-next-line react-native/no-inline-styles
         style={{
           padding: dp(20),
           display: 'flex',
@@ -212,7 +204,6 @@ const CustomDrawerContent = ({
           marginBottom: dp(80),
         }}>
         <View
-          // eslint-disable-next-line react-native/no-inline-styles
           style={{
             flexDirection: 'row',
             justifyContent: 'flex-start',
@@ -230,7 +221,6 @@ const CustomDrawerContent = ({
           <TouchableOpacity
             onPress={() => Linking.openURL('https://t.me/OnviSupportBot')}>
             <Text
-              // eslint-disable-next-line react-native/no-inline-styles
               style={{
                 fontSize: dp(10),
                 color: '#717586',

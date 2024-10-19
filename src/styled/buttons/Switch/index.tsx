@@ -1,12 +1,10 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import {StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
+import {StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
 import {dp} from '../../../utils/dp';
 import Animated, {
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withSpring,
-  withTiming,
 } from 'react-native-reanimated';
 
 interface IOnviSwitch {
@@ -32,19 +30,13 @@ interface IOnviSwitch {
 const OnviSwitch: React.FC<IOnviSwitch> = ({
   size = 'small',
   switchRightText = null,
-  switchLeftText = null,
   shadowProps = {},
   backgroundColor = '#000000',
   onToggle = () => {},
   position = 'absolute',
-  disabled = false,
-  overlay = false,
 }) => {
   const [active, setActive] = useState(false);
   const thumbTranslate = useSharedValue(0);
-  const progress = useDerivedValue(() => {
-    return withTiming(active ? 22 : 0);
-  });
 
   // Base styles of the switch
   const calculateBaseStyles = () => {

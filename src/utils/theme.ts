@@ -1,4 +1,4 @@
-import {YELLOW, BLUE, BLACK, BLACKTWO, GREY, WHITE} from './colors';
+import {YELLOW, BLUE, BLACK, WHITE} from './colors';
 
 export const defaultTheme = {
   mainColor: WHITE,

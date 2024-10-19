@@ -14,11 +14,11 @@ const RemoteNotifications = () => {
   useEffect(() => {
     async function requestUserPermission() {
       const authStatus = await messaging().requestPermission();
-      const enabled =
+      const isEnabled =
         authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-      if (enabled) {
+      if (isEnabled) {
         setEnabled(true);
         await getDeviceToken();
       }
@@ -28,7 +28,7 @@ const RemoteNotifications = () => {
   }, []);
 
   useEffect(() => {
-    if (!enabled) {
+    if (!isEnabled) {
       return;
     }
 

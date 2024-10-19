@@ -41,7 +41,7 @@ const Partner = () => {
   };
 
   // Function to handle confirming modal action
-  const handleConfirm = (inputValue: any) => {
+  const handleConfirm = () => {
     closeModal();
   };
 
@@ -144,7 +144,7 @@ const Partner = () => {
                       });
                       setModalVisible(true);
                     } else if (
-                      partner.attributes.integration_type == 'promo_code'
+                      partner.attributes.integration_type === 'promo_code'
                     ) {
                     }
                   }}

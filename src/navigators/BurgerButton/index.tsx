@@ -13,7 +13,6 @@ import {navigationRef} from '@navigators/BottomSheetStack';
 import useStore from '../../state/store';
 
 interface BurgerProps {
-  bottomSheetIndex?: number;
   isDrawerStack?: boolean;
   handleSheetChanges?: (index: number) => void;
 }
@@ -21,7 +20,6 @@ interface BurgerProps {
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 const BurgerButton = ({
-  bottomSheetIndex = 0,
   isDrawerStack = false,
   handleSheetChanges,
 }: BurgerProps) => {

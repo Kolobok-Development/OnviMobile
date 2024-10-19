@@ -1,16 +1,9 @@
 import React from 'react';
-import {
-  Modal as ModalView,
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {Modal as ModalView, View, Text, StyleSheet} from 'react-native';
 
 interface ModalProps {
   visible: boolean;
   onClose: () => void;
-  closeBtnHidden?: boolean;
   animationType?: 'none' | 'slide' | 'fade';
   transparent?: boolean;
   children: React.ReactNode;
@@ -23,7 +16,6 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({
   visible,
   onClose,
-  closeBtnHidden = false,
   animationType = 'slide',
   transparent = true,
   children,

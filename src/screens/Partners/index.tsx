@@ -57,7 +57,6 @@ const Partners = () => {
           <Text style={styles.name}>{partnerName}</Text>
           <Text style={styles.description}>Кэшбек на покупку от 2 500</Text>
           <CheckBox
-            width={dp(94)}
             height={dp(24)}
             disable={true}
             borderRadius={dp(69)}
@@ -93,9 +92,7 @@ const Partners = () => {
               onRefresh={mutate}
               refreshing={isLoading}
               ListEmptyComponent={() => (
-                <View>
                   <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
-                </View>
               )}
             />
           </View>

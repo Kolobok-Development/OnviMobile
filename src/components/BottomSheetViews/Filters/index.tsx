@@ -124,9 +124,9 @@ const Filters = () => {
   const reset = async () => {
     const filtersQuery = generateQuery({});
     setSelectedFilters({});
-    getPOSList({filter: filtersQuery}).then((data: any) => {
+    getPOSList({filter: filtersQuery}).then((dataRes: any) => {
       setFilters({});
-      setPosList(data.businessesLocations);
+      setPosList(dataRes.businessesLocations);
       navigation.navigate('Main', {});
     });
   };

@@ -1,3 +1,5 @@
+import React from 'react';
+
 import {dp} from '../../utils/dp';
 
 import {View} from 'react-native';

@@ -23,10 +23,7 @@ import {Balance} from '@components/Balance';
 import {Map} from '@components/Map';
 
 // Bottom Sheet Navigator
-import BottomSheet, {
-  BottomSheetHandle,
-  BottomSheetProps,
-} from '@gorhom/bottom-sheet';
+import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
 
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
@@ -87,9 +84,9 @@ const Home = ({navigation}: any) => {
         return values;
       }
 
-      const extractedFilters = useCallback(() => {
+      const extractedFilters = () => {
         return extractValues(filters);
-      }, [filters]);
+      };
 
       return (
         <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
@@ -159,10 +156,9 @@ const Home = ({navigation}: any) => {
           index={bottomSheetIndex}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
-          backgroundComponent={({style}) => (
-            <View
-              style={[style, styles.transparentBackground, styles.shadow]}
-            />
+          /* eslint-disable-next-line react/no-unstable-nested-components */
+          backgroundComponent={() => (
+            <View style={[styles.transparentBackground, styles.shadow]}></View>
           )}
           style={styles.shadow}
           topInset={0}>
@@ -177,10 +173,7 @@ const Home = ({navigation}: any) => {
         </BottomSheet>
 
         <View style={{...styles.burger}}>
-          <BurgerButton
-            bottomSheetIndex={bottomSheetIndex}
-            handleSheetChanges={handleSheetChanges}
-          />
+          <BurgerButton handleSheetChanges={handleSheetChanges} />
         </View>
         <View style={{...styles.balance}}>
           <Balance

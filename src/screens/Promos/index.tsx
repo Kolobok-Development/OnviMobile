@@ -22,6 +22,7 @@ import PromosPlaceholder from './PromosPlaceholder';
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 const Promos = () => {
+
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
   const isLoading = false;
@@ -97,9 +98,7 @@ const Promos = () => {
                     promo.promotionId.toString()
                   }
                   ListEmptyComponent={() => (
-                    <View>
                       <EmptyPlaceholder text="У вас нет активных бонусов" />
-                    </View>
                   )}
                 />
               )}

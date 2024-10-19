@@ -130,13 +130,7 @@ class CodeInput extends Component<OtpInputProps, IState> {
   };
 
   render() {
-    const {
-      containerStyle,
-      inputCount,
-      tintColor,
-      offTintColor,
-      inputCellLength,
-    } = this.props;
+    const {containerStyle, inputCount, tintColor, offTintColor} = this.props;
     const {focus} = this.state;
 
     const TextInputComponents = Array.from({length: inputCount}).map((_, i) => {

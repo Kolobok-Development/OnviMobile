@@ -41,7 +41,6 @@ const Verification = ({route}: VerificationProps) => {
   const [otpInput, setOtpInput] = useState<string>('');
   const input = useRef<OTPTextView>(null);
   const inputRef = useRef<any>(null);
-  const updateOtpText = () => input.current?.setValue(otpInput);
 
   const clear = () => inputRef.current?.clear();
 
@@ -55,8 +54,6 @@ const Verification = ({route}: VerificationProps) => {
     }
   };
 
-  const [code, setCode] = useState('');
-  const [error, setError] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -72,7 +69,6 @@ const Verification = ({route}: VerificationProps) => {
       setLoading(false);
       if (!res) {
         setLoading(false);
-        setError(true);
         Vibration.vibrate(100);
         clear();
       }
@@ -82,7 +78,6 @@ const Verification = ({route}: VerificationProps) => {
           popRef.current?.scrollTo(-500);
           break;
         case 'wrong-otp':
-          setError(true);
           setLoading(false);
           break;
         default:

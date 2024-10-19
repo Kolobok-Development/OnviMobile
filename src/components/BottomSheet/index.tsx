@@ -5,11 +5,7 @@ import React, {
   useRef,
 } from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
-import {
-  Gesture,
-  GestureDetector,
-  ScrollView,
-} from 'react-native-gesture-handler';
+import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 
 import Animated, {
   useAnimatedStyle,

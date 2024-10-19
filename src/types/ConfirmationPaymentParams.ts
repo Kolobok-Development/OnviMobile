@@ -1,4 +1,4 @@
-import { PaymentMethodTypesEnum } from "./PaymentType";
+import {PaymentMethodTypesEnum} from './PaymentType';
 
 export interface ConfirmationPaymentParams {
   confirmationUrl: string;

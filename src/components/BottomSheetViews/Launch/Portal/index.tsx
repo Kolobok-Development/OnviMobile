@@ -19,13 +19,9 @@ import {
 } from '../../../../utils/metrics';
 import {useTheme} from '@context/ThemeProvider';
 import {dp} from '../../../../utils/dp';
-import {useNavigation} from '@react-navigation/native';
 
 // types
 
-
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
-import { Price } from "../../../../types/api/app/types.ts";
 
 interface PortalLaunchProps {
   isOpened: boolean;
@@ -33,7 +29,7 @@ interface PortalLaunchProps {
 }
 
 export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
-  const {isBottomSheetOpen, setOrderDetails, orderDetails} = useStore();
+  const {orderDetails} = useStore();
 
   const colors: Array<'yellow' | 'blue' | 'grey' | 'black'> = [
     'yellow',
@@ -43,8 +39,6 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
   ];
 
   const {theme} = useTheme();
-  const navigation =
-    useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
 
   return (
     <BottomSheetScrollView
@@ -55,28 +49,15 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
       nestedScrollEnabled={true}
       scrollEnabled={isOpened}>
       <View style={{paddingTop: dp(15)}} />
-      <BusinessHeader
-        navigation={navigation}
-        position={'95%'}
-        type="box"
-        box={orderDetails?.bayNumber ?? 0}
-        callback={() => {
-          setOrderDetails({
-            ...orderDetails,
-            sum: null,
-            name: null,
-            bayNumber: null,
-          });
-        }}
-      />
+      <BusinessHeader type="box" box={orderDetails?.bayNumber ?? 0} />
       <ScrollView style={{paddingBottom: verticalScale(100)}}>
         {orderDetails &&
           orderDetails.prices &&
           orderDetails.prices.length &&
-          orderDetails.prices?.map((price: Price, i: number) => (
+          orderDetails.prices?.map((price: Price, indPrice: number) => (
             <View key={price.id}>
               <ExpandableView
-                color={colors[i]}
+                color={colors[indPrice]}
                 data={price}
                 onSelect={() => onSelect(price.name, price.cost)}>
                 <View style={{flexDirection: 'column', paddingBottom: dp(40)}}>
@@ -108,8 +89,9 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
                     }}>
                     ЧТО ВХОДИТ?
                   </Text>
-                  {price.serviceInfo.map((service, i) => (
+                  {price.serviceInfo.map((service, indService) => (
                     <Text
+                      key={'service-' + indService}
                       style={{
                         textAlign: 'center',
                         color: '#FFF',

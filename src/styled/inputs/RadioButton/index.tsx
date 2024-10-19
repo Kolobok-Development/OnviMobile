@@ -1,13 +1,7 @@
 // TODO
-import React, {CSSProperties, useState} from 'react';
+import React, {useState} from 'react';
 
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
-
-interface IRadioButton {
-  selected: boolean;
-  size?: 'medium' | 'small' | 'large';
-  style?: CSSProperties;
-}
 
 const RadioInput = () => {
   const [select, setSelect] = useState<boolean>(false);

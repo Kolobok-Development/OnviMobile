@@ -7,16 +7,11 @@ import {BLACK} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 
 interface IInput {
-  label: string;
   phoneNumber: string;
   setPhoneNumber: any;
 }
 
-const PhoneInp: React.FC<IInput> = ({
-  label,
-  phoneNumber = '',
-  setPhoneNumber,
-}) => {
+const PhoneInp: React.FC<IInput> = ({phoneNumber = '', setPhoneNumber}) => {
   const handleChangeText = (val: string) => {
     const slice = val.slice(3);
 
