@@ -30,10 +30,11 @@ import Modal from '@styled/Modal';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 import {Button} from '@styled/buttons';
-import { Campaign } from "../../../types/api/app/types.ts";
+import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
 const Main = () => {
-  const {isBottomSheetOpen, location, posList} = useStore();
+  const {isBottomSheetOpen, location, posList, nearByPos, setNearByPos} =
+    useStore();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -64,10 +65,9 @@ const Main = () => {
       return;
     }
 
-    let nearest = null;
     let minDistance = Infinity;
 
-    posList.forEach(carWash => {
+    posList.forEach((carWash: CarWashLocation) => {
       const cwLat = carWash.location.lat;
       const cwLon = carWash.location.lon;
       const distance = calculateDistance(
@@ -78,10 +78,9 @@ const Main = () => {
       );
       if (distance < minDistance && distance <= 0.5) {
         minDistance = distance;
-        nearest = carWash;
+        setNearByPos(carWash);
       }
     });
-    setNearestCarWash(nearest);
   };
 
   useEffect(() => {
@@ -227,7 +226,7 @@ const Main = () => {
                     letterSpacing: 0.5,
                     flexShrink: 1,
                   }}>
-                  {nearestCarWash ? `${nearestCarWash.carwashes[0].name}` : ''}
+                  {nearByPos ? `${nearByPos.carwashes[0].name}` : ''}
                 </Text>
                 <Image
                   source={require('../../../assets/icons/small-icon.png')}

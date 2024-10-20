@@ -13,7 +13,7 @@ import NetInfo from '@react-native-community/netinfo';
 import useStore from './src/state/store';
 import DeviceInfo from 'react-native-device-info';
 import {createUserMeta, updateUserMeta} from './src/services/api/user';
-import {DeviceMeta } from './src/types/models/User';
+import {DeviceMeta} from './src/types/models/User';
 import {hasMetaDataChanged} from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
 
@@ -61,7 +61,7 @@ function App(): React.JSX.Element {
   }, []);
 
   useEffect(() => {
-    loadUser()
+    loadUser();
     const syncMetaData = async () => {
       if (isConnected && user?.id) {
         try {

@@ -2,14 +2,8 @@ import React from 'react';
 import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 
 // utils
-import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
-import {dp} from '../../../utils/dp';
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from '../../../utils/metrics';
-import {FingerDownEmojie} from '../../../assets';
+import {BLACK, BLUE, GREY, WHITE, YELLOW} from '@utils/colors.ts';
+import {horizontalScale, moderateScale, verticalScale} from '@utils/metrics.ts';
 
 interface PriceCardProps {
   name: string;
@@ -133,9 +127,6 @@ const PriceCard = ({
               height: verticalScale(30),
               alignSelf: 'center',
             }}>
-            <TouchableOpacity>
-              <FingerDownEmojie width={dp(24)} height={dp(24)} />
-            </TouchableOpacity>
             <Text
               style={{
                 fontWeight: '600',

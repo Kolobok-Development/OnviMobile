@@ -3,11 +3,15 @@ const toRadians = (degrees: number) => {
 };
 
 const calculateDistance = (
-  lat1: number,
-  lon1: number,
-  lat2: number,
-  lon2: number,
+  lat1?: number,
+  lon1?: number,
+  lat2?: number,
+  lon2?: number,
 ) => {
+  if (!lat1 || !lon1 || !lat2 || !lon2) {
+    return 0;
+  }
+
   const earthRadius = 6371; // Radius of the Earth in kilometers
 
   // Convert latitude and longitude to radians

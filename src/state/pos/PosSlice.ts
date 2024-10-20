@@ -6,8 +6,8 @@ export interface PosSlice {
   setPosList: (values: CarWashLocation[]) => void;
   selectedPos: CarWash | null;
   setSelectedPos: (value: CarWash) => void;
-  nearByPos: CarWash | null;
-  setNearByPos: (value: CarWash) => void;
+  nearByPos: CarWashLocation | null;
+  setNearByPos: (value: CarWashLocation) => void;
 }
 
 const createPoSSlice: StoreSlice<PosSlice> = set => ({

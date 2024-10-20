@@ -5,10 +5,10 @@ import messaging, {
 } from '@react-native-firebase/messaging';
 import useStore from '../../state/store.ts';
 
-messaging().setBackgroundMessageHandler(async remoteMessage => {});
+messaging().setBackgroundMessageHandler(async () => {});
 
 const RemoteNotifications = () => {
-  const [enabled, setEnabled] = useState(false);
+  const [isEnabled, setIsEnabled] = useState(false);
   const {setFcmToken} = useStore();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const RemoteNotifications = () => {
         authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
       if (isEnabled) {
-        setEnabled(true);
+        setIsEnabled(true);
         await getDeviceToken();
       }
     }
@@ -38,7 +38,7 @@ const RemoteNotifications = () => {
     messaging().onNotificationOpenedApp(handleNotification);
     // Handle the notification that opened the app from Quit state
     messaging().getInitialNotification().then(handleNotification);
-  }, [enabled]);
+  }, [isEnabled]);
 
   const handleNotification = (
     remoteMessage: FirebaseMessagingTypes.RemoteMessage | null,

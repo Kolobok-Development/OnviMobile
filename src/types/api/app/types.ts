@@ -178,6 +178,12 @@ export type CarWashLocation = {
   carwashes: CarWash[];
 };
 
+export type SortedCarWashLocation = {
+  location: Location;
+  carwashes: CarWash[];
+  distance: number;
+};
+
 export type BusinessSuccessRequestPayload = {
   businessesLocations: CarWashLocation[];
 };

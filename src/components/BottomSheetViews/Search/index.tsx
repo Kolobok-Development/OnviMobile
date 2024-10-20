@@ -24,7 +24,10 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 import useSWRMutation from 'swr/mutation';
 import {getPOSList} from '@services/api/pos';
 import calculateDistance from '@utils/calculateDistance.ts';
-import { CarWashLocation } from "../../../types/api/app/types.ts";
+import {
+  CarWashLocation,
+  SortedCarWashLocation,
+} from '../../../types/api/app/types.ts';
 
 const Search = () => {
   const [search, setSearch] = useState('');
@@ -32,8 +35,7 @@ const Search = () => {
 
   const {setOrderDetails, setBusiness, location} = useStore();
 
-  const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
-  const [searchResults, setSearchResults] = useState<CarWashLocation[]>([]); // For search results
+  const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
 
   const {isMutating, trigger, data} = useSWRMutation(
     'getPOSList',
@@ -66,10 +68,12 @@ const Search = () => {
                 carwashLon,
               );
 
-              return {
+              const carWashWithDistance: SortedCarWashLocation = {
                 ...carwash,
-                distance, // Add distance to the carwash object
+                distance,
               };
+
+              return carWashWithDistance;
             },
           );
 
@@ -77,7 +81,10 @@ const Search = () => {
           sortedCarwashes.sort((a: any, b: any) => a.distance - b.distance);
 
           // Limit to the 5 closest carwashes
-          const top5Carwashes = sortedCarwashes.slice(0, 5);
+          const top5Carwashes: SortedCarWashLocation[] = sortedCarwashes.slice(
+            0,
+            5,
+          );
 
           // Update state with the sorted and limited carwashes
           setSortedData(top5Carwashes);
@@ -86,7 +93,7 @@ const Search = () => {
     }
   }, [location, trigger]);
 
-  const renderBusiness = ({item}: {item: CarWashLocation}) => {
+  const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
@@ -109,7 +116,7 @@ const Search = () => {
   };
 
   const doSearch = useCallback(
-    debounce(async () => {
+    debounce(async (val: string) => {
       const res = await trigger({search: val});
 
       if (res?.businessesLocations?.length > 0) {
@@ -118,16 +125,18 @@ const Search = () => {
             const carwashLat = carwash.location.lat;
             const carwashLon = carwash.location.lon;
             const distance = calculateDistance(
-              location.latitude,
-              location.longitude,
+              location?.latitude,
+              location?.longitude,
               carwashLat,
               carwashLon,
             );
 
-            return {
+            const carWashWithDistance: SortedCarWashLocation = {
               ...carwash,
-              distance, // Add distance property
+              distance,
             };
+
+            return carWashWithDistance;
           },
         );
 
@@ -135,7 +144,7 @@ const Search = () => {
         searchResults.sort((a: any, b: any) => a.distance - b.distance);
 
         // Update the search results state (no limit)
-        setSearchResults(searchResults);
+        setSortedData(searchResults);
       }
     }, 1300),
     [location, trigger],
@@ -205,7 +214,7 @@ const Search = () => {
               </View>
             ) : (
               <FlatList
-                data={search.length > 0 ? searchResults : sortedData}
+                data={sortedData}
                 renderItem={renderBusiness}
                 keyExtractor={(item: CarWashLocation, index: number) =>
                   index.toString()

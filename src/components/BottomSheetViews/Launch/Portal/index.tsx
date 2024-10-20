@@ -12,16 +12,10 @@ import {ExpandableView} from '@styled/views/ExpandableView';
 import {ScrollView} from 'react-native-gesture-handler';
 
 // utils
-import {
-  horizontalScale,
-  moderateScale,
-  verticalScale,
-} from '../../../../utils/metrics';
+import {horizontalScale, moderateScale, verticalScale} from '@utils/metrics.ts';
 import {useTheme} from '@context/ThemeProvider';
-import {dp} from '../../../../utils/dp';
-
-// types
-
+import {dp} from '@utils/dp.ts';
+import {Price} from '../../../../types/api/app/types.ts';
 
 interface PortalLaunchProps {
   isOpened: boolean;
@@ -89,26 +83,28 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
                     }}>
                     ЧТО ВХОДИТ?
                   </Text>
-                  {price.serviceInfo.map((service, indService) => (
-                    <Text
-                      key={'service-' + indService}
-                      style={{
-                        textAlign: 'center',
-                        color: '#FFF',
-                        fontWeight: '500',
-                        backgroundColor: '#0B68E1',
-                        fontSize: dp(10),
-                        paddingTop: dp(3),
-                        paddingBottom: dp(3),
-                        borderRadius: dp(32),
-                        maxWidth: dp(110),
-                        marginBottom: dp(8),
-                        paddingRight: dp(2),
-                        paddingLeft: dp(2),
-                      }}>
-                      🚀 {service}
-                    </Text>
-                  ))}
+                  {price.serviceInfo.map(
+                    (service: string, indService: number) => (
+                      <Text
+                        key={'service-' + indService}
+                        style={{
+                          textAlign: 'center',
+                          color: '#FFF',
+                          fontWeight: '500',
+                          backgroundColor: '#0B68E1',
+                          fontSize: dp(10),
+                          paddingTop: dp(3),
+                          paddingBottom: dp(3),
+                          borderRadius: dp(32),
+                          maxWidth: dp(110),
+                          marginBottom: dp(8),
+                          paddingRight: dp(2),
+                          paddingLeft: dp(2),
+                        }}>
+                        🚀 {service}
+                      </Text>
+                    ),
+                  )}
                 </View>
               </ExpandableView>
             </View>
