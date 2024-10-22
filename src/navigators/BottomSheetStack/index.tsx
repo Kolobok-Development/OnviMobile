@@ -22,6 +22,8 @@ import {AddCard} from '@components/BottomSheetViews/AddCard';
 import {Post} from '@components/BottomSheetViews/Post';
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+
 const navTheme = {
   ...DefaultTheme,
   colors: {
@@ -49,7 +51,7 @@ const navigateBottomSheet = (name: string, params: any) => {
 interface BottomSheetStackInterface {
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
   active: boolean;
-  drawerNavigation: any;
+  drawerNavigation: GeneralDrawerNavigationProp<any>;
   cameraRef: any;
 }
 
