@@ -12,7 +12,6 @@ import {horizontalScale, moderateScale} from '../../../utils/metrics';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 
-
 import useStore from '../../../state/store';
 
 import PostPlaceholder from './PostPlaceholder';
@@ -28,7 +27,7 @@ const Post = () => {
   const [post, setPost] = useState<NewsPost | null>(null);
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Post'>>();
 
-  const {isBottomSheetOpen: isOpened} = useStore();
+  const {isBottomSheetOpen: isOpened} = useStore.getState();
 
   useEffect(() => {
     if (route && route.params && route.params.data && route.params.data) {

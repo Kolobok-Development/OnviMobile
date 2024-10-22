@@ -7,7 +7,7 @@ import {TouchableOpacity} from 'react-native-gesture-handler';
 import useStore from '../../state/store';
 
 const Profile = () => {
-  const {setOrderDetails, orderDetails} = useStore();
+  const {setOrderDetails, orderDetails} = useStore.getState();
 
   return (
     <>

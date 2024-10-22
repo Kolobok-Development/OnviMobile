@@ -21,7 +21,7 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const {orderDetails, setOrderDetails} = useStore();
+  const {orderDetails, setOrderDetails} = useStore.getState();
 
   const [active, setActive] = useState(orderDetails.bayNumber);
 
@@ -51,7 +51,8 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
 
               if (key !== undefined) {
                 params.bottomSheetRef.current?.snapToPosition('95%');
-                navigation.navigate('Launch', params);
+
+                navigation.navigate('Launch', {});
               }
             }}
             active={active !== null && active === key}

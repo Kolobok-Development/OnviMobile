@@ -12,6 +12,7 @@ export type OrderDetailsType = {
   prices?: Price[];
   order?: number | null;
   orderDate?: string | null;
+  carwashIndex?: number;
 };
 
 export interface OrderSlice {
@@ -21,9 +22,8 @@ export interface OrderSlice {
   setSum: (sum: number) => void;
   orderDetails: OrderDetailsType;
   setOrderDetails: (orderDetails: OrderDetailsType) => void;
-
   business: (CarWashLocation & {close: boolean}) | null;
-  setBusiness: (valud: (CarWashLocation & {close: boolean}) | null) => void;
+  setBusiness: (value: (CarWashLocation & {close: boolean}) | null) => void;
 }
 
 const createOrderSlice: StoreSlice<OrderSlice> = set => ({

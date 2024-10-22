@@ -43,7 +43,7 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser, deleteUser} = useStore();
+  const {user, signOut, loadUser, deleteUser} = useStore.getState();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
 
   const initialUserName = user?.name || '';

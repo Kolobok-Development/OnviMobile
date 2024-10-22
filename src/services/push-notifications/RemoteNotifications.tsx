@@ -9,7 +9,7 @@ messaging().setBackgroundMessageHandler(async () => {});
 
 const RemoteNotifications = () => {
   const [isEnabled, setIsEnabled] = useState(false);
-  const {setFcmToken} = useStore();
+  const {setFcmToken} = useStore.getState();
 
   useEffect(() => {
     async function requestUserPermission() {

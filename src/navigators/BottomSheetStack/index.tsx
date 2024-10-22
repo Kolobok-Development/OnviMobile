@@ -1,17 +1,10 @@
-import React, {useEffect} from 'react';
-
+import React from 'react';
 import {DefaultTheme} from '@react-navigation/native';
-
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: 'transparent',
-  },
-};
-
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import useStore from '../../state/store';
+import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {createNavigationContainerRef} from '@react-navigation/native';
 
 import {
   Launch,
@@ -27,48 +20,49 @@ import {Boxes} from '@components/BottomSheetViews/Boxes';
 import {Payment} from '@components/BottomSheetViews';
 import {AddCard} from '@components/BottomSheetViews/AddCard';
 import {Post} from '@components/BottomSheetViews/Post';
-
-const RootStack = createNativeStackNavigator();
-
-// Navigation Ref
-import {createNavigationContainerRef} from '@react-navigation/native';
-
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
-import useStore from '../../state/store';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+const navTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: 'transparent',
+  },
+};
 
+const RootStack = createNativeStackNavigator();
 export const navigationRef = createNavigationContainerRef<any>();
 
 const navigateBottomSheet = (name: string, params: any) => {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name, params);
+    if (name === 'Main') {
+      navigationRef.reset({
+        index: 0,
+        routes: [{name, params}],
+      });
+    } else {
+      navigationRef.navigate(name, params);
+    }
   }
 };
-
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 interface BottomSheetStackInterface {
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
   active: boolean;
-  drawerNavigation: GeneralDrawerNavigationProp<any>;
+  drawerNavigation: any;
   cameraRef: any;
 }
 
-const BottomSheetStack = ({
-  bottomSheetRef,
-  active,
-  drawerNavigation,
-  cameraRef,
-}: BottomSheetStackInterface) => {
-  const {setIsBottomSheetOpen, setIsMainScreen} = useStore();
+const BottomSheetStack = React.memo(
+  ({
+    bottomSheetRef,
+    active,
+    drawerNavigation,
+    cameraRef,
+  }: BottomSheetStackInterface) => {
+    const {setIsMainScreen} = useStore.getState();
 
-  useEffect(() => {
-    setIsBottomSheetOpen(active);
-  }, [active]);
-
-  return (
-    <>
+    return (
       <NavigationContainer
         theme={navTheme}
         ref={navigationRef}
@@ -86,89 +80,94 @@ const BottomSheetStack = ({
           }
         }}>
         <RootStack.Navigator
-          screenOptions={{
-            headerShown: false,
-          }}
+          screenOptions={{headerShown: false}}
           initialRouteName="Main">
           <RootStack.Screen
             name="Main"
+            key="MainScreen"
             component={Main}
             initialParams={{
-              bottomSheetRef: bottomSheetRef,
-              drawerNavigation: drawerNavigation,
-              active: active,
+              bottomSheetRef,
+              drawerNavigation,
+              active,
             }}
           />
           <RootStack.Screen
             name="Search"
+            key="SearchScreen"
             component={Search}
-            initialParams={{
-              bottomSheetRef: bottomSheetRef,
-              cameraRef: cameraRef,
-            }}
+            initialParams={{bottomSheetRef, cameraRef}}
           />
           <RootStack.Screen
             name="Filters"
+            key="FiltersScreen"
             component={Filters}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="Business"
+            key="BusinessScreen"
             component={Business}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="BusinessInfo"
+            key="BusinessInfoScreen"
             component={BusinessInfo}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="Boxes"
+            key="BoxesScreen"
             component={Boxes}
-            initialParams={{bottomSheetRef: bottomSheetRef, active: active}}
+            initialParams={{bottomSheetRef, active}}
           />
           <RootStack.Screen
             name="Launch"
+            key="LaunchScreen"
             component={Launch}
-            initialParams={{bottomSheetRef: bottomSheetRef, active: active}}
+            initialParams={{bottomSheetRef, active}}
           />
           <RootStack.Screen
             name="Notifications"
+            key="NotificationsScreen"
             component={Notifications}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="History"
+            key="HistoryScreen"
             component={History}
-            initialParams={{
-              bottomSheetRef: bottomSheetRef,
-              drawerNavigation: drawerNavigation,
-            }}
+            initialParams={{bottomSheetRef, drawerNavigation}}
           />
           <RootStack.Screen
             name="Payment"
+            key="PaymentScreen"
             component={Payment}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="AddCard"
+            key="AddCardScreen"
             component={AddCard}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="Post"
+            key="PostScreen"
             component={Post}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
           <RootStack.Screen
             name="Campaign"
+            key="CampaignScreen"
             component={Campaign}
-            initialParams={{bottomSheetRef: bottomSheetRef}}
+            initialParams={{bottomSheetRef}}
           />
         </RootStack.Navigator>
       </NavigationContainer>
-    </>
-  );
-};
+    );
+  },
+);
 
 export {BottomSheetStack, navigateBottomSheet};
