@@ -31,6 +31,7 @@ import {getOrderHistory} from '@services/api/user';
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 
 const History = () => {
+
   const {user} = useStore();
 
   const {data, isLoading, mutate} = useSWR(['getOrderHistory'], () =>
