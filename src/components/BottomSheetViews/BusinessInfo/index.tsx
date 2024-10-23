@@ -16,15 +16,18 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 
 import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 import {Tag} from '../../../types/api/app/types.ts';
+import useStore from '../../../state/store.ts';
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
+
+  const {business, orderDetails} = useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = () => {
     if (true) {
-      navigateBottomSheet('Boxes', route.params);
+      navigateBottomSheet('Boxes', {});
       route.params.bottomSheetRef?.current?.snapToPosition('95%');
     } else {
       setModalVisible(false);
@@ -33,7 +36,7 @@ const BusinessInfo = () => {
 
   const forceForward = () => {
     setModalVisible(false);
-    navigateBottomSheet('Boxes', route.params);
+    navigateBottomSheet('Boxes', {});
     route.params.bottomSheetRef?.current?.snapToPosition('95%');
   };
 
@@ -87,24 +90,30 @@ const BusinessInfo = () => {
           flexWrap: 'wrap',
           paddingTop: dp(10),
         }}>
-        {route.params.tags &&
-          route.params.tags.length > 0 &&
-          route.params.tags.map((tag: Tag, index: number) => (
-            <View style={{padding: dp(2)}}>
-              <CheckBox
-                key={index}
-                disable={true}
-                borderRadius={dp(69)}
-                text={'🚀 ' + tag.name}
-                backgroundColor={'#BFFA00'}
-                textColor={'#000000'}
-                fontSize={dp(12)}
-                fontWeight={'600'}
-                height={dp(24)}
-                onClick={() => null}
-              />
-            </View>
-          ))}
+        {business &&
+          business.carwashes.length &&
+          orderDetails &&
+          typeof orderDetails.carwashIndex !== 'undefined' &&
+          business.carwashes[orderDetails.carwashIndex].tags &&
+          business.carwashes[orderDetails.carwashIndex].tags.length > 0 &&
+          business.carwashes[orderDetails.carwashIndex].tags.map(
+            (tag: Tag, index: number) => (
+              <View style={{padding: dp(2)}}>
+                <CheckBox
+                  key={index}
+                  disable={true}
+                  borderRadius={dp(69)}
+                  text={'🚀 ' + tag.name}
+                  backgroundColor={'#BFFA00'}
+                  textColor={'#000000'}
+                  fontSize={dp(12)}
+                  fontWeight={'600'}
+                  height={dp(24)}
+                  onClick={() => null}
+                />
+              </View>
+            ),
+          )}
       </View>
       <View style={{alignSelf: 'center', paddingTop: dp(36)}}>
         <Button

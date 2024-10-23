@@ -20,17 +20,18 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 const Business = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
 
-  const {setOrderDetails, orderDetails, business} = useStore();
+  const {setOrderDetails, orderDetails, business} = useStore.getState();
 
-  const selectCarwash = (carwash: any) => {
+  const selectCarwash = (carwash: any, index: number) => {
     setOrderDetails({
       ...orderDetails,
       posId: carwash.id,
       type: carwash.type,
       name: carwash.name,
+      carwashIndex: index,
     } as OrderDetailsType);
 
-    navigateBottomSheet('BusinessInfo', carwash);
+    navigateBottomSheet('BusinessInfo', {});
     route.params.bottomSheetRef?.current?.snapToPosition('60%');
   };
 
@@ -50,7 +51,7 @@ const Business = () => {
                 />
               </View>
               <View style={{flex: 5}}>
-                <TouchableOpacity onPress={() => selectCarwash(carwash)}>
+                <TouchableOpacity onPress={() => selectCarwash(carwash, index)}>
                   <Text style={styles.title}>{carwash.name}</Text>
                   <Text style={styles.text}>{carwash.address}</Text>
                 </TouchableOpacity>

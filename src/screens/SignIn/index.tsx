@@ -11,7 +11,7 @@ import {dp} from '../../utils/dp';
 import useStore from '../../state/store';
 
 const SignIn = () => {
-  const {sendOtp} = useStore();
+  const {sendOtp} = useStore.getState();
 
   const {theme} = useTheme();
 

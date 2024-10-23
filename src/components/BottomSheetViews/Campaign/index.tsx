@@ -17,7 +17,7 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 const Campaign = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();
 
-  const {isBottomSheetOpen} = useStore();
+  const {isBottomSheetOpen} = useStore.getState();
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
 

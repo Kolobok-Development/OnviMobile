@@ -33,7 +33,7 @@ const Search = () => {
   const [search, setSearch] = useState('');
   const route = useRoute<GeneralBottomSheetRouteProp<'Search'>>();
 
-  const {setOrderDetails, setBusiness, location} = useStore();
+  const {setOrderDetails, setBusiness, location} = useStore.getState();
 
   const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
 

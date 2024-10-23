@@ -7,20 +7,17 @@ import useSWR from 'swr';
 import {getPOSList} from '@services/api/pos';
 import {throttle} from 'lodash';
 
-/*
-  TODO:
-   1. Hide API KEY to config
- */
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
-const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
-  const {posList, setPosList, location, setLocation} = useStore();
-
+const Map = React.memo(({bottomSheetRef, cameraRef, userLocationRef}: any) => {
+  const {posList, setPosList, location, setLocation} = useStore.getState();
   const {error, data} = useSWR(['getPOSList'], () => getPOSList({}), {
     revalidateOnFocus: false,
   });
+
+  console.log('MAP rerender: ', posList);
 
   useEffect(() => {
     if (data && data.businessesLocations) {
@@ -29,37 +26,29 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
   }, [data]);
 
   if (error) {
-    console.error('Error fetching POS List:', error); // Log error for debugging
+    console.error('Error fetching POS List:', error);
   }
 
   const [zoomedIn, setZoomedIn] = useState(false);
+  const [hasLocationPermission, setHasLocationPermission] = useState(false);
 
   const memoizedBusinesses = useMemo(
     () =>
       posList && posList.length
-        ? posList.map(business => {
-            return (
-              <Marker
-                key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
-                coordinate={[business.location.lon, business.location.lat]}
-                locationRef={userLocationRef}
-                bottomSheetRef={bottomSheetRef}
-                business={business}
-              />
-            );
-          })
+        ? posList.map(business => (
+            <Marker
+              key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
+              coordinate={[business.location.lon, business.location.lat]}
+              locationRef={userLocationRef}
+              bottomSheetRef={bottomSheetRef}
+              business={business}
+            />
+          ))
         : [],
     [posList],
   );
 
-  //Location state
-  const [hasLocationPermission, setHasLocationPermission] =
-    useState<boolean>(false);
-
-  //Permission Request
-  // Check and request location permissions
   useEffect(() => {
-    // Check and request location permissions
     const requestLocationPermission = async () => {
       try {
         if (Platform.OS === 'android') {
@@ -69,9 +58,8 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
           setHasLocationPermission(
             granted === PermissionsAndroid.RESULTS.GRANTED,
           );
-        } else {
         }
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error checking or requesting location permission:', err);
       }
     };
@@ -79,12 +67,15 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     requestLocationPermission();
   }, []);
 
-  const onUserLocationUpdateThrottled = throttle(trhottleLocation => {
-    let lat = trhottleLocation.coords.latitude;
-    let long = trhottleLocation.coords.longitude;
-    userLocationRef.current = {lat: lat, lon: long};
-    setLocation({latitude: lat, longitude: long});
-  }, 1000);
+  const onUserLocationUpdateThrottled = useMemo(
+    () =>
+      throttle(trhottleLocation => {
+        const {latitude: lat, longitude: long} = trhottleLocation.coords;
+        userLocationRef.current = {lat, lon: long};
+        setLocation({latitude: lat, longitude: long});
+      }, 1000),
+    [userLocationRef],
+  );
 
   useEffect(() => {
     if (
@@ -99,62 +90,49 @@ const Map = ({bottomSheetRef, cameraRef, userLocationRef}: any) => {
       });
       setZoomedIn(true);
     }
-  }, [location]);
+  }, [location, zoomedIn]);
 
-  // @ts-ignore
   return (
-    <>
-      <View
-        style={{
-          height: Dimensions.get('screen').height,
-          width: Dimensions.get('screen').width,
-          position: 'absolute',
-        }}>
-        <MapboxGL.Camera
-          ref={cameraRef}
-          zoomLevel={100}
-          pitch={1}
-          animationMode="flyTo"
-          animationDuration={6000}
-          followUserLocation={false}
+    <View
+      style={{
+        height: Dimensions.get('screen').height,
+        width: Dimensions.get('screen').width,
+        position: 'absolute',
+      }}>
+      <MapboxGL.Camera
+        ref={cameraRef}
+        zoomLevel={100}
+        pitch={1}
+        animationMode="flyTo"
+        animationDuration={6000}
+        followUserLocation={false}
+      />
+      <MapboxGL.MapView
+        style={{flex: 1}}
+        zoomEnabled={true}
+        scaleBarEnabled={false}
+        styleURL={'mapbox://styles/mapbox/light-v11'}
+        preferredFramesPerSecond={120}>
+        {memoizedBusinesses}
+        <UserLocation
+          visible={hasLocationPermission}
+          showsUserHeadingIndicator={true}
+          requestsAlwaysUse={true}
+          onUpdate={onUserLocationUpdateThrottled}
+          animated={true}
         />
-        <MapboxGL.MapView
-          style={{
-            flex: 1,
+        <LocationPuck
+          puckBearing="heading"
+          pulsing={{
+            isEnabled: true,
+            color: '#BFFA00',
+            radius: 25.0,
           }}
-          zoomEnabled={true}
-          scaleBarEnabled={false}
-          styleURL={'mapbox://styles/mapbox/light-v11'}
-          preferredFramesPerSecond={120}>
-          <MapboxGL.Camera
-            ref={cameraRef}
-            zoomLevel={100}
-            pitch={1}
-            animationMode="flyTo"
-            animationDuration={6000}
-            followUserLocation={false}
-          />
-          {memoizedBusinesses}
-          <UserLocation
-            visible={hasLocationPermission}
-            showsUserHeadingIndicator={true}
-            requestsAlwaysUse={true}
-            onUpdate={onUserLocationUpdateThrottled}
-            animated={true}
-          />
-          <LocationPuck
-            puckBearing="heading"
-            pulsing={{
-              isEnabled: true,
-              color: '#BFFA00',
-              radius: 25.0,
-            }}
-            visible={true}
-          />
-        </MapboxGL.MapView>
-      </View>
-    </>
+          visible={true}
+        />
+      </MapboxGL.MapView>
+    </View>
   );
-};
+});
 
 export {Map};

@@ -13,9 +13,9 @@ import {
 const Launch = () => {
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
-  const route = useRoute<GeneralBottomSheetRouteProp<'Launch'>>();
 
-  const {isBottomSheetOpen, setOrderDetails, orderDetails} = useStore();
+  const {isBottomSheetOpen, setOrderDetails, orderDetails} =
+    useStore.getState();
 
   const isOpened = isBottomSheetOpen;
 
@@ -25,7 +25,8 @@ const Launch = () => {
       sum: price,
       name: name,
     });
-    navigation.navigate('Payment', route.params);
+
+    navigation.navigate('Payment', {});
   };
 
   if (orderDetails?.type === 'Portal') {

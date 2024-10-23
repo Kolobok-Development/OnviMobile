@@ -33,7 +33,7 @@ interface VerificationProps {
 const Verification = ({route}: VerificationProps) => {
   const popRef = useRef<PopupRefProps>(null);
 
-  const {sendOtp, register, login} = useStore();
+  const {sendOtp, register, login} = useStore.getState();
 
   const {theme} = useTheme();
 
