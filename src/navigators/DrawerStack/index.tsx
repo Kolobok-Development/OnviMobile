@@ -25,7 +25,7 @@ import {DrawerNavProp} from '../../types/DrawerNavigation';
 
 const DrawerStack = () => {
   const {theme} = useTheme();
-  const {user} = useStore();
+  const {user} = useStore.getState();
 
   return (
     <NavigationContainer independent={false}>

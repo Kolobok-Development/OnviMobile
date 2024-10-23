@@ -39,7 +39,8 @@ export default function DefaultLaunch() {
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Launch'>>();
 
-  const {isBottomSheetOpen, setOrderDetails, orderDetails} = useStore();
+  const {isBottomSheetOpen, setOrderDetails, orderDetails} =
+    useStore.getState();
 
   const order = orderDetails;
   const isOpened = isBottomSheetOpen;
@@ -214,7 +215,8 @@ export default function DefaultLaunch() {
               ...orderDetails,
               sum: cost,
             });
-            navigation.navigate('Payment', route.params);
+
+            navigation.navigate('Payment', {});
           }}
           color="blue"
         />

@@ -45,8 +45,6 @@ import {
 import Toast from 'react-native-toast-message';
 import {createPayment, getCredentials} from '@services/api/payment';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
-
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -54,7 +52,7 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore();
+  const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore.getState();
 
   const [btnLoader, setBtnLoader] = useState(false);
 

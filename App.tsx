@@ -37,7 +37,7 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore();
+  const {loadUser, user, fcmToken} = useStore.getState();
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {

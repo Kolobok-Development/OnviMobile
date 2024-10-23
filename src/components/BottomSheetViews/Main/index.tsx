@@ -33,8 +33,14 @@ import {Button} from '@styled/buttons';
 import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
 const Main = () => {
-  const {isBottomSheetOpen, location, posList, nearByPos, setNearByPos} =
-    useStore();
+  const {
+    isBottomSheetOpen,
+    location,
+    posList,
+    nearByPos,
+    setNearByPos,
+    setBusiness,
+  } = useStore.getState();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -90,6 +96,7 @@ const Main = () => {
   const handleLaunchCarWash = () => {
     if (nearestCarWash) {
       // Launch car wash logic here
+      setBusiness(nearestCarWash);
       navigateBottomSheet('Business', nearestCarWash);
     } else {
       setNearByModal(true);
@@ -226,7 +233,11 @@ const Main = () => {
                     letterSpacing: 0.5,
                     flexShrink: 1,
                   }}>
-                  {nearByPos ? `${nearByPos.carwashes[0].name}` : ''}
+                  {nearByPos &&
+                  nearByPos.carwashes &&
+                  nearByPos.carwashes.length
+                    ? `${nearByPos.carwashes[0].name}`
+                    : ''}
                 </Text>
                 <Image
                   source={require('../../../assets/icons/small-icon.png')}

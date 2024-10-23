@@ -6,6 +6,8 @@ import {dp} from '../../../utils/dp';
 
 import {Box} from '@components/Boxes/Box';
 
+import useStore from '../../../state/store';
+
 import {
   horizontalScale,
   moderateScale,
@@ -19,6 +21,8 @@ interface BusinessHeader {
 
 const BusinessHeader = ({type, box}: BusinessHeader) => {
   const route: any = useRoute();
+
+  const {business, orderDetails} = useStore.getState();
 
   const rightItem = () => {
     if (type === 'empty') {
@@ -51,8 +55,20 @@ const BusinessHeader = ({type, box}: BusinessHeader) => {
     <>
       <View style={styles.header}>
         <View style={{flex: 5}}>
-          <Text style={styles.title}>{route.params.name}</Text>
-          <Text style={styles.text}>{route.params.address}</Text>
+          <Text style={styles.title}>
+            {business &&
+            orderDetails &&
+            typeof orderDetails.carwashIndex !== 'undefined'
+              ? business.carwashes[orderDetails.carwashIndex].name
+              : ''}
+          </Text>
+          <Text style={styles.text}>
+            {business &&
+            orderDetails &&
+            typeof orderDetails.carwashIndex !== 'undefined'
+              ? business.carwashes[orderDetails.carwashIndex].address
+              : ''}
+          </Text>
         </View>
         <View style={{flex: type === 'box' ? 2 : 1}}>{rightItem()}</View>
       </View>

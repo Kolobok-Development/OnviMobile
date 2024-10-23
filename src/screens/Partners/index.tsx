@@ -92,7 +92,7 @@ const Partners = () => {
               onRefresh={mutate}
               refreshing={isLoading}
               ListEmptyComponent={() => (
-                  <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
+                <EmptyPlaceholder text="Раздел находится в разработке. Пока что список партнеров пуст." />
               )}
             />
           </View>

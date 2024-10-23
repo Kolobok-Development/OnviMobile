@@ -23,7 +23,7 @@ interface PortalLaunchProps {
 }
 
 export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
-  const {orderDetails} = useStore();
+  const {orderDetails} = useStore.getState();
 
   const colors: Array<'yellow' | 'blue' | 'grey' | 'black'> = [
     'yellow',

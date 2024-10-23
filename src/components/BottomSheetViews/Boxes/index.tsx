@@ -14,11 +14,14 @@ import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
 } from 'src/types/BottomSheetNavigation';
-import { Price } from "../../../types/api/app/types.ts";
+
+import useStore from '../../../state/store.ts';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
+
+  const {business, orderDetails} = useStore.getState();
 
   return (
     <GHScrollView
@@ -40,7 +43,15 @@ const Boxes = () => {
             </Text>
             <View style={styles.boxes}>
               <BoxesSlide
-                boxes={route.params.boxes}
+                boxes={
+                  business &&
+                  orderDetails &&
+                  typeof orderDetails.carwashIndex !== 'undefined' &&
+                  business.carwashes &&
+                  business.carwashes.length
+                    ? business.carwashes[orderDetails.carwashIndex].boxes
+                    : []
+                }
                 navigation={navigation}
                 params={route.params}
               />
@@ -52,27 +63,6 @@ const Boxes = () => {
               source={require('../../../assets/icons/small-icon.png')}
               style={{width: dp(50), height: dp(50)}}
             />
-          </View>
-
-          <View style={styles.services}>
-            {route.params.price &&
-              route.params.price.length > 0 &&
-              route.params.price.map((price: Price, index: number) => (
-                <View style={{padding: dp(2)}}>
-                  <CheckBox
-                    key={index}
-                    disable={true}
-                    text={price.name}
-                    borderRadius={dp(69)}
-                    backgroundColor={'#F5F5F5'}
-                    textColor={'#000000'}
-                    fontSize={dp(11)}
-                    fontWeight={'600'}
-                    height={dp(24)}
-                    onClick={() => null}
-                  />
-                </View>
-              ))}
           </View>
         </View>
       </View>

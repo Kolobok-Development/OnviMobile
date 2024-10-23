@@ -119,7 +119,12 @@ const CustomDrawerContent = ({
                   flexDirection: 'row',
                   paddingBottom: dp(10),
                 }}
-                onPress={() => navigation.navigate('Настройки')}>
+                onPress={() =>
+                  navigation.reset({
+                    index: 0,
+                    routes: [{name: 'Настройки'}],
+                  })
+                }>
                 <Text
                   style={{
                     fontStyle: 'normal',
@@ -169,28 +174,40 @@ const CustomDrawerContent = ({
               label={'Главная'}
               color={route === 'Главная' ? theme.primary : theme.textColor}
               onPress={() => {
-                navigation.navigate('Главная');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Главная'}],
+                });
               }}
             />
             <CustomDrawerItem
               label={'Партнеры'}
               color={route === 'Партнеры' ? theme.primary : theme.textColor}
               onPress={() => {
-                navigation.navigate('Партнеры');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Партнеры'}],
+                });
               }}
             />
             <CustomDrawerItem
               label={'Акции'}
               color={route === 'Промокоды' ? theme.primary : theme.textColor}
               onPress={() => {
-                navigation.navigate('Промокоды');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Промокоды'}],
+                });
               }}
             />
             <CustomDrawerItem
               label={'Настройки'}
               color={route === 'Настройки' ? theme.primary : theme.textColor}
               onPress={() => {
-                navigation.navigate('Настройки');
+                navigation.reset({
+                  index: 0,
+                  routes: [{name: 'Настройки'}],
+                });
               }}
             />
           </View>

@@ -1,5 +1,4 @@
-import {useRef, useState, useMemo, useCallback} from 'react';
-
+import React, {useRef, useState, useMemo, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,100 +7,64 @@ import {
   TouchableOpacity,
   Platform,
 } from 'react-native';
-
 import {ScrollView} from 'react-native-gesture-handler';
-
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-
 import {useReducedMotion} from 'react-native-reanimated';
-
-// Burger and Balance Top Button
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
-
-// Map Component
 import {Map} from '@components/Map';
-
-// Bottom Sheet Navigator
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
-
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-
 import {dp} from '../../utils/dp';
-
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
-
 import useStore from '../../state/store';
 
-const Home = ({navigation}: any) => {
+const snapPoints = ['25%', '42%', '60%', '95%'];
+
+const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
-
   const cameraRef = useRef<any>(null);
-
   const userLocationRef = useRef<any>(null);
-
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
-
-  const {filters} = useStore();
-
+  const {filters} = useStore.getState();
   const reduceMotion = useReducedMotion();
 
-  // variables
-  const snapPoints = useMemo(() => ['25%', '42%', '60%', '95%'], []);
-
-  // callbacks
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
     setBottomSheetIndex(index);
   }, []);
 
-  const findMe = async () => {
-    cameraRef.current.setCamera({
-      centerCoordinate: [
-        userLocationRef.current.lon,
-        userLocationRef.current.lat,
-      ],
-      zoomLevel: 16,
-    });
-  };
+  const findMe = useCallback(async () => {
+    if (userLocationRef.current) {
+      await cameraRef.current.setCamera({
+        centerCoordinate: [
+          userLocationRef.current.lon,
+          userLocationRef.current.lat,
+        ],
+        zoomLevel: 16,
+      });
+    }
+  }, [cameraRef, userLocationRef]);
 
-  // renderHamdleComponent выделить в отдельный компонент
   const renderHandleComponent = useCallback(
     (props: any) => {
-      function extractValues(obj: any) {
-        const values = [];
-
-        for (const key in obj) {
-          if (typeof obj[key] === 'object') {
-            for (const innerKey in obj[key]) {
-              values.push(obj[key][innerKey]);
-            }
-          }
-        }
-
-        return values;
-      }
-
-      const extractedFilters = () => {
-        return extractValues(filters);
-      };
+      const extractedFilters = useMemo(() => {
+        return Object.values(filters)
+          .flat()
+          .map((filter: any) => filter);
+      }, [filters]);
 
       return (
         <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
-          <View
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-            }}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={{flex: 1, alignSelf: 'flex-end'}}>
               <ScrollView
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.scrollViewContent}>
-                {extractedFilters().map((value, index) => (
+                {extractedFilters.map((value, index) => (
                   <View
                     key={index}
                     style={{...styles.box, width: value.length * dp(10)}}>
@@ -118,11 +81,7 @@ const Home = ({navigation}: any) => {
               </ScrollView>
             </View>
             <View>
-              <TouchableOpacity
-                style={{...styles.findMe}}
-                onPress={async () => {
-                  await findMe();
-                }}>
+              <TouchableOpacity style={styles.findMe} onPress={findMe}>
                 <Navigation fill={'white'} color={'white'} />
               </TouchableOpacity>
             </View>
@@ -133,15 +92,14 @@ const Home = ({navigation}: any) => {
         </BottomSheetHandle>
       );
     },
-    [filters],
+    [filters, findMe],
   );
 
   return (
     <GestureHandlerRootView style={styles.master}>
-      <View style={{...styles.container}}>
+      <View style={styles.container}>
         <Map
           bottomSheetRef={bottomSheetRef}
-          bottomSheetIndex={bottomSheetIndex}
           cameraRef={cameraRef}
           userLocationRef={userLocationRef}
         />
@@ -156,7 +114,6 @@ const Home = ({navigation}: any) => {
           index={bottomSheetIndex}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
-          /* eslint-disable-next-line react/no-unstable-nested-components */
           backgroundComponent={() => (
             <View style={[styles.transparentBackground, styles.shadow]}></View>
           )}
@@ -172,10 +129,10 @@ const Home = ({navigation}: any) => {
           </View>
         </BottomSheet>
 
-        <View style={{...styles.burger}}>
+        <View style={styles.burger}>
           <BurgerButton handleSheetChanges={handleSheetChanges} />
         </View>
-        <View style={{...styles.balance}}>
+        <View style={styles.balance}>
           <Balance
             bottomSheetIndex={bottomSheetIndex}
             bottomSheetRef={bottomSheetRef}
@@ -184,7 +141,7 @@ const Home = ({navigation}: any) => {
       </View>
     </GestureHandlerRootView>
   );
-};
+});
 
 const styles = StyleSheet.create({
   master: {
@@ -237,16 +194,10 @@ const styles = StyleSheet.create({
     shadowRadius: 9.11,
     elevation: 14,
   },
-
   findMe: {
     height: dp(45),
     width: dp(45),
     backgroundColor: '#000',
-    zIndex: 1,
-    // position: 'absolute',
-    // top: dp(100),
-    // marginRight: dp(4),
-    // right: dp(10),
     borderRadius: 45,
     shadowColor: '#494949',
     shadowOffset: {width: 0, height: 4},
@@ -255,18 +206,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-
-  //
   scrollViewContent: {
     flexDirection: 'row',
     alignSelf: 'flex-end',
   },
   box: {
-    // width: dp(94),
     height: dp(24),
     borderRadius: dp(69),
     backgroundColor: '#0B68E1',
-    display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: dp(16),

@@ -75,7 +75,7 @@ const Filters = () => {
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Filters'>>();
 
-  const {filters, setFilters, setPosList} = useStore();
+  const {filters, setFilters, setPosList} = useStore.getState();
 
   //Local filters
   const [selectedFilters, setSelectedFilters] =
@@ -102,10 +102,8 @@ const Filters = () => {
   //Query
   const {trigger, isMutating} = useSWRMutation(
     'getPosList', // Key for caching
-    (key, {arg}: {arg: string} ) => getPOSList({filter: arg}), // Fetcher function with arguments
+    (key, {arg}: {arg: string}) => getPOSList({filter: arg}), // Fetcher function with arguments
   );
-
-  // const {isLoading, mutate} = useBusiness({filter: query}, true);
 
   // Function to handle submit button press
   const handleSubmit = async () => {
@@ -114,7 +112,11 @@ const Filters = () => {
       if (data) {
         setFilters(selectedFilters);
         setPosList(data.businessesLocations);
-        navigation.navigate('Main', {});
+
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'Main'}],
+        });
       }
     } catch (err) {
       console.log('Error fetching data:', err);
@@ -127,7 +129,10 @@ const Filters = () => {
     getPOSList({filter: filtersQuery}).then((dataRes: any) => {
       setFilters({});
       setPosList(dataRes.businessesLocations);
-      navigation.navigate('Main', {});
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'Main'}],
+      });
     });
   };
 
