@@ -19,6 +19,7 @@ import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 import useStore from '../../state/store';
+import { Camera } from "@rnmapbox/maps";
 
 const snapPoints = ['25%', '42%', '60%', '95%'];
 
@@ -38,7 +39,7 @@ const Home = React.memo(({navigation}: any) => {
 
   const findMe = useCallback(async () => {
     if (userLocationRef.current) {
-      await cameraRef.current.setCamera({
+      await cameraRef.current?.setCamera({
         centerCoordinate: [
           userLocationRef.current.lon,
           userLocationRef.current.lat,

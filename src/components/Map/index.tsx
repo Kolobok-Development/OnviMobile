@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useMemo} from 'react';
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
-import MapboxGL, {UserLocation, LocationPuck} from '@rnmapbox/maps';
+import MapboxGL, { UserLocation, LocationPuck, MapView } from "@rnmapbox/maps";
 import Marker from './Marker';
 import useStore from '../../state/store.ts';
 import useSWR from 'swr';
@@ -31,6 +31,17 @@ const Map = React.memo(({bottomSheetRef, cameraRef, userLocationRef}: any) => {
 
   const [zoomedIn, setZoomedIn] = useState(false);
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
+  const [showUser, setShowUser] = useState(false);
+
+  const [zoom, setZoom] = useState(17);
+  const _mapRef = useRef<MapView>(null);
+
+  const onCameraChanged = async () => {
+    const currentZoom = await _mapRef.current?.getZoom();
+    if (currentZoom !== zoom) {
+      setZoom(currentZoom)
+    }
+  }
 
   const memoizedBusinesses = useMemo(
     () =>
@@ -77,20 +88,21 @@ const Map = React.memo(({bottomSheetRef, cameraRef, userLocationRef}: any) => {
     [userLocationRef],
   );
 
-  useEffect(() => {
-    if (
-      !zoomedIn &&
-      location &&
-      typeof location.latitude !== 'undefined' &&
-      typeof location.longitude !== 'undefined'
-    ) {
-      cameraRef.current.setCamera({
-        centerCoordinate: [location.longitude, location.latitude],
-        zoomLevel: 10,
-      });
-      setZoomedIn(true);
-    }
-  }, [location, zoomedIn]);
+  // useEffect(() => {
+  //   if (
+  //     !zoomedIn &&
+  //     location &&
+  //     typeof location.latitude !== 'undefined' &&
+  //     typeof location.longitude !== 'undefined'
+  //   ) {
+  //     cameraRef.current?.setCamera({
+  //       centerCoordinate: [location.longitude, location.latitude],
+  //       zoomLevel: 10,
+  //     });
+  //
+  //     setZoomedIn(true);
+  //   }
+  // }, [cameraRef.current, location, zoomedIn]);
 
   return (
     <View
@@ -99,37 +111,46 @@ const Map = React.memo(({bottomSheetRef, cameraRef, userLocationRef}: any) => {
         width: Dimensions.get('screen').width,
         position: 'absolute',
       }}>
-      <MapboxGL.Camera
-        ref={cameraRef}
-        zoomLevel={100}
-        pitch={1}
-        animationMode="flyTo"
-        animationDuration={6000}
-        followUserLocation={false}
-      />
       <MapboxGL.MapView
         style={{flex: 1}}
         zoomEnabled={true}
         scaleBarEnabled={false}
+        onCameraChanged={onCameraChanged}
+        onMapIdle={() => {
+          setShowUser(true);
+        }}
         styleURL={'mapbox://styles/mapbox/light-v11'}
         preferredFramesPerSecond={120}>
+        <MapboxGL.Camera
+          ref={cameraRef}
+          zoomLevel={100}
+          pitch={1}
+          animationMode="flyTo"
+          animationDuration={6000}
+          followUserLocation={false}
+        />
         {memoizedBusinesses}
-        <UserLocation
-          visible={hasLocationPermission}
-          showsUserHeadingIndicator={true}
-          requestsAlwaysUse={true}
-          onUpdate={onUserLocationUpdateThrottled}
-          animated={true}
-        />
-        <LocationPuck
-          puckBearing="heading"
-          pulsing={{
-            isEnabled: true,
-            color: '#BFFA00',
-            radius: 25.0,
-          }}
-          visible={true}
-        />
+
+        {showUser && (
+          <>
+            <UserLocation
+              visible={hasLocationPermission}
+              showsUserHeadingIndicator={true}
+              requestsAlwaysUse={true}
+              onUpdate={onUserLocationUpdateThrottled}
+              animated={true}
+            />
+            <LocationPuck
+              puckBearing="heading"
+              pulsing={{
+                isEnabled: true,
+                color: '#BFFA00',
+                radius: 25.0,
+              }}
+              visible={true}
+            />
+          </>
+        )}
       </MapboxGL.MapView>
     </View>
   );
