@@ -166,10 +166,10 @@ const Search = () => {
       orderDate: null,
     });
     route.params.bottomSheetRef?.current?.snapToPosition('42%');
-    route.params.cameraRef.current.moveTo(
-      [carwash.location.lon, carwash.location.lat],
-      1,
-    );
+    route.params.setCamera({
+      latitude: carwash.location.lat,
+      longitude: carwash.location.lon,
+    });
   };
 
   return (

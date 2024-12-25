@@ -20,33 +20,41 @@ import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 import useStore from '../../state/store';
 
+import {useFocusEffect} from '@react-navigation/native';
+
 const snapPoints = ['25%', '42%', '60%', '95%'];
+
+import {CameraReference} from '@components/Map';
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
-  const cameraRef = useRef<any>(null);
+  const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
-  const {filters} = useStore.getState();
+  const {filters, setIsMainScreen} = useStore.getState();
   const reduceMotion = useReducedMotion();
+
+  // Это действие будет выполнено, когда экран получит фокус
+  useFocusEffect(
+    useCallback(() => {
+      setIsMainScreen(true);
+
+      return () => {
+        console.log('Screen lost focus!');
+        setIsMainScreen(false);
+      };
+    }, []),
+  );
 
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
     setBottomSheetIndex(index);
   }, []);
 
-  const findMe = useCallback(async () => {
-    if (userLocationRef.current) {
-      await cameraRef.current.setCamera({
-        centerCoordinate: [
-          userLocationRef.current.lon,
-          userLocationRef.current.lat,
-        ],
-        zoomLevel: 16,
-      });
-    }
-  }, [cameraRef, userLocationRef]);
+  const setCamera = (val?: {longitude: number; latitude: number}) => {
+    cameraRef.current?.setCameraPosition(val);
+  };
 
   const renderHandleComponent = useCallback(
     (props: any) => {
@@ -81,7 +89,9 @@ const Home = React.memo(({navigation}: any) => {
               </ScrollView>
             </View>
             <View>
-              <TouchableOpacity style={styles.findMe} onPress={findMe}>
+              <TouchableOpacity
+                style={styles.findMe}
+                onPress={() => setCamera()}>
                 <Navigation fill={'white'} color={'white'} />
               </TouchableOpacity>
             </View>
@@ -92,7 +102,7 @@ const Home = React.memo(({navigation}: any) => {
         </BottomSheetHandle>
       );
     },
-    [filters, findMe],
+    [filters, setCamera],
   );
 
   return (
@@ -100,7 +110,7 @@ const Home = React.memo(({navigation}: any) => {
       <View style={styles.container}>
         <Map
           bottomSheetRef={bottomSheetRef}
-          cameraRef={cameraRef}
+          ref={cameraRef}
           userLocationRef={userLocationRef}
         />
         <BottomSheet
@@ -125,6 +135,7 @@ const Home = React.memo(({navigation}: any) => {
               active={visible}
               drawerNavigation={navigation}
               cameraRef={cameraRef}
+              setCamera={setCamera}
             />
           </View>
         </BottomSheet>

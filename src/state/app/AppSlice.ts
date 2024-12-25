@@ -22,6 +22,8 @@ export interface AppSlice {
   setIsBottomSheetOpen: (value: boolean) => void;
   location?: IUserLocation;
   setLocation: (value: IUserLocation) => void;
+  transferBalanceModalVisible: boolean;
+  toggleTransferBalanceModal: (val: boolean) => void;
 }
 
 const createAppSlice: StoreSlice<AppSlice> = set => ({
@@ -50,6 +52,12 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   location: undefined,
   setLocation: (value: IUserLocation) =>
     set(state => ({...state, location: value})),
+  transferBalanceModalVisible: false,
+  toggleTransferBalanceModal: val =>
+    set(state => ({
+      ...state,
+      transferBalanceModalVisible: val,
+    })),
 });
 
 export default createAppSlice;

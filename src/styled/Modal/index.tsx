@@ -11,6 +11,7 @@ interface ModalProps {
   titleStyle?: object;
   maskHidden?: boolean;
   statusBarTranslucent?: boolean;
+  bottomSheet?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -23,6 +24,7 @@ const Modal: React.FC<ModalProps> = ({
   titleStyle,
   maskHidden = false,
   statusBarTranslucent = false,
+  bottomSheet = false,
 }) => {
   return (
     <ModalView
@@ -36,7 +38,11 @@ const Modal: React.FC<ModalProps> = ({
           ...styles.position,
           ...(maskHidden ? {} : styles.overlay),
         }}>
-        <View style={styles.modalContainer}>
+        <View
+          style={[
+            styles.modalContainer,
+            bottomSheet ? styles.bottomSheetContainer : null,
+          ]}>
           {title && <Text style={[styles.title, titleStyle]}>{title}</Text>}
           {children}
         </View>
@@ -61,6 +67,16 @@ const styles = StyleSheet.create({
     padding: 20,
     elevation: 5,
     position: 'relative', // Allow absolute positioning of the close button
+  },
+  bottomSheetContainer: {
+    width: '100%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    position: 'absolute',
+    bottom: 0,
+    marginHorizontal: 0,
+    alignSelf: 'center',
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 18,
