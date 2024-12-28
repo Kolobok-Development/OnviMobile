@@ -39,8 +39,7 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken, toggleTransferBalanceModal} =
-    useStore.getState();
+  const {loadUser, user, fcmToken} = useStore.getState();
 
   useAppState();
 

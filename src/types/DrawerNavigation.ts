@@ -10,6 +10,7 @@ export type DrawerParamList = {
   Партнер: {data: Partner}; // Example of params needed for Partner
   'Ввод Промокода': undefined; // No params needed for PromosInput
   'Правовые документы': undefined; // No params needed for Legals
+  'Перенести баланс': undefined;
 };
 
 export type GeneralDrawerNavigationProp<T extends keyof DrawerParamList> =

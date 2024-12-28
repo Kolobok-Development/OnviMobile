@@ -6,21 +6,15 @@ import {DrawerStack} from '@navigators/DrawerStack';
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '@styled/alerts/toasts';
 
-// import TransferBalanceModal from '@components/TransferBalanceModal';
-
 import useStore from '../../state/store';
 
 const Application = () => {
-  const {
-    accessToken /*, transferBalanceModalVisible, toggleTransferBalanceModal*/,
-  } = useStore.getState();
+  const {accessToken} = useStore.getState();
 
   return (
     <>
       {!accessToken ? <AuthStack /> : <DrawerStack />}
       <Toast config={toastConfig} />
-
-      {/* <TransferBalanceModal /> */}
     </>
   );
 };

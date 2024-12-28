@@ -12,7 +12,6 @@ import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
 
 import {DrawerNavProp} from '../../../types/DrawerNavigation';
-// import useStore from '../../../state/store';
 
 interface CustomDrawerItemProps {
   label: string;
@@ -52,8 +51,6 @@ const CustomDrawerContent = ({
   user,
 }: CustomDrawerContentProps) => {
   const initialAvatar = user.avatar;
-
-  // const {toggleTransferBalanceModal} = useStore.getState();
 
   const avatarValue = avatarSwitch(initialAvatar);
   const route = navigation.getState().routes[navigation.getState().index].name;
@@ -224,14 +221,19 @@ const CustomDrawerContent = ({
             flexDirection: 'column',
             marginBottom: dp(80),
           }}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             style={{
               borderColor: '#3461FF',
               borderWidth: 2,
               borderRadius: 25,
               padding: 10,
             }}
-            onPress={() => toggleTransferBalanceModal(true)}>
+            onPress={() => {
+              navigation.reset({
+                index: 0,
+                routes: [{name: 'Перенести баланс'}],
+              });
+            }}>
             <Text
               style={{
                 fontSize: dp(18),
@@ -239,14 +241,14 @@ const CustomDrawerContent = ({
               }}>
               Перенос Баланса
             </Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           <View
             style={{
               flexDirection: 'row',
               justifyContent: 'flex-start',
               alignItems: 'center',
-              // marginTop: dp(20),
+              marginTop: dp(20),
             }}>
             <Image
               style={{

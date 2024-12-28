@@ -1,10 +1,7 @@
 import {useEffect, useState, useRef} from 'react';
 import {AppState, AppStateStatus} from 'react-native';
 
-import useStore from '../state/store';
-
 const useAppState = () => {
-  const {toggleTransferBalanceModal} = useStore.getState();
   const [appState, setAppState] = useState<AppStateStatus>(
     AppState.currentState,
   );
@@ -23,7 +20,6 @@ const useAppState = () => {
       }
 
       // Update appState and close modal
-      toggleTransferBalanceModal(false);
       setAppState(nextAppState);
 
       // Update ref with the latest app state
@@ -40,7 +36,7 @@ const useAppState = () => {
     return () => {
       subscription.remove();
     };
-  }, [toggleTransferBalanceModal]); // No need to add appState to dependencies anymore
+  }, []);
 
   return appState;
 };
