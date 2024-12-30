@@ -8,8 +8,14 @@ import {
   TextInput,
   SafeAreaView,
   Pressable,
+  Platform,
 } from 'react-native';
 import {dp} from '../../utils/dp';
+
+import {BackButton} from '@components/BackButton';
+import {useNavigation} from '@react-navigation/core';
+
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 type FindBalanceResponse = {
   balance: number;
@@ -21,6 +27,9 @@ const TransferBalance = () => {
   const [cardNumber, setCardNumber] = useState<string>('');
   const [balance, setBalance] = useState<FindBalanceResponse>();
   const [error, setError] = useState<string>('');
+
+  const navigation =
+    useNavigation<GeneralDrawerNavigationProp<'Перенести баланс'>>();
 
   const formatCardNumber = (text: string) => {
     setError('');
@@ -53,6 +62,15 @@ const TransferBalance = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <View style={styles.header}>
+        <BackButton
+          callback={() => {
+            navigation.navigate('Настройки');
+          }}
+        />
+        <Text style={styles.screenTitle}>Перенос Баланса</Text>
+        <View style={{width: dp(50)}} />
+      </View>
       <View style={styles.contentContainer}>
         <Text style={styles.modalTitle}>Перенос баланса</Text>
         <Text style={styles.modalDescription}>
@@ -224,6 +242,24 @@ const styles = StyleSheet.create({
     fontSize: dp(18),
     fontWeight: '600',
     color: '#FFF',
+  },
+  header: {
+    flexDirection: 'row',
+    textAlign: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: dp(20),
+  },
+  screenTitle: {
+    fontWeight: '700',
+    fontSize: dp(24),
+    textAlignVertical: 'center',
+    letterSpacing: 0.2,
+    color: '#000',
+    ...Platform.select({
+      ios: {
+        lineHeight: dp(40),
+      },
+    }),
   },
 });
 

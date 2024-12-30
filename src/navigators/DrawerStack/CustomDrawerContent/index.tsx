@@ -227,6 +227,12 @@ const CustomDrawerContent = ({
               borderWidth: 2,
               borderRadius: 25,
               padding: 10,
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              paddingEnd: dp(20),
+              paddingStart: dp(20),
             }}
             onPress={() => {
               navigation.reset({
@@ -241,6 +247,14 @@ const CustomDrawerContent = ({
               }}>
               Перенос Баланса
             </Text>
+            <Image
+              style={{
+                width: dp(25),
+                height: dp(25),
+                marginLeft: dp(5),
+              }}
+              source={require('../../../assets/icons/transfer-balance-icon.png')}
+            />
           </TouchableOpacity>
 
           <View
