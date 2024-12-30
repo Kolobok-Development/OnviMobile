@@ -32,6 +32,95 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 import {Button} from '@styled/buttons';
 import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
+import {MultiStory} from 'react-native-story-view';
+
+// Example story data with the image you provided
+// const storiesData = [
+//   {
+//     id: 1,
+//     username: 'john_doe',
+//     profile: 'https://via.placeholder.com/50', // Profile picture URL
+//     title: 'Vacation in Bali',
+//     stories: [
+//       {
+//         id: 1,
+//         url: 'https://i.pinimg.com/736x/dd/1c/51/dd1c5124f4e54fbb0497035f95584fea.jpg',
+//         text: 'Beautiful view of the beach in Bali!',
+//       },
+//       {
+//         id: 2,
+//         url: 'https://via.placeholder.com/300x500/33FF57/FFFFFF?text=Story+2',
+//         text: 'Sunset view!',
+//       },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     username: 'jane_smith',
+//     profile: 'https://via.placeholder.com/50', // Profile picture URL
+//     title: 'Food Adventures',
+//     stories: [
+//       {
+//         id: 3,
+//         url: 'https://via.placeholder.com/300x500/FF33A1/FFFFFF?text=Story+1',
+//         text: 'Tasty pizza!',
+//       },
+//       {
+//         id: 4,
+//         url: 'https://via.placeholder.com/300x500/33A1FF/FFFFFF?text=Story+2',
+//         text: 'Delicious dessert!',
+//       },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     username: 'alice_williams',
+//     profile: 'https://via.placeholder.com/50', // Profile picture URL
+//     title: 'Mountain Hiking',
+//     stories: [
+//       {
+//         id: 5,
+//         url: 'https://via.placeholder.com/300x500/3357FF/FFFFFF?text=Story+1',
+//         text: 'Peak view!',
+//       },
+//       {
+//         id: 6,
+//         url: 'https://via.placeholder.com/300x500/FF57A1/FFFFFF?text=Story+2',
+//         text: 'Trail fun!',
+//       },
+//     ],
+//   },
+// ];
+const stories = [
+  {
+    id: 1,
+    username: 'Alan',
+    title: 'Albums',
+    profile:
+      'https://sosugary.com/wp-content/uploads/2022/01/TheWeeknd_001.jpg',
+    stories: [
+      {
+        id: 0,
+        url: 'https://i1.sndcdn.com/artworks-IrhmhgPltsdrwMu8-thZohQ-t500x500.jpg',
+        type: 'image',
+        duration: 5,
+        storyId: 1,
+        isSeen: false,
+        showOverlay: true,
+        link: 'https:google.com',
+      },
+      {
+        id: 1,
+        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        type: 'video',
+        duration: 15,
+        storyId: 1,
+        isSeen: false,
+      },
+    ],
+  },
+];
+
 const Main = () => {
   const {
     isBottomSheetOpen,
@@ -288,6 +377,19 @@ const Main = () => {
             <PostsPlaceholder />
           ) : (
             <>
+              <MultiStory
+                stories={stories}
+                storyContainerProps={{
+                  renderCustomView: () => (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: 40,
+                        right: 50,
+                      }}></View>
+                  ),
+                }}
+              />
               {newsData && (
                 <View style={styles.news}>
                   {newsData[0] && (
