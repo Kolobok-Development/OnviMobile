@@ -30,9 +30,11 @@ export type RootStackParamList = {
       number: number;
     }[];
     price?: Price[];
+    bayType: string;
   };
   Launch: {
     bottomSheetRef?: React.RefObject<BottomSheetMethods>;
+    bayType: string;
     active?: boolean;
   };
   Notifications: {

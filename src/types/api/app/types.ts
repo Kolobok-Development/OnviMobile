@@ -169,6 +169,7 @@ export type CarWash = {
   limitMinCost: number;
   limitMaxCost: number;
   boxes: Box[];
+  vacuums: Box[];
   price: Price[];
   tags: Tag[];
 };

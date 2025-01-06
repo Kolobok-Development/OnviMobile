@@ -52,7 +52,7 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
               if (key !== undefined) {
                 params.bottomSheetRef.current?.snapToPosition('95%');
 
-                navigation.navigate('Launch', {});
+                navigation.navigate('Launch', {bayType: params.bayType});
               }
             }}
             active={active !== null && active === key}

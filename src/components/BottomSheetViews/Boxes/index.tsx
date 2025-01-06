@@ -16,10 +16,12 @@ import {
 } from 'src/types/BottomSheetNavigation';
 
 import useStore from '../../../state/store.ts';
+import {useEffect, useState} from 'react';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
+  const type: string = route.params.bayType;
 
   const {business, orderDetails} = useStore.getState();
 
@@ -38,23 +40,46 @@ const Boxes = () => {
 
           <View style={styles.middle}>
             <Text style={styles.middleText}>Выберите</Text>
-            <Text style={styles.middleText}>
-              бокс <Text style={[styles.emoji, {lineHeight: 50}]}>🚙</Text>
-            </Text>
+            {type === 'BAY' ? (
+              <Text style={styles.middleText}>
+                бокс <Text style={[styles.emoji, {lineHeight: 50}]}>🚙</Text>
+              </Text>
+            ) : (
+              <Text style={styles.middleText}>
+                пылесос <Text style={[styles.emoji, {lineHeight: 50}]}>💨</Text>
+              </Text>
+            )}
+
             <View style={styles.boxes}>
-              <BoxesSlide
-                boxes={
-                  business &&
-                  orderDetails &&
-                  typeof orderDetails.carwashIndex !== 'undefined' &&
-                  business.carwashes &&
-                  business.carwashes.length
-                    ? business.carwashes[orderDetails.carwashIndex].boxes
-                    : []
-                }
-                navigation={navigation}
-                params={route.params}
-              />
+              {type === 'BAY' ? (
+                <BoxesSlide
+                  boxes={
+                    business &&
+                    orderDetails &&
+                    typeof orderDetails.carwashIndex !== 'undefined' &&
+                    business.carwashes &&
+                    business.carwashes.length
+                      ? business.carwashes[orderDetails.carwashIndex].boxes
+                      : []
+                  }
+                  navigation={navigation}
+                  params={route.params}
+                />
+              ) : (
+                <BoxesSlide
+                  boxes={
+                    business &&
+                    orderDetails &&
+                    typeof orderDetails.carwashIndex !== 'undefined' &&
+                    business.carwashes &&
+                    business.carwashes.length
+                      ? business.carwashes[orderDetails.carwashIndex].vacuums
+                      : []
+                  }
+                  navigation={navigation}
+                  params={route.params}
+                />
+              )}
             </View>
           </View>
 

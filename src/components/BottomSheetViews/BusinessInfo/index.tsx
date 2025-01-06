@@ -25,9 +25,9 @@ const BusinessInfo = () => {
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
-  const modalCallback = () => {
+  const modalCallback = (bayType: string) => {
     if (true) {
-      navigateBottomSheet('Boxes', {});
+      navigateBottomSheet('Boxes', {bayType: bayType});
       route.params.bottomSheetRef?.current?.snapToPosition('95%');
     } else {
       setModalVisible(false);
@@ -115,15 +115,32 @@ const BusinessInfo = () => {
             ),
           )}
       </View>
-      <View style={{alignSelf: 'center', paddingTop: dp(36)}}>
+      <View
+        style={{
+          alignSelf: 'center',
+          paddingTop: dp(56),
+          justifyContent: 'space-between',
+          flexDirection: 'row',
+          width: '100%',
+        }}>
+        <Button
+          color={'blue'}
+          label={'Пылесосемся'}
+          width={147}
+          height={47}
+          fontSize={16}
+          fontWeight={'600'}
+          onClick={() => modalCallback('VACUUM')}
+        />
+
         <Button
           color={'blue'}
           label={'Моемся'}
-          width={187}
-          height={57}
-          fontSize={24}
+          width={147}
+          height={47}
+          fontSize={16}
           fontWeight={'600'}
-          onClick={() => modalCallback()}
+          onClick={() => modalCallback('BAY')}
         />
       </View>
     </View>

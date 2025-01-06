@@ -10,6 +10,7 @@ import {
   FlatList,
   SafeAreaView,
   Platform,
+  Image,
 } from 'react-native';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
@@ -20,9 +21,9 @@ import {PromoCard} from '@components/PromoCard';
 import PromosPlaceholder from './PromosPlaceholder';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
 
 const Promos = () => {
-
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
   const isLoading = false;
@@ -40,34 +41,16 @@ const Promos = () => {
           <View style={{width: dp(50)}} />
         </View>
         <View style={styles.content}>
-          <View style={{flex: 1}}>
-            <Text style={styles.sectionTitle}>Ввести промокод</Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: 'rgba(245, 245, 245, 1)',
-                marginTop: dp(5),
-                height: dp(40),
-                borderRadius: dp(25),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                handlePromoInput();
-              }}>
-              <Text
-                style={{
-                  color: '#000',
-                  fontSize: dp(14),
-                  fontWeight: '600',
-                  opacity: 0.25,
-                  paddingLeft: dp(10),
-                }}>
-                Промокод
-              </Text>
-            </TouchableOpacity>
+          <View style={{}}>
+            <Text style={styles.sectionTitle}>Персональные акции</Text>
+            <PersonalPromoBanner
+              title={'Вторая мойка в подарок'}
+              date={'до 28 мая'}
+              onPress={() => console.log('ok')}
+            />
           </View>
           <View style={styles.cuponContainer}>
-            <Text style={styles.sectionTitle}>Мои бонусы</Text>
+            <Text style={styles.sectionTitle}>Общие промокоды</Text>
             <View
               style={{
                 display: 'flex',
@@ -98,7 +81,7 @@ const Promos = () => {
                     promo.promotionId.toString()
                   }
                   ListEmptyComponent={() => (
-                      <EmptyPlaceholder text="У вас нет активных бонусов" />
+                    <EmptyPlaceholder text="У вас нет активных бонусов" />
                   )}
                 />
               )}
@@ -139,12 +122,14 @@ const styles = StyleSheet.create({
     marginTop: dp(30),
   },
   sectionTitle: {
-    fontSize: dp(22),
+    fontSize: dp(20),
     color: '#000',
     fontWeight: '600',
+    marginBottom: dp(8),
   },
   cuponContainer: {
     flex: 3,
+    marginTop: dp(16),
   },
   modalContainer: {
     flex: 1,
