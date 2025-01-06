@@ -1,4 +1,4 @@
-import React from 'react';
+import React /*, {useEffect}*/ from 'react';
 
 import {AuthStack} from '@navigators/AuthStack';
 import {DrawerStack} from '@navigators/DrawerStack';

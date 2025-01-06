@@ -53,6 +53,7 @@ interface BottomSheetStackInterface {
   active: boolean;
   drawerNavigation: GeneralDrawerNavigationProp<any>;
   cameraRef: any;
+  setCamera: (val?: {longitude: number; latitude: number}) => void;
 }
 
 const BottomSheetStack = React.memo(
@@ -61,6 +62,7 @@ const BottomSheetStack = React.memo(
     active,
     drawerNavigation,
     cameraRef,
+    setCamera,
   }: BottomSheetStackInterface) => {
     const {setIsMainScreen} = useStore.getState();
 
@@ -98,7 +100,7 @@ const BottomSheetStack = React.memo(
             name="Search"
             key="SearchScreen"
             component={Search}
-            initialParams={{bottomSheetRef, cameraRef}}
+            initialParams={{bottomSheetRef, setCamera}}
           />
           <RootStack.Screen
             name="Filters"

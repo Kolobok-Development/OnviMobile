@@ -11,7 +11,7 @@ export type RootStackParamList = {
   };
   Search: {
     bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-    cameraRef?: any;
+    setCamera: (val?: {longitude: number; latitude: number}) => void;
   };
   Filters: {
     bottomSheetRef?: React.RefObject<BottomSheetMethods>;

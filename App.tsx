@@ -5,7 +5,7 @@ import {ThemeProvider} from './src/context/ThemeProvider';
 
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from './src/components/Application';
-// import ThemeWrapper from '@components/ThemeWrapper';
+
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {IntlProvider} from 'react-intl';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
@@ -16,6 +16,8 @@ import {createUserMeta, updateUserMeta} from './src/services/api/user';
 import {DeviceMeta} from './src/types/models/User';
 import {hasMetaDataChanged} from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
+
+import useAppState from './src/hooks/useAppState';
 
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
@@ -38,6 +40,8 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken} = useStore.getState();
+
+  useAppState();
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {

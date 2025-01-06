@@ -22,6 +22,7 @@ import {PromosInput} from '@screens/PromosInput';
 import {CustomDrawerContent} from './CustomDrawerContent';
 import {Legals} from '@screens/Legals';
 import {DrawerNavProp} from '../../types/DrawerNavigation';
+import {TransferBalance} from '@screens/TransferBalance';
 
 const DrawerStack = () => {
   const {theme} = useTheme();
@@ -63,6 +64,9 @@ const DrawerStack = () => {
         <Drawer.Screen name="Партнер">{() => <Partner />}</Drawer.Screen>
         <Drawer.Screen name="Ввод Промокода">
           {() => <PromosInput />}
+        </Drawer.Screen>
+        <Drawer.Screen name="Перенести баланс">
+          {() => <TransferBalance />}
         </Drawer.Screen>
         <Drawer.Screen name="Правовые документы">
           {() => <Legals />}
