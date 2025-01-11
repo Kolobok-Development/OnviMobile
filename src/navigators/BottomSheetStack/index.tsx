@@ -11,6 +11,7 @@ import {
   Main,
   Notifications,
   History,
+  PostPayment,
 } from '@components/BottomSheetViews';
 import {Search} from '@components/BottomSheetViews/Search';
 import {Filters} from '@components/BottomSheetViews/Filters';
@@ -23,6 +24,7 @@ import {Post} from '@components/BottomSheetViews/Post';
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {OrderStatus} from '../../state/order/OrderSlice.ts';
 
 const navTheme = {
   ...DefaultTheme,
@@ -64,7 +66,8 @@ const BottomSheetStack = React.memo(
     cameraRef,
     setCamera,
   }: BottomSheetStackInterface) => {
-    const {setIsMainScreen} = useStore.getState();
+    const {setIsMainScreen, setShowBurgerButton} = useStore.getState();
+    const {status} = useStore.getState().orderDetails;
 
     return (
       <NavigationContainer
@@ -72,15 +75,21 @@ const BottomSheetStack = React.memo(
         ref={navigationRef}
         independent={true}
         onStateChange={(navigationState: any) => {
+          const currentRoute =
+            navigationState.routes?.[navigationState.routes.length - 1];
+
           if (
             navigationState.routes &&
             navigationState.routes.length &&
-            navigationState.routes[navigationState?.routes.length - 1].name ===
-              'Main'
+            currentRoute?.name === 'Main'
           ) {
             setIsMainScreen(true);
+            setShowBurgerButton(true);
+          } else if (currentRoute?.name === 'PostPayment') {
+            setShowBurgerButton(false);
           } else {
             setIsMainScreen(false);
+            setShowBurgerButton(true);
           }
         }}>
         <RootStack.Navigator
@@ -166,6 +175,12 @@ const BottomSheetStack = React.memo(
             name="Campaign"
             key="CampaignScreen"
             component={Campaign}
+            initialParams={{bottomSheetRef}}
+          />
+          <RootStack.Screen
+            name="PostPayment"
+            key="PostPaymentScreen"
+            component={PostPayment}
             initialParams={{bottomSheetRef}}
           />
         </RootStack.Navigator>

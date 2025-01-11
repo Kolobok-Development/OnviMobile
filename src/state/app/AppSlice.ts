@@ -16,6 +16,8 @@ export interface AppSlice {
   setPartners: (values: any[]) => void;
   isMainScreen: boolean;
   setIsMainScreen: (value: boolean) => void;
+  showBurgerButton: boolean;
+  setShowBurgerButton: (value: boolean) => void;
   bottomSheetPosition: any;
   setBottomSheetPosition: (value: any) => void;
   isBottomSheetOpen: boolean;
@@ -50,6 +52,10 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   location: undefined,
   setLocation: (value: IUserLocation) =>
     set(state => ({...state, location: value})),
+
+  showBurgerButton: true,
+  setShowBurgerButton: (value: boolean) =>
+    set(state => ({...state, showBurgerButton: value})),
 });
 
 export default createAppSlice;

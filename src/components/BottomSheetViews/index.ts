@@ -6,3 +6,4 @@ export {Filters} from './Filters';
 export {Search} from './Search';
 export {Notifications} from './Notifications';
 export {History} from './History';
+export {PostPayment} from './PostPayment';

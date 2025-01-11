@@ -287,8 +287,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           const data = await getMe();
           const tariff = await getTariff();
 
-          console.log('UPDATING USER DATA _________');
-          console.log(JSON.stringify(data, null, 2));
           set({
             user: {
               ...data,

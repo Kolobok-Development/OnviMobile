@@ -33,64 +33,32 @@ import {Button} from '@styled/buttons';
 import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
 import {MultiStory} from 'react-native-story-view';
+import {getStoryView} from '@services/api/story-view';
+import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
+import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
+import { StoryView } from "@components/StoryView";
 
-// Example story data with the image you provided
-// const storiesData = [
-//   {
-//     id: 1,
-//     username: 'john_doe',
-//     profile: 'https://via.placeholder.com/50', // Profile picture URL
-//     title: 'Vacation in Bali',
-//     stories: [
-//       {
-//         id: 1,
-//         url: 'https://i.pinimg.com/736x/dd/1c/51/dd1c5124f4e54fbb0497035f95584fea.jpg',
-//         text: 'Beautiful view of the beach in Bali!',
-//       },
-//       {
-//         id: 2,
-//         url: 'https://via.placeholder.com/300x500/33FF57/FFFFFF?text=Story+2',
-//         text: 'Sunset view!',
-//       },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     username: 'jane_smith',
-//     profile: 'https://via.placeholder.com/50', // Profile picture URL
-//     title: 'Food Adventures',
-//     stories: [
-//       {
-//         id: 3,
-//         url: 'https://via.placeholder.com/300x500/FF33A1/FFFFFF?text=Story+1',
-//         text: 'Tasty pizza!',
-//       },
-//       {
-//         id: 4,
-//         url: 'https://via.placeholder.com/300x500/33A1FF/FFFFFF?text=Story+2',
-//         text: 'Delicious dessert!',
-//       },
-//     ],
-//   },
-//   {
-//     id: 3,
-//     username: 'alice_williams',
-//     profile: 'https://via.placeholder.com/50', // Profile picture URL
-//     title: 'Mountain Hiking',
-//     stories: [
-//       {
-//         id: 5,
-//         url: 'https://via.placeholder.com/300x500/3357FF/FFFFFF?text=Story+1',
-//         text: 'Peak view!',
-//       },
-//       {
-//         id: 6,
-//         url: 'https://via.placeholder.com/300x500/FF57A1/FFFFFF?text=Story+2',
-//         text: 'Trail fun!',
-//       },
-//     ],
-//   },
-// ];
+const infractionStories = [
+  {
+    id: 1,
+    image: 'https://example.com/infraction1.jpg',
+    description: 'Parked in a no-parking zone.',
+    timestamp: '2023-01-01 12:00',
+  },
+  {
+    id: 2,
+    image: 'https://example.com/infraction2.jpg',
+    description: 'Blocking driveway.',
+    timestamp: '2023-01-02 14:30',
+  },
+  {
+    id: 3,
+    image: 'https://example.com/infraction3.jpg',
+    description: 'Double parking.',
+    timestamp: '2023-01-03 16:45',
+  },
+];
+
 const stories = [
   {
     id: 1,
@@ -131,6 +99,9 @@ const Main = () => {
 
   const isOpened = isBottomSheetOpen;
 
+  //TESTING !!
+
+
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
@@ -142,6 +113,12 @@ const Main = () => {
     data: newsData,
     error: newsError,
   } = useSWR(['getNewsList'], () => getNewsList('*'));
+
+  const {
+    isLoading: storyLoading,
+    data: storyData,
+    error: storyError,
+  } = useSWR(['getStoryViw'], () => getStoryView('*'));
 
   //Search near by POS
   const [nearestCarWash, setNearestCarWash] = useState(null);
@@ -302,7 +279,7 @@ const Main = () => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                handleLaunchCarWash();
+                navigateBottomSheet('PostPayment', {})
               }}>
               <View style={styles.label}>
                 <Text
@@ -360,6 +337,17 @@ const Main = () => {
           </View>
         </Card>
         <Card>
+          {storyLoading || storyError ? (
+            <StoryViewPlaceholder />
+          ) : (
+            <>
+              {storyData && (
+                <StoryView
+                  stories={transformContentDataToUserStories(storyData)}
+                />
+              )}
+            </>
+          )}
           <View style={{...styles.newsRow}}>
             <Text
               style={{
@@ -374,19 +362,6 @@ const Main = () => {
             <PostsPlaceholder />
           ) : (
             <>
-              <MultiStory
-                stories={stories}
-                storyContainerProps={{
-                  renderCustomView: () => (
-                    <View
-                      style={{
-                        position: 'absolute',
-                        top: 40,
-                        right: 50,
-                      }}></View>
-                  ),
-                }}
-              />
               {newsData && (
                 <View style={styles.news}>
                   {newsData[0] && (

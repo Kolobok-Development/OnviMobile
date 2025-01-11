@@ -9,12 +9,14 @@ import {IUpdateAccountResponse} from '../../../types/api/user/res/IUpdateAccount
 import {userApiInstance} from '@services/api/axiosConfig.ts';
 import {ICreateUserMetaRequest} from '../../../types/api/user/req/ICreateUserMetaRequest.ts';
 import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMetaRequest.ts';
+import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
 
 enum ACCOUNT {
-  GET_MET_URL = '/account/me',
+  GET_MET_URL = '/1/me',
   GET_ORDER_HISTORY_URL = '/account/orders',
   GET_TARIFF_URL = '/account/tariff',
   GET_PROMOTION_HISTORY_URL = '/account/promotion',
+  GET_ACTIVE_PROMOTIONS = 'account/activePromotion',
   UPDATE_ACCOUNT_URL = '/account',
   UPDATE_NOTIFICATION_URL = '/account/notifications',
   CREATE_ACCOUNT_META = '/account/meta/create',
@@ -69,6 +71,16 @@ export async function updateAllowNotificationSending(
   await userApiInstance.patch(ACCOUNT.UPDATE_NOTIFICATION_URL, {notification});
 }
 
+export async function getActiveClientPromotions(): Promise<
+  IPersonalPromotion[]
+> {
+  const response = await userApiInstance.get<
+    IUserApiResponse<IPersonalPromotion[]>
+  >(ACCOUNT.GET_ACTIVE_PROMOTIONS);
+
+  return response.data.data;
+}
+
 export async function createUserMeta(data: Meta): Promise<any> {
   const body: ICreateUserMetaRequest = {
     clientId: data.clientId,
@@ -84,7 +96,6 @@ export async function createUserMeta(data: Meta): Promise<any> {
     ACCOUNT.CREATE_ACCOUNT_META,
     body,
   );
-  console.log(JSON.stringify(response, null, 2));
   return response;
 }
 
@@ -96,7 +107,7 @@ export async function updateUserMeta(data: Meta): Promise<any> {
     ACCOUNT.UPDATE_ACCOUNT_META,
     body,
   );
-  console.log(JSON.stringify(response, null, 2));
+  //console.log(JSON.stringify(response, null, 2));
   return response;
 }
 
