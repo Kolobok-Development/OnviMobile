@@ -9,7 +9,7 @@ import {toastConfig} from '@styled/alerts/toasts';
 import useStore from '../../state/store';
 
 const Application = () => {
-  const {accessToken} = useStore.getState();
+  const {accessToken} = useStore();
 
   return (
     <>

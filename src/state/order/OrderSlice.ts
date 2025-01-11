@@ -22,8 +22,8 @@ export interface OrderSlice {
   setSum: (sum: number) => void;
   orderDetails: OrderDetailsType;
   setOrderDetails: (orderDetails: OrderDetailsType) => void;
-  business: (CarWashLocation & {close: boolean}) | null;
-  setBusiness: (value: (CarWashLocation & {close: boolean}) | null) => void;
+  business: (CarWashLocation & {close?: boolean}) | null;
+  setBusiness: (value: (CarWashLocation & {close?: boolean}) | null) => void;
 }
 
 const createOrderSlice: StoreSlice<OrderSlice> = set => ({
@@ -48,7 +48,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
   setOrderDetails: (orderDetails: OrderDetailsType) =>
     set(state => ({...state, orderDetails})),
   business: null,
-  setBusiness: (value: (CarWashLocation & {close: boolean}) | null) =>
+  setBusiness: (value: (CarWashLocation & {close?: boolean}) | null) =>
     set(state => ({...state, business: value})),
 });
 

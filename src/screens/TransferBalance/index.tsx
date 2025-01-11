@@ -17,6 +17,9 @@ import {useNavigation} from '@react-navigation/core';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
+import {getBalance} from '@services/api/balance';
+import {transferBalance} from '@services/api/balance';
+
 type FindBalanceResponse = {
   balance: number;
   balanceAfterTransfer: number;
@@ -39,20 +42,33 @@ const TransferBalance = () => {
   };
 
   const findBalance = async () => {
-    try {
-      setError('');
-      setBalance({
-        balance: 300,
-        balanceAfterTransfer: 200,
-        bonusAsPromo: 100,
+    setError('');
+
+    getBalance({
+      devNomer: cardNumber,
+    })
+      .then(data => {
+        setBalance({
+          balance: data.data.airBalance + data.data.realBalance,
+          balanceAfterTransfer: data.data.realBalance,
+          bonusAsPromo: data.data.airBalance,
+        });
+      })
+      .catch(err => {
+        setError(err.message);
+        setBalance(undefined);
       });
-    } catch (err: any) {
-      setError(err.message);
-      setBalance(undefined);
-    }
   };
 
-  const transferBalance = async () => {};
+  const transfer = async () => {
+    transferBalance({
+      devNomer: cardNumber,
+      airBalance: balance?.bonusAsPromo ?? 0,
+      realBalance: balance?.balanceAfterTransfer ?? 0,
+    })
+      .then(data => {})
+      .catch(err => {});
+  };
 
   const isCardNumberValid = cardNumber.length === 19;
   const buttonStyles = [
@@ -159,7 +175,7 @@ const TransferBalance = () => {
             <Text style={styles.buttonText}>Найти</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={buttonStyles} onPress={transferBalance}>
+          <TouchableOpacity style={buttonStyles} onPress={transfer}>
             <Text style={styles.buttonText}>Перенести</Text>
           </TouchableOpacity>
         )}
