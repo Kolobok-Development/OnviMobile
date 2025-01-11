@@ -1,6 +1,15 @@
 import {StoreSlice} from '../store.ts';
 import {CarWashLocation, Price} from '../../types/api/app/types.ts';
 
+export enum OrderStatus {
+  Created = 'created', // New status for when an order is created
+  Pending = 'pending', // Order is waiting for some action
+  InProgress = 'in_progress', // Order is currently being handled
+  InPayment = 'in_payment',
+  Completed = 'completed', // Order is finalized
+  Cancelled = 'cancelled', // Order has been cancelled
+}
+
 export type OrderDetailsType = {
   posId?: null | number;
   sum?: null | number;
@@ -13,6 +22,7 @@ export type OrderDetailsType = {
   order?: number | null;
   orderDate?: string | null;
   carwashIndex?: number;
+  status?: OrderStatus; // New field for order status
 };
 
 export interface OrderSlice {
@@ -44,6 +54,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
     prices: [],
     order: null,
     orderDate: null,
+    status: OrderStatus.Created,
   },
   setOrderDetails: (orderDetails: OrderDetailsType) =>
     set(state => ({...state, orderDetails})),

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {TouchableOpacity, StyleSheet, View, Platform} from 'react-native';
 
@@ -25,7 +25,13 @@ const BurgerButton = ({
 }: BurgerProps) => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const {isMainScreen} = useStore();
+  const {isMainScreen, showBurgerButton} = useStore();
+
+  if (!showBurgerButton) {
+    return <></>;
+  }
+
+
   if (isDrawerStack) {
     return (
       <View
@@ -64,7 +70,6 @@ const BurgerButton = ({
         Platform.OS === 'ios' && styles.iosShadow,
       ]}
       onPress={() => {
-        console.log('navigationRef: ', navigationRef);
         navigationRef.current?.goBack();
         if (
           navigationRef.current?.getCurrentRoute()?.name === 'BusinessInfo' &&

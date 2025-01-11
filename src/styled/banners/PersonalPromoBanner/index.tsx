@@ -8,18 +8,21 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
+import { FormattedDate } from "react-intl";
 
 // Define the component props
 interface PersonalPromoBannerProps {
   title: string;
-  date: string;
-  onPress: (event: GestureResponderEvent) => void;
+  date: Date;
+  disable: boolean;
+  onPress?: (event: GestureResponderEvent) => void;
 }
 
 export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
   title,
   date,
   onPress,
+  disable = false,
 }) => {
   return (
     <View style={styles.container}>
@@ -29,7 +32,13 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
             {title}
           </Text>
           <View style={styles.dateContainer}>
-            <Text style={styles.dateText}>{date}</Text>
+            <Text style={styles.dateText}>
+              <FormattedDate
+                value={date.toString()}
+                month="long"
+                day="numeric"
+              />
+            </Text>
           </View>
         </View>
 
@@ -39,9 +48,11 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
         />
       </View>
 
-      <TouchableOpacity style={styles.button} onPress={onPress}>
-        <Text style={styles.buttonText}>Использовать</Text>
-      </TouchableOpacity>
+      {!disable && (
+        <TouchableOpacity style={styles.button} onPress={onPress}>
+          <Text style={styles.buttonText}>Использовать</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -63,7 +74,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   title: {
-    fontSize: dp(22),
+    fontSize: dp(20),
     fontWeight: 'bold',
     color: '#000',
     marginBottom: dp(8),
@@ -101,4 +112,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

@@ -19,6 +19,7 @@ interface IButton {
   height?: number;
   fontSize?: number;
   fontWeight?: '600';
+  outlined?: boolean; // New prop to enable outlined styling
 }
 
 const Button: React.FC<IButton> = ({
@@ -31,6 +32,7 @@ const Button: React.FC<IButton> = ({
   fontSize,
   fontWeight,
   showLoading = false,
+  outlined = false, // Default value for outlined
 }) => {
   return (
     <TouchableOpacity
@@ -38,18 +40,24 @@ const Button: React.FC<IButton> = ({
       disabled={disabled}
       style={{
         ...styles.button,
-        ...styles[color],
+        ...(outlined ? styles.outlined : styles[color]),
         width: width ? dp(width) : dp(285),
         height: height ? dp(height) : dp(48),
+        borderColor: outlined ? styles[color]?.backgroundColor : 'transparent',
+        borderWidth: outlined ? dp(2) : 0,
       }}>
       {showLoading ? (
-        <ActivityIndicator size="large" color="white" />
+        <ActivityIndicator
+          size="large"
+          color={outlined ? styles[color]?.backgroundColor : 'white'}
+        />
       ) : (
         <Text
           style={{
             ...styles.buttonText,
             fontSize: fontSize ? dp(fontSize) : dp(18),
             fontWeight: fontWeight ? fontWeight : '500',
+            color: outlined ? styles[color]?.backgroundColor : WHITE,
           }}>
           {label}
         </Text>
@@ -60,24 +68,24 @@ const Button: React.FC<IButton> = ({
 
 const styles = StyleSheet.create({
   button: {
-    // width: 285,
-    // height: 48,
     borderRadius: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   grey: {
     backgroundColor: '#A3A3A6',
-    borderRadius: 24,
   },
   blue: {
     backgroundColor: '#0B68E1',
   },
+  lightGrey: {
+    backgroundColor: 'rgba(216, 217, 221, 1)',
+  },
   buttonText: {
     color: WHITE,
   },
-  lightGrey: {
-    backgroundColor: 'rgba(216, 217, 221, 1)',
+  outlined: {
+    backgroundColor: 'transparent',
   },
 });
 

@@ -1,94 +1,158 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {dp} from '../../utils/dp';
 
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   FlatList,
   SafeAreaView,
   Platform,
+  Pressable,
   Image,
-} from 'react-native';
+  TouchableOpacity, ScrollView
+} from "react-native";
 import {BurgerButton} from '@navigators/BurgerButton';
 import {useNavigation} from '@react-navigation/core';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
-import {IGetPromoHistoryResponse} from '../../types/api/user/res/IGetPromoHistoryResponse';
-import {PromoCard} from '@components/PromoCard';
 
-import PromosPlaceholder from './PromosPlaceholder';
+import {GlobalPromosPlaceholder} from './PromosPlaceholder';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
+import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import useSWR from 'swr';
+import {getActiveClientPromotions} from '@services/api/user';
+import {getGlobalPromotions} from '@services/api/promotion';
+import {PersonalPromoPlaceholder} from '@screens/Promos/PersonalPromoPlaceholder.tsx';
 
 const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const isLoading = false;
+  const {
+    isLoading: isGlobalPromoLoading,
+    data: globalPromo,
+    error: globalError,
+  } = useSWR(['getGlobalPromos'], () => getGlobalPromotions());
 
-  const handlePromoInput = () => {
-    navigation.navigate('Ввод Промокода');
-  };
+  const {
+    isLoading: isPersonalPromoLoading,
+    data: personalPromo,
+    error: personalError,
+  } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions());
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <View style={styles.header}>
           <BurgerButton isDrawerStack={true} />
           <Text style={styles.screenTitle}>Акции</Text>
           <View style={{width: dp(50)}} />
         </View>
         <View style={styles.content}>
-          <View style={{}}>
+          <View style={{flex: 1, marginBottom: dp(20), height: '30%'}}>
             <Text style={styles.sectionTitle}>Персональные акции</Text>
-            <PersonalPromoBanner
-              title={'Вторая мойка в подарок'}
-              date={'до 28 мая'}
-              onPress={() => console.log('ok')}
-            />
+            {isPersonalPromoLoading || personalError ? (
+              // Show the placeholder when loading
+              <PersonalPromoPlaceholder />
+            ) : personalPromo && personalPromo.length > 0 ? (
+              // Show the carousel if promo data is available
+              <View>
+                <Carousel
+                  data={personalPromo}
+                  vertical={false}
+                  width={dp(350)}
+                  height={dp(200)}
+                  pagingEnabled
+                  renderItem={({item}: any) => (
+                    <PersonalPromoBanner
+                      title={`Промокод на ${item.discount} ${
+                        item.discountType == 2 ? '%' : 'баллов'
+                      }`}
+                      date={item.expiryDate}
+                      onPress={() =>
+                        navigation.navigate('Ввод Промокода', {
+                          promocode: item,
+                          type: 'personal',
+                        })
+                      }
+                      disable={false}
+                    />
+                  )}
+                />
+              </View>
+            ) : (
+              // Show a fallback message if no promo codes are available
+              <View
+                style={{
+                  alignSelf: 'center',
+                  flex: 1,
+                  justifyContent: 'center',
+                }}>
+                <EmptyPlaceholder text="У вас пока нет промокодов" />
+              </View>
+            )}
           </View>
+
           <View style={styles.cuponContainer}>
             <Text style={styles.sectionTitle}>Общие промокоды</Text>
             <View
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                marginTop: dp(25),
+                alignItems: 'center',
               }}>
-              {isLoading ? (
-                <PromosPlaceholder />
+              {isGlobalPromoLoading || globalError ? (
+                <GlobalPromosPlaceholder />
+              ) : globalPromo && globalPromo.length > 0 ? (
+                <View>
+                  <Carousel
+                    vertical={false}
+                    loop
+                    autoPlay={true}
+                    autoPlayInterval={5000}
+                    enabled
+                    data={globalPromo}
+                    pagingEnabled
+                    width={dp(350)}
+                    height={dp(350)}
+                    renderItem={({item}: any) => {
+                      return (
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate('Ввод Промокода', {
+                              promocode: item,
+                              type: 'global',
+                            })
+                          }>
+                          <Image
+                            source={{uri: item.image}}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              resizeMode: 'contain',
+                            }}
+                          />
+                        </TouchableOpacity>
+                      );
+                    }}
+                  />
+                </View>
               ) : (
-                <FlatList
-                  data={[]}
-                  renderItem={promo => (
-                    <PromoCard
-                      title={promo.item.title}
-                      headerText={'Акция'}
-                      bonus={
-                        promo.item.point > 0
-                          ? promo.item.point + ' ₽'
-                          : promo.item.cashbackSum + ' %'
-                      }
-                      date={new Date(promo.item.expiryPeriodDate)}
-                      key={promo.item.promotionId.toString()}
-                    />
-                  )}
-                  // onRefresh={mutate}
-                  // refreshing={isLoading}
-                  keyExtractor={(promo: IGetPromoHistoryResponse) =>
-                    promo.promotionId.toString()
-                  }
-                  ListEmptyComponent={() => (
-                    <EmptyPlaceholder text="У вас нет активных бонусов" />
-                  )}
-                />
+                <View
+                  style={{
+                    alignSelf: 'center',
+                    flex: 1,
+                    justifyContent: 'center',
+                  }}>
+                  <EmptyPlaceholder text="У вас пока нет промокодов" />
+                </View>
               )}
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -128,8 +192,8 @@ const styles = StyleSheet.create({
     marginBottom: dp(8),
   },
   cuponContainer: {
-    flex: 3,
-    marginTop: dp(16),
+    flex: 2,
+    marginTop: dp(25),
   },
   modalContainer: {
     flex: 1,
