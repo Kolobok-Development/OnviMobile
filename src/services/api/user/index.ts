@@ -12,7 +12,7 @@ import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMet
 import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
 
 enum ACCOUNT {
-  GET_MET_URL = '/1/me',
+  GET_MET_URL = '/account/me',
   GET_ORDER_HISTORY_URL = '/account/orders',
   GET_TARIFF_URL = '/account/tariff',
   GET_PROMOTION_HISTORY_URL = '/account/promotion',

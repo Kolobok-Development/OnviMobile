@@ -28,8 +28,6 @@ interface TransferBalancePayload {
   airBalance: number;
 }
 
-// interface TransferBalanceResponse {}
-
 export async function transferBalance(
   body: TransferBalancePayload,
 ): Promise<any> {

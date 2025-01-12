@@ -19,6 +19,10 @@ import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 
 import {getBalance} from '@services/api/balance';
 import {transferBalance} from '@services/api/balance';
+import TransferFailModal from '@components/TransferBalance/TransferFailModal';
+import TransferSuccessModal from '@components/TransferBalance/TransferSuccessModal';
+
+import useStore from '../../state/store';
 
 type FindBalanceResponse = {
   balance: number;
@@ -30,6 +34,11 @@ const TransferBalance = () => {
   const [cardNumber, setCardNumber] = useState<string>('');
   const [balance, setBalance] = useState<FindBalanceResponse>();
   const [error, setError] = useState<string>('');
+
+  const [transferFailModal, setTransferFailModal] = useState(false);
+  const [transferSuccessModal, setTransferSuccessModal] = useState(false);
+
+  const {loadUser} = useStore.getState();
 
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'Перенести баланс'>>();
@@ -45,7 +54,7 @@ const TransferBalance = () => {
     setError('');
 
     getBalance({
-      devNomer: cardNumber,
+      devNomer: cardNumber.replace('-', ''),
     })
       .then(data => {
         setBalance({
@@ -62,12 +71,17 @@ const TransferBalance = () => {
 
   const transfer = async () => {
     transferBalance({
-      devNomer: cardNumber,
+      devNomer: cardNumber.replace('-', ''),
       airBalance: balance?.bonusAsPromo ?? 0,
       realBalance: balance?.balanceAfterTransfer ?? 0,
     })
-      .then(data => {})
-      .catch(err => {});
+      .then(() => {
+        setTransferSuccessModal(true);
+      })
+      .catch(err => {
+        console.log('err: ', err);
+        setTransferFailModal(true);
+      });
   };
 
   const isCardNumberValid = cardNumber.length === 19;
@@ -180,6 +194,28 @@ const TransferBalance = () => {
           </TouchableOpacity>
         )}
       </View>
+
+      <TransferFailModal
+        visible={transferFailModal}
+        onClose={() => {
+          setTransferFailModal(false);
+          setError('');
+          setCardNumber('');
+          setBalance(undefined);
+        }}
+      />
+      <TransferSuccessModal
+        visible={transferSuccessModal}
+        onClose={() => {
+          setTransferSuccessModal(false);
+          setError('');
+          setCardNumber('');
+          setBalance(undefined);
+          loadUser().then(() => {
+            navigation.navigate('Главная');
+          });
+        }}
+      />
     </SafeAreaView>
   );
 };

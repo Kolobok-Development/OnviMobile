@@ -1,5 +1,11 @@
 import React from 'react';
-import {Modal as ModalView, View, Text, StyleSheet} from 'react-native';
+import {
+  Modal as ModalView,
+  View,
+  Text,
+  StyleSheet,
+  ViewStyle,
+} from 'react-native';
 
 interface ModalProps {
   visible: boolean;
@@ -12,6 +18,7 @@ interface ModalProps {
   maskHidden?: boolean;
   statusBarTranslucent?: boolean;
   bottomSheet?: boolean;
+  modalStyles?: ViewStyle;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -25,6 +32,7 @@ const Modal: React.FC<ModalProps> = ({
   maskHidden = false,
   statusBarTranslucent = false,
   bottomSheet = false,
+  modalStyles,
 }) => {
   return (
     <ModalView
@@ -42,6 +50,7 @@ const Modal: React.FC<ModalProps> = ({
           style={[
             styles.modalContainer,
             bottomSheet ? styles.bottomSheetContainer : null,
+            modalStyles ? modalStyles : null,
           ]}>
           {title && <Text style={[styles.title, titleStyle]}>{title}</Text>}
           {children}
