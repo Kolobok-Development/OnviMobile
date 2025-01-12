@@ -29,6 +29,7 @@ const Business = () => {
       type: carwash.type,
       name: carwash.name,
       carwashIndex: index,
+      prices: carwash.price,
     } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', {});
