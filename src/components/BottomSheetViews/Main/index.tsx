@@ -36,7 +36,7 @@ import {MultiStory} from 'react-native-story-view';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
-import { StoryView } from "@components/StoryView";
+import {StoryView} from '@components/StoryView';
 
 const infractionStories = [
   {
@@ -100,7 +100,6 @@ const Main = () => {
   const isOpened = isBottomSheetOpen;
 
   //TESTING !!
-
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -279,7 +278,7 @@ const Main = () => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                navigateBottomSheet('PostPayment', {})
+                handleLaunchCarWash();
               }}>
               <View style={styles.label}>
                 <Text
