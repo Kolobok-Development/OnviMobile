@@ -103,16 +103,13 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       return null;
     }
   },
-
   login: async (phone, otp) => {
     try {
       const formattedPhone = phone.replace(/[ \(\)-]+/g, '');
       const response = await login({phone: formattedPhone, otp});
-
       if (response.type === 'register-required') {
         return response;
       }
-
       if (response.type === 'login-success') {
         const {tokens} = response;
         if (!tokens) {
@@ -120,7 +117,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         }
 
         const refreshToken = tokens.refreshToken;
-
         await EncryptedStorage.setItem(
           'user_session',
           JSON.stringify({
@@ -135,6 +131,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
             expiredDate: new Date(tokens.accessTokenExp).toISOString(),
           }),
         );
+
         set({
           accessToken: tokens.accessToken,
           expiredDate: new Date(tokens.accessTokenExp).toISOString(),
@@ -273,11 +270,9 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       console.log('Sign out error:', error);
     }
   },
-
   loadUser: async () => {
     try {
       const userSession = await LocalStorage.getString('user_session');
-
       const existingSession = await EncryptedStorage.getItem('user_session');
 
       let existingData: Record<string, any> = {};
@@ -328,7 +323,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   deleteUser: async () => {
     try {
       const status = await deleteAccount();
-
       if (status == 200) {
         await LocalStorage.delete('user_session');
 

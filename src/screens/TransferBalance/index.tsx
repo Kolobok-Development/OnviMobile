@@ -54,13 +54,13 @@ const TransferBalance = () => {
     setError('');
 
     getBalance({
-      devNomer: cardNumber.replace('-', ''),
+      devNomer: cardNumber.replaceAll('-', ''),
     })
       .then(data => {
         setBalance({
-          balance: data.data.airBalance + data.data.realBalance,
-          balanceAfterTransfer: data.data.realBalance,
-          bonusAsPromo: data.data.airBalance,
+          balance: data.airBalance + data.realBalance,
+          balanceAfterTransfer: data.realBalance ?? 0,
+          bonusAsPromo: data.airBalance ?? 0,
         });
       })
       .catch(err => {
@@ -71,7 +71,7 @@ const TransferBalance = () => {
 
   const transfer = async () => {
     transferBalance({
-      devNomer: cardNumber.replace('-', ''),
+      devNomer: cardNumber.replaceAll('-', ''),
       airBalance: balance?.bonusAsPromo ?? 0,
       realBalance: balance?.balanceAfterTransfer ?? 0,
     })
@@ -84,11 +84,8 @@ const TransferBalance = () => {
       });
   };
 
-  const isCardNumberValid = cardNumber.length === 19;
-  const buttonStyles = [
-    styles.button,
-    {backgroundColor: isCardNumberValid ? '#3461FF' : '#A3A3A6'},
-  ];
+  // const isCardNumberValid = cardNumber.length === 19;
+  const buttonStyles = [styles.button, {backgroundColor: '#3461FF'}];
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -184,7 +181,7 @@ const TransferBalance = () => {
         {!balance ? (
           <TouchableOpacity
             style={buttonStyles}
-            disabled={!isCardNumberValid}
+            // disabled={!isCardNumberValid}
             onPress={findBalance}>
             <Text style={styles.buttonText}>Найти</Text>
           </TouchableOpacity>

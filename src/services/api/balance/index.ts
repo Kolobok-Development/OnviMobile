@@ -14,7 +14,7 @@ interface GetBalanceResponse {
 
 export async function getBalance(query: {
   [key: string]: string;
-}): Promise<IUserApiResponse<GetBalanceResponse>> {
+}): Promise<GetBalanceResponse> {
   const response = await userApiInstance.get(BALANCE.GET_BALANCE, {
     params: query,
   });
