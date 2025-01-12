@@ -1538,7 +1538,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 4d52717dd820707cc4eadec5eb981b4832ec8d5d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   FunctionalSwift: b65b0a7ddde7f11a11e794f79a1e8009724ed0bd
-  glog: 035f1e36e53b355cf70f6434d161b36e7d21fecd
+  glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
   hermes-engine: 5420539d016f368cd27e008f65f777abd6098c56
@@ -1619,7 +1619,7 @@ SPEC CHECKSUMS:
   SPaySDK: 1015f868b6e9255457704cd6a3d051829263661a
   Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
   YandexMobileMetrica: f5368ee93f286c793d73b58da00929babfc897c1
-  Yoga: 08cd7601462818c4985bda7b205b9e6a92a7e66a
+  Yoga: ff0382b894475dba0b4d2a5fda860bfee5a9afad
   YooKassaPayments: b2a8cde4c2eeac5f8b5b73131fdb7ff17ffc09f0
   YooKassaPaymentsApi: a13865624dc72513416ee73b80b8fe5682b9525a
   YooKassaWalletApi: cbb352525bfe89fd2ad52635062f79f8bbbc23ec
@@ -1629,4 +1629,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 2d7f4a323edc1eadb777601a9876037f65de41bc
 
-COCOAPODS: 1.13.0
+COCOAPODS: 1.14.3

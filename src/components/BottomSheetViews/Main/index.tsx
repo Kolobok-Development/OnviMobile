@@ -36,7 +36,7 @@ import {MultiStory} from 'react-native-story-view';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
-import { StoryView } from "@components/StoryView";
+import {StoryView} from '@components/StoryView';
 
 const infractionStories = [
   {
@@ -90,21 +90,16 @@ const stories = [
 ];
 
 const Main = () => {
-  const {
-    isBottomSheetOpen,
-    location,
-    posList,
-    nearByPos,
-    setNearByPos,
-    setBusiness,
-  } = useStore.getState();
+  const {isBottomSheetOpen, nearByPos, setNearByPos, setBusiness, location} =
+    useStore.getState();
+
+  const {posList} = useStore();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
   const isOpened = isBottomSheetOpen;
 
   //TESTING !!
-
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -148,7 +143,8 @@ const Main = () => {
         cwLon,
         cwLat,
       );
-      if (distance < minDistance && distance <= 0.5) {
+
+      if (distance < minDistance && distance <= 5) {
         minDistance = distance;
         setNearByPos(carWash);
       }
@@ -160,10 +156,10 @@ const Main = () => {
   }, [posList]);
 
   const handleLaunchCarWash = () => {
-    if (nearestCarWash) {
+    if (nearByPos) {
       // Launch car wash logic here
-      setBusiness(nearestCarWash);
-      navigateBottomSheet('Business', nearestCarWash);
+      setBusiness(nearByPos);
+      navigateBottomSheet('Business', nearByPos);
     } else {
       setNearByModal(true);
     }
@@ -282,7 +278,7 @@ const Main = () => {
             <TouchableOpacity
               style={styles.balanceCard}
               onPress={() => {
-                navigateBottomSheet('PostPayment', {})
+                handleLaunchCarWash();
               }}>
               <View style={styles.label}>
                 <Text

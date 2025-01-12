@@ -210,7 +210,7 @@ const Payment = () => {
 
       setTimeout(() => {
         setOrderSatus(null);
-        navigateBottomSheet('Main', {});
+        navigateBottomSheet('PostPayment', {});
       }, 5000);
     } catch (error) {
       setOrderSatus(null);

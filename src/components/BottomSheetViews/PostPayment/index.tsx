@@ -5,6 +5,8 @@ import {Button, Tile} from '@styled/buttons';
 import {Slide} from '@styled/silder';
 import useStore from '../../../state/store.ts';
 
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+
 const InputSums: {label: string; description?: string; active?: boolean}[] = [
   {
     label: '50',
@@ -27,7 +29,7 @@ const InputSums: {label: string; description?: string; active?: boolean}[] = [
 const PostPayment = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const {isMainScreen, showBurgerButton} = useStore();
+  const {showBurgerButton, orderDetails, setOrderDetails} = useStore();
 
   useEffect(() => {
     console.log('CHANGING STATE SCREEN ');
@@ -37,6 +39,33 @@ const PostPayment = () => {
   const handleTileClick = (tile: any, index: number) => {
     setActiveIndex(index); // Update the active index
     console.log(tile.label); // Return the label of the clicked tile
+  };
+
+  const restart = async () => {
+    setOrderDetails({
+      ...orderDetails,
+      sum: Number(InputSums[activeIndex].label),
+    });
+
+    navigateBottomSheet('Payment', {});
+  };
+
+  const finish = () => {
+    setOrderDetails({
+      posId: null,
+      sum: null,
+      bayNumber: null,
+      promoCodeId: null,
+      rewardPointsUsed: null,
+      type: null,
+      name: null,
+      prices: undefined,
+      order: null,
+      orderDate: null,
+      carwashIndex: undefined,
+      status: undefined,
+    });
+    navigateBottomSheet('Main', {});
   };
 
   return (
@@ -57,35 +86,40 @@ const PostPayment = () => {
         <Text style={styles.titleText}>Удачной мойки!</Text>
       </View>
 
-      <View style={styles.content}>
-        <Text style={styles.contentText}>Хотите продолжить мойку? 🚙</Text>
-        <Slide
-          items={InputSums}
-          initialActiveIndex={0}
-          onItemClick={(tile, index) => handleTileClick(tile, index)}
-          renderItem={(sum, index, isActive, onClick) => (
-            <Tile
-              key={`tile-${index}`}
-              label={sum.label}
-              description={sum.description}
-              active={activeIndex === index} // Highlight the active tile
-              onClick={onClick}
-              width={dp(120)} // Adjust size as needed
-              height={dp(90)}
-              borderRadius={dp(25)}
-              labelFontSize={dp(32)} // Example of custom font size
-              descriptionFontSize={dp(18)}
-            />
-          )}
-        />
-        <Button
-          label={'Запустить повторно'}
-          color={'blue'}
-          height={dp(40)}
-          width={dp(343)}
-          outlined={true}
-        />
-      </View>
+      {orderDetails.type === 'SelfService' ? (
+        <View style={styles.content}>
+          <Text style={styles.contentText}>Хотите продолжить мойку? 🚙</Text>
+          <Slide
+            items={InputSums}
+            initialActiveIndex={0}
+            onItemClick={(tile, index) => handleTileClick(tile, index)}
+            renderItem={(sum, index, isActive, onClick) => (
+              <Tile
+                key={`tile-${index}`}
+                label={sum.label}
+                description={sum.description}
+                active={activeIndex === index} // Highlight the active tile
+                onClick={onClick}
+                width={dp(120)} // Adjust size as needed
+                height={dp(90)}
+                borderRadius={dp(25)}
+                labelFontSize={dp(32)} // Example of custom font size
+                descriptionFontSize={dp(18)}
+              />
+            )}
+          />
+          <Button
+            label={'Запустить повторно'}
+            color={'blue'}
+            height={dp(40)}
+            width={dp(343)}
+            outlined={true}
+            onClick={restart}
+          />
+        </View>
+      ) : (
+        <></>
+      )}
       <View
         style={{
           flex: 1,
@@ -97,6 +131,7 @@ const PostPayment = () => {
           color={'blue'}
           height={dp(40)}
           width={dp(343)}
+          onClick={finish}
         />
         <Text style={styles.text}>Если возникли проблемы, свяжитесь</Text>
         <Text style={styles.text}>с нашей техподдержкой</Text>

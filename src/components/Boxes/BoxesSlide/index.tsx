@@ -46,7 +46,6 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
               setOrderDetails({
                 ...orderDetails,
                 bayNumber: box.number,
-                prices: params.price,
               });
 
               if (key !== undefined) {

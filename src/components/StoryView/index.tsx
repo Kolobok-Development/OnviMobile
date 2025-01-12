@@ -18,9 +18,6 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
     setPressedIndex(index);
   };
 
-
-
-
   return (
     <View style={styles.container}>
       {/* Story Avatars */}
@@ -76,6 +73,11 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
               padding: 0,
               margin: 0,
             },
+          }}
+          imageStyle={{
+            width: '100%',
+            height: '100%',
+            resizeMode: 'cover',
           }}
         />
       )}
