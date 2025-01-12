@@ -15,6 +15,8 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import {deleteAccount, getMe, getTariff} from '@services/api/user';
 import {login, refresh, register, sendOtp} from '@services/api/auth';
 
+const MAX_REFRESH_RETRIES = 3;
+
 export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
@@ -39,6 +41,7 @@ export interface UserSlice {
   signOut: () => Promise<void>;
   loadUser: () => Promise<void>;
   deleteUser: () => Promise<void>;
+  refreshRetryCounter: number;
 }
 
 const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
@@ -48,7 +51,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   accessToken: null,
   expiredDate: null,
   loading: true,
-
+  refreshRetryCounter: MAX_REFRESH_RETRIES,
   setUser: user => set({user}),
   setAccessToken: accessToken => set({accessToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
@@ -87,7 +90,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       return existingData.refreshToken;
     } catch (error) {
       console.log('Error refreshing token:', error);
-      set({loading: false});
+
+      const refreshRetriesLeft = get().refreshRetryCounter;
+
+      if (refreshRetriesLeft > 0) {
+        set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
+      } else {
+        set({loading: false});
+        get().signOut();
+      }
 
       return null;
     }
@@ -129,6 +140,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           expiredDate: new Date(tokens.accessTokenExp).toISOString(),
           isAuthenticated: true,
           loading: false,
+          refreshRetryCounter: MAX_REFRESH_RETRIES,
         });
         await get().loadUser();
 
@@ -191,6 +203,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           expiredDate: new Date(tokens.accessTokenExp).toISOString(),
           isAuthenticated: true,
           loading: false,
+          refreshRetryCounter: MAX_REFRESH_RETRIES,
         });
         await get().loadUser();
 
@@ -254,6 +267,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         user: null,
         accessToken: null,
         expiredDate: null,
+        refreshRetryCounter: 0,
       });
     } catch (error) {
       console.log('Sign out error:', error);
@@ -292,6 +306,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
               ...data,
               tariff: tariff.cashBack,
             },
+            refreshRetryCounter: MAX_REFRESH_RETRIES,
           });
         } else if (
           formatted &&
@@ -329,6 +344,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           user: null,
           accessToken: null,
           expiredDate: null,
+          refreshRetryCounter: 0,
         });
       }
     } catch (error: any) {
