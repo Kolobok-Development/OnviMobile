@@ -158,7 +158,6 @@ const styles = StyleSheet.create({
   content: {
     flex: 2,
     flexDirection: 'column',
-    alignItems: 'center',
   },
   titleText: {
     fontSize: dp(21),

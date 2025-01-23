@@ -90,8 +90,14 @@ const stories = [
 ];
 
 const Main = () => {
-  const {isBottomSheetOpen, nearByPos, setNearByPos, setBusiness, location} =
-    useStore.getState();
+  const {
+    isBottomSheetOpen,
+    nearByPos,
+    setNearByPos,
+    setBusiness,
+    location,
+    bottomSheetRef,
+  } = useStore.getState();
 
   const {posList} = useStore();
   const {theme} = useTheme();
@@ -237,7 +243,7 @@ const Main = () => {
                 navigateBottomSheet('Search', {
                   type: 'search',
                 });
-                route.params.bottomSheetRef?.current?.snapToPosition('95%');
+                bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Search
                 stroke={'#000000'}
@@ -260,7 +266,7 @@ const Main = () => {
               style={{}}
               onPress={() => {
                 navigateBottomSheet('Filters', {});
-                route.params.bottomSheetRef?.current?.snapToPosition('95%');
+                bottomSheetRef?.current?.snapToPosition('95%');
               }}>
               <Image
                 source={require('../../../assets/icons/filterIcon.png')}

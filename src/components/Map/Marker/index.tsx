@@ -9,14 +9,19 @@ import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 interface MarkerProps {
   coordinate: number[];
   business: any;
-  bottomSheetRef: React.RefObject<BottomSheetMethods>;
+
   locationRef: any;
 }
 
 const Marker = React.memo(
-  ({coordinate, business, bottomSheetRef, locationRef}: MarkerProps) => {
-    const {setSelectedPos, setSum, setOrderDetails, setBusiness} =
-      useStore.getState();
+  ({coordinate, business, locationRef}: MarkerProps) => {
+    const {
+      setSelectedPos,
+      setSum,
+      setOrderDetails,
+      setBusiness,
+      bottomSheetRef,
+    } = useStore.getState();
 
     const handleSelected = useCallback(() => {
       const distance = calculateDistance(
@@ -44,7 +49,7 @@ const Marker = React.memo(
         order: null,
         orderDate: null,
       });
-      bottomSheetRef.current?.snapToPosition('60%');
+      bottomSheetRef?.current?.snapToPosition('60%');
     }, [
       business,
       bottomSheetRef,

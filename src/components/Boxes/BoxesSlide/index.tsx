@@ -21,7 +21,7 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const {orderDetails, setOrderDetails} = useStore.getState();
+  const {orderDetails, setOrderDetails, bottomSheetRef} = useStore.getState();
 
   const [active, setActive] = useState(orderDetails.bayNumber);
 
@@ -49,7 +49,7 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
               });
 
               if (key !== undefined) {
-                params.bottomSheetRef.current?.snapToPosition('95%');
+                bottomSheetRef?.current?.snapToPosition('95%');
 
                 navigation.navigate('Launch', {bayType: params.bayType});
               }

@@ -8,10 +8,9 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {dp} from '../../utils/dp';
 
-import {
-  GeneralBottomSheetNavigationProp,
-  GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+import useStore from '../../state/store';
+
+import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
 
 interface BackButtonProps {
   callback?: () => void;
@@ -25,7 +24,8 @@ const BackButton = ({
   index = undefined,
 }: BackButtonProps) => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<any>>();
-  const route = useRoute<GeneralBottomSheetRouteProp<any>>();
+
+  const {bottomSheetRef} = useStore.getState();
 
   return (
     <TouchableOpacity
@@ -34,16 +34,11 @@ const BackButton = ({
         if (callback) {
           return callback();
         }
-        if (
-          route &&
-          route.params &&
-          route.params.bottomSheetRef &&
-          route.params.bottomSheetRef.current
-        ) {
+        if (bottomSheetRef?.current) {
           if (index !== undefined) {
-            route.params.bottomSheetRef.current?.snapToIndex(index);
+            bottomSheetRef?.current?.snapToIndex(index);
           } else if (position) {
-            route.params.bottomSheetRef.current?.snapToPosition(position);
+            bottomSheetRef?.current?.snapToPosition(position);
           }
         }
         navigation.goBack();
