@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Pressable, StyleSheet, Image, Text} from 'react-native';
-import {MultiStoryContainer} from 'react-native-story-view'; // Assuming you're using this library
+import {View, FlatList, Pressable, StyleSheet, Image} from 'react-native';
+import {MultiStoryContainer} from 'react-native-story-view';
 import {dp} from '@utils/dp.ts';
 import {UserStoriesList} from '../../types/Stories.ts';
 import {X} from 'react-native-feather';
