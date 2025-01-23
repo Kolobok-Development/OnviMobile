@@ -182,8 +182,13 @@ const Switch = (IProps: SwitchProps): JSX.Element => {
 
   return (
     <>
-      {typeof onValueChange === 'function' && !disabled ? (
-        <TouchableWithoutFeedback onPress={() => onValueChange(!value)}>
+      {!disabled ? (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            if (onValueChange) {
+              onValueChange(!value);
+            }
+          }}>
           <Animated.View
             style={[
               styles.switch,

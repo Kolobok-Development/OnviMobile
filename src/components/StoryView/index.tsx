@@ -47,6 +47,7 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
       {/* Story Viewer */}
       {isStoryViewVisible && (
         <MultiStoryContainer
+          enableProgress={true}
           visible={isStoryViewVisible}
           viewedStories={[]}
           stories={stories}

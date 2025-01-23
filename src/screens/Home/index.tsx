@@ -32,7 +32,7 @@ const Home = React.memo(({navigation}: any) => {
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
   const bottomSheetRef = useRef<BottomSheetMethods>(null);
-  const {filters, setIsMainScreen} = useStore.getState();
+  const {filters, setIsMainScreen, setIsBottomSheetOpen} = useStore.getState();
   const reduceMotion = useReducedMotion();
 
   // Это действие будет выполнено, когда экран получит фокус
@@ -50,6 +50,8 @@ const Home = React.memo(({navigation}: any) => {
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
     setBottomSheetIndex(index);
+
+    setIsBottomSheetOpen(index >= 2);
   }, []);
 
   const setCamera = (val?: {longitude: number; latitude: number}) => {

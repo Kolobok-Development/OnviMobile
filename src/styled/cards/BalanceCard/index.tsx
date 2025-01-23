@@ -28,14 +28,14 @@ const BalanceCard = (option: IBalanceCardProps) => {
         <Text style={styles.text}>{option.option.address}</Text>
       </View>
       <View style={styles.rightSide}>
-        <Text style={styles.rubles}>{option.option.operSumReal} ₽</Text>
+        <Text style={styles.rubles}>{option.option.operSumReal} ₽ </Text>
 
         <View style={styles.balance}>
           {option.option.cashBackAmount && option.option.cashBackAmount > 0 ? (
             <CustomSwitch
               value={false}
               inActiveText={`+${option.option.cashBackAmount}`}
-              disabled={true}
+              disabled={false}
               backgroundInActive="#BFFA00FF"
               circleImageInactive={require('../../../assets/icons/small_icon_black.png')}
               circleSize={dp(17)} // Adjust the circle size as needed
@@ -51,7 +51,7 @@ const BalanceCard = (option: IBalanceCardProps) => {
                   ? `${option.option.operSumPoint}`
                   : `-${option.option.operSumPoint}`
               }
-              disabled={true}
+              disabled={false}
               backgroundInActive="#000"
               circleImageInactive={require('../../../assets/icons/small-icon.png')}
               circleSize={dp(17)} // Adjust the circle size as needed

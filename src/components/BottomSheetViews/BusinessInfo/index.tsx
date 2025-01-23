@@ -119,19 +119,32 @@ const BusinessInfo = () => {
         style={{
           alignSelf: 'center',
           paddingTop: dp(56),
-          justifyContent: 'space-between',
+          justifyContent:
+            orderDetails &&
+            Number(orderDetails.carwashIndex) >= 0 &&
+            business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
+              ?.length
+              ? 'space-between'
+              : 'center',
           flexDirection: 'row',
           width: '100%',
         }}>
-        <Button
-          color={'blue'}
-          label={'Пылесосемся'}
-          width={147}
-          height={47}
-          fontSize={16}
-          fontWeight={'600'}
-          onClick={() => modalCallback('VACUUM')}
-        />
+        {orderDetails &&
+        Number(orderDetails.carwashIndex) >= 0 &&
+        business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
+          ?.length ? (
+          <Button
+            color={'blue'}
+            label={'Пылесосемся'}
+            width={147}
+            height={47}
+            fontSize={16}
+            fontWeight={'600'}
+            onClick={() => modalCallback('VACUUM')}
+          />
+        ) : (
+          <></>
+        )}
 
         <Button
           color={'blue'}
