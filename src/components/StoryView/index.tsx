@@ -1,26 +1,36 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Pressable, StyleSheet, Image, Text} from 'react-native';
-import {MultiStoryContainer} from 'react-native-story-view'; // Assuming you're using this library
+import {View, FlatList, Pressable, StyleSheet, Image} from 'react-native';
+import {MultiStoryContainer} from 'react-native-story-view';
 import {dp} from '@utils/dp.ts';
 import {UserStoriesList} from '../../types/Stories.ts';
-import {X} from 'react-native-feather'; //
+import {X} from 'react-native-feather';
 
 interface StoryViewProps {
-  stories: UserStoriesList; // Replace `any` with the proper type for your stories/ Optional footer component
+  stories: UserStoriesList;
 }
 
 const StoryView: React.FC<StoryViewProps> = ({stories}) => {
   const [isStoryViewVisible, setIsStoryViewVisible] = useState(false);
   const [pressedIndex, setPressedIndex] = useState<number>(0);
+  const [loading, setLoading] = useState(true);
 
   const openStories = (index: number) => {
-    setIsStoryViewVisible(true);
-    setPressedIndex(index);
+    if (!loading) {
+      setIsStoryViewVisible(true);
+      setPressedIndex(index);
+    }
   };
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <View style={styles.container}>
-      {/* Story Avatars */}
       <FlatList
         horizontal
         data={stories}
@@ -28,8 +38,10 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
         renderItem={({item, index}) => (
           <Pressable
             onPress={() => openStories(index)}
+            disabled={loading}
             style={{
               paddingBottom: dp(15),
+              opacity: loading ? 0.5 : 1,
             }}>
             <Image
               source={{uri: item.icon}}
@@ -38,15 +50,16 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
                 height: dp(85),
                 resizeMode: 'contain',
                 marginRight: dp(15),
+                opacity: loading ? 0.5 : 1,
               }}
             />
           </Pressable>
         )}
       />
 
-      {/* Story Viewer */}
       {isStoryViewVisible && (
         <MultiStoryContainer
+          enableProgress={true}
           visible={isStoryViewVisible}
           viewedStories={[]}
           stories={stories}

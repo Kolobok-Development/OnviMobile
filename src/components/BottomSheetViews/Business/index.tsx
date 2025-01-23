@@ -20,7 +20,8 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 const Business = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
 
-  const {setOrderDetails, orderDetails, business} = useStore.getState();
+  const {setOrderDetails, orderDetails, business, bottomSheetRef} =
+    useStore.getState();
 
   const selectCarwash = (carwash: any, index: number) => {
     setOrderDetails({
@@ -33,7 +34,7 @@ const Business = () => {
     } as OrderDetailsType);
 
     navigateBottomSheet('BusinessInfo', {});
-    route.params.bottomSheetRef?.current?.snapToPosition('60%');
+    bottomSheetRef?.current?.snapToPosition('60%');
   };
 
   return (

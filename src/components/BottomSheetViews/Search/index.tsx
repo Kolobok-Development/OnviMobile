@@ -33,7 +33,8 @@ const Search = () => {
   const [search, setSearch] = useState('');
   const route = useRoute<GeneralBottomSheetRouteProp<'Search'>>();
 
-  const {setOrderDetails, setBusiness, location} = useStore.getState();
+  const {setOrderDetails, setBusiness, location, bottomSheetRef} =
+    useStore.getState();
 
   const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
 
@@ -165,7 +166,7 @@ const Search = () => {
       order: null,
       orderDate: null,
     });
-    route.params.bottomSheetRef?.current?.snapToPosition('42%');
+    bottomSheetRef?.current?.snapToPosition('42%');
     route.params.setCamera({
       latitude: carwash.location.lat,
       longitude: carwash.location.lon,

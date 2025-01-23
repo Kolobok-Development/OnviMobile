@@ -27,8 +27,6 @@ const Slide: React.FC<SlideProps> = ({
   initialActiveIndex = null,
   onItemClick = () => {},
   leftSpacing = (width - horizontalScale(92) * 3) / 2 - dp(22),
-  rightSpacing = (width - horizontalScale(92) * 3) / 2 - dp(22),
-  containerStyle,
 }) => {
   const [activeIndex, setActiveIndex] = useState(initialActiveIndex);
 
@@ -41,18 +39,24 @@ const Slide: React.FC<SlideProps> = ({
     <ScrollView
       horizontal
       style={[styles.container]}
+      contentContainerStyle={{
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+      }}
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}>
-      {/* Left Spacing */}
-      <View style={{width: leftSpacing}} />
-      {/* Render Items */}
-      {items.map((item, index) =>
-        renderItem(item, index, activeIndex === index, () =>
-          handleItemClick(item, index),
-        ),
-      )}
-      {/* Right Spacing */}
-      <View style={{width: rightSpacing}} />
+      {items.map((item, index) => {
+        const isFirstItem = index === 0;
+        return (
+          <View
+            key={index}
+            style={[{paddingLeft: isFirstItem ? 0 : leftSpacing / 4}]}>
+            {renderItem(item, index, activeIndex === index, () =>
+              handleItemClick(item, index),
+            )}
+          </View>
+        );
+      })}
     </ScrollView>
   );
 };

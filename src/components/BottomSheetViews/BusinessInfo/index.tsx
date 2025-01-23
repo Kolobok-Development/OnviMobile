@@ -21,14 +21,14 @@ import useStore from '../../../state/store.ts';
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails} = useStore.getState();
+  const {business, orderDetails, bottomSheetRef} = useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = (bayType: string) => {
     if (true) {
       navigateBottomSheet('Boxes', {bayType: bayType});
-      route.params.bottomSheetRef?.current?.snapToPosition('95%');
+      bottomSheetRef?.current?.snapToPosition('95%');
     } else {
       setModalVisible(false);
     }
@@ -37,7 +37,7 @@ const BusinessInfo = () => {
   const forceForward = () => {
     setModalVisible(false);
     navigateBottomSheet('Boxes', {});
-    route.params.bottomSheetRef?.current?.snapToPosition('95%');
+    bottomSheetRef?.current?.snapToPosition('95%');
   };
 
   return (
@@ -119,19 +119,32 @@ const BusinessInfo = () => {
         style={{
           alignSelf: 'center',
           paddingTop: dp(56),
-          justifyContent: 'space-between',
+          justifyContent:
+            orderDetails &&
+            Number(orderDetails.carwashIndex) >= 0 &&
+            business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
+              ?.length
+              ? 'space-between'
+              : 'center',
           flexDirection: 'row',
           width: '100%',
         }}>
-        <Button
-          color={'blue'}
-          label={'Пылесосемся'}
-          width={147}
-          height={47}
-          fontSize={16}
-          fontWeight={'600'}
-          onClick={() => modalCallback('VACUUM')}
-        />
+        {orderDetails &&
+        Number(orderDetails.carwashIndex) >= 0 &&
+        business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
+          ?.length ? (
+          <Button
+            color={'blue'}
+            label={'Пылесосемся'}
+            width={147}
+            height={47}
+            fontSize={16}
+            fontWeight={'600'}
+            onClick={() => modalCallback('VACUUM')}
+          />
+        ) : (
+          <></>
+        )}
 
         <Button
           color={'blue'}

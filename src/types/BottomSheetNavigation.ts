@@ -5,26 +5,18 @@ import {Campaign, NewsPost, Price, Tag} from './api/app/types.ts';
 
 export type RootStackParamList = {
   Main: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     drawerNavigation?: any;
     active?: boolean;
   };
   Search: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     setCamera: (val?: {longitude: number; latitude: number}) => void;
   };
-  Filters: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
-  Business: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
+  Filters: {};
+  Business: {};
   BusinessInfo: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     tags?: Tag[];
   };
   Boxes: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     active?: boolean;
     boxes?: {
       number: number;
@@ -33,38 +25,24 @@ export type RootStackParamList = {
     bayType: string;
   };
   Launch: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     bayType: string;
     active?: boolean;
   };
-  Notifications: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
+  Notifications: {};
   History: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     drawerNavigation?: any;
     type: string;
   };
-  Payment: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
-  AddCard: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
-  Settings: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
+  Payment: {};
+  AddCard: {};
+  Settings: {};
   Post: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     data?: NewsPost | null;
   };
   Campaign: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
     data?: Campaign | null;
   };
-  About: {
-    bottomSheetRef?: React.RefObject<BottomSheetMethods>;
-  };
+  About: {};
 };
 
 export type GeneralBottomSheetNavigationProp<
