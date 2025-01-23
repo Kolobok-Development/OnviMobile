@@ -3,37 +3,34 @@ import {View, FlatList, Pressable, StyleSheet, Image, Text} from 'react-native';
 import {MultiStoryContainer} from 'react-native-story-view'; // Assuming you're using this library
 import {dp} from '@utils/dp.ts';
 import {UserStoriesList} from '../../types/Stories.ts';
-import {X} from 'react-native-feather'; // Assuming this is the close icon you're using
+import {X} from 'react-native-feather';
 
 interface StoryViewProps {
-  stories: UserStoriesList; // Replace `any` with the proper type for your stories
+  stories: UserStoriesList;
 }
 
 const StoryView: React.FC<StoryViewProps> = ({stories}) => {
   const [isStoryViewVisible, setIsStoryViewVisible] = useState(false);
   const [pressedIndex, setPressedIndex] = useState<number>(0);
-  const [loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true);
 
   const openStories = (index: number) => {
     if (!loading) {
-      // Prevent opening stories if loading
       setIsStoryViewVisible(true);
       setPressedIndex(index);
     }
   };
 
-  // Simulate loading delay on mount
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false); // Set loading to false after a delay
-    }, 1000); // Set loading duration (3 seconds in this case)
+      setLoading(false);
+    }, 1000);
 
-    return () => clearTimeout(timer); // Cleanup on unmount
+    return () => clearTimeout(timer);
   }, []);
 
   return (
     <View style={styles.container}>
-      {/* Story Avatars */}
       <FlatList
         horizontal
         data={stories}
@@ -41,10 +38,10 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
         renderItem={({item, index}) => (
           <Pressable
             onPress={() => openStories(index)}
-            disabled={loading} // Disable interaction while loading
+            disabled={loading}
             style={{
               paddingBottom: dp(15),
-              opacity: loading ? 0.5 : 1, // Grey out while loading
+              opacity: loading ? 0.5 : 1,
             }}>
             <Image
               source={{uri: item.icon}}
@@ -53,14 +50,13 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
                 height: dp(85),
                 resizeMode: 'contain',
                 marginRight: dp(15),
-                opacity: loading ? 0.5 : 1, // Apply grey-out effect
+                opacity: loading ? 0.5 : 1,
               }}
             />
           </Pressable>
         )}
       />
 
-      {/* Story Viewer */}
       {isStoryViewVisible && (
         <MultiStoryContainer
           enableProgress={true}
