@@ -92,8 +92,7 @@ const Settings = () => {
 
   const handleClosePress = () => {
     setEditing(false);
-    // @ts-ignore
-    bottomSheetRef.current.close();
+    bottomSheetRef?.current?.close();
   };
 
   const saveUserDate = async () => {

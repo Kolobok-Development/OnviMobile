@@ -1,4 +1,4 @@
-import React, {useRef, useState, useMemo, useCallback} from 'react';
+import React, {useRef, useState, useMemo, useCallback, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,6 @@ import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 import {Map} from '@components/Map';
 import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
@@ -31,9 +30,17 @@ const Home = React.memo(({navigation}: any) => {
   const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
-  const bottomSheetRef = useRef<BottomSheetMethods>(null);
-  const {filters, setIsMainScreen, setIsBottomSheetOpen} = useStore.getState();
+  const {filters, setIsMainScreen, setIsBottomSheetOpen, setBottomSheetRef} =
+    useStore.getState();
   const reduceMotion = useReducedMotion();
+
+  const bsRef = useRef(null);
+
+  useEffect(() => {
+    if (bsRef.current) {
+      setBottomSheetRef(bsRef);
+    }
+  }, [bsRef.current, setBottomSheetRef]);
 
   // Это действие будет выполнено, когда экран получит фокус
   useFocusEffect(
@@ -110,17 +117,13 @@ const Home = React.memo(({navigation}: any) => {
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={styles.container}>
-        <Map
-          bottomSheetRef={bottomSheetRef}
-          ref={cameraRef}
-          userLocationRef={userLocationRef}
-        />
+        <Map ref={cameraRef} userLocationRef={userLocationRef} />
         <BottomSheet
           animateOnMount={!reduceMotion}
           enableContentPanningGesture={true}
           enableHandlePanningGesture={false}
           handleComponent={renderHandleComponent}
-          ref={bottomSheetRef}
+          ref={bsRef}
           handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}
           keyboardBlurBehavior="restore"
           index={bottomSheetIndex}
@@ -133,7 +136,6 @@ const Home = React.memo(({navigation}: any) => {
           topInset={0}>
           <View style={styles.contentContainer}>
             <BottomSheetStack
-              bottomSheetRef={bottomSheetRef}
               active={visible}
               drawerNavigation={navigation}
               cameraRef={cameraRef}
@@ -146,10 +148,7 @@ const Home = React.memo(({navigation}: any) => {
           <BurgerButton handleSheetChanges={handleSheetChanges} />
         </View>
         <View style={styles.balance}>
-          <Balance
-            bottomSheetIndex={bottomSheetIndex}
-            bottomSheetRef={bottomSheetRef}
-          />
+          <Balance bottomSheetIndex={bottomSheetIndex} />
         </View>
       </View>
     </GestureHandlerRootView>

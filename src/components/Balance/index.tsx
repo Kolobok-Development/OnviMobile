@@ -21,13 +21,12 @@ import BalancePlaceholder from './BalancePlaceholder';
 
 interface BalanceProps {
   bottomSheetIndex: number;
-  bottomSheetRef: any;
 }
 
-const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
+const Balance = ({bottomSheetIndex}: BalanceProps) => {
   const {theme} = useTheme();
 
-  const {user} = useStore();
+  const {user, bottomSheetRef} = useStore();
 
   return (
     <>
@@ -48,7 +47,7 @@ const Balance = ({bottomSheetIndex, bottomSheetRef}: BalanceProps) => {
             }}
             onPress={() => {
               navigateBottomSheet('History', {});
-              bottomSheetRef.current?.snapToPosition('95%');
+              bottomSheetRef?.current?.snapToPosition('95%');
             }}>
             <Image
               source={require('../../assets/icons/small-icon.png')}
