@@ -44,7 +44,7 @@ const SignIn = () => {
           Введите номер телефона
         </Text>
         <Text style={styles.descriptionText}>
-          Мы отправили на него код активации
+          Мы отправим на него код активации
         </Text>
 
         <PhoneInp phoneNumber={phone} setPhoneNumber={setPhone} />

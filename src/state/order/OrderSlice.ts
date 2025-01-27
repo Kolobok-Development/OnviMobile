@@ -57,7 +57,10 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
     status: OrderStatus.Created,
   },
   setOrderDetails: (orderDetails: OrderDetailsType) =>
-    set(state => ({...state, orderDetails})),
+    set(state => ({
+      ...state,
+      orderDetails,
+    })),
   business: null,
   setBusiness: (value: (CarWashLocation & {close?: boolean}) | null) =>
     set(state => ({...state, business: value})),

@@ -57,10 +57,64 @@ const PromoModal: React.FC<IPromoModalProps> = ({
   return (
     <Modal
       visible={isVisible ?? false}
-      animationType="slide"
       transparent={true}
-      onClose={onClose}>
-      <View style={styles.modalContainer}>
+      onClose={onClose}
+      title={title}
+      titleStyle={styles.modalTitle}
+      modalStyles={{
+        width: '90%',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      {type === 'input' ? (
+        <>
+          <Text style={styles.modalText}>{content}</Text>
+          {inputData && (
+            <TextInput
+              style={styles.inputField}
+              placeholder={inputData.placeholder}
+              value={inputText}
+              onChangeText={setInputText}
+            />
+          )}
+        </>
+      ) : type === 'promo_code' ? (
+        <>
+          <Text style={styles.modalText}>{content}</Text>
+          {promoCodeData && (
+            <Text style={styles.modalText}>{promoCodeData.code}</Text>
+          )}
+        </>
+      ) : (
+        <Text style={styles.modalText}>{content}</Text>
+      )}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          marginTop: dp(10),
+          width: '100%',
+        }}>
+        <Button
+          label={'Закрыть'}
+          width={dp(150)}
+          height={dp(40)}
+          onClick={onClose}
+          color={'grey'}
+          fontSize={dp(12)}
+        />
+
+        <Button
+          label={buttonText}
+          width={dp(150)}
+          height={dp(40)}
+          onClick={handleConfirm}
+          color={'blue'}
+          fontSize={dp(12)}
+        />
+      </View>
+
+      {/*<View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <View style={styles.header}>
             <Text style={styles.modalTitle}>{title}</Text>
@@ -99,20 +153,19 @@ const PromoModal: React.FC<IPromoModalProps> = ({
             fontSize={dp(12)}
           />
         </View>
-      </View>
+      </View>*/}
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   modalContainer: {
-    flex: 1,
+    backgroundColor: 'red',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
-    backgroundColor: 'white',
+    backgroundColor: 'green',
     padding: dp(20),
     borderRadius: dp(10),
     alignItems: 'center',
@@ -128,11 +181,14 @@ const styles = StyleSheet.create({
     fontSize: dp(18),
     fontWeight: 'bold',
     marginBottom: dp(10),
+    alignSelf: 'center',
+    color: 'black',
   },
   modalText: {
     alignSelf: 'flex-start',
     fontSize: dp(14),
     marginBottom: dp(15),
+    color: 'black',
   },
   inputField: {
     borderWidth: 1,

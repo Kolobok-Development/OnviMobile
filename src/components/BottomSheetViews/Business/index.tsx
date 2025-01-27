@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Text, View, Image, Dimensions, StyleSheet} from 'react-native';
 
 // styled components
@@ -20,21 +20,26 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 const Business = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
 
-  const {setOrderDetails, orderDetails, business, bottomSheetRef} =
-    useStore.getState();
+  const {
+    setOrderDetails,
+    orderDetails,
+    business,
+    bottomSheetRef,
+    setSelectedPos,
+  } = useStore.getState();
 
   const selectCarwash = (carwash: any, index: number) => {
     setOrderDetails({
-      ...orderDetails,
       posId: carwash.id,
       type: carwash.type,
       name: carwash.name,
       carwashIndex: index,
       prices: carwash.price,
     } as OrderDetailsType);
+    setSelectedPos(carwash);
 
     navigateBottomSheet('BusinessInfo', {});
-    bottomSheetRef?.current?.snapToPosition('60%');
+    bottomSheetRef?.current?.snapToPosition('75%');
   };
 
   return (

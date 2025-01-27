@@ -59,6 +59,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   setFcmToken: fcmToken => set({fcmToken}),
   mutateRefreshToken: async () => {
     try {
+
       const existingSession = await EncryptedStorage.getItem('user_session');
       let existingData: Record<string, any> = {};
       if (existingSession) {
@@ -89,7 +90,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
 
       return existingData.refreshToken;
     } catch (error) {
-      console.log('Error refreshing token:', error);
+      console.log('Error refreshing token:', JSON.stringify(error, null, 2));
 
       const refreshRetriesLeft = get().refreshRetryCounter;
 

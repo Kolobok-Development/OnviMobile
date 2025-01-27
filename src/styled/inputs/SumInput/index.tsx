@@ -36,6 +36,8 @@ interface ISumInput {
   };
 }
 
+const MIN_FILL_HEIGHT = 20; // Minimum fill height in pixels
+
 const SumInput: React.FC<ISumInput> = ({
   width = 200,
   height = 200,
@@ -43,7 +45,7 @@ const SumInput: React.FC<ISumInput> = ({
   maxValue = 1000,
   step = 10,
   borderRadius = 1000,
-  value: currentValue = 0,
+  value: currentValue = minValue, // Set default to minValue
   onChange = () => {},
   onComplete = () => {},
   inputBackgroundColor = '#FFFFFF',
@@ -60,7 +62,8 @@ const SumInput: React.FC<ISumInput> = ({
     borderRadius,
   ]);
 
-  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} = shadowProps;
+  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} =
+    shadowProps || {};
 
   const calculateShadowStyles = () => ({
     shadowColor,
@@ -76,58 +79,45 @@ const SumInput: React.FC<ISumInput> = ({
     shadowRadius,
   ]);
 
-  /**
-   * _clamp is a helper function that ensures that the value of the slider is within the range of min and max
-   * @param newValue
-   * @param minValue
-   * @param maxValue
-   */
   const _clamp = (newValue: number, min: number, max: number) => {
     return Math.min(Math.max(newValue, min), max);
   };
 
-  /**
-   * function that updates the state of the slider with the new value calculated by
-   * @param newValue
-   */
   const updateNewValue = (newValue: number) => {
     let valueToUpdate = _clamp(newValue, minValue, maxValue);
     _value.value = valueToUpdate;
     value.setValue(valueToUpdate);
   };
 
-  const _moveStartValue = useSharedValue<number>(0); //tracking of initial value on slider move
-  const _value = useSharedValue<number>(currentValue); // current value of slider
-  const value = new RNAnimated.Value(currentValue); // current value of the slider for animation
+  const _moveStartValue = useSharedValue<number>(0); // Tracking initial value on slider move
+  const _value = useSharedValue<number>(currentValue); // Current value of slider
+  const _gestureValue = useSharedValue<number>(currentValue); // Gesture-based value for animation
+  const value = new RNAnimated.Value(currentValue); // Animated value for legacy RN Animated (if used elsewhere)
 
-  const calculateValues = () => {
+  React.useEffect(() => {
     updateNewValue(currentValue);
-  };
-  React.useEffect(calculateValues, [currentValue]);
+    _gestureValue.value = currentValue; // Sync gesture value
+  }, [currentValue]);
 
-  /**
-   * is a function that calculates the new value of the slider when it is being dragged based on the current position of the slider, the height of the slider
-   * @param gestureState
-   */
   const _calculateValue = (gestureState: PanResponderGestureState) => {
     const ratio = -gestureState.dy / (height - 100);
     const diff = maxValue - minValue;
+    let newValue;
+
     if (step) {
-      const newValue = Math.max(
-        minValue,
-        Math.min(
-          maxValue,
-          _moveStartValue.value + Math.round((ratio * diff) / step) * 10,
-        ),
-      );
-      return newValue;
+      newValue = Math.round((ratio * diff) / step) * step;
     } else {
-      return (
-        Math.floor(
-          Math.max(minValue, _moveStartValue.value + ratio * diff) * 100,
-        ) / 100
-      );
+      newValue = ratio * diff;
     }
+
+    const unclampedValue = _moveStartValue.value + newValue;
+    const clampedValue = _clamp(unclampedValue, minValue, maxValue);
+
+    // Update the gesture value for animation
+    _gestureValue.value = unclampedValue;
+
+    // Return the clamped value for onChange
+    return clampedValue;
   };
 
   // PanResponder handlers
@@ -141,19 +131,22 @@ const SumInput: React.FC<ISumInput> = ({
     _event: GestureResponderEvent,
     gestureState: PanResponderGestureState,
   ) => {
-    onChange(_calculateValue(gestureState));
+    const clampedValue = _calculateValue(gestureState);
+    onChange(clampedValue);
   };
   const onPanResponderRelease = (
     _event: GestureResponderEvent,
     gestureState: PanResponderGestureState,
   ) => {
-    onChange(_calculateValue(gestureState));
+    const clampedValue = _calculateValue(gestureState);
+    onChange(clampedValue);
   };
   const onPanResponderTerminate = (
     _event: GestureResponderEvent,
     gestureState: PanResponderGestureState,
   ) => {
-    onComplete(_calculateValue(gestureState));
+    const clampedValue = _calculateValue(gestureState);
+    onComplete(clampedValue);
   };
 
   const panResponder = React.useRef(
@@ -169,15 +162,36 @@ const SumInput: React.FC<ISumInput> = ({
   ).current;
 
   const sliderStyle = useAnimatedStyle(() => {
-    const _newHeight =
-      ((_value.value - minValue + 50) * height - 50) / (maxValue - minValue);
-    const animatedHeight = withSpring(_newHeight, {
-      damping: 20, // Adjust damping for smoothness (higher values make it smoother)
-      stiffness: 90, // Adjust stiffness (higher values make it less elastic)
-      overshootClamping: true, // Prevent overshooting
-      restSpeedThreshold: 0.1, // Lower value for faster response
-      restDisplacementThreshold: 0.1, // Lower value for faster response
-    });
+    // Calculate the ratio based on gesture value
+    const effectiveValue = _gestureValue.value;
+
+    // Calculate the ratio
+    const ratio = (effectiveValue - minValue) / (maxValue - minValue);
+
+    // Clamp the ratio to [0, 1]
+    const clampedRatio = Math.min(Math.max(ratio, 0), 1);
+
+    // Calculate raw height based on the ratio
+    const rawHeight = clampedRatio * height;
+
+    // Incorporate the minimal fill height
+    const fillHeight =
+      MIN_FILL_HEIGHT + (rawHeight / height) * (height - MIN_FILL_HEIGHT);
+
+    // Define over-drag limit (e.g., 20% of the height)
+    const overDragLimit = height * 0.2;
+
+    // Clamp the fillHeight to allow over-drag up to the limit
+    const animatedHeight = withSpring(
+      Math.min(fillHeight, height + overDragLimit),
+      {
+        damping: 20,
+        stiffness: 90,
+        overshootClamping: false, // Allow overshooting for over-drag
+        restSpeedThreshold: 0.1,
+        restDisplacementThreshold: 0.1,
+      },
+    );
 
     return {
       height: animatedHeight,

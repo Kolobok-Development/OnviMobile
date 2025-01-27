@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 // components
@@ -39,7 +39,7 @@ export default function DefaultLaunch() {
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Launch'>>();
 
-  const {isBottomSheetOpen, setOrderDetails, orderDetails} =
+  const {isBottomSheetOpen, setOrderDetails, orderDetails, selectedPos} =
     useStore.getState();
 
   const order = orderDetails;
@@ -89,17 +89,35 @@ export default function DefaultLaunch() {
           fontSize={moderateScale(22)}
           fontWeight={'400'}
           onClick={() => {
-            if (value <= 490) {
-              setValue(value + 10);
+            const step =
+              selectedPos && selectedPos.stepCost > 0
+                ? selectedPos.stepCost
+                : 10;
+            const maxVal =
+              selectedPos && selectedPos.limitMaxCost > 0
+                ? selectedPos.limitMaxCost
+                : 50;
+            if (value <= maxVal - 10) {
+              setValue(value + step);
             }
           }}
         />
       </View>
       <View style={{...styles.sumSelector}}>
         <SumInput
-          maxValue={500}
-          minValue={50}
-          step={10}
+          maxValue={
+            selectedPos && selectedPos.limitMaxCost > 0
+              ? selectedPos.limitMaxCost
+              : 500
+          }
+          minValue={
+            selectedPos && selectedPos.limitMinCost > 0
+              ? selectedPos.limitMinCost
+              : 50
+          }
+          step={
+            selectedPos && selectedPos.stepCost > 0 ? selectedPos.stepCost : 10
+          }
           height={moderateVerticalScale(235)}
           width={moderateVerticalScale(235)}
           borderRadius={moderateScale(1000)}
@@ -193,8 +211,16 @@ export default function DefaultLaunch() {
           fontSize={moderateScale(22)}
           fontWeight={'400'}
           onClick={() => {
-            if (value >= 60) {
-              setValue(value - 10);
+            const step =
+              selectedPos && selectedPos.stepCost > 0
+                ? selectedPos.stepCost
+                : 10;
+            const minVal =
+              selectedPos && selectedPos.limitMinCost > 0
+                ? selectedPos.limitMinCost
+                : 50;
+            if (value >= minVal + 10) {
+              setValue(value - step);
             }
           }}
         />

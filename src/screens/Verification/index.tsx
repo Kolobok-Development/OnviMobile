@@ -144,33 +144,6 @@ const Verification = ({route}: VerificationProps) => {
         <Text style={styles.descriptionText}>
           Код отправлен на {route.params.phone}
         </Text>
-        {/*<OTPTextView*/}
-        {/*  inputCount={4}*/}
-        {/*  ref={input}*/}
-        {/*  keyboardType="numeric"*/}
-        {/*  handleTextChange={setOtpInput}*/}
-        {/*  handleCellTextChange={handleCellTextChange}*/}
-        {/*  containerStyle={styles.textInputContainer}*/}
-        {/*  textInputStyle={{*/}
-        {/*    padding: dp(5),*/}
-        {/*    fontSize: dp(28),*/}
-        {/*  }}*/}
-        {/*  tintColor={YELLOW}*/}
-        {/*/>*/}
-        {/*<CodeInput error={error} setError={setError} verify={verifyCode} />*/}
-        {/*<CodeInput*/}
-        {/*  ref={inputRef}*/}
-        {/*  inputCount={4}*/}
-        {/*  defaultValue={''}*/}
-        {/*  inputCellLength={4}*/}
-        {/*  handleTextChange={setOtpInput}*/}
-        {/*  tintColor={YELLOW}*/}
-        {/*  offTintColor={GREY}*/}
-        {/*  containerStyle={{*/}
-        {/*    marginTop: '5%',*/}
-        {/*  }}*/}
-        {/*  handeCallTextChange={handleCellTextChange}*/}
-        {/*/>*/}
         <OtpInput
           numberOfDigits={4}
           focusColor={YELLOW}
@@ -184,14 +157,14 @@ const Verification = ({route}: VerificationProps) => {
               flexDirection: 'row',
               paddingLeft: dp(20),
               paddingRight: dp(40),
-              marginTop: dp(20),
+              marginTop: dp(40),
               justifyContent: 'space-evenly',
               alignItems: 'center',
               flex: 1,
             },
             pinCodeContainerStyle: {
               width: dp(60),
-              height: '55%',
+              height: dp(60)
             },
           }}
         />

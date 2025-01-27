@@ -105,9 +105,6 @@ const Settings = () => {
 
       const avatar = avatarMapping[selectedAvatar];
 
-      console.log('avatarMapping: ', avatarMapping);
-      console.log('selectedAvatar: ', selectedAvatar);
-      console.log('avatar: ', avatar);
 
       const userData: {name?: string; email?: string; avatar?: number} = {};
 
@@ -115,7 +112,7 @@ const Settings = () => {
         userData.name = userName;
       }
       if (email) {
-        userData.email = email;
+        userData.email = email.replace(/\s/g, '');
       }
       if (avatar !== undefined) {
         userData.avatar = avatar;

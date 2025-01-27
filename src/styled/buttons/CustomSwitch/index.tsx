@@ -188,7 +188,8 @@ const Switch = (IProps: SwitchProps): JSX.Element => {
             if (onValueChange) {
               onValueChange(!value);
             }
-          }}>
+          }}
+          hitSlop={{top: 25, bottom: 25, left: 20, right: 20}}>
           <Animated.View
             style={[
               styles.switch,

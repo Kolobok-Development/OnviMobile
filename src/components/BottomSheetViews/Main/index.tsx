@@ -126,7 +126,6 @@ const Main = () => {
   } = useSWR(['getStoryViw'], () => getStoryView('*'));
 
   //Search near by POS
-  const [nearestCarWash, setNearestCarWash] = useState(null);
   const [nearByModal, setNearByModal] = useState(false);
 
   const findNearestCarWash = () => {

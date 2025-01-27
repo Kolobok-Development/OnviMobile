@@ -78,7 +78,7 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity style={styles.toggleBnt} onPress={toggleItem}>
+          <TouchableOpacity style={styles.toggleBnt} onPress={toggleItem} hitSlop={{ top: 25, bottom: 25, left: 20, right: 20}}>
             {expanded ? (
               <Text style={{fontWeight: '500', fontSize: dp(11)}}>
                 ☝️cвернуть
@@ -135,12 +135,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     backgroundColor: 'rgba(245, 245, 245, 1)',
     borderRadius: dp(32),
-    height: dp(22),
+    height: dp(26),
     flexDirection: 'row',
     paddingLeft: dp(10),
     paddingRight: dp(10),
     paddingTop: dp(3),
     paddingBottom: dp(3),
+    alignItems: 'center',
   },
   body: {},
 });

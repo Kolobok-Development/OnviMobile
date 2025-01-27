@@ -193,6 +193,7 @@ const Filters = () => {
           flex: 1,
           justifyContent: 'flex-end',
           alignItems: 'center',
+          marginBottom: dp(35),
         }}
         ListFooterComponent={
           <View

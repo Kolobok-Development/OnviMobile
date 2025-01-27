@@ -6,6 +6,7 @@ import {Slide} from '@styled/silder';
 import useStore from '../../../state/store.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
 const InputSums: {label: string; description?: string; active?: boolean}[] = [
   {
@@ -29,12 +30,7 @@ const InputSums: {label: string; description?: string; active?: boolean}[] = [
 const PostPayment = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const {showBurgerButton, orderDetails, setOrderDetails} = useStore();
-
-  useEffect(() => {
-    console.log('CHANGING STATE SCREEN ');
-    console.log(showBurgerButton);
-  }, []);
+  const {isBottomSheetOpen, orderDetails, setOrderDetails} = useStore();
 
   const handleTileClick = (tile: any, index: number) => {
     setActiveIndex(index); // Update the active index
@@ -70,72 +66,74 @@ const PostPayment = () => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flex: 3,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          width: '100%',
-        }}>
-        <Image
-          source={require('../../../assets/images/success_image.png')}
-          style={styles.image}
-        />
-        <Text style={styles.titleText}>Оплата прошла успешно!</Text>
-        <Text style={styles.titleText}>Удачной мойки!</Text>
-      </View>
-
-      {orderDetails.type === 'SelfService' ? (
-        <View style={styles.content}>
-          <Text style={styles.contentText}>Хотите продолжить мойку? 🚙</Text>
-          <Slide
-            items={InputSums}
-            initialActiveIndex={0}
-            onItemClick={(tile, index) => handleTileClick(tile, index)}
-            renderItem={(sum, index, isActive, onClick) => (
-              <Tile
-                key={`tile-${index}`}
-                label={sum.label}
-                description={sum.description}
-                active={activeIndex === index} // Highlight the active tile
-                onClick={onClick}
-                width={dp(120)} // Adjust size as needed
-                height={dp(90)}
-                borderRadius={dp(25)}
-                labelFontSize={dp(32)} // Example of custom font size
-                descriptionFontSize={dp(18)}
-              />
-            )}
+      <BottomSheetScrollView scrollEnabled={isBottomSheetOpen} nestedScrollEnabled={true}>
+        <View
+          style={{
+            flex: 3,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '100%',
+          }}>
+          <Image
+            source={require('../../../assets/images/success_image.png')}
+            style={styles.image}
           />
+          <Text style={styles.titleText}>Оплата прошла успешно!</Text>
+          <Text style={styles.titleText}>Удачной мойки!</Text>
+        </View>
+
+        {orderDetails.type === 'SelfService' ? (
+          <View style={styles.content}>
+            <Text style={styles.contentText}>Хотите продолжить мойку? 🚙</Text>
+            <Slide
+              items={InputSums}
+              initialActiveIndex={0}
+              onItemClick={(tile, index) => handleTileClick(tile, index)}
+              renderItem={(sum, index, isActive, onClick) => (
+                <Tile
+                  key={`tile-${index}`}
+                  label={sum.label}
+                  description={sum.description}
+                  active={activeIndex === index} // Highlight the active tile
+                  onClick={onClick}
+                  width={dp(120)} // Adjust size as needed
+                  height={dp(90)}
+                  borderRadius={dp(25)}
+                  labelFontSize={dp(32)} // Example of custom font size
+                  descriptionFontSize={dp(18)}
+                />
+              )}
+            />
+            <Button
+              label={'Запустить повторно'}
+              color={'blue'}
+              height={dp(40)}
+              width={dp(343)}
+              outlined={true}
+              onClick={restart}
+            />
+          </View>
+        ) : (
+          <></>
+        )}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <Button
-            label={'Запустить повторно'}
+            label={'Завершить'}
             color={'blue'}
             height={dp(40)}
             width={dp(343)}
-            outlined={true}
-            onClick={restart}
+            onClick={finish}
           />
+          <Text style={styles.text}>Если возникли проблемы, свяжитесь</Text>
+          <Text style={styles.text}>с нашей техподдержкой</Text>
         </View>
-      ) : (
-        <></>
-      )}
-      <View
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Button
-          label={'Завершить'}
-          color={'blue'}
-          height={dp(40)}
-          width={dp(343)}
-          onClick={finish}
-        />
-        <Text style={styles.text}>Если возникли проблемы, свяжитесь</Text>
-        <Text style={styles.text}>с нашей техподдержкой</Text>
-      </View>
+      </BottomSheetScrollView>
     </View>
   );
 };
@@ -158,17 +156,22 @@ const styles = StyleSheet.create({
   content: {
     flex: 2,
     flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: dp(40),
   },
   titleText: {
     fontSize: dp(21),
     fontWeight: '700',
+    color: 'black',
   },
   contentText: {
     fontSize: dp(21),
     fontWeight: '600',
+    color: 'black',
   },
   text: {
     fontSize: dp(12),
+    color: 'black',
   },
 });
 
