@@ -8,13 +8,13 @@ import {IGetHistoryResponse} from '../../../types/api/user/res/IGetHistoryRespon
 import {FormattedDate} from 'react-intl';
 
 export interface IBalanceCardProps {
-  key: number;
+  key: string;
   option: IGetHistoryResponse;
 }
 
 const BalanceCard = (option: IBalanceCardProps) => {
   return (
-    <View style={styles.box}>
+    <View style={styles.box} key={option.key}>
       <View style={styles.leftSide}>
         <Text style={styles.date}>
           <FormattedDate

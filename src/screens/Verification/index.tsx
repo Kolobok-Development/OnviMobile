@@ -20,8 +20,7 @@ import {dp} from '../../utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
 import OTPTextView from 'react-native-otp-textinput';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {GREY, YELLOW} from '@utils/colors.ts';
-import CodeInput from '@styled/inputs/CodeInput';
+import {YELLOW} from '@utils/colors.ts';
 import CheckBox from '@react-native-community/checkbox';
 import {openWebURL} from '@utils/openWebUrl.ts';
 import {OtpInput} from 'react-native-otp-entry';
@@ -136,7 +135,13 @@ const Verification = ({route}: VerificationProps) => {
       <View style={styles.topContainer}>
         <Image source={require('../../assets/icons/small-icon.png')} />
       </View>
-      <Spinner visible={loading} color={'#0B68E1'} size={'large'} />
+      <Spinner
+        visible={loading}
+        color={'#0B68E1'}
+        size={'large'}
+        overlayColor="rgba(0, 0, 0, 0.4)"
+        textStyle={{zIndex: 9999}}
+      />
       <View style={styles.middleContainer}>
         <Text style={{...styles.text, color: theme.textColor}}>
           Введите код из СМС

@@ -39,7 +39,7 @@ const Modal: React.FC<ModalProps> = ({
       visible={visible}
       animationType={animationType}
       transparent={transparent}
-      onRequestClose={onClose}
+      onRequestClose={onClose} // Ensure iOS handles close correctly
       statusBarTranslucent={statusBarTranslucent}>
       <View
         style={{
@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    zIndex: 1000,
   },
   modalContainer: {
     width: '80%',

@@ -5,7 +5,7 @@ export interface PosSlice {
   posList: CarWashLocation[];
   setPosList: (values: CarWashLocation[]) => void;
   selectedPos: CarWash | null;
-  setSelectedPos: (value: CarWash) => void;
+  setSelectedPos: (value: CarWash | null) => void;
   nearByPos: CarWashLocation | null;
   setNearByPos: (value: CarWashLocation) => void;
 }

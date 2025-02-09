@@ -19,45 +19,32 @@ import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 import useStore from '../../state/store';
 
-import {useFocusEffect} from '@react-navigation/native';
+import {CameraReference} from '@components/Map';
 
 const snapPoints = ['25%', '42%', '60%', '95%'];
-
-import {CameraReference} from '@components/Map';
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
-  const {filters, setIsMainScreen, setIsBottomSheetOpen, setBottomSheetRef} =
+  const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
     useStore.getState();
-  const reduceMotion = useReducedMotion();
 
+  const {isMainScreen} = useStore();
+
+  const reduceMotion = useReducedMotion();
   const bsRef = useRef(null);
 
   useEffect(() => {
     if (bsRef.current) {
       setBottomSheetRef(bsRef);
     }
-  }, [bsRef.current, setBottomSheetRef]);
-
-  // Это действие будет выполнено, когда экран получит фокус
-  useFocusEffect(
-    useCallback(() => {
-      setIsMainScreen(true);
-
-      return () => {
-        console.log('Screen lost focus!');
-        setIsMainScreen(false);
-      };
-    }, []),
-  );
+  }, [setBottomSheetRef]);
 
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
     setBottomSheetIndex(index);
-
     setIsBottomSheetOpen(index >= 2);
   }, []);
 
@@ -74,36 +61,23 @@ const Home = React.memo(({navigation}: any) => {
       }, [filters]);
 
       return (
-        <BottomSheetHandle {...props} style={{paddingBottom: 2}}>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <View style={{flex: 1, alignSelf: 'flex-end'}}>
-              <ScrollView
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.scrollViewContent}>
-                {extractedFilters.map((value, index) => (
-                  <View
-                    key={index}
-                    style={{...styles.box, width: value.length * dp(10)}}>
-                    <Text
-                      style={{
-                        color: '#ffffff',
-                        fontSize: dp(12),
-                        fontWeight: '600',
-                      }}>
-                      {value}
-                    </Text>
-                  </View>
-                ))}
-              </ScrollView>
-            </View>
-            <View>
-              <TouchableOpacity
-                style={styles.findMe}
-                onPress={() => setCamera()}>
-                <Navigation fill={'white'} color={'white'} />
-              </TouchableOpacity>
-            </View>
+        <BottomSheetHandle {...props} style={styles.handle}>
+          <View style={styles.handleContent}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.scrollViewContent}>
+              {extractedFilters.map((value, index) => (
+                <View
+                  key={index}
+                  style={[styles.filterBox, {width: value.length * dp(10)}]}>
+                  <Text style={styles.filterText}>{value}</Text>
+                </View>
+              ))}
+            </ScrollView>
+            <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
+              <Navigation fill="white" color="white" />
+            </TouchableOpacity>
           </View>
           <View style={styles.lineContainer}>
             <View style={styles.line} />
@@ -119,18 +93,18 @@ const Home = React.memo(({navigation}: any) => {
       <View style={styles.container}>
         <Map ref={cameraRef} userLocationRef={userLocationRef} />
         <BottomSheet
+          enableContentPanningGesture={isMainScreen}
           animateOnMount={!reduceMotion}
-          enableContentPanningGesture={true}
           enableHandlePanningGesture={false}
           handleComponent={renderHandleComponent}
           ref={bsRef}
-          handleIndicatorStyle={{backgroundColor: '#a1a1a1', display: 'none'}}
+          handleIndicatorStyle={styles.handleIndicator}
           keyboardBlurBehavior="restore"
           index={bottomSheetIndex}
           snapPoints={snapPoints}
           onChange={handleSheetChanges}
           backgroundComponent={() => (
-            <View style={[styles.transparentBackground, styles.shadow]}></View>
+            <View style={[styles.transparentBackground, styles.shadow]} />
           )}
           style={styles.shadow}
           topInset={0}>
@@ -190,21 +164,29 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  contentContainer: {
-    flex: 1,
+  handle: {
+    paddingBottom: 2,
   },
-  transparentBackground: {
-    backgroundColor: 'transparent',
+  handleContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 7,
-    },
-    shadowOpacity: 0.41,
-    shadowRadius: 9.11,
-    elevation: 14,
+  scrollViewContent: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  },
+  filterBox: {
+    height: dp(24),
+    borderRadius: dp(69),
+    backgroundColor: '#0B68E1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: dp(16),
+  },
+  filterText: {
+    color: '#ffffff',
+    fontSize: dp(12),
+    fontWeight: '600',
   },
   findMe: {
     height: dp(45),
@@ -218,17 +200,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
   },
-  scrollViewContent: {
-    flexDirection: 'row',
-    alignSelf: 'flex-end',
-  },
-  box: {
-    height: dp(24),
-    borderRadius: dp(69),
-    backgroundColor: '#0B68E1',
+  lineContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: dp(16),
+    marginTop: dp(18),
   },
   line: {
     borderBottomWidth: 5,
@@ -236,11 +212,24 @@ const styles = StyleSheet.create({
     width: dp(134),
     borderRadius: dp(10),
   },
-  lineContainer: {
+  transparentBackground: {
+    backgroundColor: 'transparent',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 7,
+    },
+    shadowRadius: 9.11,
+    elevation: 14,
+  },
+  handleIndicator: {
+    backgroundColor: '#a1a1a1',
+    display: 'none',
+  },
+  contentContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: dp(18),
   },
 });
 
