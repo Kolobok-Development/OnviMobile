@@ -30,6 +30,9 @@ end
 
 target 'OnviMobile' do
   config = use_native_modules!
+
+  pod 'react-native-config/Extension', :path => '../node_modules/react-native-config'
+
   use_frameworks! :linkage => :static
   $RNFirebaseAsStaticFramework = true
   use_react_native!(
@@ -43,14 +46,17 @@ target 'OnviMobile' do
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
 
+  target 'OnviMobile-Dev' do
+      inherit! :complete
+  end
+
+  target 'OnviMobile-Stage' do
+        inherit! :complete
+  end
+
   pod 'YooKassaPayments',
       :git => 'https://git.yoomoney.ru/scm/sdk/yookassa-payments-swift.git',
       :tag => '6.13.0'
-
-  target 'OnviMobileTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202

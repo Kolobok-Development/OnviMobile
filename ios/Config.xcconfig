@@ -1,0 +1,10 @@
+//
+//  Config.xcconfig
+//  OnviMobile
+//
+//  Created by Evgeniy Shomin on 2025-02-05.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+#include? "tmp.xcconfig"

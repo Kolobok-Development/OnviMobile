@@ -974,6 +974,11 @@ PODS:
   - React-Mapbuffer (0.73.3):
     - glog
     - React-debug
+  - react-native-config (1.5.3):
+    - react-native-config/App (= 1.5.3)
+  - react-native-config/App (1.5.3):
+    - React-Core
+  - react-native-config/Extension (1.5.3)
   - react-native-encrypted-storage (4.0.3):
     - React-Core
   - react-native-mmkv (2.12.2):
@@ -994,6 +999,10 @@ PODS:
     - KTVHTTPCache (~> 2.0.0)
     - React-Core
   - react-native-video/Video (6.8.2):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+  - react-native-webview (13.13.2):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1295,12 +1304,15 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-config (from `../node_modules/react-native-config`)
+  - react-native-config/Extension (from `../node_modules/react-native-config`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-video (from `../node_modules/react-native-video`)
   - react-native-video-cache-control (from `../node_modules/react-native-video-cache-control`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -1433,6 +1445,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-config:
+    :path: "../node_modules/react-native-config"
   react-native-encrypted-storage:
     :path: "../node_modules/react-native-encrypted-storage"
   react-native-mmkv:
@@ -1445,6 +1459,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-video"
   react-native-video-cache-control:
     :path: "../node_modules/react-native-video-cache-control"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-nativeconfig:
     :path: "../node_modules/react-native/ReactCommon"
   React-NativeModulesApple:
@@ -1576,12 +1592,14 @@ SPEC CHECKSUMS:
   React-jsinspector: 6fad0fe14882fb6b1c32e5cc8a4bd3d33a8b6790
   React-logger: cb0dd15ac67b00e7b771ef15203edcb29d4a3f8e
   React-Mapbuffer: ac7eff7bcdb1716d18eb7b305ee8c43a9a1ed7c8
+  react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-mmkv: 6d738233c99440c39ef88c3a080b0af80265a72a
   react-native-netinfo: 076df4f9b07f6670acf4ce9a75aac8d34c2e2ccc
   react-native-safe-area-context: 0ee144a6170530ccc37a0fd9388e28d06f516a89
   react-native-video: e6d9ac2774f692d60d1e7b6957b56021f418790a
   react-native-video-cache-control: 68839d91536309798bb8b789b22b587e062fbb37
+  react-native-webview: 9e7e9fce2eed807de15490fd7fa42b679e298978
   React-nativeconfig: 4662ac75a0a77789c9ed896ed77baa1a25cdf006
   React-NativeModulesApple: 92bc296f2ae166d10cb4d6a05498c80bf4ef9fa2
   React-perflogger: 27ccacf853ba725524ef2b4e444f14e34d0837b0
@@ -1619,7 +1637,7 @@ SPEC CHECKSUMS:
   SPaySDK: 1015f868b6e9255457704cd6a3d051829263661a
   Turf: 13d1a92d969ca0311bbc26e8356cca178ce95da2
   YandexMobileMetrica: f5368ee93f286c793d73b58da00929babfc897c1
-  Yoga: ff0382b894475dba0b4d2a5fda860bfee5a9afad
+  Yoga: 08cd7601462818c4985bda7b205b9e6a92a7e66a
   YooKassaPayments: b2a8cde4c2eeac5f8b5b73131fdb7ff17ffc09f0
   YooKassaPaymentsApi: a13865624dc72513416ee73b80b8fe5682b9525a
   YooKassaWalletApi: cbb352525bfe89fd2ad52635062f79f8bbbc23ec
@@ -1627,6 +1645,6 @@ SPEC CHECKSUMS:
   YooMoneySessionProfiler: 1a19bed99feca98c04e2a906908f91a7d5db408d
   YooMoneyUI: 01f293ed3486e00c5244a5feded457e7cdc18074
 
-PODFILE CHECKSUM: 2d7f4a323edc1eadb777601a9876037f65de41bc
+PODFILE CHECKSUM: cfbbebbbd7520beeee804896dc302f3e9f4533a1
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.13.0

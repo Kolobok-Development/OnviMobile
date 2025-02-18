@@ -3,11 +3,15 @@ import {
   PartnersSuccessRequestPayload,
   PartnerSuccessRequestPayload,
 } from '../../../types/api/app/types.ts';
-import {contentApiInstance} from '@services/api/axiosConfig.ts';
+import {
+  contentApiInstance,
+  userApiInstance,
+} from '@services/api/axiosConfig.ts';
 
 enum PARTNER {
   GET_PARTNER_LIST = 'api/partners',
   GET_PARTNER_BY_ID = 'api/partners',
+  GET_GAZPROM_AUTH_TOKEN = '/partner/2921/activate',
 }
 
 export async function getPartners(
@@ -54,5 +58,11 @@ export async function getPartner(
     {params}, // Axios will handle the query string
   );
 
+  return response.data.data;
+}
+
+export async function getGazpromAuthToken(): Promise<any> {
+  console.log('MAKING API CALL');
+  const response = await userApiInstance.post(PARTNER.GET_GAZPROM_AUTH_TOKEN);
   return response.data.data;
 }

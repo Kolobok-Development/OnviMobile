@@ -18,6 +18,11 @@ import {hasMetaDataChanged} from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
 
 import useAppState from './src/hooks/useAppState';
+import Config from 'react-native-config';
+
+if (__DEV__) {
+  require('./ReactotronConfig');
+}
 
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
@@ -44,6 +49,7 @@ function App(): React.JSX.Element {
   useAppState();
 
   useEffect(() => {
+    console.log(`ENV________${JSON.stringify(Config)}________`);
     const unsubscribe = NetInfo.addEventListener(state => {
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);

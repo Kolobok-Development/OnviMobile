@@ -1,12 +1,12 @@
 import axios, {InternalAxiosRequestConfig} from 'axios';
-import {STRAPI_URL} from '@env';
 const PREFIX = '/api/v2/';
 
 import {isValidStorageData} from '@services/validation/index.validator.ts';
 import {getToken} from '../../state/store.ts';
+import Config from 'react-native-config';
 
 const userApiInstance = axios.create({
-  baseURL: 'https://d5dvl4vdjmsgsmscobdi.apigw.yandexcloud.net' + PREFIX,
+  baseURL: Config.API_URL + PREFIX,
   withCredentials: true,
 });
 
@@ -48,7 +48,7 @@ userApiInstance.interceptors.request.use(
   },
 );
 const contentApiInstance = axios.create({
-  baseURL: STRAPI_URL,
+  baseURL: Config.STRAPI_URL,
   headers: {
     'Content-Type': 'application/json',
   },

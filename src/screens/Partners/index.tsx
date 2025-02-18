@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from "react";
 
 import {dp} from '../../utils/dp';
 
@@ -34,6 +34,7 @@ const Partners = () => {
   } = useSWR('getPartnerList', () => getPartners('*'));
 
   const handlePartnerPress = (data: Partner) => {
+    console.log(JSON.stringify(data, null, 2))
     navigation.navigate('Партнер', {data: data});
   };
 
