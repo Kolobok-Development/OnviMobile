@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -18,7 +18,7 @@ import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-import {useRoute} from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
 // @ts-ignore
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
@@ -32,7 +32,6 @@ import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
 import {Button} from '@styled/buttons';
 import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
-import {MultiStory} from 'react-native-story-view';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
@@ -97,9 +96,10 @@ const Main = () => {
     setBusiness,
     location,
     bottomSheetRef,
+    setIsMainScreen,
   } = useStore.getState();
 
-  const {posList} = useStore();
+  const {posList, setSelectedPos} = useStore.getState();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -127,6 +127,17 @@ const Main = () => {
 
   //Search near by POS
   const [nearByModal, setNearByModal] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      setIsMainScreen(true);
+      setSelectedPos(null);
+
+      return () => {
+        setIsMainScreen(false);
+      };
+    }, []),
+  );
 
   const findNearestCarWash = () => {
     if (!location) {
@@ -162,7 +173,6 @@ const Main = () => {
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
-      // Launch car wash logic here
       setBusiness(nearByPos);
       navigateBottomSheet('Business', nearByPos);
     } else {

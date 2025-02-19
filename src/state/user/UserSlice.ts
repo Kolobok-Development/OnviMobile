@@ -83,12 +83,13 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
             loading: false,
           });
           await get().loadUser();
+          return existingData.refreshToken;
+        } else {
+          throw new Error('Failed to refresh token');
         }
       } else {
-        return null;
+        throw new Error('No refresh token found');
       }
-
-      return existingData.refreshToken;
     } catch (error) {
       console.log('Error refreshing token:', JSON.stringify(error, null, 2));
 

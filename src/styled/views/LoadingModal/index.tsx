@@ -66,12 +66,12 @@ const LoadingModal = (props: ILoadingModal) => {
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={true}
       visible={props.isVisible}
       statusBarTranslucent={true}
       onClose={() => {}}>
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: 'rgba(0, 0, 0, 0.5)'}]}>
         <View
           style={[
             styles.modalView,
@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#0008',
+    zIndex: 1000, // Ensure it's above other components
   },
   modalView: {
     height: dp(278),

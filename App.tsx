@@ -17,6 +17,11 @@ import {DeviceMeta} from './src/types/models/User';
 import {hasMetaDataChanged} from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
 
+import {
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} from 'react-native-reanimated';
+
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
 
@@ -45,6 +50,11 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken} = useStore.getState();
+
+  configureReanimatedLogger({
+    level: ReanimatedLogLevel.error,
+    strict: true,
+  });
 
   useAppState();
 

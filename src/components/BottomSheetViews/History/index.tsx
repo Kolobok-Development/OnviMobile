@@ -135,7 +135,10 @@ const History = () => {
           <FlatList
             data={orderData}
             renderItem={order => (
-              <BalanceCard key={order.index} option={order.item} />
+              <BalanceCard
+                key={`balance-card-${order.index}`}
+                option={order.item}
+              />
             )}
             refreshing={isLoading}
             keyExtractor={(_order, index) => index.toString()}
