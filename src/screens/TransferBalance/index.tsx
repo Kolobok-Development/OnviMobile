@@ -15,7 +15,7 @@ import {dp} from '../../utils/dp';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 import {getBalance} from '@services/api/balance';
 import {transferBalance} from '@services/api/balance';

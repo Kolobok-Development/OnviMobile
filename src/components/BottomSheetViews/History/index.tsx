@@ -28,7 +28,7 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const History = () => {
   const {user} = useStore.getState();

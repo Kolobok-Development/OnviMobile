@@ -27,7 +27,7 @@ import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequ
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {

@@ -1,7 +1,7 @@
 import {DrawerNavigationProp} from '@react-navigation/drawer';
-import {Partner} from './api/app/types.ts';
-import {IPersonalPromotion} from './models/PersonalPromotion.ts';
-import {IGlobalPromotion} from './models/GlobalPromotion.ts';
+import {Partner} from '../api/app/types.ts';
+import {IPersonalPromotion} from '../models/PersonalPromotion.ts';
+import {IGlobalPromotion} from '../models/GlobalPromotion.ts';
 
 export type DrawerParamList = {
   Главная: undefined; // No params needed for Home

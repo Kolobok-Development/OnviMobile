@@ -172,6 +172,7 @@ export type CarWash = {
   vacuums: Box[];
   price: Price[];
   tags: Tag[];
+  IsLoyaltyMember: boolean;
 };
 
 export type CarWashLocation = {

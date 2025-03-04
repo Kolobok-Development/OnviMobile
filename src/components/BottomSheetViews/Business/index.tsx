@@ -15,7 +15,7 @@ import useStore from '../../../state/store';
 
 import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const Business = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();

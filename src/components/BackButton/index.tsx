@@ -10,7 +10,7 @@ import {dp} from '../../utils/dp';
 
 import useStore from '../../state/store';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetNavigationProp} from '../../types/navigation/BottomSheetNavigation.ts';
 
 interface BackButtonProps {
   callback?: () => void;

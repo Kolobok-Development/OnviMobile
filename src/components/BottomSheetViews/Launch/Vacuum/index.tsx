@@ -25,7 +25,7 @@ import useStore from '../../../../state/store';
 // types
 import {Button} from '@styled/buttons';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetNavigationProp} from '../../../../types/navigation/BottomSheetNavigation.ts';
 
 export default function VacuumLaunch() {
   const {theme} = useTheme();

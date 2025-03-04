@@ -20,7 +20,7 @@ import {debounce} from 'lodash';
 import {dp} from '../../../utils/dp';
 import useStore from '../../../state/store';
 import SearchPlaceholder from './SearchPlaceholder';
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import useSWRMutation from 'swr/mutation';
 import {getPOSList} from '@services/api/pos';
 import calculateDistance from '@utils/calculateDistance.ts';
@@ -81,14 +81,8 @@ const Search = () => {
           // Sort by distance (ascending)
           sortedCarwashes.sort((a: any, b: any) => a.distance - b.distance);
 
-          // Limit to the 5 closest carwashes
-          const top5Carwashes: SortedCarWashLocation[] = sortedCarwashes.slice(
-            0,
-            5,
-          );
-
           // Update state with the sorted and limited carwashes
-          setSortedData(top5Carwashes);
+          setSortedData(sortedCarwashes);
         }
       });
     }

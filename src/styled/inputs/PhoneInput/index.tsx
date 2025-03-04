@@ -55,9 +55,9 @@ const PhoneInp: React.FC<IInput> = ({phoneNumber = '', setPhoneNumber}) => {
           keyboardType="phone-pad"
           style={{
             backgroundColor: 'rgba(216, 217, 221, 1)',
-            width: dp(285),
+            width: dp(320),
             borderRadius: 25,
-            height: dp(50),
+            height: dp(60),
             textAlign: 'center',
             alignItems: 'center',
             fontSize: dp(24),

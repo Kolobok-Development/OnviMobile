@@ -13,7 +13,7 @@ import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {BackButton} from '@components/BackButton';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 const About = () => {
   const navigation =

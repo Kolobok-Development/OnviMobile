@@ -12,7 +12,7 @@ import useStore from '../../../state/store';
 
 import CampaignPlaceholder from './CampaignPlaceholder';
 
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const Campaign = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();

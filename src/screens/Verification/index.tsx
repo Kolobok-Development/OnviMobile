@@ -68,7 +68,7 @@ const Verification = ({route}: VerificationProps) => {
       setLoading(false);
       if (!res) {
         setLoading(false);
-        Vibration.vibrate(100);
+        //Vibration.vibrate(100);
         clear();
       }
 
@@ -89,7 +89,7 @@ const Verification = ({route}: VerificationProps) => {
     setDisabled(false);
   };
 
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(60);
   const timerRef: any = useRef(null);
 
   const startTimer = () => {
@@ -109,7 +109,7 @@ const Verification = ({route}: VerificationProps) => {
       // Timer is already running, stop it
       stopTimer();
       activateButton();
-    } else if (timer === 10) {
+    } else if (timer === 60) {
       // Timer is not running, start it
       startTimer();
     }
@@ -169,7 +169,7 @@ const Verification = ({route}: VerificationProps) => {
             },
             pinCodeContainerStyle: {
               width: dp(60),
-              height: dp(60)
+              height: dp(60),
             },
           }}
         />
@@ -181,7 +181,7 @@ const Verification = ({route}: VerificationProps) => {
             onClick={() => {
               setDisabled(true);
               sendOtp(route.params.phone);
-              setTimer(10);
+              setTimer(60);
             }}
           />
         </View>

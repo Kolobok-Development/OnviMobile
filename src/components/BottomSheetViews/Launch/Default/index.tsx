@@ -28,7 +28,7 @@ import {Button} from '@styled/buttons';
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+} from '../../../../types/navigation/BottomSheetNavigation.ts';
 
 export default function DefaultLaunch() {
   const {theme} = useTheme();

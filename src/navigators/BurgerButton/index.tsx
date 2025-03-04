@@ -17,7 +17,7 @@ interface BurgerProps {
   handleSheetChanges?: (index: number) => void;
 }
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 const BurgerButton = ({
   isDrawerStack = false,

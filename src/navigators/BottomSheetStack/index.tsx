@@ -23,7 +23,7 @@ import {AddCard} from '@components/BottomSheetViews/AddCard';
 import {Post} from '@components/BottomSheetViews/Post';
 import {Campaign} from '@components/BottomSheetViews/Campaign';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 const navTheme = {
   ...DefaultTheme,
@@ -63,7 +63,11 @@ const BottomSheetStack = React.memo(
     cameraRef,
     setCamera,
   }: BottomSheetStackInterface) => {
-    const {setIsMainScreen, setShowBurgerButton} = useStore.getState();
+    const {
+      setIsMainScreen,
+      setShowBurgerButton,
+      setCurrentRouteName,
+    } = useStore.getState();
 
     return (
       <NavigationContainer
@@ -71,8 +75,18 @@ const BottomSheetStack = React.memo(
         ref={navigationRef}
         independent={true}
         onStateChange={(navigationState: any) => {
+          if (!navigationState) {
+            return;
+          }
+
           const currentRoute =
             navigationState.routes?.[navigationState.routes.length - 1];
+
+          if (!currentRoute) {
+            return;
+          }
+
+          setCurrentRouteName(currentRoute.name);
 
           if (
             navigationState.routes &&

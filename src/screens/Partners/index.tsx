@@ -19,7 +19,7 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 import PartnersPlaceholder from './PartnersPlaceholder';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import useSWR from 'swr';
 import {getPartners} from '@services/api/partners';
 import {Partner} from '../../types/api/app/types.ts';

@@ -12,6 +12,7 @@ import useStore from '../../state/store';
 
 const SignIn = () => {
   const {sendOtp} = useStore.getState();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {theme} = useTheme();
 
@@ -29,8 +30,15 @@ const SignIn = () => {
 
   const login = async () => {
     if (validate(phone)) {
-      await sendOtp(phone);
-      navigation.navigate('Verify', {phone: phone, type: 'register'});
+      setIsLoading(true);
+      sendOtp(phone)
+        .then(() => {
+          setIsLoading(false);
+          navigation.navigate('Verify', {phone: phone, type: 'register'});
+        })
+        .catch(err => {
+          setIsLoading(false);
+        });
     }
   };
 
@@ -54,6 +62,7 @@ const SignIn = () => {
             color={phone ? 'blue' : 'grey'}
             disabled={phone ? false : true}
             onClick={login}
+            showLoading={isLoading}
           />
         </View>
       </View>

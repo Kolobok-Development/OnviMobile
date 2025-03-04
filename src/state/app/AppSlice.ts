@@ -3,6 +3,8 @@ import {StoreSlice} from '../store.ts';
 import {SelectedFilters} from '@components/BottomSheetViews/Filters/index.tsx';
 
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {DRAGGABLE_SCREENS} from '../../shared/constants';
+import {ScreenName} from '../../types/navigation/BottomSheetScreenName.ts';
 
 export interface IUserLocation {
   latitude: number;
@@ -30,6 +32,10 @@ export interface AppSlice {
   setBottomSheetRef: (
     value: React.RefObject<BottomSheetMethods> | null,
   ) => void;
+  isDraggable: boolean;
+  currentRouteName: ScreenName;
+  setDraggable: (value: boolean) => void;
+  setCurrentRouteName: (value: ScreenName) => void;
 }
 
 const createAppSlice: StoreSlice<AppSlice> = set => ({
@@ -57,6 +63,14 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   showBurgerButton: true,
   setShowBurgerButton: (value: boolean) =>
     set(state => ({...state, showBurgerButton: value})),
+  isDraggable: true,
+  currentRouteName: 'Main',
+  setDraggable: isDraggable => set({isDraggable}),
+  setCurrentRouteName: routeName =>
+    set({
+      currentRouteName: routeName,
+      isDraggable: DRAGGABLE_SCREENS[routeName] ?? false,
+    }),
 });
 
 export default createAppSlice;

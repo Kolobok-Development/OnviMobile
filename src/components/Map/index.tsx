@@ -23,6 +23,11 @@ MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
+const DEFAULT_LOCATION = {
+  longitude: 37.618423,
+  latitude: 55.751244,
+};
+
 const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   const {posList, setPosList, location, setLocation} = useStore.getState();
   const {error, data} = useSWR(['getPOSList'], () => getPOSList({}), {
@@ -99,7 +104,10 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     cameraRef.current?.setCamera({
       centerCoordinate: val
         ? [val.longitude, val.latitude]
-        : [location?.longitude ?? 0, location?.latitude ?? 0],
+        : [
+            location?.longitude ?? DEFAULT_LOCATION.longitude,
+            location?.latitude ?? DEFAULT_LOCATION.latitude,
+          ],
       zoomLevel: 14,
       pitch: 1,
       animationMode: 'flyTo',
@@ -133,11 +141,15 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         {memoizedBusinesses}
         <MapboxGL.Camera
           ref={cameraRef}
-          zoomLevel={100}
+          zoomLevel={12}
           pitch={1}
           animationMode="flyTo"
-          animationDuration={6000}
+          animationDuration={4000}
           followUserLocation={false}
+          centerCoordinate={[
+            DEFAULT_LOCATION.longitude,
+            DEFAULT_LOCATION.latitude,
+          ]}
         />
         <UserLocation
           visible={hasLocationPermission}

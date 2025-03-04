@@ -11,7 +11,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
 
-import {DrawerNavProp} from '../../../types/DrawerNavigation';
+import {DrawerNavProp} from '../../../types/navigation/DrawerNavigation.ts';
 
 interface CustomDrawerItemProps {
   label: string;

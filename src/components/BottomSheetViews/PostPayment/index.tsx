@@ -109,7 +109,7 @@ const PostPayment = () => {
               label={'Запустить повторно'}
               color={'blue'}
               height={dp(40)}
-              width={dp(343)}
+              width={dp(300)}
               outlined={true}
               onClick={restart}
             />
@@ -127,7 +127,7 @@ const PostPayment = () => {
             label={'Завершить'}
             color={'blue'}
             height={dp(40)}
-            width={dp(343)}
+            width={dp(300)}
             onClick={finish}
           />
           <Text style={styles.text}>Если возникли проблемы, свяжитесь</Text>

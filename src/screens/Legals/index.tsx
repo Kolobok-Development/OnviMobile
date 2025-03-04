@@ -11,7 +11,7 @@ import {dp} from '@utils/dp.ts';
 import React from 'react';
 import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {openWebURL} from '@utils/openWebUrl.ts';
 
 const Legals = () => {

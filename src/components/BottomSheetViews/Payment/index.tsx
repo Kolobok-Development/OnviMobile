@@ -26,7 +26,7 @@ import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
-import {confirmPayment, tokenize} from '../../../native';
+import { confirmPayment, dismiss, tokenize } from "../../../native";
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
 import {PaymentConfig} from 'src/types/PaymentConfig';
@@ -34,7 +34,7 @@ import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
 import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
-import {X} from 'react-native-feather';
+import {Info, X} from 'react-native-feather';
 import {GREY} from '@utils/colors.ts';
 import useSWRMutation from 'swr/mutation';
 import {
@@ -52,7 +52,8 @@ enum OrderStatus {
 }
 
 const Payment = () => {
-  const {user, loadUser, isBottomSheetOpen, orderDetails} = useStore.getState();
+  const {user, loadUser, isBottomSheetOpen, orderDetails, selectedPos} =
+    useStore.getState();
 
   const [btnLoader, setBtnLoader] = useState(false);
 
@@ -81,6 +82,50 @@ const Payment = () => {
       setPromoError(null);
     }
   }, [data]);
+
+  /**
+   * Analyzes payment response and returns appropriate error message
+   * @param {Object} paymentResponse - Response from payment gateway
+   * @returns {string|null} Error message or null if no error
+   */
+  const getPaymentErrorMessage = (paymentResponse: any) => {
+    // If payment is canceled
+    if (paymentResponse?.status === 'canceled') {
+      // Check cancellation details
+      if (
+        paymentResponse?.cancellation_details?.reason === 'insufficient_funds'
+      ) {
+        return 'Недостаточно средств на карте. Пожалуйста, используйте другую карту или способ оплаты.';
+      }
+
+      // Generic cancellation message
+      return 'Оплата отменена. Пожалуйста, попробуйте снова или выберите другой способ оплаты.';
+    }
+
+    // Check if we need to redirect to 3DS
+    if (
+      paymentResponse?.confirmation?.type === 'redirect' &&
+      paymentResponse?.confirmation?.confirmation_url
+    ) {
+      // This is not an error, but a successful redirect to 3DS
+      return null;
+    }
+
+    // Check for inactive payment method
+    if (paymentResponse?.payment_method?.status === 'inactive') {
+      return 'Платежное средство неактивно. Пожалуйста, используйте другую карту.';
+    }
+
+    // Generic error - if we got here but paid is false
+    if (
+      paymentResponse?.paid === false &&
+      !paymentResponse?.confirmation?.confirmation_url
+    ) {
+      return 'Произошла ошибка при обработке платежа. Пожалуйста, попробуйте позже.';
+    }
+
+    return null;
+  };
 
   const applyPromocode = async () => {
     const body = {
@@ -174,6 +219,15 @@ const Payment = () => {
         amount: realSum.toString(),
         description: paymentConfigParams.subtitle,
       });
+
+      const errorMessage: string | null = getPaymentErrorMessage(payment);
+      if (errorMessage) {
+        setError(errorMessage);
+        setBtnLoader(false);
+        setOrderSatus(null);
+        await dismiss();
+        return;
+      }
 
       const confirmationUrl = payment.confirmation.confirmation_url;
       const paymentId = payment.id;
@@ -285,7 +339,7 @@ const Payment = () => {
           }}
         />
         <LoadingModal
-          isVisible={orderStatus ? true : false}
+          isVisible={!!orderStatus}
           color={'#FFFFFF'}
           status={orderStatus ? orderStatus : 'start'}
           stageText={{
@@ -360,114 +414,141 @@ const Payment = () => {
                     justifyContent: 'space-between',
                     marginTop: dp(6),
                   }}>
-                  <Text
-                    style={{
-                      fontWeight: '300',
-                      fontSize: dp(15),
-                      color: 'rgba(0, 0, 0, 1)',
-                    }}>
-                    Ваш Cashback
-                  </Text>
-                  {!user || !user.tariff || user.tariff === 0 ? (
-                    <View>
-                      <SkeletonPlaceholder borderRadius={10}>
-                        <SkeletonPlaceholder.Item
-                          width={40}
-                          height={15}
-                          alignSelf={'flex-end'}
-                        />
-                      </SkeletonPlaceholder>
-                    </View>
-                  ) : (
-                    <Text
-                      style={{
-                        color: 'rgba(0, 0, 0, 1)',
-                        fontWeight: '700',
-                        fontSize: dp(16),
-                      }}>
-                      {order.sum
-                        ? Math.round((order.sum * user.tariff) / 100)
-                        : 0}{' '}
-                      ₽
-                    </Text>
-                  )}
-                </View>
-                <View
-                  style={{
-                    marginTop: dp(35),
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    flexDirection: 'row',
-                  }}>
-                  <View>
-                    <Text
-                      style={{
-                        fontWeight: '300',
-                        fontSize: dp(15),
-                        color: 'rgba(0, 0, 0, 1)',
-                      }}>
-                      Списать бонусы Onvi
-                    </Text>
-                  </View>
-                  <View
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <TouchableOpacity onPress={applyPoints}>
-                      {!user || !user.cards || !user.cards.balance == null ? (
+                  {selectedPos?.IsLoyaltyMember ? (
+                    <>
+                      <Text
+                        style={{
+                          fontWeight: '300',
+                          fontSize: dp(15),
+                          color: 'rgba(0, 0, 0, 1)',
+                        }}>
+                        Ваш Cashback
+                      </Text>
+                      {!user || !user.tariff || user.tariff === 0 ? (
                         <View>
-                          <SkeletonPlaceholder borderRadius={20}>
+                          <SkeletonPlaceholder borderRadius={10}>
                             <SkeletonPlaceholder.Item
-                              width={60}
-                              height={25}
+                              width={40}
+                              height={15}
                               alignSelf={'flex-end'}
                             />
                           </SkeletonPlaceholder>
                         </View>
                       ) : (
-                        <Switch
-                          value={toggled}
-                          onValueChange={onToggle}
-                          activeText={`${Math.min(
-                            Number(user.cards.balance),
-                            Number(
-                              order.sum
-                                ? order.sum -
-                                    (order.sum * discount) / 100 -
-                                    usedPoints || usedPoints - 1
-                                : 0,
-                            ),
-                          )}`}
-                          inActiveText={`${Math.min(
-                            Number(user.cards.balance),
-                            Number(
-                              order.sum
-                                ? order.sum -
-                                    (order.sum * discount) / 100 -
-                                    usedPoints
-                                : 0,
-                            ),
-                          )}`}
-                          backgroundActive="#A3A3A6"
-                          backgroundInActive="#000"
-                          circleImageActive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
-                          circleImageInactive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
-                          circleSize={dp(22)} // Adjust the circle size as needed
-                          switchBorderRadius={7}
-                          width={dp(60)} // Adjust the switch width as needed
-                          textStyle={{fontSize: dp(13), color: 'white'}}
-                        />
+                        <Text
+                          style={{
+                            color: 'rgba(0, 0, 0, 1)',
+                            fontWeight: '700',
+                            fontSize: dp(16),
+                          }}>
+                          {order.sum
+                            ? Math.round((order.sum * user.tariff) / 100)
+                            : 0}{' '}
+                          ₽
+                        </Text>
                       )}
-                    </TouchableOpacity>
-                  </View>
+                    </>
+                  ) : (
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginTop: dp(10),
+                      }}>
+                      <Info width={20} height={20} />
+                      <Text
+                        style={{
+                          fontWeight: '400',
+                          fontSize: dp(10),
+                          color: 'rgba(0, 0, 0, 1)',
+                          marginLeft: dp(4),
+                        }}>
+                        Кешбэк не начисляется. Автомойка не участвует в
+                        программе лояльности.
+                      </Text>
+                    </View>
+                  )}
                 </View>
+                {selectedPos?.IsLoyaltyMember && (
+                  <View
+                    style={{
+                      marginTop: dp(35),
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      flexDirection: 'row',
+                    }}>
+                    <View>
+                      <Text
+                        style={{
+                          fontWeight: '300',
+                          fontSize: dp(15),
+                          color: 'rgba(0, 0, 0, 1)',
+                        }}>
+                        Списать бонусы Onvi
+                      </Text>
+                    </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
+                      <TouchableOpacity onPress={applyPoints}>
+                        {!user || !user.cards || !user.cards.balance == null ? (
+                          <View>
+                            <SkeletonPlaceholder borderRadius={20}>
+                              <SkeletonPlaceholder.Item
+                                width={60}
+                                height={25}
+                                alignSelf={'flex-end'}
+                              />
+                            </SkeletonPlaceholder>
+                          </View>
+                        ) : (
+                          <Switch
+                            value={toggled}
+                            onValueChange={onToggle}
+                            activeText={`${Math.min(
+                              Number(user.cards.balance),
+                              Number(
+                                order.sum
+                                  ? order.sum -
+                                      (order.sum * discount) / 100 -
+                                      usedPoints || usedPoints - 1
+                                  : 0,
+                              ),
+                            )}`}
+                            inActiveText={`${Math.min(
+                              Number(user.cards.balance),
+                              Number(
+                                order.sum
+                                  ? order.sum -
+                                      (order.sum * discount) / 100 -
+                                      usedPoints
+                                  : 0,
+                              ),
+                            )}`}
+                            backgroundActive="#A3A3A6"
+                            backgroundInActive="#000"
+                            circleImageActive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
+                            circleImageInactive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
+                            circleSize={dp(22)} // Adjust the circle size as needed
+                            switchBorderRadius={7}
+                            width={dp(60)} // Adjust the switch width as needed
+                            textStyle={{fontSize: dp(13), color: 'white'}}
+                          />
+                        )}
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                )}
+
                 <View
                   style={{
                     display: 'flex',
                     flexDirection: 'row',
-                    marginTop: dp(15),
+                    marginTop: dp(25),
                   }}>
                   <TouchableOpacity
                     style={{

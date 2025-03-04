@@ -8,7 +8,7 @@ import useStore from '../../../state/store';
 import {getPOSList} from '@services/api/pos';
 import useSWRMutation from 'swr/mutation';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetNavigationProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 // Define types
 type Filter = {

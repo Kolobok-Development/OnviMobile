@@ -21,7 +21,7 @@ import {PromosInput} from '@screens/PromosInput';
 //CustomDrawerContent
 import {CustomDrawerContent} from './CustomDrawerContent';
 import {Legals} from '@screens/Legals';
-import {DrawerNavProp} from '../../types/DrawerNavigation';
+import {DrawerNavProp} from '../../types/navigation/DrawerNavigation.ts';
 import {TransferBalance} from '@screens/TransferBalance';
 
 const DrawerStack = () => {

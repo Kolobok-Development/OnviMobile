@@ -18,7 +18,7 @@ import PostPlaceholder from './PostPlaceholder';
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {NewsPost} from '../../../types/api/app/types.ts';
 
 const Post = () => {

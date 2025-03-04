@@ -28,7 +28,7 @@ import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import Modal from '@styled/Modal';
 import CampaignPlaceholder from './CampaignPlaceholder';
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Button} from '@styled/buttons';
 import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 

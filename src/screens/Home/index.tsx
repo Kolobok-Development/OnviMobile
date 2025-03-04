@@ -31,7 +31,7 @@ const Home = React.memo(({navigation}: any) => {
   const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
     useStore.getState();
 
-  const {isMainScreen} = useStore();
+  const {isDraggable} = useStore();
 
   const reduceMotion = useReducedMotion();
   const bsRef = useRef(null);
@@ -49,6 +49,7 @@ const Home = React.memo(({navigation}: any) => {
   }, []);
 
   const setCamera = (val?: {longitude: number; latitude: number}) => {
+    console.log(`LOCATION VAL ${val}`);
     cameraRef.current?.setCameraPosition(val);
   };
 
@@ -93,9 +94,9 @@ const Home = React.memo(({navigation}: any) => {
       <View style={styles.container}>
         <Map ref={cameraRef} userLocationRef={userLocationRef} />
         <BottomSheet
-          enableContentPanningGesture={isMainScreen}
+          enableContentPanningGesture={isDraggable}
           animateOnMount={!reduceMotion}
-          enableHandlePanningGesture={false}
+          enableHandlePanningGesture={isDraggable}
           handleComponent={renderHandleComponent}
           ref={bsRef}
           handleIndicatorStyle={styles.handleIndicator}

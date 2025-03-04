@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import React, {useCallback, useMemo} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import {GeneralDrawerNavigationProp} from '../../types/DrawerNavigation.ts';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {Partner as PartnerType} from '../../types/api/app/types.ts';
 import PartnerPlaceholder from '@screens/Partner/PartnerPlaceholder.tsx';
 import {BackButton} from '@components/BackButton';

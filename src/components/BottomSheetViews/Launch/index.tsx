@@ -8,7 +8,7 @@ import DefaultLaunch from './Default';
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+} from '../../../types/navigation/BottomSheetNavigation.ts';
 import VacuumLaunch from '@components/BottomSheetViews/Launch/Vacuum';
 
 const Launch = () => {

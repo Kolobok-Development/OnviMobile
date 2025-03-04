@@ -13,7 +13,7 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
-} from 'src/types/BottomSheetNavigation';
+} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 import useStore from '../../../state/store.ts';
 import {useEffect, useState} from 'react';

@@ -14,7 +14,7 @@ import {WHITE} from '@utils/colors.ts';
 import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
 
-import {GeneralBottomSheetRouteProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
 

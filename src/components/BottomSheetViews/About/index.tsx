@@ -9,7 +9,7 @@ import {Platform} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 
-import {GeneralBottomSheetNavigationProp} from 'src/types/BottomSheetNavigation';
+import {GeneralBottomSheetNavigationProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const About = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'About'>>();

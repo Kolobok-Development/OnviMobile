@@ -19,7 +19,7 @@ import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
 import {GlobalPromosPlaceholder} from './PromosPlaceholder';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 import useSWR from 'swr';

@@ -22,7 +22,7 @@ import Toast from 'react-native-toast-message';
 import {
   DrawerParamList,
   GeneralDrawerNavigationProp,
-} from 'src/types/DrawerNavigation';
+} from '../../types/navigation/DrawerNavigation.ts';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
 import {RouteProp, useRoute} from '@react-navigation/native';
 import {Copy} from 'react-native-feather';
