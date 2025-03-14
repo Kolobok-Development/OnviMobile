@@ -15,6 +15,5 @@ export async function getPOSList(query: {
     },
   );
 
-  console.log(JSON.stringify(response.data, null, 2));
   return response.data;
 }

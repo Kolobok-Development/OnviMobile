@@ -42,6 +42,10 @@ export interface UserSlice {
   loadUser: () => Promise<void>;
   deleteUser: () => Promise<void>;
   refreshRetryCounter: number;
+  handleTokenExpiry: (originalRequest?: {
+    headers: Record<string, string>;
+    [key: string]: any;
+  }) => Promise<any>;
 }
 
 const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
@@ -59,7 +63,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   setFcmToken: fcmToken => set({fcmToken}),
   mutateRefreshToken: async () => {
     try {
-
       const existingSession = await EncryptedStorage.getItem('user_session');
       let existingData: Record<string, any> = {};
       if (existingSession) {
@@ -126,7 +129,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           }),
         );
 
-        await LocalStorage.set(
+        LocalStorage.set(
           'user_session',
           JSON.stringify({
             accessToken: tokens.accessToken,
@@ -346,6 +349,54 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
     } catch (error: any) {
       console.log(JSON.stringify(error, null, 2));
       console.log('Delete account error:', error);
+    }
+  },
+  handleTokenExpiry: async (originalRequest?: {
+    headers: Record<string, string>;
+    [key: string]: any;
+  }) => {
+    console.log('Access token expired, attempting to refresh token');
+
+    try {
+      // Try to refresh the token
+      const refreshResult = await get().mutateRefreshToken();
+
+      if (refreshResult) {
+        console.log('Token refresh successful');
+
+        // If we have an original request to retry, return it
+        if (originalRequest) {
+          // Update the Authorization header with the new token
+          originalRequest.headers.Authorization = `Bearer ${get().accessToken}`;
+          return originalRequest;
+        }
+        return true; // Token refresh was successful
+      } else {
+        // If refresh failed, log out the user
+        console.log('Token refresh failed, logging out user');
+        await get().signOut();
+
+        // Show toast notification to the user
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Сессия истекла',
+          text2: 'Пожалуйста, войдите снова',
+          props: {errorCode: 401},
+        });
+        return false; // Token refresh failed
+      }
+    } catch (error) {
+      console.error('Error during token refresh:', error);
+      await get().signOut();
+
+      // Show toast notification to the user
+      Toast.show({
+        type: 'customErrorToast',
+        text1: 'Ошибка авторизации',
+        text2: 'Пожалуйста, войдите снова',
+        props: {errorCode: 401},
+      });
+      return false; // Token refresh failed with error
     }
   },
 });

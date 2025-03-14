@@ -17,6 +17,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [webViewError, setWebViewError] = useState(null);
+  const [url, setUrl] = useState<string | null>(null);
 
   // Fetch auth token *only* for redirect integration
   const isRedirectIntegration =
@@ -44,6 +45,9 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
     },
   });
 
+  useEffect(() => {
+    console.log(partnerData);
+  }, [partnerData]);
   /**
    * useEffect to wait for authentication before setting authToken
    */
@@ -61,6 +65,25 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
       trigger()
         .then(data => {
           setAuthToken(data?.token);
+          const queryParams = {
+            utm_source: 'moy-ka_ds',
+            utm_medium: 'partner_widget',
+            utm_campaign: 'online',
+            utm_content: 'mobapp',
+          };
+
+          const queryString = Object.keys(queryParams)
+            .map(
+              key =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                  queryParams[key],
+                )}`,
+            )
+            .join('&');
+
+          const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
+          console.log('URL ++++++ ', widgetUrlWithParams);
+          setUrl(widgetUrlWithParams);
         })
         .catch(err => {
           console.log('err: ', err);
@@ -80,6 +103,11 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
       showErrorToast('Партнерский виджет не доступен');
     }
   }, []);
+
+  useEffect(() => {
+    console.log('URL TO GAZPROM');
+    console.log(url);
+  }, [url]);
 
   /**
    * Handle web
@@ -127,7 +155,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
       {isRedirectIntegration && modalVisible && authToken && (
         <Modal visible={modalVisible} animationType="slide" transparent>
           <RNGPBonus
-            widgetUrl={partner.attributes.itegration_data?.url}
+            widgetUrl={url ? url : partner.attributes.itegration_data?.url}
             token={authToken}
             checkExternalUrl={false}
             onWidgetClose={handleClose}

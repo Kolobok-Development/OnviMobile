@@ -456,7 +456,7 @@ const Payment = () => {
                         alignItems: 'center',
                         marginTop: dp(10),
                       }}>
-                      <Info width={20} height={20} />
+                      <Info width={20} height={20} stroke={'#0B68E1'} />
                       <Text
                         style={{
                           fontWeight: '400',

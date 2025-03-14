@@ -1,52 +1,24 @@
 import axios, {InternalAxiosRequestConfig} from 'axios';
 const PREFIX = '/api/v2/';
 
-import {isValidStorageData} from '@services/validation/index.validator.ts';
-import {getToken} from '../../state/store.ts';
 import Config from 'react-native-config';
+import {setupAuthInterceptors} from './interceptors';
 
+// Create API instances
 const userApiInstance = axios.create({
   baseURL: Config.API_URL + PREFIX,
   withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
 });
 
-const _retriveConfigWithAuthorization = async (
-  config: InternalAxiosRequestConfig<any>,
-) => {
-  console.log('retrieve config with authorization: ', config);
-  try {
-    const accessToken = getToken().accessToken;
-    const expiredDate = getToken().expiredDate;
+// Setup auth interceptors for handling token expiry
+setupAuthInterceptors(userApiInstance);
 
-    if (
-      accessToken &&
-      expiredDate &&
-      isValidStorageData(accessToken, expiredDate)
-    ) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
-  } catch (e) {
-    console.log(e);
-  }
-
-  return config;
-};
-
-const getConfigWithHeaders = async (
-  config: InternalAxiosRequestConfig<any>,
-) => {
-  config.headers['Content-Type'] = 'application/json';
-  config.headers.Accept = 'application/json';
-  config.headers['Access-Control-Allow-Origin'] = '*';
-  return _retriveConfigWithAuthorization(config);
-};
-
-userApiInstance.interceptors.request.use(
-  config => getConfigWithHeaders(config),
-  error => {
-    return Promise.reject(error);
-  },
-);
+// Content API instance (without auth interceptors)
 const contentApiInstance = axios.create({
   baseURL: Config.STRAPI_URL,
   headers: {

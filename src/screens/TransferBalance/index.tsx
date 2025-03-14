@@ -21,6 +21,7 @@ import {getBalance} from '@services/api/balance';
 import {transferBalance} from '@services/api/balance';
 import TransferFailModal from '@components/TransferBalance/TransferFailModal';
 import TransferSuccessModal from '@components/TransferBalance/TransferSuccessModal';
+import TransferBalanceOnboardingStory from '@components/TransferBalance/OnboardingStory';
 
 import useStore from '../../state/store';
 
@@ -34,6 +35,8 @@ const TransferBalance = () => {
   const [cardNumber, setCardNumber] = useState<string>('');
   const [balance, setBalance] = useState<FindBalanceResponse>();
   const [error, setError] = useState<string>('');
+  const [showContent, setShowContent] = useState<boolean>(false);
+  const [showInstructions, setShowInstructions] = useState<boolean>(false);
 
   const [transferFailModal, setTransferFailModal] = useState(false);
   const [transferSuccessModal, setTransferSuccessModal] = useState(false);
@@ -89,6 +92,17 @@ const TransferBalance = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      {/* Onboarding Story - shown at first visit or when manually triggered */}
+      {(!showContent || showInstructions) && (
+        <TransferBalanceOnboardingStory
+          onComplete={() => {
+            setShowContent(true);
+            setShowInstructions(false);
+          }}
+          isManualTrigger={showInstructions} // Pass true for manual triggers
+        />
+      )}
+
       <View style={styles.header}>
         <BackButton
           callback={() => {
@@ -96,15 +110,22 @@ const TransferBalance = () => {
           }}
         />
         <Text style={styles.screenTitle}>Перенос Баланса</Text>
-        <View style={{width: dp(50)}} />
+        <View style={{width: dp(30)}} />
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.modalTitle}>Перенос баланса</Text>
-        <Text style={styles.modalDescription}>
-          {!balance
-            ? 'Средства будут перенесены из приложения «Мой-Ка!ДС» в приложение «ONVI».\n \nВведите номер счета лояльности приложения «Мой-Ка!ДС».'
-            : 'Карта найдена, можем осуществить перенос бонусов в приложение «ONVI».'}
-        </Text>
+        <View>
+          <Text style={styles.modalDescription}>
+            {!balance
+              ? 'Средства будут перенесены из приложения «Мой-Ка!ДС» в приложение «ONVI».\n \nВведите номер счета лояльности приложения «Мой-Ка!ДС».'
+              : 'Карта найдена, можем осуществить перенос бонусов в приложение «ONVI».'}
+          </Text>
+          <TouchableOpacity onPress={() => setShowInstructions(true)}>
+            <Text style={styles.instructionsLink}>
+              Как это работает? Посмотреть инструкцию
+            </Text>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.cardInputContainer}>
           <ImageBackground
@@ -117,7 +138,7 @@ const TransferBalance = () => {
                   style={[styles.input, error ? {color: 'red'} : undefined]}
                   value={cardNumber}
                   onChangeText={formatCardNumber}
-                  placeholder="xxxx-xxxx-xxxx-xxxx"
+                  placeholder="xxxx-xxxx-xxxx"
                   keyboardType="numeric"
                   maxLength={19}
                   placeholderTextColor="#999"
@@ -236,6 +257,34 @@ const styles = StyleSheet.create({
     fontSize: dp(16),
     marginTop: dp(8),
   },
+  instructionsLink: {
+    color: '#0B68E1',
+    fontSize: dp(14),
+    marginTop: dp(10),
+    marginBottom: dp(5),
+    textDecorationLine: 'underline',
+  },
+  helpButton: {
+    width: dp(36),
+    height: dp(36),
+    borderRadius: dp(18),
+    backgroundColor: '#0B68E1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+    elevation: 3,
+  },
+  helpButtonText: {
+    color: 'white',
+    fontSize: dp(20),
+    fontWeight: 'bold',
+  },
   cardInputContainer: {
     position: 'relative',
     marginTop: dp(10),
@@ -295,8 +344,8 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     textAlign: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: dp(20),
+    justifyContent: 'space-between',
   },
   screenTitle: {
     fontWeight: '700',

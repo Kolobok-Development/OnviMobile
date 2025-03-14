@@ -1,4 +1,4 @@
-import create, { createStore, StoreApi } from "zustand";
+import create, {createStore, StoreApi} from 'zustand';
 import createAppSlice, {AppSlice} from './app/AppSlice.ts';
 import createOrderSlice, {OrderSlice} from './order/OrderSlice.ts';
 import createPoSSlice, {PosSlice} from './pos/PosSlice.ts';
@@ -57,4 +57,27 @@ export const getToken = () => {
     expiredDate: useStore.getState().expiredDate,
     mutateRefreshToken: useStore.getState().mutateRefreshToken,
   };
+};
+
+export const handleTokenExpiry = async (originalRequest?: {
+  headers: Record<string, string>;
+  [key: string]: any;
+}) => {
+  console.log('Access token expired, handling in store');
+
+  // Call the handleTokenExpiry method from UserSlice which also shows a notification
+  const state = useStore.getState();
+
+  if (state.handleTokenExpiry) {
+    console.log(
+      'Delegating to UserSlice.handleTokenExpiry with original request',
+    );
+    // Pass the original request to UserSlice.handleTokenExpiry for possible retry
+    return await state.handleTokenExpiry(originalRequest);
+  } else {
+    // Fallback if handleTokenExpiry isn't available
+    console.log('No UserSlice.handleTokenExpiry available, using signOut');
+    await state.signOut();
+    return false;
+  }
 };

@@ -18,6 +18,7 @@ import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import {Navigation} from 'react-native-feather';
 import useStore from '../../state/store';
+import TokenExpiryTester from '../../components/TokenExpiryTester';
 
 import {CameraReference} from '@components/Map';
 
@@ -49,7 +50,6 @@ const Home = React.memo(({navigation}: any) => {
   }, []);
 
   const setCamera = (val?: {longitude: number; latitude: number}) => {
-    console.log(`LOCATION VAL ${val}`);
     cameraRef.current?.setCameraPosition(val);
   };
 
@@ -125,6 +125,13 @@ const Home = React.memo(({navigation}: any) => {
         <View style={styles.balance}>
           <Balance bottomSheetIndex={bottomSheetIndex} />
         </View>
+
+        {/* Token Expiry Tester Component - Only visible in development */}
+        {/*{__DEV__ && (*/}
+        {/*  <View style={styles.tokenTester}>*/}
+        {/*    <TokenExpiryTester />*/}
+        {/*  </View>*/}
+        {/*)}*/}
       </View>
     </GestureHandlerRootView>
   );
@@ -231,6 +238,13 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+  },
+  tokenTester: {
+    position: 'absolute',
+    bottom: 200,
+    left: 0,
+    right: 0,
+    zIndex: 999,
   },
 });
 

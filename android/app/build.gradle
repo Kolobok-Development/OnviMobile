@@ -86,8 +86,8 @@ android {
         applicationId "com.onvimobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "1.1.1"
+        versionCode 5
+        versionName "1.1.2"
         resValue 'string', 'build_config_package','com.onvimobile'
     }
     signingConfigs {
