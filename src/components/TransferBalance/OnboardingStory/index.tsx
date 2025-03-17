@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
   storyImage: {
     width: screenWidth,
     height: screenHeight,
-    resizeMode: 'center',
+    resizeMode: 'cover',
   },
 });
 
