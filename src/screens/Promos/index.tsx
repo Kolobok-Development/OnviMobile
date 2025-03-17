@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {dp} from '../../utils/dp';
 
@@ -6,14 +6,12 @@ import {
   View,
   Text,
   StyleSheet,
-  FlatList,
   SafeAreaView,
-  Platform,
-  Pressable,
   Image,
-  TouchableOpacity, ScrollView
-} from "react-native";
-import {BurgerButton} from '@navigators/BurgerButton';
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+
 import {useNavigation} from '@react-navigation/core';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
 
@@ -26,6 +24,7 @@ import useSWR from 'swr';
 import {getActiveClientPromotions} from '@services/api/user';
 import {getGlobalPromotions} from '@services/api/promotion';
 import {PersonalPromoPlaceholder} from '@screens/Promos/PersonalPromoPlaceholder.tsx';
+import ScreenHeader from '@components/ScreenHeader';
 
 const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
@@ -45,11 +44,7 @@ const Promos = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={styles.container}>
-        <View style={styles.header}>
-          <BurgerButton isDrawerStack={true} />
-          <Text style={styles.screenTitle}>Акции</Text>
-          <View style={{width: dp(50)}} />
-        </View>
+        <ScreenHeader screenTitle="Акции" />
         <View style={styles.content}>
           <View style={{flex: 1, marginBottom: dp(20), height: '30%'}}>
             <Text style={styles.sectionTitle}>Персональные акции</Text>
@@ -162,23 +157,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: dp(16),
     flexDirection: 'column',
-  },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    justifyContent: 'space-between',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(24),
-    textAlignVertical: 'center',
-    letterSpacing: 0.2,
-    color: '#000',
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
   },
   content: {
     flex: 1,

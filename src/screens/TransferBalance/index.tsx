@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import {dp} from '../../utils/dp';
 
-import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
@@ -24,6 +23,7 @@ import TransferSuccessModal from '@components/TransferBalance/TransferSuccessMod
 import TransferBalanceOnboardingStory from '@components/TransferBalance/OnboardingStory';
 
 import useStore from '../../state/store';
+import ScreenHeader from '@components/ScreenHeader';
 
 type FindBalanceResponse = {
   balance: number;
@@ -104,10 +104,10 @@ const TransferBalance = () => {
       )}
 
       <View style={styles.header}>
-        <BackButton
-          callback={() => {
-            navigation.navigate('Настройки');
-          }}
+        <ScreenHeader
+          screenTitle={'Перенос Баланса'}
+          btnType="back"
+          btnCallback={() => navigation.navigate('Настройки')}
         />
         <Text style={styles.screenTitle}>Перенос Баланса</Text>
         <View style={{width: dp(30)}} />
@@ -243,6 +243,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  header: {
+    padding: dp(16),
+  },
   contentContainer: {
     flex: 1,
     paddingHorizontal: dp(20),
@@ -340,12 +343,6 @@ const styles = StyleSheet.create({
     fontSize: dp(18),
     fontWeight: '600',
     color: '#FFF',
-  },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    paddingHorizontal: dp(20),
-    justifyContent: 'space-between',
   },
   screenTitle: {
     fontWeight: '700',

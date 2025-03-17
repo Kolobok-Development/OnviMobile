@@ -11,8 +11,9 @@ import {
 import {dp} from '../../utils/dp';
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
-import {BackButton} from '@components/BackButton';
 
+import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
 const About = () => {
@@ -21,15 +22,11 @@ const About = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <BackButton
-            callback={() => {
-              navigation.navigate('Настройки');
-            }}
-          />
-          <Text style={styles.screenTitle}>О Нас</Text>
-          <View style={{width: dp(50)}} />
-        </View>
+        <ScreenHeader
+          screenTitle="О нас"
+          btnType="back"
+          btnCallback={() => navigation.navigate('Настройки')}
+        />
         <View style={styles.content}>
           <Image
             source={require('../../assets/icons/onvi_log_black_green.png')}
@@ -89,23 +86,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: dp(16),
     flexDirection: 'column',
-  },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    justifyContent: 'space-between',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(24),
-    textAlignVertical: 'center',
-    letterSpacing: 0.2,
-    color: '#000',
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
   },
   content: {
     marginTop: dp(30),

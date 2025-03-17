@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   Platform,
+  Animated,
 } from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -22,11 +23,14 @@ import TokenExpiryTester from '../../components/TokenExpiryTester';
 
 import {CameraReference} from '@components/Map';
 
+import {BottomSheetHandleProps} from '@gorhom/bottom-sheet';
+
 const snapPoints = ['25%', '42%', '60%', '95%'];
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
+  const [filtersOpacity] = useState(new Animated.Value(1));
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
   const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
@@ -43,43 +47,52 @@ const Home = React.memo(({navigation}: any) => {
     }
   }, [setBottomSheetRef]);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    setVisible(index ? true : false);
-    setBottomSheetIndex(index);
-    setIsBottomSheetOpen(index >= 2);
-  }, []);
+  const handleSheetChanges = useCallback(
+    (index: number) => {
+      setVisible(index ? true : false);
+      setBottomSheetIndex(index);
+      setIsBottomSheetOpen(index >= 2);
+
+      Animated.timing(filtersOpacity, {
+        toValue: index === 3 ? 0 : 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    },
+    [filtersOpacity],
+  );
 
   const setCamera = (val?: {longitude: number; latitude: number}) => {
     cameraRef.current?.setCameraPosition(val);
   };
 
   const renderHandleComponent = useCallback(
-    (props: any) => {
+    (props: BottomSheetHandleProps) => {
       const extractedFilters = useMemo(() => {
         return Object.values(filters)
           .flat()
-          .map((filter: any) => filter);
+          .map(filter => filter);
       }, [filters]);
 
       return (
         <BottomSheetHandle {...props} style={styles.handle}>
-          <View style={styles.handleContent}>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollViewContent}>
-              {extractedFilters.map((value, index) => (
-                <View
-                  key={index}
-                  style={[styles.filterBox, {width: value.length * dp(10)}]}>
-                  <Text style={styles.filterText}>{value}</Text>
-                </View>
-              ))}
+          <Animated.View
+            style={[styles.filtersContainer, {opacity: filtersOpacity}]}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {Object.values(filters)
+                .flat()
+                .map((filter, index) => (
+                  <View
+                    key={index}
+                    style={[styles.filterBox, {width: filter.length * dp(10)}]}>
+                    <Text style={styles.filterText}>{filter}</Text>
+                  </View>
+                ))}
             </ScrollView>
             <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
               <Navigation fill="white" color="white" />
             </TouchableOpacity>
-          </View>
+          </Animated.View>
           <View style={styles.lineContainer}>
             <View style={styles.line} />
           </View>
@@ -238,6 +251,11 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     flex: 1,
+  },
+  filtersContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   tokenTester: {
     position: 'absolute',

@@ -1,5 +1,6 @@
 import {
   Image,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -49,14 +50,15 @@ const Partner = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <BackButton callback={handleGoBack} />
-        <Text style={styles.screenTitle}>{partnerAttributes?.name}</Text>
-        <View style={{width: dp(50)}} />
-      </View>
-      <ScrollView contentContainerStyle={styles.scrollView}>
+    <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
+      <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
+          <ScreenHeader
+            screenTitle={partner?.attributes.name ?? ''}
+            btnType="back"
+            btnCallback={() => navigation.navigate('Партнеры')}
+          />
           <Image
             source={{uri: partnerAttributes?.image?.data?.attributes?.url}}
             style={styles.banner}
@@ -76,27 +78,43 @@ const Partner = () => {
             </View>
           </View>
 
-          {/* Memoized markdown content */}
+            {/* Memoized markdown content */}
           <Markdown style={{body: {color: '#000', fontSize: dp(14), paddingLeft: 16}}}>
             {markdownContent}
           </Markdown>
-
           {/* Partner Interaction Component */}
           <PartnerIntegration partner={partner} />
         </View>
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {flex: 1, backgroundColor: '#fff'},
-  scrollView: {flexGrow: 1, paddingBottom: dp(30)},
-  header: {flexDirection: 'row', justifyContent: 'space-between'},
-  screenTitle: {fontWeight: '700', fontSize: dp(24), color: '#000'},
-  content: {alignItems: 'center', marginTop: dp(15)},
-  banner: {width: dp(342), height: dp(190)},
-  contentHeader: {flexDirection: 'row', alignItems: 'center', padding: 16},
+  container: {
+    flex: 1,
+    padding: dp(16),
+    flexDirection: 'row',
+  },
+  scrollView: {
+    flexGrow: 1,
+    paddingBottom: dp(30),
+  },
+  content: {
+    alignItems: 'center',
+    marginTop: dp(15),
+  },
+  banner: {
+    width: dp(342),
+    height: dp(190),
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 8,
+  },
   circleImageContainer: {
     width: 56,
     height: 56,
