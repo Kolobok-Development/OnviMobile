@@ -85,13 +85,7 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
               styles.storyThumbnailContainer,
               {opacity: loading ? 0.5 : 1},
             ]}>
-            <View>
-              <Image
-                source={{uri: item.icon}}
-                style={styles.storyThumbnail}
-                resizeMode="contain"
-              />
-            </View>
+            <Image source={{uri: item.icon}} style={styles.storyThumbnail} />
           </TouchableOpacity>
         )}
       />
@@ -136,23 +130,16 @@ const styles = StyleSheet.create({
   },
   storyThumbnailContainer: {
     marginRight: dp(10),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  storyThumbnailBorder: {
-    width: dp(87),
-    height: dp(87),
-    borderRadius: dp(20),
-    padding: dp(2),
-    borderWidth: dp(2),
-    borderColor: '#0B68E1', // Brand color for the border
+    width: dp(92),
+    height: dp(92),
+    borderRadius: dp(5),
     alignItems: 'center',
     justifyContent: 'center',
   },
   storyThumbnail: {
-    width: dp(82),
-    height: dp(82),
-    borderRadius: dp(20),
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   headerContainer: {
     flexDirection: 'row',
