@@ -2,7 +2,6 @@ import {
   Dimensions,
   Image,
   Linking,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,7 +18,6 @@ import {Button} from '@styled/buttons';
 import {LogOut} from 'react-native-feather';
 import BottomSheet, {BottomSheetTextInput} from '@gorhom/bottom-sheet';
 import {useNavigation} from '@react-navigation/native';
-import {BurgerButton} from '@navigators/BurgerButton';
 import Switch from '@styled/buttons/CustomSwitch';
 import {AvatarEnum} from '../../types/AvatarEnum.ts';
 import {update, updateAllowNotificationSending} from '@services/api/user';
@@ -28,6 +26,7 @@ import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import ScreenHeader from '@components/ScreenHeader/index.tsx';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
@@ -282,10 +281,9 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.header}>
-          <BurgerButton isDrawerStack={true} />
-          <Text style={styles.screenTitle}>Настройки</Text>
-          <View style={{width: dp(50)}} />
+          <ScreenHeader screenTitle="Найстройки" />
         </View>
+
         <View style={styles.container}>
           <View style={styles.profileCard}>
             <Image source={avatarValue} style={styles.avatar} />
@@ -439,25 +437,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
   },
   header: {
-    backgroundColor: '#FFF',
-    flexDirection: 'row',
-    textAlign: 'center',
-    paddingLeft: dp(16),
-    paddingTop: dp(16),
-    paddingBottom: dp(3),
-    justifyContent: 'space-between',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(24),
-    textAlignVertical: 'center',
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
-    color: '#000',
-    letterSpacing: 0.2,
+    padding: dp(16),
   },
   backButton: {
     alignSelf: 'flex-start',

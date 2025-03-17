@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
 import React from 'react';
-import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 import {openWebURL} from '@utils/openWebUrl.ts';
+import ScreenHeader from '@components/ScreenHeader';
 
 const Legals = () => {
   const navigation =
@@ -20,15 +20,12 @@ const Legals = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <BackButton
-            callback={() => {
-              navigation.navigate('Настройки');
-            }}
-          />
-          <Text style={styles.screenTitle}>Правовые документы</Text>
-          <View style={{width: dp(50)}} />
-        </View>
+        <ScreenHeader
+          screenTitle="Правовые документы"
+          btnType="back"
+          btnCallback={() => navigation.navigate('Настройки')}
+        />
+
         <View style={styles.content}>
           <View style={styles.section}>
             <View style={styles.sectionBody}>
@@ -86,25 +83,8 @@ const styles = StyleSheet.create({
     padding: dp(16),
     flexDirection: 'column',
   },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    justifyContent: 'space-between',
-  },
   content: {
     marginTop: '10%',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(18),
-    textAlignVertical: 'center',
-    letterSpacing: 0.2,
-    color: '#000',
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
   },
   backButton: {
     alignSelf: 'flex-start',

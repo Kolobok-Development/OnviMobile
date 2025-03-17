@@ -1,6 +1,5 @@
 import {
   Image,
-  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -14,12 +13,12 @@ import {Partner as PartnerType} from '../../types/api/app/types';
 import Markdown from 'react-native-markdown-display';
 import {Button} from '@styled/buttons';
 import PromoModal, {IPromoModalProps, IInputData} from '@components/PromoModal';
-import {BackButton} from '@components/BackButton';
 import {useNavigation} from '@react-navigation/core';
 
 import PartnerPlaceholder from './PartnerPlaceholder';
 
 import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
+import ScreenHeader from '@components/ScreenHeader';
 
 const Partner = () => {
   const route: any = useRoute();
@@ -85,15 +84,11 @@ const Partner = () => {
         <ScrollView
           contentContainerStyle={styles.scrollView}
           showsVerticalScrollIndicator={false}>
-          <View style={styles.header}>
-            <BackButton
-              callback={() => {
-                navigation.navigate('Партнеры');
-              }}
-            />
-            <Text style={styles.screenTitle}>{partner?.attributes.name}</Text>
-            <View style={{width: dp(50)}} />
-          </View>
+          <ScreenHeader
+            screenTitle={partner?.attributes.name ?? ''}
+            btnType="back"
+            btnCallback={() => navigation.navigate('Партнеры')}
+          />
           {partner ? (
             <View style={styles.content}>
               {renderCustomModal()}
@@ -169,23 +164,6 @@ const styles = StyleSheet.create({
   scrollView: {
     flexGrow: 1,
     paddingBottom: dp(30),
-  },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    justifyContent: 'space-between',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(24),
-    textAlignVertical: 'center',
-    color: '#000',
-    letterSpacing: 0.2,
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
   },
   content: {
     alignItems: 'center',

@@ -10,9 +10,8 @@ import {
   StyleSheet,
   FlatList,
   SafeAreaView,
-  Platform,
 } from 'react-native';
-import {BurgerButton} from '@navigators/BurgerButton';
+
 import {CheckBox} from '@styled/buttons/CheckBox';
 import {useNavigation} from '@react-navigation/native';
 import EmptyPlaceholder from '@components/EmptyPlaceholder';
@@ -23,6 +22,8 @@ import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 import useSWR from 'swr';
 import {getPartners} from '@services/api/partners';
 import {Partner} from '../../types/api/app/types.ts';
+
+import ScreenHeader from '@components/ScreenHeader/index.tsx';
 
 const Partners = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнеры'>>();
@@ -76,11 +77,7 @@ const Partners = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <BurgerButton isDrawerStack={true} />
-          <Text style={styles.screenTitle}>Партнеры</Text>
-          <View style={{width: dp(50)}} />
-        </View>
+        <ScreenHeader screenTitle="Партнеры" />
         {isLoading ? (
           <PartnersPlaceholder />
         ) : (
@@ -107,23 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: dp(16),
     flexDirection: 'column',
-  },
-  header: {
-    flexDirection: 'row',
-    textAlign: 'center',
-    justifyContent: 'space-between',
-  },
-  screenTitle: {
-    fontWeight: '700',
-    fontSize: dp(24),
-    textAlignVertical: 'center',
-    color: '#000',
-    letterSpacing: 0.2,
-    ...Platform.select({
-      ios: {
-        lineHeight: dp(40),
-      },
-    }),
   },
   content: {
     marginTop: dp(30),
