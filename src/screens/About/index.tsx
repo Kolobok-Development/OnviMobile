@@ -12,7 +12,6 @@ import {dp} from '../../utils/dp';
 import React from 'react';
 import {useNavigation} from '@react-navigation/core';
 
-import {GeneralDrawerNavigationProp} from 'src/types/DrawerNavigation';
 import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 

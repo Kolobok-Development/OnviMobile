@@ -6,7 +6,7 @@
     "android": "tsc --noEmit && react-native run-android",
     "ios": "tsc --noEmit && react-native run-ios",
     "lint": "eslint .",
-    "start": "tsc --noEmit && react-native start",
+    "start": "react-native start",
     "purge:ios": "rm -rf ios/Pods ios/build ~/Library/Caches/CocoaPods ~/Library/Developer/Xcode/DerivedData && cd ios && bundle exec pod cache clean --all && cd ..",
     "setDevelopment": "ENVFILE=.env.development",
     "setStaging": "ENVFILE=.env.staging",
@@ -30,7 +30,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^4.6.0",
+    "@gorhom/bottom-sheet": "^5.1.1",
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-clipboard/clipboard": "^1.14.1",
     "@react-native-community/checkbox": "^0.5.17",
@@ -40,6 +40,7 @@
     "@react-native-firebase/messaging": "^19.2.2",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-native/gradle-plugin": "^0.73.4",
+    "@react-navigation/devtools": "^7.0.18",
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",

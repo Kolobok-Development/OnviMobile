@@ -32,6 +32,9 @@ export interface AppSlice {
   setBottomSheetRef: (
     value: React.RefObject<BottomSheetMethods> | null,
   ) => void;
+  // Global snap points configuration
+  bottomSheetSnapPoints: string[];
+  setBottomSheetSnapPoints: (snapPoints: string[]) => void;
   isDraggable: boolean;
   currentRouteName: ScreenName;
   setDraggable: (value: boolean) => void;
@@ -63,6 +66,10 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   showBurgerButton: true,
   setShowBurgerButton: (value: boolean) =>
     set(state => ({...state, showBurgerButton: value})),
+  // Default snap points (will be updated by Home screen)
+  bottomSheetSnapPoints: ['35%', '50%'],
+  setBottomSheetSnapPoints: (snapPoints: string[]) => 
+    set(state => ({...state, bottomSheetSnapPoints: snapPoints})),
   isDraggable: true,
   currentRouteName: 'Main',
   setDraggable: isDraggable => set({isDraggable}),

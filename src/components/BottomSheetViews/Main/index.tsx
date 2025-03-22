@@ -37,56 +37,6 @@ import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.t
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
 
-const infractionStories = [
-  {
-    id: 1,
-    image: 'https://example.com/infraction1.jpg',
-    description: 'Parked in a no-parking zone.',
-    timestamp: '2023-01-01 12:00',
-  },
-  {
-    id: 2,
-    image: 'https://example.com/infraction2.jpg',
-    description: 'Blocking driveway.',
-    timestamp: '2023-01-02 14:30',
-  },
-  {
-    id: 3,
-    image: 'https://example.com/infraction3.jpg',
-    description: 'Double parking.',
-    timestamp: '2023-01-03 16:45',
-  },
-];
-
-const stories = [
-  {
-    id: 1,
-    username: 'Alan',
-    title: 'Albums',
-    profile:
-      'https://sosugary.com/wp-content/uploads/2022/01/TheWeeknd_001.jpg',
-    stories: [
-      {
-        id: 0,
-        url: 'https://i1.sndcdn.com/artworks-IrhmhgPltsdrwMu8-thZohQ-t500x500.jpg',
-        type: 'image',
-        duration: 5,
-        storyId: 1,
-        isSeen: false,
-        showOverlay: true,
-        link: 'https:google.com',
-      },
-      {
-        id: 1,
-        url: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        type: 'video',
-        duration: 15,
-        storyId: 1,
-        isSeen: false,
-      },
-    ],
-  },
-];
 
 const Main = () => {
   const {
@@ -325,7 +275,15 @@ const Main = () => {
             <TouchableOpacity
               style={styles.partnersCard}
               onPress={() => {
-                route.params.drawerNavigation.navigate('Партнеры');
+                console.log('[PARTNERS_BUTTON] Button pressed');
+                console.log('[PARTNERS_BUTTON] Current route:', route.name);
+                console.log('[PARTNERS_BUTTON] Navigation params:', route.params);
+                
+                // Use a small timeout to prevent navigation issues when in Main screen
+                setTimeout(() => {
+                  console.log('[PARTNERS_BUTTON] Navigating to Partners screen after timeout');
+                  route.params.drawerNavigation.navigate('Партнеры');
+                }, 100); // Increased timeout for better reliability
               }}>
               <View style={styles.label}>
                 <Text

@@ -1,36 +1,39 @@
-import React, {useRef, useState, useMemo, useCallback, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Text,
-  TouchableOpacity,
-  Platform,
-  Animated,
-} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import React, {useRef, useState, useMemo, useEffect, useCallback} from 'react';
+import {View, StyleSheet, Dimensions, Platform} from 'react-native';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {useReducedMotion} from 'react-native-reanimated';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 import {Map} from '@components/Map';
-import BottomSheet, {BottomSheetHandle} from '@gorhom/bottom-sheet';
+import BottomSheet from '@gorhom/bottom-sheet';
 import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
-import {Navigation} from 'react-native-feather';
 import useStore from '../../state/store';
-import TokenExpiryTester from '../../components/TokenExpiryTester';
+import {useReducedMotion, useSharedValue} from 'react-native-reanimated';
 
 import {CameraReference} from '@components/Map';
+import FindMeButton from '@screens/Home/FindMeButton.tsx';
+import style from '@styled/inputs/RadioButton/style.ts';
+import {useSnapPoints, MAX_SNAP_INDEX} from '../../utils/snapPoints';
 
-import {BottomSheetHandleProps} from '@gorhom/bottom-sheet';
-
-const snapPoints = ['25%', '42%', '60%', '95%'];
+const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(2);
-  const [filtersOpacity] = useState(new Animated.Value(1));
+  const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
+  const [filtersOpacity] = useState(1);
+
+  // Calculate dynamic snap points based on screen size
+  // Use the global snap points hook to ensure consistency across screens
+  const snapPoints = useSnapPoints();
+
+  // Set snap points in global state for use in other components
+  const {setBottomSheetSnapPoints} = useStore.getState();
+
+  // Update global snap points when local snap points change
+  useEffect(() => {
+    setBottomSheetSnapPoints(snapPoints);
+  }, [snapPoints]);
+
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
   const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
@@ -41,81 +44,101 @@ const Home = React.memo(({navigation}: any) => {
   const reduceMotion = useReducedMotion();
   const bsRef = useRef(null);
 
+  const currentPosition = useSharedValue(0);
+
   useEffect(() => {
     if (bsRef.current) {
       setBottomSheetRef(bsRef);
     }
   }, [setBottomSheetRef]);
 
-  const handleSheetChanges = useCallback(
-    (index: number) => {
-      setVisible(index ? true : false);
-      setBottomSheetIndex(index);
-      setIsBottomSheetOpen(index >= 2);
-
-      Animated.timing(filtersOpacity, {
-        toValue: index === 3 ? 0 : 1,
-        duration: 200,
-        useNativeDriver: true,
-      }).start();
-    },
-    [filtersOpacity],
-  );
-
   const setCamera = (val?: {longitude: number; latitude: number}) => {
     cameraRef.current?.setCameraPosition(val);
   };
 
-  const renderHandleComponent = useCallback(
-    (props: BottomSheetHandleProps) => {
-      const extractedFilters = useMemo(() => {
-        return Object.values(filters)
-          .flat()
-          .map(filter => filter);
-      }, [filters]);
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log(index);
+    setVisible(index ? true : false);
+    setBottomSheetIndex(index);
+    setIsBottomSheetOpen(index >= 2);
+  }, []);
 
-      return (
-        <BottomSheetHandle {...props} style={styles.handle}>
-          <Animated.View
-            style={[styles.filtersContainer, {opacity: filtersOpacity}]}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {Object.values(filters)
-                .flat()
-                .map((filter, index) => (
-                  <View
-                    key={index}
-                    style={[styles.filterBox, {width: filter.length * dp(10)}]}>
-                    <Text style={styles.filterText}>{filter}</Text>
-                  </View>
-                ))}
-            </ScrollView>
-            <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
-              <Navigation fill="white" color="white" />
-            </TouchableOpacity>
-          </Animated.View>
-          <View style={styles.lineContainer}>
-            <View style={styles.line} />
-          </View>
-        </BottomSheetHandle>
-      );
-    },
-    [filters, setCamera],
+  // const renderHandleComponent = useCallback(
+  //   (props: BottomSheetHandleProps) => {
+  //     const extractedFilters = useMemo(() => {
+  //       return Object.values(filters)
+  //         .flat()
+  //         .map(filter => filter);
+  //     }, [filters]);
+  //
+  //     return (
+  //       <BottomSheetHandle {...props} style={styles.handle}>
+  //         <Animated.View
+  //           style={[styles.filtersContainer, {opacity: filtersOpacity}]}>
+  //           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+  //             {Object.values(filters)
+  //               .flat()
+  //               .map((filter, index) => (
+  //                 <View
+  //                   key={index}
+  //                   style={[styles.filterBox, {width: filter.length * dp(10)}]}>
+  //                   <Text style={styles.filterText}>{filter}</Text>
+  //                 </View>
+  //               ))}
+  //           </ScrollView>
+  //           <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
+  //             <Navigation fill="white" color="white" />
+  //           </TouchableOpacity>
+  //         </Animated.View>
+  //         <View style={styles.lineContainer}>
+  //           <View style={styles.line} />
+  //         </View>
+  //       </BottomSheetHandle>
+  //     );
+  //   },
+  //   [filters, setCamera],
+  // );
+
+  useEffect(() => {
+    console.warn('[BOTTOMSHEET]: rerender');
+  });
+
+  const memoizedBottomSheetStack = useMemo(
+    () => (
+      <BottomSheetStack
+        active={visible}
+        drawerNavigation={navigation}
+        cameraRef={cameraRef}
+        setCamera={setCamera}
+      />
+    ),
+    [visible, navigation, cameraRef, setCamera],
   );
 
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={styles.container}>
         <Map ref={cameraRef} userLocationRef={userLocationRef} />
+
+        {/* FindMe button with built-in position tracking and opacity fade */}
+        <FindMeButton
+          animatedPosition={currentPosition}
+          animatedIndex={currentPosition}
+          onPress={() => setCamera()}
+        />
+
         <BottomSheet
           enableContentPanningGesture={isDraggable}
-          animateOnMount={!reduceMotion}
           enableHandlePanningGesture={isDraggable}
-          handleComponent={renderHandleComponent}
           ref={bsRef}
           handleIndicatorStyle={styles.handleIndicator}
           keyboardBlurBehavior="restore"
-          index={bottomSheetIndex}
+          animatedPosition={currentPosition}
+          enableOverDrag={true}
+          enablePanDownToClose={false}
+          enableDynamicSizing={false}
           snapPoints={snapPoints}
+          index={bottomSheetIndex}
           onChange={handleSheetChanges}
           backgroundComponent={() => (
             <View style={[styles.transparentBackground, styles.shadow]} />
@@ -123,28 +146,16 @@ const Home = React.memo(({navigation}: any) => {
           style={styles.shadow}
           topInset={0}>
           <View style={styles.contentContainer}>
-            <BottomSheetStack
-              active={visible}
-              drawerNavigation={navigation}
-              cameraRef={cameraRef}
-              setCamera={setCamera}
-            />
+            {memoizedBottomSheetStack}
           </View>
         </BottomSheet>
 
-        <View style={styles.burger}>
-          <BurgerButton handleSheetChanges={handleSheetChanges} />
+        <View style={[styles.burger]}>
+          <BurgerButton />
         </View>
-        <View style={styles.balance}>
+        <View style={[styles.balance]}>
           <Balance bottomSheetIndex={bottomSheetIndex} />
         </View>
-
-        {/* Token Expiry Tester Component - Only visible in development */}
-        {/*{__DEV__ && (*/}
-        {/*  <View style={styles.tokenTester}>*/}
-        {/*    <TokenExpiryTester />*/}
-        {/*  </View>*/}
-        {/*)}*/}
       </View>
     </GestureHandlerRootView>
   );
@@ -163,8 +174,8 @@ const styles = StyleSheet.create({
   },
   burger: {
     position: 'absolute',
-    top: dp(28),
-    left: dp(5),
+    top: dp(16),
+    left: dp(6),
     flexDirection: 'row',
     alignItems: 'center',
     ...Platform.select({
@@ -175,8 +186,8 @@ const styles = StyleSheet.create({
   },
   balance: {
     position: 'absolute',
-    top: dp(28),
-    right: dp(5),
+    top: dp(20),
+    right: dp(6),
     flexDirection: 'row',
     alignItems: 'center',
     ...Platform.select({
@@ -209,18 +220,6 @@ const styles = StyleSheet.create({
     fontSize: dp(12),
     fontWeight: '600',
   },
-  findMe: {
-    height: dp(45),
-    width: dp(45),
-    backgroundColor: '#000',
-    borderRadius: 45,
-    shadowColor: '#494949',
-    shadowOffset: {width: 0, height: 4},
-    shadowRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
   lineContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -246,23 +245,28 @@ const styles = StyleSheet.create({
     elevation: 14,
   },
   handleIndicator: {
-    backgroundColor: '#a1a1a1',
     display: 'none',
   },
   contentContainer: {
     flex: 1,
   },
-  filtersContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  tokenTester: {
+  findMeContainer: {
     position: 'absolute',
-    bottom: 200,
-    left: 0,
-    right: 0,
+    right: dp(20),
     zIndex: 999,
+    backgroundColor: 'red',
+    // Add shadow for iOS
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: {width: 0, height: 2},
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 });
 

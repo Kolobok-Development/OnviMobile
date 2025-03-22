@@ -20,6 +20,13 @@ import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheet
 const Business = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
 
+  console.log('[BUSINESS] Rendering with props:', route.params);
+
+  useEffect(() => {
+    console.log('[BUSINESS] Component mounted');
+    return () => console.log('[BUSINESS] Component unmounted');
+  }, []);
+
   const {
     setOrderDetails,
     orderDetails,
@@ -39,7 +46,6 @@ const Business = () => {
     setSelectedPos(carwash);
 
     navigateBottomSheet('BusinessInfo', {});
-    bottomSheetRef?.current?.snapToPosition('75%');
   };
 
   return (
