@@ -42,6 +42,14 @@ const store = createStore<StoreState>()(
       {
         name: 'store',
         storage: createJSONStorage(() => ZustandMMKVStorage),
+        partialize: state => ({
+          accessToken: state.accessToken,
+          expiredDate: state.expiredDate,
+          user: state.user,
+          fcmToken: state.fcmToken,
+          refreshRetryCounter: state.refreshRetryCounter,
+          isAuthenticated: state.isAuthenticated,
+        }),
       },
     ),
   ),

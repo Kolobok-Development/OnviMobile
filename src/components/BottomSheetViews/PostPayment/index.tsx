@@ -66,7 +66,9 @@ const PostPayment = () => {
 
   return (
     <View style={styles.container}>
-      <BottomSheetScrollView scrollEnabled={isBottomSheetOpen} nestedScrollEnabled={true}>
+      <BottomSheetScrollView
+        scrollEnabled={isBottomSheetOpen}
+        nestedScrollEnabled={true}>
         <View
           style={{
             flex: 3,

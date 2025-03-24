@@ -37,7 +37,6 @@ import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.t
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
 
-
 const Main = () => {
   const {
     isBottomSheetOpen,
@@ -277,11 +276,16 @@ const Main = () => {
               onPress={() => {
                 console.log('[PARTNERS_BUTTON] Button pressed');
                 console.log('[PARTNERS_BUTTON] Current route:', route.name);
-                console.log('[PARTNERS_BUTTON] Navigation params:', route.params);
-                
+                console.log(
+                  '[PARTNERS_BUTTON] Navigation params:',
+                  route.params,
+                );
+
                 // Use a small timeout to prevent navigation issues when in Main screen
                 setTimeout(() => {
-                  console.log('[PARTNERS_BUTTON] Navigating to Partners screen after timeout');
+                  console.log(
+                    '[PARTNERS_BUTTON] Navigating to Partners screen after timeout',
+                  );
                   route.params.drawerNavigation.navigate('Партнеры');
                 }, 100); // Increased timeout for better reliability
               }}>

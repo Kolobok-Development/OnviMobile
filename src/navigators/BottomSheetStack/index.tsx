@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -97,9 +97,16 @@ const BottomSheetStack = React.memo(
           console.log('[NAV] Navigation container is ready');
         }}
         onStateChange={(navigationState: any) => {
-          console.log('[NAV] State changed:', navigationState ?
-            `Current route: ${navigationState.routes?.[navigationState.routes.length - 1]?.name}, 
-      Route count: ${navigationState.routes?.length}` : 'Navigation state is null');
+          console.log(
+            '[NAV] State changed:',
+            navigationState
+              ? `Current route: ${
+                  navigationState.routes?.[navigationState.routes.length - 1]
+                    ?.name
+                }, 
+      Route count: ${navigationState.routes?.length}`
+              : 'Navigation state is null',
+          );
 
           if (!navigationState) {
             console.warn('[NAV] Navigation state is null, returning early');
@@ -116,7 +123,10 @@ const BottomSheetStack = React.memo(
 
           console.log('[NAV] Current route name:', currentRoute.name);
           console.log('[NAV] Current route params:', currentRoute.params);
-          console.log('[NAV] Setting current route name to:', currentRoute.name);
+          console.log(
+            '[NAV] Setting current route name to:',
+            currentRoute.name,
+          );
 
           setCurrentRouteName(currentRoute.name);
 
@@ -125,21 +135,29 @@ const BottomSheetStack = React.memo(
             navigationState.routes.length &&
             currentRoute?.name === 'Main'
           ) {
-            console.log('[NAV] On Main screen, setting isMainScreen=true, showBurgerButton=true');
+            console.log(
+              '[NAV] On Main screen, setting isMainScreen=true, showBurgerButton=true',
+            );
             setIsMainScreen(true);
             setShowBurgerButton(true);
           } else if (currentRoute?.name === 'PostPayment') {
-            console.log('[NAV] On PostPayment screen, setting showBurgerButton=false');
+            console.log(
+              '[NAV] On PostPayment screen, setting showBurgerButton=false',
+            );
             setShowBurgerButton(false);
           } else {
-            console.log(`[NAV] On ${currentRoute.name} screen, setting isMainScreen=false, showBurgerButton=true`);
+            console.log(
+              `[NAV] On ${currentRoute.name} screen, setting isMainScreen=false, showBurgerButton=true`,
+            );
             setIsMainScreen(false);
             setShowBurgerButton(true);
           }
 
-          console.log('[NAV] Full navigation state:', JSON.stringify(navigationState, null, 2));
-        }}
-        >
+          console.log(
+            '[NAV] Full navigation state:',
+            JSON.stringify(navigationState, null, 2),
+          );
+        }}>
         <RootStack.Navigator
           screenOptions={{headerShown: false}}
           initialRouteName="Main">
