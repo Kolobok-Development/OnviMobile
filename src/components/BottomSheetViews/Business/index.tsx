@@ -29,9 +29,8 @@ const Business = () => {
 
   const {
     setOrderDetails,
-    orderDetails,
     business,
-    bottomSheetRef,
+
     setSelectedPos,
   } = useStore.getState();
 

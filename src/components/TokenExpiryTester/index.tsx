@@ -1,6 +1,9 @@
-import React, { useEffect } from 'react';
-import { Button, View, Text, StyleSheet } from 'react-native';
-import { mockTokenExpiry, setupMockTokenExpiryInterceptor } from '../../services/api/mock/mockTokenExpiry';
+import React, {useEffect} from 'react';
+import {Button, View, Text, StyleSheet} from 'react-native';
+import {
+  mockTokenExpiry,
+  setupMockTokenExpiryInterceptor,
+} from '../../services/api/mock/mockTokenExpiry';
 import useStore from '../../state/store';
 
 /**
@@ -8,7 +11,7 @@ import useStore from '../../state/store';
  * Only visible in development and when user is authenticated
  */
 const TokenExpiryTester: React.FC = () => {
-  const { isAuthenticated } = useStore();
+  const isAuthenticated = useStore(state => state.isAuthenticated);
 
   useEffect(() => {
     // Set up the mock interceptor when the component mounts

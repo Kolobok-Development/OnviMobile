@@ -99,10 +99,6 @@ const Home = React.memo(({navigation}: any) => {
   //   [filters, setCamera],
   // );
 
-  useEffect(() => {
-    console.warn('[BOTTOMSHEET]: rerender');
-  });
-
   const memoizedBottomSheetStack = useMemo(
     () => (
       <BottomSheetStack

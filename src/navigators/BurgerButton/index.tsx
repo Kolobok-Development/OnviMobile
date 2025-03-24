@@ -31,7 +31,6 @@ const BurgerButton = ({
     return <></>;
   }
 
-
   if (isDrawerStack) {
     return (
       <View
