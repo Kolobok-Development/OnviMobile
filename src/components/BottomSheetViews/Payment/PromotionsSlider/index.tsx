@@ -90,7 +90,6 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: dp(10),
     marginTop: dp(10),
   },
   promoWrapper: {
