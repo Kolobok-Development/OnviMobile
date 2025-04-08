@@ -45,6 +45,10 @@ import {
 import Toast from 'react-native-toast-message';
 import {createPayment, getCredentials} from '@services/api/payment';
 
+import {IPersonalPromotion} from 'src/types/models/PersonalPromotion.ts';
+
+import PromotionsSlider from './PromotionsSlider/index.tsx';
+
 enum OrderStatus {
   START = 'start',
   PROCESSING = 'processing',
@@ -57,7 +61,7 @@ const Payment = () => {
 
   const [btnLoader, setBtnLoader] = useState(false);
 
-  const [promocode, setPromocode] = useState<string>('');
+  const [promocode, setPromocode] = useState<string>();
   const [usedPoints, setUsedPoints] = useState(0);
 
   const isOpened = isBottomSheetOpen;
@@ -127,15 +131,23 @@ const Payment = () => {
     return null;
   };
 
-  const applyPromocode = async () => {
+  const handlePromoPress = (promo: IPersonalPromotion) => {
+    if (!promo) return;
+    setPromocode(promo.code);
+    applyPromocode(promo.code);
+  };
+
+  const applyPromocode = async (val?: string) => {
     const body = {
-      promoCode: promocode,
+      promoCode: val ? val : promocode ? promocode : '',
       carWashId: Number(order.posId),
     };
+
     try {
       await trigger(body);
       setPromoError(null);
     } catch (error: any) {
+      setPromocode(undefined);
       const errorResponse = error.response?.data;
       let message = 'Призошла ощибка повторите попытку чуть позже';
       switch (parseInt(errorResponse.code)) {
@@ -364,7 +376,7 @@ const Payment = () => {
               setShowPromocodeModal(false);
               setPromoError(null);
             }}
-            promocode={promocode}
+            promocode={promocode ?? ''}
             handleSearchChange={handleSearchChange}
             apply={() => debouncedSearch()}
             promocodeError={promoError}
@@ -575,6 +587,16 @@ const Payment = () => {
                     </Text>
                   </TouchableOpacity>
                 </View>
+
+                <PromotionsSlider
+                  value={promocode}
+                  onSelect={handlePromoPress}
+                  onDeselect={() => {
+                    setPromocode(undefined);
+                    applyPromocode(undefined);
+                  }}
+                />
+
                 <ScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
