@@ -48,13 +48,11 @@ const Main = () => {
     setIsMainScreen,
   } = useStore.getState();
 
-  const {posList, setSelectedPos} = useStore.getState();
+  const {posList, setSelectedPos, bottomSheetSnapPoints} = useStore.getState();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
   const isOpened = isBottomSheetOpen;
-
-  //TESTING !!
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -118,12 +116,15 @@ const Main = () => {
 
   useEffect(() => {
     findNearestCarWash();
-  }, [posList]);
+  }, [posList, location]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
       setBusiness(nearByPos);
       navigateBottomSheet('Business', nearByPos);
+      bottomSheetRef?.current?.snapToPosition(
+        bottomSheetSnapPoints[bottomSheetSnapPoints.length - 2],
+      );
     } else {
       setNearByModal(true);
     }
@@ -158,7 +159,7 @@ const Main = () => {
     <BottomSheetScrollView
       contentContainerStyle={{flexGrow: 1}}
       nestedScrollEnabled={true}
-      scrollEnabled={isOpened}>
+      scrollEnabled={true}>
       <View style={{flexGrow: 1}}>
         <Modal
           visible={nearByModal}
@@ -201,7 +202,9 @@ const Main = () => {
                 navigateBottomSheet('Search', {
                   type: 'search',
                 });
-                bottomSheetRef?.current?.snapToPosition('95%');
+                bottomSheetRef?.current?.snapToPosition(
+                  bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+                );
               }}>
               <Search
                 stroke={'#000000'}
@@ -224,7 +227,9 @@ const Main = () => {
               style={{}}
               onPress={() => {
                 navigateBottomSheet('Filters', {});
-                bottomSheetRef?.current?.snapToPosition('95%');
+                bottomSheetRef?.current?.snapToPosition(
+                  bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+                );
               }}>
               <Image
                 source={require('../../../assets/icons/filterIcon.png')}
@@ -274,20 +279,9 @@ const Main = () => {
             <TouchableOpacity
               style={styles.partnersCard}
               onPress={() => {
-                console.log('[PARTNERS_BUTTON] Button pressed');
-                console.log('[PARTNERS_BUTTON] Current route:', route.name);
-                console.log(
-                  '[PARTNERS_BUTTON] Navigation params:',
-                  route.params,
-                );
-
-                // Use a small timeout to prevent navigation issues when in Main screen
                 setTimeout(() => {
-                  console.log(
-                    '[PARTNERS_BUTTON] Navigating to Partners screen after timeout',
-                  );
                   route.params.drawerNavigation.navigate('Партнеры');
-                }, 100); // Increased timeout for better reliability
+                }, 100);
               }}>
               <View style={styles.label}>
                 <Text
@@ -295,20 +289,6 @@ const Main = () => {
                   Партнеры
                 </Text>
               </View>
-              {/*<View style={{...styles.info, justifyContent: 'flex-start'}}>*/}
-              {/*  <Image*/}
-              {/*    source={require('../../../assets/icons/magnitIcon.png')}*/}
-              {/*    style={{width: dp(32), height: dp(32), marginRight: dp(10)}}*/}
-              {/*  />*/}
-              {/*  <Image*/}
-              {/*    source={require('../../../assets/icons/dodoIcon.png')}*/}
-              {/*    style={{width: dp(32), height: dp(32), marginRight: dp(10)}}*/}
-              {/*  />*/}
-              {/*  <Image*/}
-              {/*    source={require('../../../assets/icons/OgonIcon.png')}*/}
-              {/*    style={{width: dp(32), height: dp(32)}}*/}
-              {/*  />*/}
-              {/*</View>*/}
             </TouchableOpacity>
           </View>
         </Card>

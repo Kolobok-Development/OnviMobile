@@ -26,7 +26,7 @@ interface BalanceProps {
 const Balance = ({bottomSheetIndex}: BalanceProps) => {
   const {theme} = useTheme();
 
-  const {user, bottomSheetRef} = useStore();
+  const {user, bottomSheetRef, bottomSheetSnapPoints} = useStore();
 
   return (
     <>
@@ -47,7 +47,9 @@ const Balance = ({bottomSheetIndex}: BalanceProps) => {
             }}
             onPress={() => {
               navigateBottomSheet('History', {});
-              bottomSheetRef?.current?.snapToPosition('95%');
+              bottomSheetRef?.current?.snapToPosition(
+                bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+              );
             }}>
             <Image
               source={require('../../assets/icons/small-icon.png')}

@@ -36,12 +36,10 @@ const Home = React.memo(({navigation}: any) => {
 
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
-  const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
-    useStore.getState();
+  const {setIsBottomSheetOpen, setBottomSheetRef} = useStore.getState();
 
   const {isDraggable} = useStore();
 
-  const reduceMotion = useReducedMotion();
   const bsRef = useRef(null);
 
   const currentPosition = useSharedValue(0);
@@ -57,47 +55,9 @@ const Home = React.memo(({navigation}: any) => {
   };
 
   const handleSheetChanges = useCallback((index: number) => {
-    console.log(index);
     setVisible(index ? true : false);
-    setBottomSheetIndex(index);
     setIsBottomSheetOpen(index >= 2);
   }, []);
-
-  // const renderHandleComponent = useCallback(
-  //   (props: BottomSheetHandleProps) => {
-  //     const extractedFilters = useMemo(() => {
-  //       return Object.values(filters)
-  //         .flat()
-  //         .map(filter => filter);
-  //     }, [filters]);
-  //
-  //     return (
-  //       <BottomSheetHandle {...props} style={styles.handle}>
-  //         <Animated.View
-  //           style={[styles.filtersContainer, {opacity: filtersOpacity}]}>
-  //           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //             {Object.values(filters)
-  //               .flat()
-  //               .map((filter, index) => (
-  //                 <View
-  //                   key={index}
-  //                   style={[styles.filterBox, {width: filter.length * dp(10)}]}>
-  //                   <Text style={styles.filterText}>{filter}</Text>
-  //                 </View>
-  //               ))}
-  //           </ScrollView>
-  //           <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
-  //             <Navigation fill="white" color="white" />
-  //           </TouchableOpacity>
-  //         </Animated.View>
-  //         <View style={styles.lineContainer}>
-  //           <View style={styles.line} />
-  //         </View>
-  //       </BottomSheetHandle>
-  //     );
-  //   },
-  //   [filters, setCamera],
-  // );
 
   const memoizedBottomSheetStack = useMemo(
     () => (

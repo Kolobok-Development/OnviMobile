@@ -5,6 +5,9 @@ import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
+import io.branch.rnbranch.*;
+import android.content.Intent
+
 class MainActivity : ReactActivity() {
 
   /**
@@ -17,6 +20,20 @@ class MainActivity : ReactActivity() {
    * Returns the instance of the [ReactActivityDelegate]. We use [DefaultReactActivityDelegate]
    * which allows you to enable New Architecture with a single boolean flags [fabricEnabled]
    */
+
+  override fun onStart() {
+      super.onStart()
+      RNBranchModule.initSession(getIntent().getData(), this)
+  }
+
+  override fun onNewIntent(intent: Intent?) {
+      super.onNewIntent(intent)
+      setIntent(intent)
+      RNBranchModule.reInitSession(this)
+  }
+
   override fun createReactActivityDelegate(): ReactActivityDelegate =
       DefaultReactActivityDelegate(this, mainComponentName, fabricEnabled)
+
+
 }

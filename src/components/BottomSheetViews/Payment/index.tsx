@@ -26,7 +26,7 @@ import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import Switch from '@styled/buttons/CustomSwitch';
-import { confirmPayment, dismiss, tokenize } from "../../../native";
+import {confirmPayment, dismiss, tokenize} from '../../../native';
 import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
 
 import {PaymentConfig} from 'src/types/PaymentConfig';
@@ -194,12 +194,12 @@ const Payment = () => {
         title: `${order.name}`, // string
         subtitle: 'АМС', // string
         price: realSum, // number
-        paymentMethodTypes: [PaymentMethodTypesEnum.BANK_CARD], // optional array of PaymentMethodTypesEnum
+        paymentMethodTypes: [], // optional array of PaymentMethodTypesEnum
         customerId: String(user.id),
         authCenterClientId: null,
         userPhoneNumber: null, // optional string
         gatewayId: null, // optional string
-        returnUrl: null, // optional string
+        returnUrl: 'onvione://success-payment', // optional string
         googlePaymentMethodTypes: null, // optional array of GooglePaymentMethodTypesEnum
         applePayMerchantId: null, // optional string
         isDebug: false, // optional boolean
@@ -212,12 +212,16 @@ const Payment = () => {
         return;
       }
 
+      console.log('TOKEN______');
+      console.log(token);
+
       setOrderSatus(OrderStatus.START);
 
       const payment = await createPayment({
         paymentToken: token,
         amount: realSum.toString(),
         description: paymentConfigParams.subtitle,
+        paymentMethod: PaymentMethodTypesEnum.SBP,
       });
 
       const errorMessage: string | null = getPaymentErrorMessage(payment);
@@ -229,7 +233,9 @@ const Payment = () => {
         return;
       }
 
-      const confirmationUrl = payment.confirmation.confirmation_url;
+      const confirmationUrl = PaymentMethodTypesEnum.SBP
+        ? 'onvione://success-paymen'
+        : payment.confirmation.confirmation_url;
       const paymentId = payment.id;
 
       setOrderSatus(null);

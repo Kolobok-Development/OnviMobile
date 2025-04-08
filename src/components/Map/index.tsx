@@ -35,6 +35,8 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   });
 
   const [locationFound, setLocationFound] = useState(false);
+  // Track if initial centering has been performed to prevent multiple animations
+  const initialCenteringRef = React.useRef(false);
 
   const cameraRef = React.useRef<CameraRef>(null);
 
@@ -88,16 +90,37 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     requestLocationPermission();
   }, []);
 
+  useEffect(() => {
+    console.log('PERMISSION', hasLocationPermission);
+  }, [hasLocationPermission]);
+
   const onUserLocationUpdateThrottled = useMemo(
     () =>
       throttle(userLocation => {
-        if (!locationFound) {
-          setLocationFound(true);
-        }
+        console.log('CALLED');
         const {latitude: lat, longitude: lon} = userLocation.coords;
         setLocation({latitude: lat, longitude: lon});
+
+        // Only center the map on first location update, using our ref to prevent multiple animations
+        if (!initialCenteringRef.current) {
+          setLocationFound(true);
+          initialCenteringRef.current = true;
+
+          console.log('First location received, centering map to:', {lat, lon});
+
+          // Immediately center the camera on first location update
+          if (cameraRef.current) {
+            cameraRef.current.setCamera({
+              centerCoordinate: [lon, lat],
+              zoomLevel: 14,
+              pitch: 1,
+              animationMode: 'flyTo',
+              animationDuration: 300, // Faster animation for initial centering
+            });
+          }
+        }
       }, 1000),
-    [setLocation],
+    [locationFound, setLocation],
   );
 
   const setCameraPosition = (val?: {longitude: number; latitude: number}) => {
@@ -119,11 +142,8 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     setCameraPosition: setCameraPosition,
   }));
 
-  useEffect(() => {
-    if (locationFound) {
-      setCameraPosition();
-    }
-  }, [locationFound]);
+  // Remove the effect that depends on locationFound since we now center the map
+  // immediately when the first location update comes in
 
   return (
     <View
@@ -144,12 +164,14 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
           zoomLevel={12}
           pitch={1}
           animationMode="flyTo"
-          animationDuration={4000}
+          animationDuration={1000}
           followUserLocation={false}
-          centerCoordinate={[
-            DEFAULT_LOCATION.longitude,
-            DEFAULT_LOCATION.latitude,
-          ]}
+          centerCoordinate={
+            // Use user location if available, otherwise use default
+            location
+              ? [location.longitude, location.latitude]
+              : [DEFAULT_LOCATION.longitude, DEFAULT_LOCATION.latitude]
+          }
         />
         <UserLocation
           visible={hasLocationPermission}

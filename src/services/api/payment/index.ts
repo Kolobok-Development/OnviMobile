@@ -13,6 +13,8 @@ export async function createPayment(body: ICreatePaymentRequest): Promise<any> {
     body,
   );
 
+  console.log(JSON.stringify(response, null, 2));
+
   return response.data.data;
 }
 

@@ -6551,6 +6551,11 @@ react-is@^17.0.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
+react-native-branch@^6.5.0:
+  version "6.5.0"
+  resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-6.5.0.tgz#373f396a24da21aca39526d091a72e817ac42365"
+  integrity sha512-p5r9o9bXEsPVgyylxTqJh8rOG7DlmfZZGiRWUFBYtyJB4jyVmdI1YUieQNSqEH4wDaFpaU/I96KOgfBUAr05ZQ==
+
 react-native-config@^1.5.3:
   version "1.5.3"
   resolved "https://registry.yarnpkg.com/react-native-config/-/react-native-config-1.5.3.tgz#1286c0c117adb367a948b31005430146e88c9c2e"

@@ -25,7 +25,7 @@ export const useSnapPoints = () => {
     );
 
     // First snap point is lower, second one is higher but limited to not cover the button
-    return ['35%', '50%', `${maxHeightPercent}%`];
+    return ['35%', '55%', `${maxHeightPercent}%`];
   }, []);
 };
 

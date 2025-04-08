@@ -50,6 +50,8 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
       console.log('🔵 AUTH INTERCEPTORS: Error URL:', error.config?.url);
 
       const originalRequest = error.config;
+      // Cast to any to add/check the _retry property
+      const requestWithRetry = originalRequest as any;
 
       // Check if error is due to an expired token
       if (
@@ -72,67 +74,76 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
           errorMsg.includes('expired') ||
           errorMsg.includes('invalid token') ||
           errorMsg.includes('jwt') ||
-          error.response.status === 401;
+          error.response.status === 401 ||
+          error.response.status === 403;
 
         console.log('🔵 AUTH INTERCEPTORS: Is token expired?', isTokenExpired);
 
-        if (isTokenExpired) {
+        // Get the store's handleTokenExpiry function to try refreshing the token
+        const userStore = useStore.getState();
+
+        // Check if this is a refresh token request that failed
+        const isRefreshTokenRequest =
+          originalRequest.url?.includes('/refresh-token') ||
+          originalRequest.url?.includes('/refresh') ||
+          requestWithRetry._isRefreshRequest;
+
+        if (isRefreshTokenRequest) {
           console.log(
-            '🔵 AUTH INTERCEPTORS: Token expired, handling expiry...',
+            '🔵 AUTH INTERCEPTORS: Refresh token request failed, signing out',
           );
+          await userStore.signOut();
+          return Promise.reject(error);
+        }
+
+        if (
+          isTokenExpired &&
+          !requestWithRetry._retry &&
+          userStore.handleTokenExpiry
+        ) {
+          console.log(
+            '🔵 AUTH INTERCEPTORS: Attempting to refresh token and retry request',
+          );
+
+          // Mark that we're retrying this request
+          requestWithRetry._retry = true;
+
           try {
-            // Get the store's handleTokenExpiry function to try refreshing the token
-            const userStore = useStore.getState();
-
-            // Cast to any to add the _retry property
-            const requestWithRetry = originalRequest as any;
-
-            if (!requestWithRetry._retry && userStore.handleTokenExpiry) {
-              console.log(
-                '🔵 AUTH INTERCEPTORS: Attempting to refresh token and retry request',
-              );
-
-              // Mark that we're retrying this request
-              requestWithRetry._retry = true;
-
-              // Call the token expiry handler with the original request
-              const updatedRequest = await userStore.handleTokenExpiry(
-                requestWithRetry,
-              );
-
-              if (updatedRequest) {
-                console.log(
-                  '🔵 AUTH INTERCEPTORS: Token refreshed, retrying original request',
-                );
-                // Retry the original request with the new token
-                return axiosInstance(updatedRequest);
-              } else {
-                console.log(
-                  '🔵 AUTH INTERCEPTORS: Token refresh failed, resetting navigation',
-                );
-                // If token refresh failed, navigate to login
-                resetNavigation('SignIn');
-                console.log('🔵 AUTH INTERCEPTORS: Navigation reset completed');
-              }
-            } else {
-              // Handle case where we can't retry or already retried
-              console.log(
-                '🔵 AUTH INTERCEPTORS: Unable to retry request, logging out',
-              );
-              await handleTokenExpiry();
-              console.log(
-                '🔵 AUTH INTERCEPTORS: Resetting navigation to SignIn',
-              );
-              resetNavigation('SignIn');
-            }
-          } catch (e) {
-            console.error(
-              '🔵 AUTH INTERCEPTORS: Error during token expiry handling:',
-              e,
+            // Call the token expiry handler with the original request
+            const updatedRequest = await userStore.handleTokenExpiry(
+              requestWithRetry,
             );
-            // In case of error, reset to login screen as fallback
+
+            if (updatedRequest) {
+              console.log(
+                '🔵 AUTH INTERCEPTORS: Token refreshed, retrying original request',
+              );
+              // Retry the original request with the new token
+              return axiosInstance(updatedRequest);
+            } else {
+              console.log(
+                '🔵 AUTH INTERCEPTORS: Token refresh failed, resetting navigation',
+              );
+              // If token refresh failed, navigate to login
+              resetNavigation('SignIn');
+              console.log('🔵 AUTH INTERCEPTORS: Navigation reset completed');
+            }
+          } catch (refreshError) {
+            console.error(
+              '🔵 AUTH INTERCEPTORS: Error during token refresh:',
+              refreshError,
+            );
+            await userStore.signOut();
             resetNavigation('SignIn');
+            return Promise.reject(error);
           }
+        } else if (requestWithRetry._retry || !userStore.handleTokenExpiry) {
+          // This is either a retry or we don't have a token refresh handler
+          console.log(
+            '🔵 AUTH INTERCEPTORS: Already retried or no refresh handler, logging out',
+          );
+          await userStore.signOut();
+          resetNavigation('SignIn');
         }
       }
 
@@ -153,6 +164,14 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
           accessToken ? 'Token exists' : 'No token',
           expiredDate ? 'Expiry exists' : 'No expiry',
         );
+
+        // Mark refresh token requests to identify them in the response interceptor
+        if (
+          config.url?.includes('/refresh-token') ||
+          config.url?.includes('/refresh')
+        ) {
+          (config as any)._isRefreshRequest = true;
+        }
 
         if (
           accessToken &&

@@ -84,6 +84,7 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
         final Set<PaymentMethodType> paymentMethodTypes = getPaymentMethodTypes(paymentTypes, authCenterClientId != null);
         final Set<GooglePayCardNetwork> googlePaymentMethodTypes = getGooglePaymentMethodTypes(googlePaymentTypes);
 
+
         PaymentParameters paymentParameters = new PaymentParameters(
                 new Amount(new BigDecimal(amount), Currency.getInstance("RUB")),
                 title,
@@ -99,6 +100,7 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
                 authCenterClientId,
                 customerId
         );
+
 
 
 
@@ -146,6 +148,8 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
 
     }
 
+
+
     @ReactMethod
     public void dismiss() {
         return;
@@ -159,6 +163,7 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
             paymentMethodTypes.add(PaymentMethodType.BANK_CARD);
             paymentMethodTypes.add(PaymentMethodType.SBERBANK);
             paymentMethodTypes.add(PaymentMethodType.GOOGLE_PAY);
+            paymentMethodTypes.add(PaymentMethodType.SBP);
 
             if (authCenterClientIdProvided) {
                 paymentMethodTypes.add(PaymentMethodType.YOO_MONEY);
@@ -175,6 +180,9 @@ public class PaymentGatewayModule extends ReactContextBaseJavaModule {
                         break;
                     case "GOOGLE_PAY":
                         paymentMethodTypes.add(PaymentMethodType.GOOGLE_PAY);
+                        break;
+                    case "SBP":
+                        paymentMethodTypes.add(PaymentMethodType.SBP);
                         break;
                     case "YOO_MONEY":
                         if (authCenterClientIdProvided) {

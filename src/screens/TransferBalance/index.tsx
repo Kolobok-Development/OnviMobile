@@ -109,8 +109,6 @@ const TransferBalance = () => {
           btnType="back"
           btnCallback={() => navigation.navigate('Настройки')}
         />
-        <Text style={styles.screenTitle}>Перенос Баланса</Text>
-        <View style={{width: dp(30)}} />
       </View>
       <View style={styles.contentContainer}>
         <Text style={styles.modalTitle}>Перенос баланса</Text>

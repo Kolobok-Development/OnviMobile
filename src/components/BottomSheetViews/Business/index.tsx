@@ -3,34 +3,18 @@ import {Text, View, Image, Dimensions, StyleSheet} from 'react-native';
 
 // styled components
 import {Card} from '@styled/cards';
-
-import {useRoute} from '@react-navigation/native';
-
 import {dp} from '../../../utils/dp';
-
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-
 import useStore from '../../../state/store';
-
 import {OrderDetailsType} from 'src/state/order/OrderSlice';
 
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
-
 const Business = () => {
-  const route = useRoute<GeneralBottomSheetRouteProp<'Business'>>();
-
-  console.log('[BUSINESS] Rendering with props:', route.params);
-
-  useEffect(() => {
-    console.log('[BUSINESS] Component mounted');
-    return () => console.log('[BUSINESS] Component unmounted');
-  }, []);
-
   const {
     setOrderDetails,
     business,
-
+    bottomSheetRef,
+    bottomSheetSnapPoints,
     setSelectedPos,
   } = useStore.getState();
 
@@ -45,6 +29,9 @@ const Business = () => {
     setSelectedPos(carwash);
 
     navigateBottomSheet('BusinessInfo', {});
+    bottomSheetRef?.current?.snapToPosition(
+      bottomSheetSnapPoints[bottomSheetSnapPoints.length - 2],
+    );
   };
 
   return (

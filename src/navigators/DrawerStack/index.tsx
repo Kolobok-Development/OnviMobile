@@ -20,6 +20,8 @@ import {CustomDrawerContent} from './CustomDrawerContent';
 import {Legals} from '@screens/Legals';
 import {DrawerNavProp} from '../../types/navigation/DrawerNavigation.ts';
 import {TransferBalance} from '@screens/TransferBalance';
+import { config } from "@navigators/DrawerStack/LinkingConfig.ts";
+
 
 const DrawerStack = () => {
   const {theme} = useTheme();

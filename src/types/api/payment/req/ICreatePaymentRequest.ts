@@ -4,4 +4,5 @@ export interface ICreatePaymentRequest {
   currency?: string;
   capture?: boolean;
   description?: string;
+  paymentMethod: string;
 }

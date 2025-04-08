@@ -9,6 +9,7 @@ import {useNavigation, useRoute} from '@react-navigation/native';
 import {dp} from '../../utils/dp';
 
 import useStore from '../../state/store';
+import {SNAP_POINTS, SCREEN_SNAP_POINTS} from '../../shared/constants';
 
 import {GeneralBottomSheetNavigationProp} from '../../types/navigation/BottomSheetNavigation.ts';
 
@@ -24,6 +25,7 @@ const BackButton = ({
   index = undefined,
 }: BackButtonProps) => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<any>>();
+  const route = useRoute();
 
   const {bottomSheetRef} = useStore.getState();
 
@@ -34,14 +36,30 @@ const BackButton = ({
         if (callback) {
           return callback();
         }
+
+        // Navigate back first
+        navigation.goBack();
+
+        // Then adjust bottom sheet position
         if (bottomSheetRef?.current) {
           if (index !== undefined) {
-            bottomSheetRef?.current?.snapToIndex(index);
-          } else if (position) {
-            bottomSheetRef?.current?.snapToPosition(position);
+            // If explicit index is provided, use it
+            bottomSheetRef.current.snapToIndex(index);
+          } else {
+            // Get the current route name after navigation back
+            const previousScreen = navigation.getState().routes[navigation.getState().index]?.name;
+            
+            if (previousScreen) {
+              // Check if we have a defined snap point for this screen
+              if (SCREEN_SNAP_POINTS[previousScreen] !== undefined) {
+                bottomSheetRef.current.snapToIndex(SCREEN_SNAP_POINTS[previousScreen]);
+              } else if (position) {
+                // Fall back to position parameter if no specific index
+                bottomSheetRef.current.snapToPosition(position);
+              }
+            }
           }
         }
-        navigation.goBack();
       }}>
       <ChevronLeft height={dp(20)} width={dp(20)} stroke={'#000000'} />
     </TouchableOpacity>

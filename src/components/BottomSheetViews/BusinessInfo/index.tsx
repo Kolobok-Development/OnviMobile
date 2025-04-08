@@ -21,14 +21,17 @@ import useStore from '../../../state/store.ts';
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails, bottomSheetRef} = useStore.getState();
+  const {business, orderDetails, bottomSheetRef, bottomSheetSnapPoints} =
+    useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = (bayType: string) => {
     if (true) {
       navigateBottomSheet('Boxes', {bayType: bayType});
-      bottomSheetRef?.current?.snapToPosition('95%');
+      bottomSheetRef?.current?.snapToPosition(
+        bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+      );
     } else {
       setModalVisible(false);
     }
@@ -37,7 +40,9 @@ const BusinessInfo = () => {
   const forceForward = () => {
     setModalVisible(false);
     navigateBottomSheet('Boxes', {});
-    bottomSheetRef?.current?.snapToPosition('95%');
+    bottomSheetRef?.current?.snapToPosition(
+      bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+    );
   };
 
   return (

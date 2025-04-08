@@ -25,7 +25,6 @@ const Boxes = () => {
 
   const {business, orderDetails} = useStore.getState();
 
-
   return (
     <GHScrollView
       contentContainerStyle={{flexGrow: 1}}

@@ -28,6 +28,31 @@
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
+
+          <!-- Branch URI Scheme -->
+          <intent-filter>
+              <data android:scheme="branchandroid" />
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+          </intent-filter>
+
+          <intent-filter android:autoVerify="true">
+              <action android:name="android.intent.action.VIEW" />
+              <category android:name="android.intent.category.DEFAULT" />
+              <category android:name="android.intent.category.BROWSABLE" />
+              <data android:scheme="https" />
+              <data android:host="onvione.ru" />
+              <data android:scheme="https" android:host="wrzx5.app.link" />
+              <data android:scheme="https" android:host="wrzx5-alternate.app.link" />
+              <!-- Add path if needed, for example: -->
+              <!-- <data android:pathPattern="/.*" /> -->
+          </intent-filter>
+
       </activity>
+        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ark3Xn0ur4EM89pB25kblcldzxmQUqEJ"/>
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_KjyXkwVc0JaZkYEbz8iyQo8XrF34T92O" />
+        <!-- Set to `true` to use `BranchKey.test` -->
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
     </application>
 </manifest>

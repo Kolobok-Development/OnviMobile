@@ -4,4 +4,5 @@ export enum PaymentMethodTypesEnum {
   GOOGLE_PAY = 'GOOGLE_PAY',
   YOO_MONEY = 'YOO_MONEY',
   SBERBANK = 'SBERBANK',
+  SBP = 'SBP',
 }

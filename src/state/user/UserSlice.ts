@@ -63,46 +63,94 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   setFcmToken: fcmToken => set({fcmToken}),
   mutateRefreshToken: async () => {
     try {
+      // Check if we've run out of refresh attempts to prevent infinite loops
+      const refreshRetriesLeft = get().refreshRetryCounter;
+
+      if (refreshRetriesLeft <= 0) {
+        console.log('Maximum refresh token attempts reached, signing out...');
+        await get().signOut();
+
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Сессия истекла',
+          text2: 'Пожалуйста, войдите снова',
+          props: {errorCode: 401},
+        });
+
+        return null;
+      }
+
       const existingSession = await EncryptedStorage.getItem('user_session');
       let existingData: Record<string, any> = {};
       if (existingSession) {
         existingData = JSON.parse(existingSession);
       }
-      if (existingData.refreshToken) {
-        const response = await refresh({
-          refreshToken: existingData.refreshToken,
-        });
-        if (response) {
-          await LocalStorage.set(
-            'user_session',
-            JSON.stringify({
-              accessToken: response.accessToken,
-              expiredDate: new Date(response.accessTokenExp).toISOString(),
-            }),
-          );
-          set({
+
+      if (!existingData.refreshToken) {
+        console.log('No refresh token found, signing out');
+        await get().signOut();
+        return null;
+      }
+
+      // Attempt to refresh the token
+      console.log(
+        `Refresh token attempt ${
+          MAX_REFRESH_RETRIES - refreshRetriesLeft + 1
+        } of ${MAX_REFRESH_RETRIES}`,
+      );
+
+      const response = await refresh({
+        refreshToken: existingData.refreshToken,
+      });
+
+      if (response) {
+        await LocalStorage.set(
+          'user_session',
+          JSON.stringify({
             accessToken: response.accessToken,
             expiredDate: new Date(response.accessTokenExp).toISOString(),
-            loading: false,
-          });
-          await get().loadUser();
-          return existingData.refreshToken;
-        } else {
-          throw new Error('Failed to refresh token');
-        }
+          }),
+        );
+
+        set({
+          accessToken: response.accessToken,
+          expiredDate: new Date(response.accessTokenExp).toISOString(),
+          loading: false,
+          // Reset the retry counter on successful refresh
+          refreshRetryCounter: MAX_REFRESH_RETRIES,
+        });
+
+        await get().loadUser();
+        return existingData.refreshToken;
       } else {
-        throw new Error('No refresh token found');
+        throw new Error('Failed to refresh token: Empty response');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log('Error refreshing token:', JSON.stringify(error, null, 2));
 
-      const refreshRetriesLeft = get().refreshRetryCounter;
+      // Check error response for specific refresh token error codes
+      const isRefreshTokenError =
+        error?.response?.status === 401 ||
+        error?.response?.status === 403 ||
+        (error?.response?.data?.message &&
+          (error.response.data.message.includes('refresh token expired') ||
+            error.response.data.message.includes('invalid refresh token')));
 
-      if (refreshRetriesLeft > 0) {
-        set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
-      } else {
-        set({loading: false});
-        get().signOut();
+      // Decrement retry counter
+      const refreshRetriesLeft = get().refreshRetryCounter;
+      set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
+
+      // If it's a refresh token error or we're out of retries, sign out
+      if (isRefreshTokenError || refreshRetriesLeft <= 1) {
+        console.log('Refresh token expired or invalid, signing out user');
+        await get().signOut();
+
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Сессия истекла',
+          text2: 'Пожалуйста, войдите снова',
+          props: {errorCode: 401},
+        });
       }
 
       return null;
@@ -355,8 +403,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
     headers: Record<string, string>;
     [key: string]: any;
   }) => {
-    console.log('Access token expired, attempting to refresh token');
-
     try {
       // Try to refresh the token
       const refreshResult = await get().mutateRefreshToken();

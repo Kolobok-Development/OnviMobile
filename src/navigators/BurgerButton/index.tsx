@@ -11,6 +11,7 @@ import {ArrowLeft} from 'react-native-feather';
 import {navigationRef} from '@navigators/BottomSheetStack';
 
 import useStore from '../../state/store';
+import {SNAP_POINTS, SCREEN_SNAP_POINTS} from '../../shared/constants';
 
 interface BurgerProps {
   isDrawerStack?: boolean;
@@ -18,6 +19,7 @@ interface BurgerProps {
 }
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+import {DRAGGABLE_SCREENS} from '../../shared/constants';
 
 const BurgerButton = ({
   isDrawerStack = false,
@@ -25,7 +27,12 @@ const BurgerButton = ({
 }: BurgerProps) => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const {isMainScreen, showBurgerButton} = useStore();
+  const {
+    isMainScreen,
+    showBurgerButton,
+    bottomSheetSnapPoints,
+    bottomSheetRef,
+  } = useStore();
 
   if (!showBurgerButton) {
     return <></>;
@@ -70,11 +77,31 @@ const BurgerButton = ({
       ]}
       onPress={() => {
         navigationRef.current?.goBack();
-        if (
-          navigationRef.current?.getCurrentRoute()?.name === 'BusinessInfo' &&
-          handleSheetChanges
-        ) {
-          handleSheetChanges(2);
+        // Get the current route after navigation
+        const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
+
+        if (!currentRouteName || !bottomSheetRef?.current) {
+          return;
+        }
+
+        // If a specific handler is provided for BusinessInfo (legacy support)
+        if (currentRouteName === 'BusinessInfo' && handleSheetChanges) {
+          handleSheetChanges(SNAP_POINTS.EXPANDED);
+          return;
+        }
+
+        // Use the screen-specific snap point if defined, otherwise use DRAGGABLE_SCREENS logic
+        if (SCREEN_SNAP_POINTS[currentRouteName] !== undefined) {
+          // Use screen-specific snap point from our constants
+          bottomSheetRef.current.snapToIndex(
+            SCREEN_SNAP_POINTS[currentRouteName],
+          );
+        } else {
+          // Fall back to previous DRAGGABLE_SCREENS logic for backward compatibility
+          const index = DRAGGABLE_SCREENS[currentRouteName]
+            ? SNAP_POINTS.HALF_EXPANDED
+            : SNAP_POINTS.EXPANDED;
+          bottomSheetRef.current.snapToIndex(index);
         }
       }}>
       <ArrowLeft stroke={'#000'} />

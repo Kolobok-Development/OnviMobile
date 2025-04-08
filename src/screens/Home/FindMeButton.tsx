@@ -52,7 +52,7 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
     const opacity = interpolate(
       animatedPosition.value,
       [200, 300], // When position is between 200-400, fade out
-      [0, 1], // From fully visible to invisible
+      [0, 1], // From fully visible to invisible - fixed direction
       Extrapolation.CLAMP,
     );
 

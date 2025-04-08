@@ -56,12 +56,12 @@ const Partner = () => {
         <ScrollView
           contentContainerStyle={styles.scrollView}
           showsVerticalScrollIndicator={false}>
+          <ScreenHeader
+            screenTitle={partner?.attributes.name ?? ''}
+            btnType="back"
+            btnCallback={() => navigation.navigate('Партнеры')}
+          />
           <View style={styles.content}>
-            <ScreenHeader
-              screenTitle={partner?.attributes.name ?? ''}
-              btnType="back"
-              btnCallback={() => navigation.navigate('Партнеры')}
-            />
             <Image
               source={{uri: partnerAttributes?.image?.data?.attributes?.url}}
               style={styles.banner}
