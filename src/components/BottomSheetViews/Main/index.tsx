@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -40,7 +40,6 @@ import {StoryView} from '@components/StoryView';
 const Main = () => {
   const {
     isBottomSheetOpen,
-    nearByPos,
     setNearByPos,
     setBusiness,
     location,
@@ -48,7 +47,11 @@ const Main = () => {
     setIsMainScreen,
   } = useStore.getState();
 
-  const {posList, setSelectedPos} = useStore.getState();
+  const {setSelectedPos} = useStore.getState();
+
+  const posList = useStore(state => state.posList);
+  const nearByPos = useStore(state => state.nearByPos);
+
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -116,9 +119,19 @@ const Main = () => {
     });
   };
 
+  const isNearestCarWashSet = useRef(false);
+
   useEffect(() => {
-    findNearestCarWash();
-  }, [posList]);
+    if (
+      !isNearestCarWashSet.current &&
+      location &&
+      posList &&
+      posList.length > 0
+    ) {
+      findNearestCarWash();
+      isNearestCarWashSet.current = true;
+    }
+  }, [location, posList]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
