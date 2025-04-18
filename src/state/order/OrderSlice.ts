@@ -12,7 +12,7 @@ export enum OrderStatus {
 
 export type OrderDetailsType = {
   posId?: null | number;
-  sum?: null | number;
+  sum: number;
   bayNumber?: number | null;
   promoCodeId?: number | null;
   rewardPointsUsed?: null | number;

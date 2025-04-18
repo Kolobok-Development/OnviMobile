@@ -3,342 +3,138 @@ import {
   moderateScale,
   verticalScale,
 } from '../../../utils/metrics';
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {
-  ScrollView,
-  ScrollView as GHScrollView,
-} from 'react-native-gesture-handler';
+import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
 
-// styled components
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
-
 import {dp} from '../../../utils/dp';
-
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-
 import {Button} from '@styled/buttons';
-
 import useStore from '../../../state/store';
-
 import {LoadingModal} from '@styled/views/LoadingModal';
 import {CustomModal} from '@styled/views/CustomModal';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
-import Switch from '@styled/buttons/CustomSwitch';
-import {confirmPayment, dismiss, tokenize} from '../../../native';
-import {PaymentMethodTypesEnum} from '../../../types/PaymentType';
-
-import {PaymentConfig} from 'src/types/PaymentConfig';
-import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidatePromoCodeRequest.ts';
-import {ICreateOrderRequest} from '../../../types/api/order/req/ICreateOrderRequest.ts';
-import {SendStatus} from '../../../types/api/order/res/ICreateOrderResponse.ts';
-import {Info, X} from 'react-native-feather';
-import {GREY} from '@utils/colors.ts';
-import useSWRMutation from 'swr/mutation';
+import PaymentMethods from '@components/PaymentMethods';
+import PaymentSummary from '@components/BottomSheetViews/Payment/PaymentSummary';
+import PointsToggle from '@components/BottomSheetViews/Payment/PointsToggle';
+import {useBonusPoints} from '@hooks/useBonusPoints.ts';
+import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
+import PromocodeSection from '@components/BottomSheetViews/Payment/PromocodeSection';
+import {usePromoCode} from '@hooks/usePromoCode.ts';
 import {
-  create as orderCreate,
-  pingPos,
-  validatePromoCode,
-} from '@services/api/order';
-import Toast from 'react-native-toast-message';
-import {createPayment, getCredentials} from '@services/api/payment';
-
-import {IPersonalPromotion} from 'src/types/models/PersonalPromotion.ts';
-
-import PromotionsSlider from './PromotionsSlider/index.tsx';
-
-enum OrderStatus {
-  START = 'start',
-  PROCESSING = 'processing',
-  END = 'end',
-}
+  DiscountType,
+  IPersonalPromotion,
+} from '../../../types/models/PersonalPromotion.ts';
+import {
+  calculateActualDiscount,
+  calculateActualPointsUsed,
+  calculateFinalAmount,
+} from '@utils/paymentHelpers.ts';
 
 const Payment = () => {
   const {user, loadUser, isBottomSheetOpen, orderDetails, selectedPos} =
     useStore.getState();
 
-  const [btnLoader, setBtnLoader] = useState(false);
-
-  const [promocode, setPromocode] = useState<string>();
-  const [usedPoints, setUsedPoints] = useState(0);
-
   const isOpened = isBottomSheetOpen;
   const order = orderDetails;
 
-  const [discount, setDiscount] = useState(0);
+  /**
+   * ___________NEW CODE VERSION FOR PAYMENT COMPONENT___________
+   * ____________________________________________________________
+   */
 
-  const [error, setError] = useState<string | null>(null);
-  const [orderStatus, setOrderSatus] = useState<OrderStatus | null>(null);
+  const [finalOrderCost, setFinalOrderCost] = useState<number>(order.sum);
+  const [paymentErrorModalState, setPaymentErrorModalState] =
+    useState<boolean>(false);
 
-  const [promoError, setPromoError] = useState<string | null>(null);
+  const {
+    inputCodeValue,
+    discount,
+    promoError,
+    isMutating,
+    promoCodeId,
+    setPromocode,
+    applyPromoCode,
+    debouncedApplyPromoCode,
+    resetPromoCode,
+  } = usePromoCode(order.posId || 0);
 
-  const {data, trigger, isMutating} = useSWRMutation(
-    'validatePromoCode',
-    (key, {arg}: {arg: IValidatePromoCodeRequest}) => validatePromoCode(arg),
+  const {usedPoints, toggled, applyPoints, togglePoints} = useBonusPoints(
+    user,
+    order,
+    discount,
   );
 
-  useEffect(() => {
-    if (data?.discount && showPromocodeModal) {
-      setDiscount(data.discount);
-      setShowPromocodeModal(false);
-      setPromoError(null);
-    }
-  }, [data]);
+  const {
+    loading,
+    error,
+    orderStatus,
+    processPayment,
+    clearError,
+    setPaymentMethod,
+    paymentMethod,
+  } = usePaymentProcess(
+    user,
+    order,
+    discount,
+    usedPoints,
+    promoCodeId,
+    loadUser,
+  );
 
-  /**
-   * Analyzes payment response and returns appropriate error message
-   * @param {Object} paymentResponse - Response from payment gateway
-   * @returns {string|null} Error message or null if no error
-   */
-  const getPaymentErrorMessage = (paymentResponse: any) => {
-    // If payment is canceled
-    if (paymentResponse?.status === 'canceled') {
-      // Check cancellation details
-      if (
-        paymentResponse?.cancellation_details?.reason === 'insufficient_funds'
-      ) {
-        return 'Недостаточно средств на карте. Пожалуйста, используйте другую карту или способ оплаты.';
-      }
-
-      // Generic cancellation message
-      return 'Оплата отменена. Пожалуйста, попробуйте снова или выберите другой способ оплаты.';
-    }
-
-    // Check if we need to redirect to 3DS
-    if (
-      paymentResponse?.confirmation?.type === 'redirect' &&
-      paymentResponse?.confirmation?.confirmation_url
-    ) {
-      // This is not an error, but a successful redirect to 3DS
-      return null;
-    }
-
-    // Check for inactive payment method
-    if (paymentResponse?.payment_method?.status === 'inactive') {
-      return 'Платежное средство неактивно. Пожалуйста, используйте другую карту.';
-    }
-
-    // Generic error - if we got here but paid is false
-    if (
-      paymentResponse?.paid === false &&
-      !paymentResponse?.confirmation?.confirmation_url
-    ) {
-      return 'Произошла ошибка при обработке платежа. Пожалуйста, попробуйте позже.';
-    }
-
-    return null;
-  };
-
+  // Handle promo code selection from promotions slider
   const handlePromoPress = (promo: IPersonalPromotion) => {
-    if (!promo) return;
+    if (!promo) {
+      return;
+    }
+
     setPromocode(promo.code);
-    applyPromocode(promo.code);
+    applyPromoCode(promo.code);
   };
 
-  const applyPromocode = async (val?: string) => {
-    const body = {
-      promoCode: val ? val : promocode ? promocode : '',
-      carWashId: Number(order.posId),
-    };
-
-    try {
-      await trigger(body);
-      setPromoError(null);
-    } catch (error: any) {
-      setPromocode(undefined);
-      const errorResponse = error.response?.data;
-      let message = 'Призошла ощибка повторите попытку чуть позже';
-      switch (parseInt(errorResponse.code)) {
-        case 8:
-          message =
-            'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
-          break;
-        default:
-          message = 'Призошла ошибка, повторите попытку чуть позже.';
-      }
-
-      Toast.show({
-        type: 'customErrorToast',
-        text1: message,
-      });
-    }
-  };
-
-  const createOrder = async () => {
-    if (!user) {
-      return;
-    }
-
-    if (!order.posId || !order.bayNumber) {
-      return;
-    }
-
-    try {
-      setBtnLoader(true);
-      const paymentConfig = await getCredentials();
-
-      const apiKey: string = paymentConfig.apiKey.toString();
-      const storeId: string = paymentConfig.storeId.toString();
-      const discountSum: number = (order.sum! * discount) / 100;
-      const realSum: number = Math.max(
-        order.sum! - discountSum - usedPoints,
-        1,
-      );
-      const pointsSum = realSum === 1 ? usedPoints - realSum : usedPoints;
-
-      const bayStatus = await pingPos({
-        carWashId: order.posId,
-        bayNumber: order.bayNumber,
-      });
-
-      if (bayStatus.status !== 'Free') {
-        setError('Аавтомойка не может принять заказ');
-        setBtnLoader(false);
-        return;
-      }
-
-      //Start tokenization and await the result
-      const paymentConfigParams: PaymentConfig = {
-        clientApplicationKey: apiKey, // string
-        shopId: storeId, // string
-        title: `${order.name}`, // string
-        subtitle: 'АМС', // string
-        price: realSum, // number
-        paymentMethodTypes: [], // optional array of PaymentMethodTypesEnum
-        customerId: String(user.id),
-        authCenterClientId: null,
-        userPhoneNumber: null, // optional string
-        gatewayId: null, // optional string
-        returnUrl: 'onvione://success-payment', // optional string
-        googlePaymentMethodTypes: null, // optional array of GooglePaymentMethodTypesEnum
-        applePayMerchantId: null, // optional string
-        isDebug: false, // optional boolean
-      };
-
-      const {token, paymentMethodType} = await tokenize(paymentConfigParams);
-      if (!token) {
-        setError('Что то пошло не так ...');
-        setBtnLoader(false);
-        return;
-      }
-
-      console.log('TOKEN______');
-      console.log(token);
-
-      setOrderSatus(OrderStatus.START);
-
-      const payment = await createPayment({
-        paymentToken: token,
-        amount: realSum.toString(),
-        description: paymentConfigParams.subtitle,
-        paymentMethod: PaymentMethodTypesEnum.SBP,
-      });
-
-      const errorMessage: string | null = getPaymentErrorMessage(payment);
-      if (errorMessage) {
-        setError(errorMessage);
-        setBtnLoader(false);
-        setOrderSatus(null);
-        await dismiss();
-        return;
-      }
-
-      const confirmationUrl = PaymentMethodTypesEnum.SBP
-        ? 'onvione://success-paymen'
-        : payment.confirmation.confirmation_url;
-      const paymentId = payment.id;
-
-      setOrderSatus(null);
-      await confirmPayment({confirmationUrl, paymentMethodType});
-      setOrderSatus(OrderStatus.PROCESSING);
-
-      const createOrderRequest: ICreateOrderRequest = {
-        transactionId: paymentId,
-        sum: realSum,
-        rewardPointsUsed: pointsSum,
-        carWashId: Number(order.posId),
-        bayNumber: Number(order.bayNumber),
-      };
-
-      if (data?.id && promocode) {
-        createOrderRequest.sum = realSum + discountSum;
-        createOrderRequest.promoCodeId = data.id;
-      }
-
-      orderCreate(createOrderRequest)
-        .then(data => {
-          if (data.sendStatus === SendStatus.SUCCESS) {
-            loadUser().then(() => {
-              setOrderSatus(OrderStatus.END);
-              setBtnLoader(false);
-            });
-          }
-        })
-        .catch(err => {
-          console.log(JSON.stringify(err));
-        });
-
-      setTimeout(() => {
-        setOrderSatus(null);
-        setBtnLoader(false);
-        navigateBottomSheet('PostPayment', {});
-      }, 5000);
-    } catch (error) {
-      setOrderSatus(null);
-      setBtnLoader(false);
-      setError('Что то пошло не так ...');
-      // Handle errors appropriately
-    }
-  };
-
-  const applyPoints = () => {
-    if (!user || !order.sum) {
-      return;
-    }
-    let leftToPay = order.sum - (order.sum * discount) / 100;
-
-    if (user.cards!.balance >= leftToPay) {
-      setUsedPoints(leftToPay);
-    } else {
-      setUsedPoints(user.cards!.balance);
-    }
-  };
-
-  const debounceTimeout: any = useRef(null);
-
-  // Debounce function for search
-  const debounce = (func: any, delay: number) => {
-    return function () {
-      clearTimeout(debounceTimeout.current);
-
-      debounceTimeout.current = setTimeout(() => {
-        func();
-      }, delay);
-    };
-  };
-
-  // Create a debounced version of the search function with a delay of 500ms
-  const debouncedSearch = debounce(applyPromocode, 1000);
-
+  // Handle search input change
   const handleSearchChange = (val: string) => {
     setPromocode(val);
   };
 
-  const [toggled, setToggled] = useState(false);
-
   const [showPromocodeModal, setShowPromocodeModal] = useState(false);
 
-  const onToggle = () => {
-    if (!toggled) {
-      setToggled(true);
-      applyPoints();
-    } else {
-      setToggled(false);
-      setUsedPoints(0);
+  useEffect(() => {
+    if (error) {
+      setPaymentErrorModalState(true);
     }
-  };
+  }, [error]);
+
+  // Effect to update UI when promo code is validated
+  useEffect(() => {
+    if (promoCodeId && showPromocodeModal) {
+      setShowPromocodeModal(false);
+    }
+  }, [promoCodeId, showPromocodeModal]);
+
+  useEffect(() => {
+    // Calculate the actual discount amount
+    const actualDiscount = calculateActualDiscount(discount, order.sum);
+
+    // Calculate actual points used
+    const actualPoints = calculateActualPointsUsed(
+      order.sum,
+      actualDiscount,
+      usedPoints,
+    );
+
+    // Calculate the final amount
+    const finalSum = calculateFinalAmount(
+      order.sum,
+      actualDiscount,
+      actualPoints,
+    );
+
+    // Update the state
+    setFinalOrderCost(finalSum);
+  }, [order.sum, discount, usedPoints, toggled, user]);
 
   return (
     <View
@@ -350,10 +146,12 @@ const Payment = () => {
       }}>
       <BottomSheetScrollView nestedScrollEnabled={true} scrollEnabled={true}>
         <CustomModal
-          isVisible={error ? true : false}
+          isVisible={paymentErrorModalState}
           text={error ? error : ''}
           onClick={() => {
-            setError(null);
+            clearError();
+            resetPromoCode();
+            setPaymentErrorModalState(false);
           }}
         />
         <LoadingModal
@@ -374,11 +172,10 @@ const Payment = () => {
             onClose={() => {
               setPromocode('');
               setShowPromocodeModal(false);
-              setPromoError(null);
             }}
-            promocode={promocode ?? ''}
+            promocode={inputCodeValue ?? ''}
             handleSearchChange={handleSearchChange}
-            apply={() => debouncedSearch()}
+            apply={debouncedApplyPromoCode}
             promocodeError={promoError}
             fetching={isMutating}
           />
@@ -396,214 +193,42 @@ const Payment = () => {
               nestedScrollEnabled={true}
               scrollEnabled={isOpened}>
               <Text style={styles.section}>Ваш выбор</Text>
+              <PaymentSummary
+                order={order}
+                user={user}
+                selectedPos={selectedPos}
+              />
               <View style={styles.choice}>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: dp(6),
-                  }}>
-                  {order.name ? (
-                    <Text
-                      style={{
-                        fontWeight: '300',
-                        fontSize: dp(15),
-                        color: 'rgba(0, 0, 0, 1)',
-                      }}>
-                      {order.name}
-                    </Text>
-                  ) : (
-                    <Text />
-                  )}
-                  <Text
-                    style={{
-                      color: 'rgba(0, 0, 0, 1)',
-                      fontWeight: '700',
-                      fontSize: dp(16),
-                    }}>
-                    {order.sum ? order.sum : 0} ₽
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    marginTop: dp(6),
-                  }}>
-                  {selectedPos?.IsLoyaltyMember ? (
-                    <>
-                      <Text
-                        style={{
-                          fontWeight: '300',
-                          fontSize: dp(15),
-                          color: 'rgba(0, 0, 0, 1)',
-                        }}>
-                        Ваш Cashback
-                      </Text>
-                      {!user || !user.tariff || user.tariff === 0 ? (
-                        <View>
-                          <SkeletonPlaceholder borderRadius={10}>
-                            <SkeletonPlaceholder.Item
-                              width={40}
-                              height={15}
-                              alignSelf={'flex-end'}
-                            />
-                          </SkeletonPlaceholder>
-                        </View>
-                      ) : (
-                        <Text
-                          style={{
-                            color: 'rgba(0, 0, 0, 1)',
-                            fontWeight: '700',
-                            fontSize: dp(16),
-                          }}>
-                          {order.sum
-                            ? Math.round((order.sum * user.tariff) / 100)
-                            : 0}{' '}
-                          ₽
-                        </Text>
-                      )}
-                    </>
-                  ) : (
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: dp(10),
-                      }}>
-                      <Info width={20} height={20} stroke={'#0B68E1'} />
-                      <Text
-                        style={{
-                          fontWeight: '400',
-                          fontSize: dp(10),
-                          color: 'rgba(0, 0, 0, 1)',
-                          marginLeft: dp(4),
-                        }}>
-                        Кешбэк не начисляется. Автомойка не участвует в
-                        программе лояльности.
-                      </Text>
-                    </View>
-                  )}
-                </View>
                 {selectedPos?.IsLoyaltyMember && (
-                  <View
-                    style={{
-                      marginTop: dp(35),
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      flexDirection: 'row',
-                    }}>
-                    <View>
-                      <Text
-                        style={{
-                          fontWeight: '300',
-                          fontSize: dp(15),
-                          color: 'rgba(0, 0, 0, 1)',
-                        }}>
-                        Списать бонусы Onvi
-                      </Text>
-                    </View>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
-                      <TouchableOpacity onPress={applyPoints}>
-                        {!user || !user.cards || !user.cards.balance == null ? (
-                          <View>
-                            <SkeletonPlaceholder borderRadius={20}>
-                              <SkeletonPlaceholder.Item
-                                width={60}
-                                height={25}
-                                alignSelf={'flex-end'}
-                              />
-                            </SkeletonPlaceholder>
-                          </View>
-                        ) : (
-                          <Switch
-                            value={toggled}
-                            onValueChange={onToggle}
-                            activeText={`${Math.min(
-                              Number(user.cards.balance),
-                              Number(
-                                order.sum
-                                  ? order.sum -
-                                      (order.sum * discount) / 100 -
-                                      usedPoints || usedPoints - 1
-                                  : 0,
-                              ),
-                            )}`}
-                            inActiveText={`${Math.min(
-                              Number(user.cards.balance),
-                              Number(
-                                order.sum
-                                  ? order.sum -
-                                      (order.sum * discount) / 100 -
-                                      usedPoints
-                                  : 0,
-                              ),
-                            )}`}
-                            backgroundActive="#A3A3A6"
-                            backgroundInActive="#000"
-                            circleImageActive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
-                            circleImageInactive={require('../../../assets/icons/onvi_ractangel.png')} // Replace with your image source
-                            circleSize={dp(22)} // Adjust the circle size as needed
-                            switchBorderRadius={7}
-                            width={dp(60)} // Adjust the switch width as needed
-                            textStyle={{fontSize: dp(13), color: 'white'}}
-                          />
-                        )}
-                      </TouchableOpacity>
-                    </View>
-                  </View>
+                  <PointsToggle
+                    user={user}
+                    order={order}
+                    discount={discount}
+                    usedPoints={usedPoints}
+                    toggled={toggled}
+                    onToggle={togglePoints}
+                    applyPoints={applyPoints}
+                  />
                 )}
 
-                <View
-                  style={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    marginTop: dp(25),
-                  }}>
-                  <TouchableOpacity
-                    style={{
-                      backgroundColor: '#ffffff',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      width: dp(219),
-                      height: dp(31),
-                      paddingLeft: dp(12),
-                      paddingRight: dp(5.38),
-                      borderRadius: dp(30),
-                    }}
-                    onPress={() => {
-                      setShowPromocodeModal(true);
-                    }}>
-                    <Text style={{fontSize: dp(10), fontWeight: '500'}}>
-                      ПРОМОКОД
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-
-                <PromotionsSlider
-                  value={promocode}
-                  onSelect={handlePromoPress}
-                  onDeselect={() => {
-                    setPromocode(undefined);
-                    applyPromocode(undefined);
-                  }}
+                <PromocodeSection
+                  promocode={inputCodeValue}
+                  onPress={() => setShowPromocodeModal(true)}
+                  quickPromoSelect={handlePromoPress}
+                  quickPromoDeselect={() => setPromocode(undefined)}
                 />
 
-                <ScrollView
+                <GHScrollView
                   horizontal={true}
                   showsHorizontalScrollIndicator={false}>
                   {discount ? (
                     <View style={{paddingTop: dp(15)}}>
                       <Button
-                        label={`У ВАС ЕСТЬ ПРОМОКОД НА ${discount}%`}
+                        label={`У ВАС ЕСТЬ ПРОМОКОД НА ${
+                          discount.type === DiscountType.CASH
+                            ? discount.discount + '₽'
+                            : discount.discount + '%'
+                        }`}
                         onClick={() => {}}
                         color="blue"
                         width={184}
@@ -618,13 +243,7 @@ const Payment = () => {
                   {usedPoints ? (
                     <View style={{paddingTop: dp(15)}}>
                       <Button
-                        label={`ИСПОЛЬЗОВАНО ${Number(
-                          order.sum
-                            ? order.sum -
-                                (order.sum * discount) / 100 -
-                                usedPoints || usedPoints - 1
-                            : 0,
-                        )} БАЛОВ`}
+                        label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
                         onClick={() => {}}
                         color="blue"
                         width={184}
@@ -636,79 +255,45 @@ const Payment = () => {
                   ) : (
                     <></>
                   )}
-                </ScrollView>
+                </GHScrollView>
               </View>
+              <PaymentMethods
+                selectedMethod={paymentMethod}
+                onSelectMethod={setPaymentMethod}
+              />
               <View
                 style={{
                   display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: dp(38),
+                  flexDirection: 'column',
                   alignItems: 'center',
                 }}>
-                <View style={{display: 'flex', flexDirection: 'column'}}>
-                  <Text style={{fontWeight: '600', fontSize: dp(10)}}>
-                    ИТОГО
-                  </Text>
-                  <Text
-                    style={{
-                      fontWeight: '600',
-                      fontSize: dp(36),
-                      color: '#000',
-                    }}>
-                    {order.sum
-                      ? order.sum - (order.sum * discount) / 100 - usedPoints ||
-                        1
-                      : 0}{' '}
-                    ₽
-                  </Text>
-                </View>
                 <Button
-                  label="Оплатить"
-                  onClick={createOrder}
+                  label={`Оплатить ${finalOrderCost} ₽`}
+                  onClick={processPayment}
                   color="blue"
-                  width={158}
                   height={43}
                   fontSize={18}
                   fontWeight={'600'}
-                  showLoading={btnLoader}
+                  showLoading={loading}
                 />
               </View>
-              <View
+              <TouchableOpacity
                 style={{
+                  justifyContent: 'center',
                   alignItems: 'center',
-                  height: '35%',
-                  justifyContent: 'flex-end',
+                  marginTop: dp(10),
+                }}
+                onPress={() => {
+                  navigateBottomSheet('Main', {});
                 }}>
-                <TouchableOpacity
-                  style={{
-                    height: dp(45),
-                    width: dp(45),
-                    backgroundColor: GREY,
-                    borderRadius: dp(50),
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    elevation: 2,
-                    shadowColor: '#000',
-                    shadowOffset: {
-                      width: 0,
-                      height: 1,
-                    },
-                  }}
-                  onPress={() => {
-                    navigateBottomSheet('Main', {});
-                  }}>
-                  <X stroke={'#000000'} aria-label={'Hello'} />
-                </TouchableOpacity>
                 <Text
                   style={{
-                    color: '#494949',
-                    letterSpacing: 1,
                     fontSize: dp(12),
+                    textDecorationLine: 'underline',
                   }}>
-                  Отмена
+                  Отменить заказ
                 </Text>
-              </View>
+              </TouchableOpacity>
             </GHScrollView>
           </>
         )}

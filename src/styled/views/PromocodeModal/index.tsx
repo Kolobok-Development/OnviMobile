@@ -40,19 +40,6 @@ const PromocodeModal = (props: IPromocodeModal) => {
             style={styles.bottomSheetTextInput}
           />
         </View>
-        {props.promocodeError && (
-          <Text
-            style={{
-              alignSelf: 'flex-start',
-              paddingLeft: dp(15),
-              marginTop: dp(5),
-              color: '#000000',
-              fontSize: dp(16),
-              fontWeight: '400',
-            }}>
-            {props.promocodeError}
-          </Text>
-        )}
         <View
           style={{
             flexDirection: 'row',

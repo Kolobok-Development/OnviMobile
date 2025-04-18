@@ -89,6 +89,7 @@ android {
         versionCode 6
         versionName "1.1.3"
         resValue 'string', 'build_config_package','com.onvimobile'
+        resValue 'string', 'ym_app_scheme', 'onvione'
     }
     signingConfigs {
         debug {
@@ -148,7 +149,7 @@ dependencies {
 
     implementation 'com.mapbox.maps:android:10.16.4'
 
-    implementation 'ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.8.0'
+    implementation 'ru.yoomoney.sdk.kassa.payments:yookassa-android-sdk:6.11.0'
 
     implementation 'io.branch.sdk.android:library:5.8.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'

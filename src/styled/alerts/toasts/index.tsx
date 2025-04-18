@@ -52,33 +52,41 @@ export const toastConfig: ToastConfig = {
     <View
       style={{
         display: 'flex',
-        minHeight: 50,
+        minHeight: 60,
         width: '90%',
-        backgroundColor: 'rgba(250, 2, 2, 0.60)',
-        borderRadius: 38,
-        paddingHorizontal: 15,
+        backgroundColor: '#FFFFFF',
+        borderRadius: 16,
+        paddingHorizontal: 20,
+        paddingVertical: 12,
         justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 3,
+        },
+        shadowOpacity: 0.15,
+        shadowRadius: 5,
+        elevation: 5,
+        borderLeftWidth: 10,
+        borderLeftColor: '#E53935',
       }}>
       <Text
         style={{
-          paddingLeft: 5,
-          fontSize: 15,
-          fontWeight: '500',
-          color: '#FFF',
+          fontSize: 16,
+          fontWeight: '600',
+          color: '#262626',
+          marginBottom: props.errorCode ? 4 : 0,
         }}>
-        🥲 {text1}
+        {text1}
       </Text>
       {props.errorCode && (
         <Text
           style={{
-            paddingLeft: 32,
-            paddingTop: 2,
             fontSize: 12,
-            fontWeight: '600',
-            color: '#FFF',
-            textDecorationLine: 'underline',
+            fontWeight: '500',
+            color: '#666666',
           }}>
-          Код ошибки {props.errorCode}
+          Код ошибки: {props.errorCode}
         </Text>
       )}
     </View>

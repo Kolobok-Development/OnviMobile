@@ -1,6 +1,11 @@
+export enum DiscountType {
+  CASH = 1,
+  DISCOUNT,
+}
+
 export interface IPersonalPromotion {
   code: string; // Promo code
-  discountType: number; // Type of discount (e.g., percentage, fixed amount)
+  discountType: DiscountType; // Type of discount (e.g., percentage, fixed amount)
   expiryDate: Date; // Expiry date of the promotion in ISO format (YYYY-MM-DD)
   isActive: number; // 1 if active, 0 if inactive
   createdAt: Date; // ISO date when the promotion was created

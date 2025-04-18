@@ -7,7 +7,7 @@ export interface PaymentConfig {
   title: string;
   subtitle: string;
   price: number;
-  paymentMethodTypes?: PaymentMethodTypesEnum[];
+  paymentMethodTypes?: any[];
   customerId?: string;
   authCenterClientId?: string | null; // ! If YooMoney method selected
   userPhoneNumber?: string | null;

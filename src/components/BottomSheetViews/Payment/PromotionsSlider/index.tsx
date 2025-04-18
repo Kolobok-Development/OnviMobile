@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 
 // constants
-import {YELLOW, BLACK, GREY} from '@utils/colors.ts';
+import {BLACK, GREY, YELLOW} from '@utils/colors.ts';
 
 // utils
 import useSWR from 'swr';
@@ -11,7 +11,8 @@ import {getActiveClientPromotions} from '@services/api/user/index.ts';
 import {dp} from '../../../../utils/dp.ts';
 
 // types
-import {IPersonalPromotion} from 'src/types/models/PersonalPromotion.ts';
+import { DiscountType, IPersonalPromotion } from "../../../../types/models/PersonalPromotion.ts";
+
 interface PromotionsSliderProps {
   value?: string;
   onSelect: (val: IPersonalPromotion) => void;
@@ -28,6 +29,7 @@ export default function PromotionsSlider({
     data: personalPromo,
     error: personalError,
   } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions());
+
 
   if (personalError) {
     return null;
@@ -69,7 +71,10 @@ export default function PromotionsSlider({
                 }}>
                 <Text
                   style={[styles.pillText, isSelected && styles.selectedText]}>
-                  {promo.code} - {promo.discount}%
+                  {promo.code} -{' '}
+                  {promo.discountType === DiscountType.DISCOUNT
+                    ? `${promo.discount}%`
+                    : `${promo.discount}₽`}
                 </Text>
                 {isSelected && (
                   <TouchableOpacity

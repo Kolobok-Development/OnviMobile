@@ -54,3 +54,5 @@ export const SCREEN_SNAP_POINTS = {
   PostPayment: SNAP_POINTS.EXPANDED,
   // For other screens, default to HALF_EXPANDED
 };
+
+export const SAFETY_ORDER_COEFICIENT_AMOUNT = 1;
