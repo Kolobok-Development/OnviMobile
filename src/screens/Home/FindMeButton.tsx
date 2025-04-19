@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Platform, Dimensions} from 'react-native';
+import {TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -18,25 +18,20 @@ interface FindMeButtonProps {
   onPress: () => void;
 }
 
-// Button dimensions
 const BUTTON_SIZE = dp(40);
-const BUTTON_MARGIN = dp(30);
+const BUTTON_MARGIN = dp(10);
 
 const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
-  // Get screen dimensions and safe area insets
   const {height: SCREEN_HEIGHT} = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
-  // Create the animated style for the button
+
   const containerAnimatedStyle = useAnimatedStyle(() => {
-    // Get the current position of the bottom sheet
     const sheetTopPosition = animatedPosition.value;
 
-    // Calculate the button position to stay right above the sheet
-    // Add a fixed margin to ensure it's always visible above the sheet
     const bottomPosition = SCREEN_HEIGHT - sheetTopPosition + BUTTON_MARGIN;
 
-    // Make sure the button doesn't go below safe area
-    const minBottom = Platform.OS === 'ios' ? insets.bottom + 10 : 20;
+    const minBottom =
+      Platform.OS === 'ios' ? insets.bottom + 10 : insets.bottom + 20;
     const safeBottomPosition = Math.max(minBottom, bottomPosition);
 
     return {
@@ -45,14 +40,10 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
   });
 
   const opacityAnimatedStyle = useAnimatedStyle(() => {
-    // Calculate opacity based only on animatedPosition.value
-    // We'll use fixed threshold values to determine when to fade
-
-    // Assuming smaller values mean sheet is lower, larger values mean sheet is higher
     const opacity = interpolate(
       animatedPosition.value,
-      [200, 300], // When position is between 200-400, fade out
-      [0, 1], // From fully visible to invisible
+      [200, 300],
+      [0, 1],
       Extrapolation.CLAMP,
     );
 
