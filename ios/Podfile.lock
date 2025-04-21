@@ -1,6 +1,7 @@
 PODS:
   - BEMCheckBox (1.4.1)
   - boost (1.83.0)
+  - BranchSDK (3.9.0)
   - BVLinearGradient (2.8.3):
     - React-Core
   - CocoaAsyncSocket (7.6.5)
@@ -15,9 +16,6 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.73.3)
   - Firebase/CoreOnly (10.24.0):
     - FirebaseCore (= 10.24.0)
-  - Firebase/DynamicLinks (10.24.0):
-    - Firebase/CoreOnly
-    - FirebaseDynamicLinks (~> 10.24.0)
   - Firebase/Messaging (10.24.0):
     - Firebase/CoreOnly
     - FirebaseMessaging (~> 10.24.0)
@@ -29,8 +27,6 @@ PODS:
     - FirebaseCore (~> 10.0)
   - FirebaseCoreInternal (10.29.0):
     - "GoogleUtilities/NSData+zlib (~> 7.8)"
-  - FirebaseDynamicLinks (10.24.0):
-    - FirebaseCore (~> 10.0)
   - FirebaseInstallations (10.29.0):
     - FirebaseCore (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
@@ -979,6 +975,9 @@ PODS:
   - React-Mapbuffer (0.73.3):
     - glog
     - React-debug
+  - react-native-branch (6.5.0):
+    - BranchSDK (= 3.9.0)
+    - React-Core
   - react-native-config (1.5.3):
     - react-native-config/App (= 1.5.3)
   - react-native-config/App (1.5.3):
@@ -1192,11 +1191,6 @@ PODS:
   - RNFBApp (19.2.2):
     - Firebase/CoreOnly (= 10.24.0)
     - React-Core
-  - RNFBDynamicLinks (21.12.0):
-    - Firebase/DynamicLinks (= 10.24.0)
-    - GoogleUtilities/AppDelegateSwizzler
-    - React-Core
-    - RNFBApp
   - RNFBMessaging (19.2.2):
     - Firebase/Messaging (= 10.24.0)
     - FirebaseCoreExtension
@@ -1314,6 +1308,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector-modern`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - react-native-branch (from `../node_modules/react-native-branch`)
   - react-native-config (from `../node_modules/react-native-config`)
   - react-native-config/Extension (from `../node_modules/react-native-config`)
   - react-native-encrypted-storage (from `../node_modules/react-native-encrypted-storage`)
@@ -1349,7 +1344,6 @@ DEPENDENCIES:
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
-  - "RNFBDynamicLinks (from `../node_modules/@react-native-firebase/dynamic-links`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - "RNFlashList (from `../node_modules/@shopify/flash-list`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
@@ -1372,12 +1366,12 @@ SPEC REPOS:
     - YooMoneyUI
   https://github.com/CocoaPods/Specs.git:
     - BEMCheckBox
+    - BranchSDK
     - CocoaAsyncSocket
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
     - FirebaseCoreInternal
-    - FirebaseDynamicLinks
     - FirebaseInstallations
     - FirebaseMessaging
     - fmt
@@ -1457,6 +1451,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-branch:
+    :path: "../node_modules/react-native-branch"
   react-native-config:
     :path: "../node_modules/react-native-config"
   react-native-encrypted-storage:
@@ -1525,8 +1521,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
-  RNFBDynamicLinks:
-    :path: "../node_modules/@react-native-firebase/dynamic-links"
   RNFBMessaging:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFlashList:
@@ -1555,6 +1549,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   BEMCheckBox: 5ba6e37ade3d3657b36caecc35c8b75c6c2b1a4e
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
+  BranchSDK: caa0aad74d39bcd08573661d13ae0821feecdada
   BVLinearGradient: 880f91a7854faff2df62518f0281afb1c60d49a3
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
@@ -1564,7 +1559,6 @@ SPEC CHECKSUMS:
   FirebaseCore: 11dc8a16dfb7c5e3c3f45ba0e191a33ac4f50894
   FirebaseCoreExtension: 705ca5b14bf71d2564a0ddc677df1fc86ffa600f
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
-  FirebaseDynamicLinks: 96e59750f0c383258c35f5b20e3c18e14b57933a
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
   FirebaseMessaging: 4d52717dd820707cc4eadec5eb981b4832ec8d5d
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
@@ -1607,6 +1601,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 6fad0fe14882fb6b1c32e5cc8a4bd3d33a8b6790
   React-logger: cb0dd15ac67b00e7b771ef15203edcb29d4a3f8e
   React-Mapbuffer: ac7eff7bcdb1716d18eb7b305ee8c43a9a1ed7c8
+  react-native-branch: 5d9f8cd26a4d7f5667d1866c4918d507883d88df
   react-native-config: 8f7283449bbb048902f4e764affbbf24504454af
   react-native-encrypted-storage: db300a3f2f0aba1e818417c1c0a6be549038deb7
   react-native-mmkv: 6d738233c99440c39ef88c3a080b0af80265a72a
@@ -1641,7 +1636,6 @@ SPEC CHECKSUMS:
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNDeviceInfo: e13b7d68878fba693c9fbb13ca4d56ad57d95917
   RNFBApp: 91311b27bc9a33e23b76a62825afd1635501018a
-  RNFBDynamicLinks: 45de1d957dad49e0feac2d33281e2fadf32bc965
   RNFBMessaging: e86747e8bba79cb464f3f1f22aaae19f38ee7397
   RNFlashList: 854efb6cc6d435bac25eea4ecbef6eb9dce65272
   RNGestureHandler: 53c46ccbd53c37b73b1a9b1a8e375753bc89344c
