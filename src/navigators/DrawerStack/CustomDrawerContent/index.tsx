@@ -181,16 +181,16 @@ const CustomDrawerContent = ({
                   });
                 }}
               />
-              <CustomDrawerItem
-                label={'Партнеры'}
-                color={route === 'Партнеры' ? theme.primary : theme.textColor}
-                onPress={() => {
-                  navigation.reset({
-                    index: 0,
-                    routes: [{name: 'Партнеры'}],
-                  });
-                }}
-              />
+              {/*<CustomDrawerItem*/}
+              {/*  label={'Партнеры'}*/}
+              {/*  color={route === 'Партнеры' ? theme.primary : theme.textColor}*/}
+              {/*  onPress={() => {*/}
+              {/*    navigation.reset({*/}
+              {/*      index: 0,*/}
+              {/*      routes: [{name: 'Партнеры'}],*/}
+              {/*    });*/}
+              {/*  }}*/}
+              {/*/>*/}
               <CustomDrawerItem
                 label={'Акции'}
                 color={route === 'Промокоды' ? theme.primary : theme.textColor}

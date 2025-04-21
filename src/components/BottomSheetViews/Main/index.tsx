@@ -38,17 +38,14 @@ import {transformContentDataToUserStories} from '../../../shared/mappers/StoryVi
 import {StoryView} from '@components/StoryView';
 
 const Main = () => {
-  const {
-    isBottomSheetOpen,
-    nearByPos,
-    setNearByPos,
-    setBusiness,
-    location,
-    bottomSheetRef,
-    setIsMainScreen,
-  } = useStore.getState();
+  //Extract these states directly to make them reactive
+  //Interesting bug!!!!!!
+  const {isBottomSheetOpen, nearByPos, posList, location} = useStore();
 
-  const {posList, setSelectedPos, bottomSheetSnapPoints} = useStore.getState();
+  const {setNearByPos, setBusiness, bottomSheetRef, setIsMainScreen} =
+    useStore.getState();
+
+  const {setSelectedPos, bottomSheetSnapPoints} = useStore.getState();
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -86,6 +83,12 @@ const Main = () => {
     }, []),
   );
 
+  useEffect(() => {
+    if (location && posList && posList.length > 0) {
+      findNearestCarWash();
+    }
+  }, [posList, location]);
+
   const findNearestCarWash = () => {
     if (!location) {
       return;
@@ -113,10 +116,6 @@ const Main = () => {
       }
     });
   };
-
-  useEffect(() => {
-    findNearestCarWash();
-  }, [posList, location]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
@@ -159,7 +158,7 @@ const Main = () => {
     <BottomSheetScrollView
       contentContainerStyle={{flexGrow: 1}}
       nestedScrollEnabled={true}
-      scrollEnabled={true}>
+      scrollEnabled={isOpened}>
       <View style={{flexGrow: 1}}>
         <Modal
           visible={nearByModal}
@@ -280,13 +279,13 @@ const Main = () => {
               style={styles.partnersCard}
               onPress={() => {
                 setTimeout(() => {
-                  route.params.drawerNavigation.navigate('Партнеры');
+                  route.params.drawerNavigation.navigate('Промокоды');
                 }, 100);
               }}>
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Партнеры
+                  Промокоды
                 </Text>
               </View>
             </TouchableOpacity>

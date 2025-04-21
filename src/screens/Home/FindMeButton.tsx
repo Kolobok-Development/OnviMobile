@@ -1,5 +1,5 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Platform, Dimensions} from 'react-native';
+import {TouchableOpacity, StyleSheet, Platform, PixelRatio} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -26,14 +26,26 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
   // Get screen dimensions and safe area insets
   const {height: SCREEN_HEIGHT} = useSafeAreaFrame();
   const insets = useSafeAreaInsets();
+
+  // Get the device's pixel ratio
+  const pixelRatio = PixelRatio.get();
+  const exactDpi = pixelRatio * 160;
   // Create the animated style for the button
   const containerAnimatedStyle = useAnimatedStyle(() => {
     // Get the current position of the bottom sheet
     const sheetTopPosition = animatedPosition.value;
+    // Apply specific adjustments for problematic DPI range
+    let dpiAdjustment = 1.0;
+    if (exactDpi >= 400 && exactDpi < 430) {
+      // Specifically target around 420dpi
+      dpiAdjustment = 1.75; // Larger adjustment for the problematic range
+    } else if (exactDpi >= 380 && exactDpi < 450) {
+      // Slightly wider range
+      dpiAdjustment = 1.5; // Moderate adjustment
+    }
 
-    // Calculate the button position to stay right above the sheet
-    // Add a fixed margin to ensure it's always visible above the sheet
-    const bottomPosition = SCREEN_HEIGHT - sheetTopPosition + BUTTON_MARGIN;
+    const adjustedMargin = BUTTON_MARGIN * dpiAdjustment;
+    const bottomPosition = SCREEN_HEIGHT - sheetTopPosition + adjustedMargin;
 
     // Make sure the button doesn't go below safe area
     const minBottom = Platform.OS === 'ios' ? insets.bottom + 10 : 20;

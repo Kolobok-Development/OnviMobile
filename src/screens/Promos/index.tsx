@@ -44,7 +44,7 @@ const Promos = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={styles.container}>
-        <ScreenHeader screenTitle="Акции" />
+        <ScreenHeader screenTitle="Промокоды" />
         <View style={styles.content}>
           <View style={{flex: 1, marginBottom: dp(20), height: '30%'}}>
             <Text style={styles.sectionTitle}>Персональные акции</Text>
