@@ -37,6 +37,7 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   const [locationFound, setLocationFound] = useState(false);
 
   const cameraRef = React.useRef<CameraRef>(null);
+  const [cameraSet, setCameraSet] = useState(false);
 
   useEffect(() => {
     if (data && data.businessesLocations) {
@@ -87,6 +88,22 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
 
     requestLocationPermission();
   }, []);
+
+  useEffect(() => {
+    if (!cameraSet && hasLocationPermission && locationFound && location) {
+      cameraRef.current?.setCamera({
+        centerCoordinate: [
+          location?.longitude ?? DEFAULT_LOCATION.longitude,
+          location?.latitude ?? DEFAULT_LOCATION.latitude,
+        ],
+        zoomLevel: 14,
+        pitch: 1,
+        animationMode: 'flyTo',
+        animationDuration: 1,
+      });
+      setCameraSet(true);
+    }
+  }, [hasLocationPermission, locationFound, location, cameraSet]);
 
   const onUserLocationUpdateThrottled = useMemo(
     () =>

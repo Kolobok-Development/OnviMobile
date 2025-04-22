@@ -16,6 +16,7 @@ import {BackButton} from '@components/BackButton';
 import {dp} from '@utils/dp.ts';
 import Markdown from 'react-native-markdown-display';
 import {PartnerIntegration} from '@screens/Partner/PartnerIntegration.tsx';
+import ScreenHeader from '@components/ScreenHeader';
 
 const Partner = () => {
   const route: any = useRoute();
@@ -52,40 +53,47 @@ const Partner = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollView} showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <ScreenHeader
-            screenTitle={partner?.attributes.name ?? ''}
-            btnType="back"
-            btnCallback={() => navigation.navigate('Партнеры')}
-          />
-          <Image
-            source={{uri: partnerAttributes?.image?.data?.attributes?.url}}
-            style={styles.banner}
-          />
-          <View style={styles.contentHeader}>
-            <View style={styles.circleImageContainer}>
-              <Image
-                source={{
-                  uri: partnerAttributes?.partner_icon?.data?.attributes?.url,
-                }}
-                style={styles.circleImage}
-              />
+        <ScrollView
+          contentContainerStyle={styles.scrollView}
+          showsVerticalScrollIndicator={false}>
+          <View style={styles.content}>
+            <ScreenHeader
+              screenTitle={partner?.attributes.name ?? ''}
+              btnType="back"
+              btnCallback={() => navigation.navigate('Партнеры')}
+            />
+            <Image
+              source={{uri: partnerAttributes?.image?.data?.attributes?.url}}
+              style={styles.banner}
+            />
+            <View style={styles.contentHeader}>
+              <View style={styles.circleImageContainer}>
+                <Image
+                  source={{
+                    uri: partnerAttributes?.partner_icon?.data?.attributes?.url,
+                  }}
+                  style={styles.circleImage}
+                />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.name}>{partnerAttributes?.name}</Text>
+                <Text style={styles.description}>
+                  Кэшбек на покупку от 2 500
+                </Text>
+              </View>
             </View>
-            <View style={styles.detailsContainer}>
-              <Text style={styles.name}>{partnerAttributes?.name}</Text>
-              <Text style={styles.description}>Кэшбек на покупку от 2 500</Text>
-            </View>
-          </View>
 
             {/* Memoized markdown content */}
-          <Markdown style={{body: {color: '#000', fontSize: dp(14), paddingLeft: 16}}}>
-            {markdownContent}
-          </Markdown>
-          {/* Partner Interaction Component */}
-          <PartnerIntegration partner={partner} />
-        </View>
-      </ScrollView>
+            <Markdown
+              style={{
+                body: {color: '#000', fontSize: dp(14), paddingLeft: 16},
+              }}>
+              {markdownContent}
+            </Markdown>
+            {/* Partner Interaction Component */}
+            <PartnerIntegration partner={partner} />
+          </View>
+        </ScrollView>
       </View>
     </SafeAreaView>
   );

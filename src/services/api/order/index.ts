@@ -5,7 +5,7 @@ import {IValidatePromoCodeRequest} from '../../../types/api/order/req/IValidateP
 import {IValidatePromoCodeResponse} from '../../../types/api/order/res/IValidatePromoCodeResponse.ts';
 import {IPingPosRequestParams} from '../../../types/api/order/req/IPingPosRequestParams.ts';
 import {IPingPosResponse} from '../../../types/api/order/res/IPingPosResponse.ts';
-import { userApiInstance } from "@services/api/axiosConfig.ts";
+import {userApiInstance} from '@services/api/axiosConfig.ts';
 
 enum ORDER {
   CREATE_ORDER_URL = '/order/create',

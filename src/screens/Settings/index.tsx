@@ -104,7 +104,6 @@ const Settings = () => {
 
       const avatar = avatarMapping[selectedAvatar];
 
-
       const userData: {name?: string; email?: string; avatar?: number} = {};
 
       if (userName) {
