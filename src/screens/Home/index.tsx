@@ -8,19 +8,15 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import useStore from '../../state/store';
-import {useReducedMotion, useSharedValue} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 
 import {CameraReference} from '@components/Map';
 import FindMeButton from '@screens/Home/FindMeButton.tsx';
-import style from '@styled/inputs/RadioButton/style.ts';
-import {useSnapPoints, MAX_SNAP_INDEX} from '../../utils/snapPoints';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import {useSnapPoints} from '../../utils/snapPoints';
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
-  const [filtersOpacity] = useState(1);
 
   // Calculate dynamic snap points based on screen size
   // Use the global snap points hook to ensure consistency across screens
@@ -36,12 +32,10 @@ const Home = React.memo(({navigation}: any) => {
 
   const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
-  const {filters, setIsBottomSheetOpen, setBottomSheetRef} =
-    useStore.getState();
+  const {setIsBottomSheetOpen, setBottomSheetRef} = useStore.getState();
 
   const {isDraggable} = useStore();
 
-  const reduceMotion = useReducedMotion();
   const bsRef = useRef(null);
 
   const currentPosition = useSharedValue(0);
@@ -52,9 +46,12 @@ const Home = React.memo(({navigation}: any) => {
     }
   }, [setBottomSheetRef]);
 
-  const setCamera = (val?: {longitude: number; latitude: number}) => {
-    cameraRef.current?.setCameraPosition(val);
-  };
+  const setCamera = useCallback(
+    (val?: {longitude: number; latitude: number}) => {
+      cameraRef.current?.setCameraPosition(val);
+    },
+    [],
+  );
 
   const handleSheetChanges = useCallback((index: number) => {
     console.log(index);
@@ -62,42 +59,6 @@ const Home = React.memo(({navigation}: any) => {
     setBottomSheetIndex(index);
     setIsBottomSheetOpen(index >= 2);
   }, []);
-
-  // const renderHandleComponent = useCallback(
-  //   (props: BottomSheetHandleProps) => {
-  //     const extractedFilters = useMemo(() => {
-  //       return Object.values(filters)
-  //         .flat()
-  //         .map(filter => filter);
-  //     }, [filters]);
-  //
-  //     return (
-  //       <BottomSheetHandle {...props} style={styles.handle}>
-  //         <Animated.View
-  //           style={[styles.filtersContainer, {opacity: filtersOpacity}]}>
-  //           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-  //             {Object.values(filters)
-  //               .flat()
-  //               .map((filter, index) => (
-  //                 <View
-  //                   key={index}
-  //                   style={[styles.filterBox, {width: filter.length * dp(10)}]}>
-  //                   <Text style={styles.filterText}>{filter}</Text>
-  //                 </View>
-  //               ))}
-  //           </ScrollView>
-  //           <TouchableOpacity style={styles.findMe} onPress={() => setCamera()}>
-  //             <Navigation fill="white" color="white" />
-  //           </TouchableOpacity>
-  //         </Animated.View>
-  //         <View style={styles.lineContainer}>
-  //           <View style={styles.line} />
-  //         </View>
-  //       </BottomSheetHandle>
-  //     );
-  //   },
-  //   [filters, setCamera],
-  // );
 
   const memoizedBottomSheetStack = useMemo(
     () => (

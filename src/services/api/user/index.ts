@@ -112,7 +112,7 @@ export async function updateUserMeta(data: Meta): Promise<any> {
 }
 
 export async function deleteAccount(): Promise<number> {
-  console.log('CALLED')
+  console.log('CALLED');
   const response = await userApiInstance.delete(ACCOUNT.UPDATE_ACCOUNT_URL);
   console.log(JSON.stringify(response, null, 2));
   return response.status;

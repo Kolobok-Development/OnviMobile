@@ -6,7 +6,8 @@ import {setupAuthInterceptors} from './interceptors';
 
 // Create API instances
 const userApiInstance = axios.create({
-  baseURL: Config.API_URL + PREFIX,
+  baseURL:
+    'https://d5dujs53ub9l7pfufoct.aqkd4clz.apigw.yandexcloud.net' + PREFIX,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -20,7 +21,7 @@ setupAuthInterceptors(userApiInstance);
 
 // Content API instance (without auth interceptors)
 const contentApiInstance = axios.create({
-  baseURL: Config.STRAPI_URL,
+  baseURL: 'https://onvi-mobile-app-api-kqeql.ondigitalocean.app',
   headers: {
     'Content-Type': 'application/json',
   },
