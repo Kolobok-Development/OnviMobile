@@ -1,5 +1,10 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  useWindowDimensions,
+} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,
@@ -7,10 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Navigation} from 'react-native-feather';
 import {dp} from '../../utils/dp';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface FindMeButtonProps {
   animatedPosition: Animated.SharedValue<number>;
@@ -22,7 +24,7 @@ const BUTTON_SIZE = dp(40);
 const BUTTON_MARGIN = dp(10);
 
 const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
-  const {height: SCREEN_HEIGHT} = useSafeAreaFrame();
+  const {height: SCREEN_HEIGHT} = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
   const containerAnimatedStyle = useAnimatedStyle(() => {
@@ -30,8 +32,7 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
 
     const bottomPosition = SCREEN_HEIGHT - sheetTopPosition + BUTTON_MARGIN;
 
-    const minBottom =
-      Platform.OS === 'ios' ? insets.bottom + 10 : insets.bottom + 20;
+    const minBottom = insets.bottom + 10;
     const safeBottomPosition = Math.max(minBottom, bottomPosition);
 
     return {
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   findMeContainer: {
     position: 'absolute',
     right: dp(20),
-    zIndex: 999,
+    zIndex: 999, // Ensure it's above the bottom sheet
     // Add shadow for iOS
     ...Platform.select({
       ios: {
