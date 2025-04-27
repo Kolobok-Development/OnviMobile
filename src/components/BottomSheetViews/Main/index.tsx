@@ -45,6 +45,7 @@ const Main = () => {
     location,
     bottomSheetRef,
     setIsMainScreen,
+    bottomSheetSnapPoints,
   } = useStore.getState();
 
   const {setSelectedPos} = useStore.getState();
