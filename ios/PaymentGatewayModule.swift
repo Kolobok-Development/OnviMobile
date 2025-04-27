@@ -12,10 +12,73 @@ import YooKassaPayments
 
 @objc(PaymentGatewayModule)
 class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
-
+ 
   var paymentCallback: RCTResponseSenderBlock?
   var confirmCallback: RCTResponseSenderBlock?
   var viewController: UIViewController?
+  
+  
+  func didFinish(on module: YooKassaPayments.TokenizationModuleInput, with error: YooKassaPayments.YooKassaPaymentsError?) {
+    let error: NSDictionary = [
+                "code" : "E_PAYMENT_CANCELLED",
+                "message" : "Payment cancelled."
+            ]
+
+            DispatchQueue.main.async {
+                self.viewController?.dismiss(animated: true)
+            }
+
+          if let callback = self.paymentCallback {
+                callback([NSNull(), error])
+                self.paymentCallback = nil
+            }
+  }
+  
+  
+  func didFailConfirmation(error: YooKassaPayments.YooKassaPaymentsError?) {
+    let error: NSDictionary = [
+      "code" : "ERROR_PAYMENT_CONFIRMATION",
+      "message" : "Payment failed."
+    ]
+    DispatchQueue.main.async {
+        self.viewController?.dismiss(animated: true)
+    }
+
+    if let callback = self.paymentCallback {
+          callback([NSNull(), error])
+          self.paymentCallback = nil
+      }
+  }
+  
+  
+  func didFinishConfirmation(paymentMethodType: YooKassaPayments.PaymentMethodType) {
+    let result: NSDictionary = [
+               "message" : "verified"
+           ]
+
+      DispatchQueue.main.async {
+              self.viewController?.dismiss(animated: true)
+          }
+
+          if let callback = self.confirmCallback {
+              callback([result])
+              confirmCallback = nil
+          }
+  }
+  
+  func tokenizationModule(_ module: YooKassaPayments.TokenizationModuleInput, didTokenize token: YooKassaPayments.Tokens, paymentMethodType: YooKassaPayments.PaymentMethodType) {
+      let result: NSDictionary = [
+               "token" : token.paymentToken,
+               "paymentMethodType" : paymentMethodType.rawValue.uppercased()
+           ]
+    
+
+    if let callback = self.paymentCallback {
+        callback([result])
+        paymentCallback = nil
+    }
+  }
+  
   
   
   @objc
@@ -52,9 +115,6 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
                     return
                 }
 
-                if (payType == .applePay && applePayMerchantId == nil) {
-                    return
-                }
 
                 paymentMethodTypes.insert(PaymentMethodTypes(rawValue: [payType]))
             }
@@ -67,12 +127,10 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
             paymentMethodTypes.insert(.yooMoney)
         }
 
-        if (applePayMerchantId != nil) {
-            paymentMethodTypes.insert(.applePay)
-        }
     }
     
     let tokenizationSettings = TokenizationSettings(paymentMethodTypes: paymentMethodTypes)
+    let applicationScheme = "onvione://";
     let amount = Amount(value: amountValue.decimalValue, currency: .rub)
     let tokenizationModuleInputData =
                 TokenizationModuleInputData(
@@ -83,11 +141,11 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
                 amount: amount,
                 gatewayId: gatewayId,
                 tokenizationSettings: tokenizationSettings,
-                applePayMerchantIdentifier: applePayMerchantId,
                 returnUrl: returnUrl,
                 userPhoneNumber: userPhoneNumber,
                 savePaymentMethod: .off,
                 moneyAuthClientId: authCenterClientId,
+                applicationScheme: applicationScheme,
                 customerId: customerId
             )
     
@@ -129,61 +187,6 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
       self.viewController?.dismiss(animated: true);
     }
   }
-  
-  func didFinish(on module: YooKassaPayments.TokenizationModuleInput, with error: YooKassaPayments.YooKassaPaymentsError?) {
-    print("PAYMENT GATEWAY -> FINISH.....");
-    let error: NSDictionary = [
-                "code" : "E_PAYMENT_CANCELLED",
-                "message" : "Payment cancelled."
-            ]
-
-            DispatchQueue.main.async {
-                self.viewController?.dismiss(animated: true)
-            }
-
-          if let callback = self.paymentCallback {
-                callback([NSNull(), error])
-                self.paymentCallback = nil
-            }
-  }
-  
-  func didFinishConfirmation(paymentMethodType: YooKassaPayments.PaymentMethodType) {
-    DispatchQueue.main.async { [weak self] in
-           guard let self = self else { return }
-
-           // Now close tokenization module
-            self.viewController?.dismiss(animated: true)
-       }
-  }
-  
-  func didSuccessfullyConfirmation(paymentMethodType: PaymentMethodType) {
-    let result: NSDictionary = [
-               "message" : "verified"
-           ]
-
-      DispatchQueue.main.async {
-              self.viewController?.dismiss(animated: true)
-          }
-
-          if let callback = self.confirmCallback {
-              callback([result])
-              confirmCallback = nil
-          }
-  }
-  
-  func tokenizationModule(_ module: YooKassaPayments.TokenizationModuleInput, didTokenize token: YooKassaPayments.Tokens, paymentMethodType: YooKassaPayments.PaymentMethodType) {
-      let result: NSDictionary = [
-               "token" : token.paymentToken,
-               "paymentMethodType" : paymentMethodType.rawValue.uppercased()
-           ]
-    
-
-    if let callback = self.paymentCallback {
-        callback([result])
-        paymentCallback = nil
-    }
-  }
-  
   
   override class func requiresMainQueueSetup() -> Bool {
          return false
