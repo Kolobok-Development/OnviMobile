@@ -1,5 +1,10 @@
 import React from 'react';
-import {TouchableOpacity, StyleSheet, Platform, PixelRatio} from 'react-native';
+import {
+  TouchableOpacity,
+  StyleSheet,
+  Platform,
+  useWindowDimensions, PixelRatio
+} from "react-native";
 import Animated, {
   Extrapolation,
   interpolate,
@@ -7,10 +12,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import {Navigation} from 'react-native-feather';
 import {dp} from '../../utils/dp';
-import {
-  useSafeAreaFrame,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 interface FindMeButtonProps {
   animatedPosition: Animated.SharedValue<number>;
@@ -18,13 +20,11 @@ interface FindMeButtonProps {
   onPress: () => void;
 }
 
-// Button dimensions
 const BUTTON_SIZE = dp(40);
 const BUTTON_MARGIN = dp(30);
 
 const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
-  // Get screen dimensions and safe area insets
-  const {height: SCREEN_HEIGHT} = useSafeAreaFrame();
+  const {height: SCREEN_HEIGHT} = useWindowDimensions();
   const insets = useSafeAreaInsets();
 
   // Get the device's pixel ratio
@@ -32,7 +32,6 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
   const exactDpi = pixelRatio * 160;
   // Create the animated style for the button
   const containerAnimatedStyle = useAnimatedStyle(() => {
-    // Get the current position of the bottom sheet
     const sheetTopPosition = animatedPosition.value;
     // Apply specific adjustments for problematic DPI range
     let dpiAdjustment = 1.0;
@@ -57,10 +56,6 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
   });
 
   const opacityAnimatedStyle = useAnimatedStyle(() => {
-    // Calculate opacity based only on animatedPosition.value
-    // We'll use fixed threshold values to determine when to fade
-
-    // Assuming smaller values mean sheet is lower, larger values mean sheet is higher
     const opacity = interpolate(
       animatedPosition.value,
       [200, 300], // When position is between 200-400, fade out
@@ -91,7 +86,7 @@ const styles = StyleSheet.create({
   findMeContainer: {
     position: 'absolute',
     right: dp(20),
-    zIndex: 999,
+    zIndex: 999, // Ensure it's above the bottom sheet
     // Add shadow for iOS
     ...Platform.select({
       ios: {

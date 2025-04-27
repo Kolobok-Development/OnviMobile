@@ -8,19 +8,15 @@ import BottomSheet from '@gorhom/bottom-sheet';
 import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import useStore from '../../state/store';
-import {useReducedMotion, useSharedValue} from 'react-native-reanimated';
+import {useSharedValue} from 'react-native-reanimated';
 
 import {CameraReference} from '@components/Map';
 import FindMeButton from '@screens/Home/FindMeButton.tsx';
-import style from '@styled/inputs/RadioButton/style.ts';
-import {useSnapPoints, MAX_SNAP_INDEX} from '../../utils/snapPoints';
-
-const SCREEN_HEIGHT = Dimensions.get('window').height;
+import {useSnapPoints} from '../../utils/snapPoints';
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
-  const [filtersOpacity] = useState(1);
 
   // Calculate dynamic snap points based on screen size
   // Use the global snap points hook to ensure consistency across screens
@@ -50,9 +46,12 @@ const Home = React.memo(({navigation}: any) => {
     }
   }, [setBottomSheetRef]);
 
-  const setCamera = (val?: {longitude: number; latitude: number}) => {
-    cameraRef.current?.setCameraPosition(val);
-  };
+  const setCamera = useCallback(
+    (val?: {longitude: number; latitude: number}) => {
+      cameraRef.current?.setCameraPosition(val);
+    },
+    [],
+  );
 
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);

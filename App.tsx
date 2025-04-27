@@ -90,15 +90,14 @@ function App(): React.JSX.Element {
           if (!user?.meta) {
             await createUserMeta({
               ...localMetaDataPartial,
-              appToken: fcmToken,
+              appToken: fcmToken ?? '',
               clientId: user.id,
-              metaId: null,
             });
           } else if (
             hasMetaDataChanged(
               {
                 ...localMetaDataPartial,
-                appToken: fcmToken,
+                appToken: fcmToken ?? '',
                 clientId: user.id,
                 metaId: user.meta.metaId,
               },
@@ -107,7 +106,7 @@ function App(): React.JSX.Element {
           ) {
             await updateUserMeta({
               ...localMetaDataPartial,
-              appToken: fcmToken,
+              appToken: fcmToken ?? '',
               clientId: user.id,
               metaId: user.meta.metaId,
             });

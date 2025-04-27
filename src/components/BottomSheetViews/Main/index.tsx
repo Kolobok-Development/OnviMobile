@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -38,14 +38,20 @@ import {transformContentDataToUserStories} from '../../../shared/mappers/StoryVi
 import {StoryView} from '@components/StoryView';
 
 const Main = () => {
-  //Extract these states directly to make them reactive
-  //Interesting bug!!!!!!
-  const {isBottomSheetOpen, nearByPos, posList, location} = useStore();
+  const {
+    isBottomSheetOpen,
+    setNearByPos,
+    setBusiness,
+    location,
+    bottomSheetRef,
+    setIsMainScreen,
+  } = useStore.getState();
 
-  const {setNearByPos, setBusiness, bottomSheetRef, setIsMainScreen} =
-    useStore.getState();
+  const {setSelectedPos} = useStore.getState();
 
-  const {setSelectedPos, bottomSheetSnapPoints} = useStore.getState();
+  const posList = useStore(state => state.posList);
+  const nearByPos = useStore(state => state.nearByPos);
+
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
@@ -83,12 +89,6 @@ const Main = () => {
     }, []),
   );
 
-  useEffect(() => {
-    if (location && posList && posList.length > 0) {
-      findNearestCarWash();
-    }
-  }, [posList, location]);
-
   const findNearestCarWash = () => {
     if (!location) {
       return;
@@ -116,6 +116,20 @@ const Main = () => {
       }
     });
   };
+
+  const isNearestCarWashSet = useRef(false);
+
+  useEffect(() => {
+    if (
+      !isNearestCarWashSet.current &&
+      location &&
+      posList &&
+      posList.length > 0
+    ) {
+      findNearestCarWash();
+      isNearestCarWashSet.current = true;
+    }
+  }, [location, posList]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
