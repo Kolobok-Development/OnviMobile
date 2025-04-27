@@ -2294,10 +2294,10 @@
   dependencies:
     nanoid "^3.1.23"
 
-"@rnmapbox/maps@10.1.24":
-  version "10.1.24"
-  resolved "https://registry.npmjs.org/@rnmapbox/maps/-/maps-10.1.24.tgz"
-  integrity sha512-3l3WV8rnK28InMl5rVjtO4XxK/x2aHV4qDp3BGlNU8a+lCIF0fR3Dw3ChukgV2dszxjS7pX6OHtmkng6yoc0Tw==
+"@rnmapbox/maps@10.1.35":
+  version "10.1.35"
+  resolved "https://registry.yarnpkg.com/@rnmapbox/maps/-/maps-10.1.35.tgz#d6f6878883e1deef0f7668b503d56690ffbb9f98"
+  integrity sha512-Mwm4Q4lG/+6BahbtzXnqyfP9JszoCMFX8qQwG3gxDDV3O/53J8DGh0c4peRLRgYEn/KUP4LLyZJal09g00M+AQ==
   dependencies:
     "@turf/along" "6.5.0"
     "@turf/distance" "6.5.0"

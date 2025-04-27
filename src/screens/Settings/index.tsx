@@ -277,7 +277,7 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.header}>
-          <ScreenHeader screenTitle="Найстройки" />
+          <ScreenHeader screenTitle="Настройки" />
         </View>
 
         <View style={styles.container}>

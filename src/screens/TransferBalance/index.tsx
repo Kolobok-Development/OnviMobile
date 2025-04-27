@@ -107,7 +107,7 @@ const TransferBalance = () => {
         <ScreenHeader
           screenTitle={'Перенос Баланса'}
           btnType="back"
-          btnCallback={() => navigation.navigate('Настройки')}
+          btnCallback={() => navigation.navigate('Главная')}
         />
       </View>
       <View style={styles.contentContainer}>

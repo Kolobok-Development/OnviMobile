@@ -30,7 +30,7 @@ const CustomDrawerItem = ({label, color, onPress}: CustomDrawerItemProps) => {
     <TouchableOpacity
       style={{
         flexDirection: 'row',
-        paddingBottom: dp(15),
+        paddingBottom: dp(25),
       }}
       onPress={onPress}>
       <Text
@@ -225,14 +225,14 @@ const CustomDrawerContent = ({
             style={{
               borderColor: '#3461FF',
               borderWidth: 2,
-              borderRadius: 25,
-              padding: 10,
+              borderRadius: 20,
+              padding: 8,
               display: 'flex',
               flexDirection: 'row',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              paddingEnd: dp(20),
-              paddingStart: dp(20),
+              justifyContent: 'space-evenly',
+              paddingEnd: dp(10),
+              paddingStart: dp(10),
             }}
             onPress={() => {
               navigation.reset({
@@ -242,16 +242,17 @@ const CustomDrawerContent = ({
             }}>
             <Text
               style={{
-                fontSize: dp(18),
-                fontWeight: '600',
+                fontSize: dp(16),
+                fontWeight: '500',
+                color: 'black',
               }}>
               Перенос Баланса
             </Text>
             <Image
               style={{
-                width: dp(25),
-                height: dp(25),
-                marginLeft: dp(5),
+                width: dp(20),
+                height: dp(20),
+                marginLeft: dp(0),
               }}
               source={require('../../../assets/icons/transfer-balance-icon.png')}
             />

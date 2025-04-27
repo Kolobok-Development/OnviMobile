@@ -1,6 +1,6 @@
 import {IUser} from '../types/models/User.ts';
 import {OrderDetailsType} from '../state/order/OrderSlice.ts';
-import {useCallback, useState} from 'react';
+import {useCallback, useEffect, useState} from 'react';
 import {createPayment, getCredentials} from '@services/api/payment';
 import {confirmPayment, dismiss, tokenize} from '../native';
 import {
@@ -36,6 +36,10 @@ export const usePaymentProcess = (
   const [orderStatus, setOrderStatus] = useState<OrderProcessingStatus | null>(
     null,
   );
+
+  useEffect(() => {
+    console.log(error);
+  }, [error]);
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethodType>('BANK_CARD');
 
@@ -233,7 +237,10 @@ export const usePaymentProcess = (
       console.error('Payment process error:', error);
       setOrderStatus(null);
       setLoading(false);
-      if (error.code === 'ERROR_PAYMENT_CANCELLED') {
+      if (
+        error.code === 'ERROR_PAYMENT_CANCELLED' ||
+        error.code === 'E_PAYMENT_CANCELLED'
+      ) {
         setError('❌ Заказ отменён. Платёж не был завершён');
       }
     }
