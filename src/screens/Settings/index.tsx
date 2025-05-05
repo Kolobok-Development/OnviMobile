@@ -27,6 +27,7 @@ import Toast from 'react-native-toast-message';
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import ScreenHeader from '@components/ScreenHeader/index.tsx';
+import { CarAvatar } from '@components/СarAvatar/index.tsx';
 
 export const avatarSwitch = (avatar: string) => {
   switch (avatar) {
@@ -148,7 +149,7 @@ const Settings = () => {
         snapPoints={snapPoints}
         keyboardBlurBehavior="restore"
         // add bottom inset to elevate the sheet
-        bottomInset={dp(Dimensions.get('window').height / 5)}
+        bottomInset={dp(Dimensions.get('window').height / 9)}
         // set `detached` to true
         detached={true}
         style={styles.sheetContainer}
@@ -156,10 +157,11 @@ const Settings = () => {
         handleHeight={dp(30)}
         handleIndicatorStyle={{display: 'none'}}>
         <View style={styles.contentContainer}>
+          <CarAvatar />
           <Text style={{...styles.titleText, marginBottom: dp(20)}}>
             Личные данные
           </Text>
-          <View style={styles.avatars}>
+          {/* <View style={styles.avatars}>
             <TouchableOpacity
               onPress={() => setSelectedAvatar('both.jpg')}
               style={
@@ -202,7 +204,7 @@ const Settings = () => {
                 source={require('../../assets/avatars/male.jpg')}
               />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.textInputGroup}>
             <Text style={{padding: dp(10)}}>👤</Text>
             <BottomSheetTextInput
