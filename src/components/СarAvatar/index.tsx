@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { dp } from '../../utils/dp';
-import { ScrollView } from 'react-native-gesture-handler';
 
 type TCar = 'sedan' | 'hatchback' | 'suv' | 'universall' | 'coupe' | 'miniven';
 
 type TColor = 'black' | 'white' | 'silver' | 'blue' | 'red' | 'purple' | 'yellow';
 
-interface IType {
+interface ICarType {
     id: string,
     name: TCar,
     text: string
@@ -26,7 +25,7 @@ type CarImages = {
     [key in TCarImageKey]?: number
 };
 
-const types: IType[] = [
+const types: ICarType[] = [
     { id: "1", name: "sedan", text: "Седан" },
     { id: "2", name: "hatchback", text: "Хетчбек" },
     { id: "3", name: "suv", text: "Внедорожник" },
@@ -45,7 +44,7 @@ const colors: IColor[] = [
     { id: "7", name: "yellow", color: "#FFDB58", text: "Желтый" },
 ];
 
-const carImages: Partial<CarImages> = {
+const carImages: CarImages = {
     black_sedan: require('../../assets/cars/sedan/black_sedan.png'),
     white_sedan: require('../../assets/cars/sedan/white_sedan.png'),
     silver_sedan: require('../../assets/cars/sedan/silver_sedan.png'),
@@ -97,8 +96,8 @@ const carImages: Partial<CarImages> = {
 
 const CarAvatar = () => {
 
-    const [selectedColor, setSelectedColor] = useState<IColor>(colors[0]);
-    const [selectedType, setSelectedType] = useState<IType>(types[0]);
+    const [selectedColor, setSelectedColor] = useState<IColor>(colors[0] ?? { id: "0", name: "black", color: "#000000", text: "Черный" });
+    const [selectedType, setSelectedType] = useState<ICarType>(types[0] ?? { id: "0", name: "sedan", text: "Седан" });
 
     const getCarImage = (): number | undefined => {
         const imageKey: TCarImageKey = `${selectedColor.name}_${selectedType.name}`;
@@ -136,11 +135,10 @@ const CarAvatar = () => {
                                 styles.carTypeButton,
                                 selectedType.id === item.id && styles.carTypeButtonSelected
                             ]}
+                            key={item.id}
                             onPress={() => setSelectedType(item)}
                         >
-                            <View>
-                                <Text style={styles.carTypeButtonText}>{item.text}</Text>
-                            </View>
+                            <Text style={styles.carTypeButtonText}>{item.text}</Text>
                         </TouchableOpacity>
                     ))}
                 </ScrollView>
@@ -192,7 +190,6 @@ const styles = StyleSheet.create({
         height: dp(74),
         objectFit: 'contain',
         borderColor: 'black',
-        // borderWidth: 1,
         borderStyle: 'solid',
     },
     titleContainer: {
