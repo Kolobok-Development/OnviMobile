@@ -8,24 +8,25 @@ import {
   Text,
   TouchableOpacity,
   View,
+  TextInput
 } from 'react-native';
 
-import {dp} from '../../utils/dp';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import { dp } from '../../utils/dp';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import useStore from '../../state/store';
-import {formatPhoneNumber} from '../../utils/phoneFormat';
-import {Button} from '@styled/buttons';
-import {LogOut} from 'react-native-feather';
-import BottomSheet, {BottomSheetTextInput} from '@gorhom/bottom-sheet';
-import {useNavigation} from '@react-navigation/native';
+import { formatPhoneNumber } from '../../utils/phoneFormat';
+import { Button } from '@styled/buttons';
+import { LogOut } from 'react-native-feather';
+import BottomSheet, { BottomSheetTextInput } from '@gorhom/bottom-sheet';
+import { useNavigation } from '@react-navigation/native';
 import Switch from '@styled/buttons/CustomSwitch';
-import {AvatarEnum} from '../../types/AvatarEnum.ts';
-import {update, updateAllowNotificationSending} from '@services/api/user';
-import {IUpdateAccountRequest} from '../../types/api/user/req/IUpdateAccountRequest.ts';
+import { AvatarEnum } from '../../types/AvatarEnum.ts';
+import { update, updateAllowNotificationSending } from '@services/api/user';
+import { IUpdateAccountRequest } from '../../types/api/user/req/IUpdateAccountRequest.ts';
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
-
-import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+import Modal from 'react-native-modal';
+import { GeneralDrawerNavigationProp } from '../../types/navigation/DrawerNavigation.ts';
 import ScreenHeader from '@components/ScreenHeader/index.tsx';
 import { CarAvatar } from '@components/СarAvatar/index.tsx';
 
@@ -43,7 +44,7 @@ export const avatarSwitch = (avatar: string) => {
 };
 
 const Settings = () => {
-  const {user, signOut, loadUser, deleteUser} = useStore.getState();
+  const { user, signOut, loadUser, deleteUser } = useStore.getState();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
 
   const initialUserName = user?.name || '';
@@ -66,9 +67,9 @@ const Settings = () => {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPoints = useMemo(() => ['80%'], []);
 
-  const {trigger, isMutating} = useSWRMutation(
+  const { trigger, isMutating } = useSWRMutation(
     'updateUserData',
-    (key, {arg}: {arg: IUpdateAccountRequest}) => update(arg),
+    (key, { arg }: { arg: IUpdateAccountRequest }) => update(arg),
     {
       onError: err => {
         Toast.show({
@@ -79,8 +80,8 @@ const Settings = () => {
     },
   );
 
-  const {trigger: notificationTrigger, isMutating: isNotifcationMutating} =
-    useSWRMutation('updateNotificationStatys', (key, {arg}: {arg: boolean}) =>
+  const { trigger: notificationTrigger, isMutating: isNotifcationMutating } =
+    useSWRMutation('updateNotificationStatys', (key, { arg }: { arg: boolean }) =>
       updateAllowNotificationSending(arg),
     );
 
@@ -97,7 +98,7 @@ const Settings = () => {
 
   const saveUserDate = async () => {
     try {
-      const avatarMapping: {[key in AvatarEnum]?: number} = {
+      const avatarMapping: { [key in AvatarEnum]?: number } = {
         [AvatarEnum.ONE]: 1,
         [AvatarEnum.TWO]: 2,
         [AvatarEnum.THREE]: 3,
@@ -105,7 +106,7 @@ const Settings = () => {
 
       const avatar = avatarMapping[selectedAvatar];
 
-      const userData: {name?: string; email?: string; avatar?: number} = {};
+      const userData: { name?: string; email?: string; avatar?: number } = {};
 
       if (userName) {
         userData.name = userName;
@@ -142,25 +143,27 @@ const Settings = () => {
 
   const avatarValue = avatarSwitch(selectedAvatar);
 
-  const editingMode = () => {
+  const editingModeModal = () => {
     return (
-      <BottomSheet
-        ref={bottomSheetRef}
-        snapPoints={snapPoints}
-        keyboardBlurBehavior="restore"
-        // add bottom inset to elevate the sheet
-        bottomInset={dp(Dimensions.get('window').height / 9)}
-        // set `detached` to true
-        detached={true}
-        style={styles.sheetContainer}
-        backgroundStyle={{borderRadius: dp(38)}}
-        handleHeight={dp(30)}
-        handleIndicatorStyle={{display: 'none'}}>
-        <View style={styles.contentContainer}>
+      <Modal
+        isVisible={true}
+        swipeDirection="down"
+        style={styles.modal}
+        animationIn="slideInUp"
+        animationOut="slideOutDown"
+        backdropTransitionOutTiming={0}
+      >
+
+        <View
+          style={styles.contentContainer}
+        >
+
           <CarAvatar />
-          <Text style={{...styles.titleText, marginBottom: dp(20)}}>
+
+          <Text style={{ ...styles.titleText }}>
             Личные данные
           </Text>
+
           {/* <View style={styles.avatars}>
             <TouchableOpacity
               onPress={() => setSelectedAvatar('both.jpg')}
@@ -206,78 +209,81 @@ const Settings = () => {
             </TouchableOpacity>
           </View> */}
           <View style={styles.textInputGroup}>
-            <Text style={{padding: dp(10)}}>👤</Text>
-            <BottomSheetTextInput
+            <Text style={{ padding: dp(10) }}>👤</Text>
+            <TextInput
               value={userName}
-              placeholder={'Имя'}
-              onChangeText={(val: string) => {
-                setUserName(val);
-              }}
+              placeholder="Имя"
+              onChangeText={setUserName}
               style={styles.bottomSheetTextInput}
             />
           </View>
+
           <View style={styles.textInputGroup}>
-            <Text style={{padding: dp(10)}}>✉️</Text>
-            <BottomSheetTextInput
+            <Text style={{ padding: dp(10) }}>✉️</Text>
+            <TextInput
               value={email}
-              placeholder={'Почта'}
-              onChangeText={(val: string) => {
-                setEmail(val);
-              }}
+              placeholder="Почта"
+              onChangeText={setEmail}
               style={styles.bottomSheetTextInput}
             />
           </View>
+
           <View
             style={{
               ...styles.textInputGroup,
               backgroundColor: 'rgba(0, 0, 0, 0.3)',
-            }}>
-            <Text style={{padding: dp(10)}}>📞</Text>
-            <BottomSheetTextInput
+            }}
+          >
+            <Text style={{ padding: dp(10) }}>📞</Text>
+            <TextInput
               editable={false}
               value={formatPhoneNumber(initialPhone)}
-              placeholder={'Почта'}
+              placeholder="Телефон"
               style={{
                 ...styles.bottomSheetTextInput,
                 backgroundColor: 'rgba(0, 0, 0, 0.008)',
               }}
             />
           </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              marginTop: dp(20)
+            }}
+          >
+            <Button
+              label={'Закрыть'}
+              color={'blue'}
+              width={dp(140)}
+              height={dp(40)}
+              fontSize={dp(16)}
+              fontWeight={'600'}
+              onClick={handleClosePress}
+            />
+            <Button
+              label={'Сохранить'}
+              color={'blue'}
+              width={dp(140)}
+              height={dp(40)}
+              fontSize={dp(16)}
+              fontWeight={'600'}
+              disabled={isMutating}
+              onClick={saveUserDate}
+              showLoading={isMutating}
+            />
+          </View>
+
         </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginBottom: dp(16),
-            justifyContent: 'space-evenly',
-          }}>
-          <Button
-            label={'Закрыть'}
-            color={'blue'}
-            width={dp(140)}
-            height={dp(40)}
-            fontSize={dp(16)}
-            fontWeight={'600'}
-            onClick={handleClosePress}
-          />
-          <Button
-            label={'Сохранить'}
-            color={'blue'}
-            width={dp(140)}
-            height={dp(40)}
-            fontSize={dp(16)}
-            fontWeight={'600'}
-            disabled={isMutating}
-            onClick={saveUserDate}
-            showLoading={isMutating}
-          />
-        </View>
-      </BottomSheet>
+
+      </Modal>
     );
-  };
+  }
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         <View style={styles.header}>
           <ScreenHeader screenTitle="Настройки" />
         </View>
@@ -285,13 +291,13 @@ const Settings = () => {
         <View style={styles.container}>
           <View style={styles.profileCard}>
             <Image source={avatarValue} style={styles.avatar} />
-            <Text style={{...styles.titleText, marginTop: dp(12)}}>
+            <Text style={{ ...styles.titleText, marginTop: dp(12) }}>
               {userName}
             </Text>
-            <Text style={{...styles.text, marginTop: dp(5)}}>
+            <Text style={{ ...styles.text, marginTop: dp(5) }}>
               {formatPhoneNumber(initialPhone)}
             </Text>
-            <Text style={{...styles.text}}>{email}</Text>
+            <Text style={{ ...styles.text }}>{email}</Text>
             <View
               style={{
                 marginTop: dp(40),
@@ -347,7 +353,7 @@ const Settings = () => {
                       circleSize={dp(18)} // Adjust the circle size as needed
                       switchBorderRadius={20}
                       width={dp(45)} // Adjust the switch width as needed
-                      textStyle={{fontSize: dp(13), color: 'white'}}
+                      textStyle={{ fontSize: dp(13), color: 'white' }}
                     />
                   </View>
                 </View>
@@ -409,7 +415,7 @@ const Settings = () => {
           <View style={styles.footerBtns}>
             <TouchableOpacity style={styles.btnDelete} onPress={deleteUser}>
               <Text
-                style={{fontSize: dp(10), fontWeight: '400', color: '#AFAEAE'}}>
+                style={{ fontSize: dp(10), fontWeight: '400', color: '#AFAEAE' }}>
                 УДАЛИТЬ АККАУНТ
               </Text>
             </TouchableOpacity>
@@ -421,12 +427,28 @@ const Settings = () => {
         </View>
       </ScrollView>
       {renderOverlay()}
-      {editing && editingMode()}
+      {editing && editingModeModal()}
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
+  modal: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 0,
+    padding: dp(10),
+  },
+  contentContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    padding: dp(20),
+    backgroundColor: '#FFFFFF',
+    borderRadius: dp(38),
+  },
   container: {
     flex: 1,
     padding: dp(16),
@@ -484,6 +506,7 @@ const styles = StyleSheet.create({
     color: '#000000',
     textAlign: 'center',
     letterSpacing: 0.33,
+    marginTop: dp(24)
   },
   text: {
     fontSize: dp(14),
@@ -533,12 +556,6 @@ const styles = StyleSheet.create({
   sheetContainer: {
     // add horizontal space
     marginHorizontal: dp(16),
-  },
-  contentContainer: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
-    padding: dp(10),
   },
   bottomSheetTextInput: {
     flex: 1,
@@ -645,4 +662,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Settings};
+export { Settings };

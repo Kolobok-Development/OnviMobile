@@ -128,6 +128,7 @@ const CarAvatar = () => {
                 <ScrollView
                     horizontal={true}
                     showsHorizontalScrollIndicator={false}
+                    nestedScrollEnabled={true}
                 >
                     {types.map(item => (
                         <TouchableOpacity
@@ -184,19 +185,18 @@ const styles = StyleSheet.create({
     carImageCnt: {
         display: 'flex',
         alignItems: 'center',
+        marginTop: dp(20),
     },
     carImage: {
         width: dp(138),
         height: dp(74),
         objectFit: 'contain',
-        borderColor: 'black',
-        borderStyle: 'solid',
     },
     titleContainer: {
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginTop: dp(12),
+        marginTop: dp(20),
         marginBottom: dp(12),
     },
     titleText: {
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
         color: '#000000',
     },
     svContainer: {
-        height: dp(40),
+        height: dp(35),
     },
     carTypeButton: {
         justifyContent: 'center',
