@@ -21,11 +21,13 @@ export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
   accessToken: string | null;
+  referenceToken: string | null;
   expiredDate: string | null;
   fcmToken: string | null;
   loading: boolean;
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
+  setReferenceToken: (accessToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setFcmToken: (fcmToken: string | null) => void;
   setLoading: (loading: boolean) => void;
@@ -37,6 +39,7 @@ export interface UserSlice {
     isTermsAccepted?: boolean,
     isPromoTermsAccepted?: boolean,
   ) => Promise<IRegisterResponse | null>;
+  // getTokenFromReference: (referenceToken: string) => void;
   sendOtp: (phone: string) => Promise<void>;
   signOut: () => Promise<void>;
   loadUser: () => Promise<void>;
@@ -53,11 +56,13 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   user: null,
   fcmToken: null,
   accessToken: null,
+  referenceToken: null,
   expiredDate: null,
   loading: true,
   refreshRetryCounter: MAX_REFRESH_RETRIES,
   setUser: user => set({user}),
   setAccessToken: accessToken => set({accessToken}),
+  setReferenceToken: referenceToken => set({referenceToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
   setLoading: loading => set({loading}),
   setFcmToken: fcmToken => set({fcmToken}),

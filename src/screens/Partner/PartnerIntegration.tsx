@@ -8,6 +8,8 @@ import {dp} from '@utils/dp.ts';
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
 import RNGPBonus from '@setpartnerstv/react-native-gpbonus-sdk';
+import useStore from '../../state/store';
+
 
 interface PartnerIntegrationProps {
   partner: PartnerType;
@@ -18,6 +20,8 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [webViewError, setWebViewError] = useState(null);
   const [url, setUrl] = useState<string | null>(null);
+
+  const {referenceToken, setReferenceToken} = useStore.getState();
 
   // Fetch auth token *only* for redirect integration
   const isRedirectIntegration =
@@ -33,6 +37,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
     });
   };
 
+  //
   const {
     trigger,
     isMutating,
@@ -107,6 +112,12 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   useEffect(() => {
     console.log('URL TO GAZPROM');
     console.log(url);
+
+    if (referenceToken) {
+      handleActivation();
+      setReferenceToken(null);
+    }
+    
   }, [url]);
 
   /**

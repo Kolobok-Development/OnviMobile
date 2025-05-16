@@ -36,6 +36,7 @@ import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
+import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.ts';
 
 const Main = () => {
   const {
@@ -48,7 +49,7 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const {setSelectedPos} = useStore.getState();
+  const {setSelectedPos, referenceToken, setReferenceToken} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -62,6 +63,11 @@ const Main = () => {
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
     () => getCampaignList('*'),
+    {
+      onSuccess: (data) => {
+        // data.forEach(item => console.log("🍏🍏🍏: ", item));
+      },
+    }
   );
 
   const {
@@ -120,6 +126,18 @@ const Main = () => {
 
   const isNearestCarWashSet = useRef(false);
 
+  const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
+    const data = await getGazpromAuthTokenFromReference({reference: referenceToken})
+    const token = data.token;
+
+    if (!campaignLoading && campaignData) {
+      const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
+      if (gazpromCampaign) {
+        handleCampaignItemPress(gazpromCampaign);
+      }
+    }
+  }
+
   useEffect(() => {
     if (
       !isNearestCarWashSet.current &&
@@ -130,7 +148,12 @@ const Main = () => {
       findNearestCarWash();
       isNearestCarWashSet.current = true;
     }
-  }, [location, posList]);
+
+    if (referenceToken) {
+      getTokenAndRedirectToGPBWidget(referenceToken);
+    }
+    
+  }, [location, posList, campaignLoading, campaignData]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
@@ -151,6 +174,7 @@ const Main = () => {
   };
 
   const renderCampaignItem = ({item}: {item: Campaign}) => {
+    
     return (
       <TouchableOpacity
         onPress={() => {

@@ -1,29 +1,23 @@
 #import "AppDelegate.h"
 #import <Firebase.h>
-
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTLinkingManager.h>
-#import <React/RCTLinkingManager.h>
+#import <RNBranch/RNBranch.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [FIRApp configure];
-  self.moduleName = @"OnviMobile";
-  // You can add your custom initial props in the dictionary below.
-  // They will be passed down to the ViewController used by React Native.
-  self.initialProps = @{};
+  [RNBranch initSessionWithLaunchOptions:launchOptions isReferrable:YES]; // Инициализация Branch
+  [FIRApp configure]; // Инициализация Firebase
   
+  self.moduleName = @"OnviMobile";
+  self.initialProps = @{};
+
   return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
 
 - (NSURL *)sourceURLForBridge:(RCTBridge *)bridge
-{
-  return [self getBundleURL];
-}
-
-- (NSURL *)getBundleURL
 {
 #if DEBUG
   return [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index"];
@@ -32,23 +26,34 @@
 #endif
 }
 
-// iOS 9.x or newer DeepLinking
+#pragma mark - Deep Linking
 
-- (BOOL)application:(UIApplication *)application
-   openURL:(NSURL *)url
-   options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options
+// Обработка URL Schemes (iOS 9+)
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<UIApplicationOpenURLOptionsKey,id> *)options 
 {
-  return [RCTLinkingManager application:application openURL:url options:options];
+  [RNBranch application:app openURL:url options:options]; // Branch
+  return [RCTLinkingManager application:app openURL:url options:options]; // React Native
 }
 
-- (BOOL)application:(UIApplication *)application continueUserActivity:(nonnull NSUserActivity *)userActivity
- restorationHandler:(nonnull void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler
+// Обработка URL Schemes (iOS 8-)
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation 
 {
- return [RCTLinkingManager application:application
-                  continueUserActivity:userActivity
-                    restorationHandler:restorationHandler];
+  [RNBranch application:application openURL:url sourceApplication:sourceApplication annotation:annotation]; // Branch
+  return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation]; // React Native
+}
+
+// Обработка Universal Links
+- (BOOL)application:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray<id<UIUserActivityRestoring>> * _Nullable))restorationHandler 
+{
+  // 1. Сначала Branch обрабатывает ссылку
+  BOOL handledByBranch = [RNBranch continueUserActivity:userActivity];
+  
+  // 2. Затем React Native
+  BOOL handledByRN = [RCTLinkingManager application:application 
+                              continueUserActivity:userActivity 
+                                restorationHandler:restorationHandler];
+  
+  return handledByBranch || handledByRN;
 }
 
 @end
-
-

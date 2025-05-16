@@ -18,10 +18,14 @@ import Markdown from 'react-native-markdown-display';
 import {PartnerIntegration} from '@screens/Partner/PartnerIntegration.tsx';
 import ScreenHeader from '@components/ScreenHeader';
 
-const Partner = () => {
+interface PartnerIntegrationProps {
+  partner: PartnerType;
+}
+
+const Partner: React.FC<PartnerIntegrationProps> = ({partner}) => {
   const route: any = useRoute();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Партнер'>>();
-  const partner: PartnerType | undefined = route.params?.data;
+  // const partner: PartnerType | undefined = route.params?.data;
 
   /**
    * Memoize partner attributes to prevent unnecessary recomputation
