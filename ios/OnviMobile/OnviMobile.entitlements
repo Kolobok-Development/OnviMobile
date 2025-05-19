@@ -8,6 +8,7 @@
 	<array>
 		<string>applinks:wrzx5.app.link</string>
 		<string>applinks:wrzx5-alternate.app.link</string>
+		<string>applinks:wrzx5.test-app.link</string>
 	</array>
 </dict>
 </plist>
