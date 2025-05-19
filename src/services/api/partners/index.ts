@@ -78,12 +78,10 @@ interface IGazpromResponseData {
 
 export async function getGazpromAuthTokenFromReference(body: IGazpromReferencePayload): Promise<IGazpromResponseData> {
   console.log('MAKING API CALL');
-  // const response = await userApiInstance.post<IUserApiResponse<any>>(
-  //   PARTNER.GET_GAZPROM_AUTH_TOKEN_FROM_REFERENCE,
-  //   body,
-  // );
+  const response = await userApiInstance.post(
+    PARTNER.GET_GAZPROM_AUTH_TOKEN_FROM_REFERENCE,
+    body,
+  );
 
-  // return response.data.data;
-
-  return {token: "TOKEEEEEEEN"}
+  return response.data.data;
 }

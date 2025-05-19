@@ -2,7 +2,7 @@ import React, {useState, useCallback, useEffect} from 'react';
 import {View, Modal, ActivityIndicator} from 'react-native';
 import {Button} from '@styled/buttons';
 import PromoModal from '@components/PromoModal';
-import {Partner as PartnerType} from '../../types/api/app/types';
+import {Campaign, Partner as PartnerType} from '../../types/api/app/types';
 import {getGazpromAuthToken} from '@services/api/partners';
 import {dp} from '@utils/dp.ts';
 import useSWRMutation from 'swr/mutation';
@@ -12,20 +12,21 @@ import useStore from '../../state/store';
 
 
 interface PartnerIntegrationProps {
-  partner: PartnerType;
+  partner: Campaign;
 }
 
 const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
+  
   const [modalVisible, setModalVisible] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [webViewError, setWebViewError] = useState(null);
   const [url, setUrl] = useState<string | null>(null);
 
-  const {referenceToken, setReferenceToken} = useStore.getState();
+  const {referenceToken, setReferenceToken, gazpromToken, setGazpromToken} = useStore.getState();
 
   // Fetch auth token *only* for redirect integration
-  const isRedirectIntegration =
-    partner.attributes.integration_type === 'redirect';
+  // const isRedirectIntegration =
+  //   partner.attributes.integration_type === 'redirect';
 
   // Show error toast
   const showErrorToast = (message: string) => {
@@ -57,8 +58,13 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
    * useEffect to wait for authentication before setting authToken
    */
   useEffect(() => {
-    if (!isMutating && partnerData?.token) {
-      setAuthToken(partnerData.token);
+    if (gazpromToken) {
+      setAuthToken(gazpromToken);
+      setGazpromToken(null);      
+    } else {
+      if (!isMutating && partnerData?.token) {
+        setAuthToken(partnerData.token);
+      }
     }
   }, [isMutating, partnerData]);
 
@@ -66,7 +72,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
    * Optimized function to handle activation
    */
   const handleActivation = useCallback(() => {
-    if (isRedirectIntegration) {
+    // if (isRedirectIntegration) {
       trigger()
         .then(data => {
           setAuthToken(data?.token);
@@ -86,7 +92,8 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
             )
             .join('&');
 
-          const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
+          // const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
+          const widgetUrlWithParams = `${partner.attributes.url}?${queryString}`;
           console.log('URL ++++++ ', widgetUrlWithParams);
           setUrl(widgetUrlWithParams);
         })
@@ -95,9 +102,10 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
           showErrorToast('Не получилось открыть виджет...');
           setModalVisible(false);
         });
-    }
+    // }
     setModalVisible(true);
-  }, [authToken, isRedirectIntegration]);
+  // }, [authToken, isRedirectIntegration]);
+  }, [authToken]);
 
   /**
    * Optimized function to close modal
@@ -112,7 +120,6 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   useEffect(() => {
     console.log('URL TO GAZPROM');
     console.log(url);
-
     if (referenceToken) {
       handleActivation();
       setReferenceToken(null);
@@ -141,7 +148,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
       />
 
       {/* Show Promo Modal for `input` & `promo_code` */}
-      {partner.attributes.integration_type !== 'redirect' && (
+      {/* {partner.attributes.integration_type !== 'redirect' && (
         <PromoModal
           isVisible={modalVisible}
           type={partner.attributes.integration_type}
@@ -160,13 +167,15 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
           buttonText="Activate"
           onClose={handleClose}
         />
-      )}
+      )} */}
 
       {/* WebView for `redirect` integration type - Opens only when AuthToken is Ready */}
-      {isRedirectIntegration && modalVisible && authToken && (
+      {/* {isRedirectIntegration && modalVisible && authToken && ( */}
+      { modalVisible && authToken && (
         <Modal visible={modalVisible} animationType="slide" transparent>
           <RNGPBonus
-            widgetUrl={url ? url : partner.attributes.itegration_data?.url}
+            // widgetUrl={url ? url : partner.attributes.itegration_data?.url}
+            widgetUrl={url ? url : partner.attributes.url}
             token={authToken}
             checkExternalUrl={false}
             onWidgetClose={handleClose}
@@ -193,7 +202,8 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
       )}
 
       {/* Show Loading UI if we are still fetching token */}
-      {isRedirectIntegration && modalVisible && !authToken && (
+      {/* {isRedirectIntegration && modalVisible && !authToken && ( */}
+      { modalVisible && !authToken && (
         <Modal visible={modalVisible} animationType="slide" transparent>
           {!webViewError && (
             <View

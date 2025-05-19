@@ -181,7 +181,7 @@ const CustomDrawerContent = ({
                   });
                 }}
               />
-              <CustomDrawerItem
+              {/* <CustomDrawerItem
                 label={'Партнеры'}
                 color={route === 'Партнеры' ? theme.primary : theme.textColor}
                 onPress={() => {
@@ -190,7 +190,7 @@ const CustomDrawerContent = ({
                     routes: [{name: 'Партнеры'}],
                   });
                 }}
-              />
+              /> */}
               <CustomDrawerItem
                 label={'Акции'}
                 color={route === 'Промокоды' ? theme.primary : theme.textColor}

@@ -49,7 +49,7 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const {setSelectedPos, referenceToken, setReferenceToken} = useStore.getState();
+  const {setSelectedPos, referenceToken, setGazpromToken} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -65,7 +65,6 @@ const Main = () => {
     () => getCampaignList('*'),
     {
       onSuccess: (data) => {
-        // data.forEach(item => console.log("🍏🍏🍏: ", item));
       },
     }
   );
@@ -127,9 +126,9 @@ const Main = () => {
   const isNearestCarWashSet = useRef(false);
 
   const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
-    const data = await getGazpromAuthTokenFromReference({reference: referenceToken})
-    const token = data.token;
-
+    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});    
+    data?.token && setGazpromToken(data.token);
+    
     if (!campaignLoading && campaignData) {
       const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
       if (gazpromCampaign) {

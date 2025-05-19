@@ -14,9 +14,6 @@ import CampaignPlaceholder from './CampaignPlaceholder';
 
 import { GeneralBottomSheetRouteProp } from '../../../types/navigation/BottomSheetNavigation.ts';
 import { PartnerIntegration } from '@screens/Partner/PartnerIntegration.tsx';
-import { getPartners } from '@services/api/partners';
-import useSWR from 'swr';
-
 
 const Campaign = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();
@@ -24,12 +21,6 @@ const Campaign = () => {
   const { isBottomSheetOpen } = useStore.getState();
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
-
-  const {
-    isLoading,
-    data: partnersData,
-    mutate,
-  } = useSWR('getPartnerList', () => getPartners('*'));
 
   useEffect(() => {
     if (route && route.params && route.params.data) {
@@ -88,7 +79,7 @@ const Campaign = () => {
                   campaign.attributes.slug === "gazprom-bonus"
                     ?
                     <>
-                      {partnersData && <PartnerIntegration partner={partnersData[0]} />}
+                      {campaign && <PartnerIntegration partner={campaign} />}
                     </>
                     :
                     <>
