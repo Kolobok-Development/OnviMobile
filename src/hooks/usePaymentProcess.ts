@@ -1,26 +1,29 @@
 import {IUser} from '../types/models/User.ts';
 import {OrderDetailsType} from '../state/order/OrderSlice.ts';
 import {useCallback, useEffect, useState} from 'react';
-import {createPayment, getCredentials} from '@services/api/payment';
-import {confirmPayment, dismiss, tokenize} from '../native';
+import {getCredentials} from '@services/api/payment';
+import {confirmPayment, tokenize} from '../native';
 import {
   calculateActualPointsUsed,
   calculateFinalAmount,
   createPaymentConfig,
 } from '@utils/paymentHelpers.ts';
-import {create, pingPos} from '@services/api/order';
+import {create, pingPos, register} from '@services/api/order';
 import {PaymentMethodTypesEnum} from '../types/PaymentType.ts';
 import {ICreateOrderRequest} from '../types/api/order/req/ICreateOrderRequest.ts';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-import {getPaymentErrorMessage} from '@utils/errorHandlers.ts';
+
 import {ICreateOrderResponse} from '../types/api/order/res/ICreateOrderResponse.ts';
 import {DiscountValueType} from '@hooks/usePromoCode.ts';
 import {PaymentMethodType} from '@styled/buttons/PaymentMethodButton';
+import {getOrderByOrderId} from '@services/api/order';
 
 enum OrderProcessingStatus {
   START = 'start',
   PROCESSING = 'processing',
   END = 'end',
+  WAITING_PAYMENT = 'waiting_payment',
+  POLLING = 'polling',
 }
 
 export const usePaymentProcess = (
@@ -78,10 +81,14 @@ export const usePaymentProcess = (
       const storeId: string = paymentConfig.storeId.toString();
 
       // Calculate payment amounts
-      const realSum = calculateFinalAmount(order.sum, discount, usedPoints);
+      const realSum = calculateFinalAmount(
+        order.sum,
+        discount?.discount ?? 0,
+        usedPoints,
+      );
       const pointsSum = calculateActualPointsUsed(
         order.sum,
-        discount,
+        discount ? discount.discount : 0,
         usedPoints,
       );
 
@@ -127,81 +134,8 @@ export const usePaymentProcess = (
         paymentMethodTypes,
       );
 
-      // Start tokenization
-      console.log('🐛STARTING TOKENIZTION');
-      console.log(JSON.stringify(paymentConfigParams));
-      const {token, paymentMethodType} = await tokenize(paymentConfigParams);
-      console.log('🐛TOKENIZATION SUCCESS');
-      console.log(JSON.stringify(token));
-      console.log(JSON.stringify(paymentMethodTypes));
-
-      if (!token) {
-        setError('🔐 Ошибка оплаты. Попробуйте ещё раз');
-        setLoading(false);
-        setOrderStatus(null);
-        return;
-      }
-
-      // Create payment
-      console.log('🐛CREATING PAYMENT ON BACKEND');
-      const payment = await createPayment({
-        paymentToken: token,
-        amount: realSum.toString(),
-        description: paymentConfigParams.subtitle,
-      });
-
-      console.log('🐛BACKEND RESPONSE');
-      console.log(JSON.stringify(payment, null, 2));
-
-      // Check for payment errors
-      const errorMessage = getPaymentErrorMessage(payment);
-
-      if (errorMessage) {
-        setError(errorMessage);
-        setLoading(false);
-        setOrderStatus(null);
-        await dismiss();
-        return;
-      }
-
-      // Confirm payment
-      const confirmationUrl = payment.confirmation?.confirmation_url;
-      const paymentId = payment.id;
-
-      if (!confirmationUrl || !paymentId) {
-        setError(
-          '❌ Не удалось подтвердить платёж. Проверьте данные и попробуйте снова',
-        );
-        setLoading(false);
-        setOrderStatus(null);
-        return;
-      }
-
-      console.log('🐛STARTING CONFIRMATION');
-      console.log(
-        JSON.stringify(
-          {
-            confirmationUrl,
-            paymentMethodType: paymentMethodType.toUpperCase(),
-            shopId: storeId,
-            clientApplicationKey: apiKey,
-          },
-          null,
-          2,
-        ),
-      );
-      await confirmPayment({
-        confirmationUrl,
-        paymentMethodType,
-        shopId: storeId,
-        clientApplicationKey: apiKey,
-      });
-
-      setOrderStatus(OrderProcessingStatus.START);
-
       // Create order request
       const createOrderRequest: ICreateOrderRequest = {
-        transactionId: paymentId,
         sum: realSum,
         rewardPointsUsed: pointsSum,
         carWashId: Number(order.posId),
@@ -220,19 +154,91 @@ export const usePaymentProcess = (
         createOrderRequest,
       );
 
-      if (orderResult.sendStatus === 'Success') {
-        if (loadUser) {
-          await loadUser();
-        }
-        setOrderStatus(OrderProcessingStatus.END);
+      // обработать ошибку создания заказа
+      if (orderResult.sendStatus !== 'CREATED') {
+        setError('🙅‍К сожалению, не удалось создать заказ');
+        setLoading(false);
+        setOrderStatus(null);
+        return;
       }
 
-      // Navigate to post-payment screen after delay
-      setTimeout(() => {
-        setOrderStatus(null);
+      // Start tokenization
+      console.log('🐛STARTING TOKENIZTION');
+      console.log(JSON.stringify(paymentConfigParams));
+      const {token, paymentMethodType} = await tokenize(paymentConfigParams);
+      console.log('🐛TOKENIZATION SUCCESS');
+      console.log(JSON.stringify(token));
+      console.log(JSON.stringify(paymentMethodTypes));
+
+      if (!token) {
+        setError('🔐 Ошибка оплаты. Попробуйте ещё раз');
         setLoading(false);
-        navigateBottomSheet('PostPayment', {});
-      }, 5000);
+        setOrderStatus(null);
+        return;
+      }
+
+      const {status, confirmation_url} = await register({
+        orderId: orderResult.orderId,
+        paymentToken: token,
+        amount: realSum.toString(),
+        description: paymentConfigParams.subtitle,
+        receiptReturnPhoneNumber: user.phone ?? '',
+        transactionId: '', // откуда взять?
+      });
+
+      if (status !== 'WAITING_PAYMENT') {
+        setError('🙅‍К сожалению, оплата не прошла');
+        setLoading(false);
+        setOrderStatus(null);
+        return;
+      }
+
+      setOrderStatus(OrderProcessingStatus.WAITING_PAYMENT);
+
+      await confirmPayment({
+        confirmationUrl: confirmation_url,
+        paymentMethodType,
+        shopId: storeId,
+        clientApplicationKey: apiKey,
+      });
+      setOrderStatus(OrderProcessingStatus.POLLING);
+
+      // poll order status until COMPLETED
+      const pollInterval = 10000;
+      let attempts = 0;
+      const maxAttempts = 30; // e.g. 30 attempts = ~5 minute
+
+      const pollOrderStatus = async () => {
+        try {
+          const response = await getOrderByOrderId(orderResult.orderId);
+
+          if (response.status === 'COMPLETED') {
+            setOrderStatus(OrderProcessingStatus.END);
+            setLoading(false);
+            navigateBottomSheet('PostPayment', {});
+          } else {
+            attempts++;
+            if (attempts >= maxAttempts) {
+              setError('⏳ Время ожидания оплаты истекло. Попробуйте снова.');
+              setLoading(false);
+              setOrderStatus(null);
+            } else {
+              setTimeout(pollOrderStatus, pollInterval);
+            }
+          }
+        } catch (err: any) {
+          console.error('Polling error:', err);
+          if (err?.code === 'OrderNotFoundException') {
+            setError('❌ Заказ не найден');
+          } else {
+            setError('⚠️ Ошибка при проверке статуса заказа');
+          }
+          setLoading(false);
+          setOrderStatus(null);
+        }
+      };
+
+      pollOrderStatus();
     } catch (error: any) {
       console.error('Payment process error:', error);
       setOrderStatus(null);
