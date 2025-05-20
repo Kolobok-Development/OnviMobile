@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 import {dp} from '../../../utils/dp';
@@ -166,7 +166,7 @@ const Payment = () => {
           fetching={isMutating} // replace with actual loading state
         />
       ) : (
-        <BottomSheetScrollView
+        <ScrollView
           nestedScrollEnabled={true}
           scrollEnabled={true}
           contentContainerStyle={styles.scrollContent}>
@@ -260,7 +260,7 @@ const Payment = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </BottomSheetScrollView>
+        </ScrollView>
       )}
     </View>
   );
