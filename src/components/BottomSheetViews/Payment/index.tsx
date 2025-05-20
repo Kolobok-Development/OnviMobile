@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {BottomSheetView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
 import {dp} from '../../../utils/dp';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -26,11 +26,11 @@ import {
   calculateFinalAmount,
 } from '@utils/paymentHelpers.ts';
 
-const Payment = () => {
-  const {user, loadUser, isBottomSheetOpen, orderDetails, selectedPos} =
-    useStore.getState();
+import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
 
-  const isOpened = isBottomSheetOpen;
+const Payment = () => {
+  const {user, loadUser, orderDetails, selectedPos} = useStore.getState();
+
   const order = orderDetails;
 
   /**
@@ -130,10 +130,10 @@ const Payment = () => {
   }, [order.sum, discount, usedPoints, toggled, user]);
 
   return (
-    <View style={styles.mainContainer}>
+    <BottomSheetView style={styles.mainContainer}>
       <CustomModal
         isVisible={paymentErrorModalState}
-        text={error}
+        text={error ?? ''}
         onClick={() => {
           clearError();
           resetPromoCode();
@@ -149,6 +149,8 @@ const Payment = () => {
           start: 'Подготавливаем оборудование...',
           processing: 'Зачисляем деньги...',
           end: 'Удачной мойки',
+          waiting_payment: 'Ожидаем оплату',
+          polling: 'Ещё чуть-чуть',
         }}
         modalStyle={{}}
         textStyle={{}}
@@ -166,9 +168,8 @@ const Payment = () => {
           fetching={isMutating} // replace with actual loading state
         />
       ) : (
-        <ScrollView
+        <GHScrollView
           nestedScrollEnabled={true}
-          scrollEnabled={true}
           contentContainerStyle={styles.scrollContent}>
           <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
           <Text style={styles.title}>Оплата</Text>
@@ -260,9 +261,9 @@ const Payment = () => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </GHScrollView>
       )}
-    </View>
+    </BottomSheetView>
   );
 };
 
@@ -270,6 +271,8 @@ const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
     backgroundColor: '#fff',
+    borderRadius: 25,
+    overflow: 'hidden',
   },
   scrollContent: {
     flexGrow: 1,

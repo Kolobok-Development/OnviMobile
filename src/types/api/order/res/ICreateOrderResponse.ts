@@ -1,9 +1,9 @@
 export enum SendStatus {
-  SUCCESS = 'Success',
+  CREATED = 'CREATED',
   FAIL = 'Fail',
 }
 
 export interface ICreateOrderResponse {
   sendStatus: SendStatus;
-  errorMessage: string | null;
+  orderId: number;
 }

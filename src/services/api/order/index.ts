@@ -6,11 +6,16 @@ import {IValidatePromoCodeResponse} from '../../../types/api/order/res/IValidate
 import {IPingPosRequestParams} from '../../../types/api/order/req/IPingPosRequestParams.ts';
 import {IPingPosResponse} from '../../../types/api/order/res/IPingPosResponse.ts';
 import {userApiInstance} from '@services/api/axiosConfig.ts';
+import {IRegisterOrderRequest} from 'src/types/api/order/req/IRegisterOrderRequest.ts';
+import {IRegisterOrderResponse} from 'src/types/api/order/res/IRegisterOrderResponse.ts';
+import {IGetOrderResponse} from 'src/types/api/order/res/IGetOrderByResponse.ts';
 
 enum ORDER {
   CREATE_ORDER_URL = '/order/create',
   VALIDATE_PROMOCODE_URL = '/order/promo/validate',
   PING_POS_URL = '/order/ping',
+  REGISTER_ORDER = '/order/register',
+  GET_ORDER_BY_ORDER_ID = '/order',
 }
 
 export async function create(
@@ -36,5 +41,24 @@ export async function pingPos(
   const response = await userApiInstance.get<
     IUserApiResponse<IPingPosResponse>
   >(ORDER.PING_POS_URL, {params});
+  return response.data.data;
+}
+
+export async function register(
+  body: IRegisterOrderRequest,
+): Promise<IRegisterOrderResponse> {
+  const response = await userApiInstance.post<
+    IUserApiResponse<IRegisterOrderResponse>
+  >(ORDER.REGISTER_ORDER, body);
+  return response.data.data;
+}
+
+export async function getOrderByOrderId(
+  id: number,
+): Promise<IGetOrderResponse> {
+  const response = await userApiInstance.get(
+    ORDER.GET_ORDER_BY_ORDER_ID + `/${id}`,
+  );
+
   return response.data.data;
 }

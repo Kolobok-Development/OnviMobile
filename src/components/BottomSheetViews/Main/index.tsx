@@ -39,7 +39,6 @@ import {StoryView} from '@components/StoryView';
 
 const Main = () => {
   const {
-    isBottomSheetOpen,
     setNearByPos,
     setBusiness,
     location,
@@ -55,8 +54,6 @@ const Main = () => {
 
   const {theme} = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
-
-  const isOpened = isBottomSheetOpen;
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -173,7 +170,7 @@ const Main = () => {
     <BottomSheetScrollView
       contentContainerStyle={{flexGrow: 1}}
       nestedScrollEnabled={true}
-      scrollEnabled={isOpened}>
+      scrollEnabled={true}>
       <View style={{flexGrow: 1}}>
         <Modal
           visible={nearByModal}

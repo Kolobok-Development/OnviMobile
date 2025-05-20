@@ -1,5 +1,4 @@
 export interface ICreateOrderRequest {
-  transactionId?: string;
   sum: number;
   rewardPointsUsed: number;
   promoCodeId?: number;

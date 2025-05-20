@@ -61,7 +61,7 @@ const Home = React.memo(({navigation}: any) => {
   const memoizedBottomSheetStack = useMemo(
     () => (
       <BottomSheetStack
-        active={visible}
+        active={true}
         drawerNavigation={navigation}
         cameraRef={cameraRef}
         setCamera={setCamera}

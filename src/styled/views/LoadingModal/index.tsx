@@ -15,17 +15,21 @@ interface ILoadingModal {
   color: string;
   modalStyle: StyleProp<ViewStyle>;
   textStyle: object;
-  status: 'start' | 'processing' | 'end';
+  status: 'start' | 'processing' | 'end' | 'waiting_payment' | 'polling';
   stageText: {
     start: string;
     processing: string;
     end: string;
+    waiting_payment: string;
+    polling: string;
   };
 }
 
 enum loadingState {
   start = 'https://storage.yandexcloud.net/onvi-mobile/Saly-39loading_in_process.png',
   processing = 'https://storage.yandexcloud.net/onvi-mobile/Saly-39loading_in_process.png',
+  waiting_payment = 'https://storage.yandexcloud.net/onvi-mobile/Saly-39loading_in_process.png',
+  polling = 'https://storage.yandexcloud.net/onvi-mobile/Saly-39loading_in_process.png',
   end = 'https://storage.yandexcloud.net/onvi-mobile/success_loading.png',
 }
 
@@ -50,6 +54,20 @@ const LoadingModal = (props: ILoadingModal) => {
           text: props.stageText.processing,
           imageUri: loadingState.processing,
           state: 'processing',
+        });
+        break;
+      case 'waiting_payment':
+        setLoaderState({
+          text: props.stageText.waiting_payment,
+          imageUri: loadingState.waiting_payment,
+          state: 'end',
+        });
+        break;
+      case 'polling':
+        setLoaderState({
+          text: props.stageText.polling,
+          imageUri: loadingState.polling,
+          state: 'end',
         });
         break;
       case 'end':
