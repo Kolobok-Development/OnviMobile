@@ -126,7 +126,7 @@ const Main = () => {
   const isNearestCarWashSet = useRef(false);
 
   const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
-    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});    
+    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});        
     data?.token && setGazpromToken(data.token);
     
     if (!campaignLoading && campaignData) {
@@ -147,12 +147,14 @@ const Main = () => {
       findNearestCarWash();
       isNearestCarWashSet.current = true;
     }
-
-    if (referenceToken) {
-      getTokenAndRedirectToGPBWidget(referenceToken);
-    }
     
   }, [location, posList, campaignLoading, campaignData]);
+
+  useEffect(() => {
+    if (referenceToken && campaignData) {
+      getTokenAndRedirectToGPBWidget(referenceToken);
+    }
+  }, [campaignLoading, referenceToken]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
