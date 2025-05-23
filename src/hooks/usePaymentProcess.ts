@@ -156,7 +156,7 @@ export const usePaymentProcess = (
       );
 
       // обработать ошибку создания заказа
-      if (orderResult.sendStatus !== 'CREATED') {
+      if (orderResult.status !== 'created') {
         setError('🙅‍К сожалению, не удалось создать заказ');
         setLoading(false);
         setOrderStatus(null);
