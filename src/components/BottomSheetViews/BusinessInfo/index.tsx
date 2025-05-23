@@ -17,17 +17,21 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
+import { getFreeVacuum } from '@services/api/user/index.ts';
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails, bottomSheetRef, bottomSheetSnapPoints} =
+  const {business, orderDetails, bottomSheetRef, bottomSheetSnapPoints, setFreeVacuum} =
     useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
-  const modalCallback = (bayType: string) => {
+  const modalCallback = async (bayType: string) => {
     if (true) {
+      // здесь можно добавить подгрузку бесплатных пылесосов
+      const data = await getFreeVacuum();
+      setFreeVacuum(data);
       navigateBottomSheet('Boxes', {bayType: bayType});
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],

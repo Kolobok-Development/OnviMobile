@@ -24,11 +24,13 @@ export interface UserSlice {
   expiredDate: string | null;
   fcmToken: string | null;
   loading: boolean;
+  freeVacuum: { limit: number, remains: number };
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setFcmToken: (fcmToken: string | null) => void;
   setLoading: (loading: boolean) => void;
+  setFreeVacuum: (freeVacuum: { limit: number, remains: number }) => void;
   mutateRefreshToken: () => Promise<string | null>;
   login: (phone: string, otp: string) => Promise<ILoginResponse | null>;
   register: (
@@ -56,10 +58,12 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   expiredDate: null,
   loading: true,
   refreshRetryCounter: MAX_REFRESH_RETRIES,
+  freeVacuum: { limit: 0, remains: 0 },
   setUser: user => set({user}),
   setAccessToken: accessToken => set({accessToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
   setLoading: loading => set({loading}),
+  setFreeVacuum: freeVacuum => set({freeVacuum}),
   setFcmToken: fcmToken => set({fcmToken}),
   mutateRefreshToken: async () => {
     try {

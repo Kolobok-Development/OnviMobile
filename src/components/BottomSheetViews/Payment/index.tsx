@@ -66,6 +66,7 @@ const Payment = () => {
     error,
     orderStatus,
     processPayment,
+    processFreePayment,
     clearError,
     setPaymentMethod,
     paymentMethod,
@@ -264,7 +265,7 @@ const Payment = () => {
                   ?
                   <Button
                     label="Активировать"
-                    onClick={processPayment}
+                    onClick={processFreePayment}
                     color="blue"
                     height={43}
                     fontSize={18}

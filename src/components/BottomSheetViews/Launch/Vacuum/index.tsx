@@ -32,20 +32,18 @@ export default function VacuumLaunch() {
   const [value, setValue] = useState(50);
   const measureTypeData = ['рубли'];
 
-  const freeVacOn = false;
-  const maxNumOfFreeOn = 3;
-  const numOfFreeOn = 3;
-
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
 
-  const { isBottomSheetOpen, setOrderDetails, orderDetails } =
+  const { isBottomSheetOpen, setOrderDetails, orderDetails, freeVacuum } =
     useStore.getState();
 
   const order = orderDetails;
 
   const isOpened = isBottomSheetOpen;
 
+  const freeVacOn = freeVacuum.remains > 0;
+ 
   return (
     <>
       {
@@ -91,7 +89,7 @@ export default function VacuumLaunch() {
                   shadowOpacity: 0.25,
                 }}
               />
-              <Text style={{ ...styles.sum }}>{numOfFreeOn}/{maxNumOfFreeOn}</Text>
+              <Text style={{ ...styles.sum }}>{freeVacuum.remains}/{freeVacuum.limit}</Text>
             </View>
             <View
               style={{
@@ -127,7 +125,7 @@ export default function VacuumLaunch() {
                 textAlign: 'center',
                 marginBottom: dp(20)
               }}>
-                Остаток бесплатных включений: {numOfFreeOn} шт.
+                Остаток бесплатных включений: {freeVacuum.remains} шт.
               </Text>
               <Button
                 label="Включить бесплатно"

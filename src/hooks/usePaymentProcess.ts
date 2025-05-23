@@ -263,6 +263,11 @@ export const usePaymentProcess = (
     setError(null);
   }, []);
 
+  const processFreePayment = () => {
+    console.log("Зашли в processFreePayment");
+    // здесь деллаем запрос на бек с бесплатной активацией пылесоса и возвращаем результат
+  };
+
   return {
     loading,
     error,
@@ -270,6 +275,7 @@ export const usePaymentProcess = (
     paymentMethod,
     orderStatus,
     processPayment,
+    processFreePayment,
     clearError,
   };
 };
