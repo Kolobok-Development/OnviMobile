@@ -1,5 +1,4 @@
 import {View, Text, StyleSheet} from 'react-native';
-
 import {dp} from '../../utils/dp';
 
 interface FilterListProps {
@@ -20,6 +19,7 @@ const FilterList = ({
   return (
     <View style={styles.container}>
       {data.map((filter: string, index: number) => {
+        const isLastItem = index === data.length - 1;
         return (
           <View
             style={{
@@ -27,6 +27,7 @@ const FilterList = ({
               width: width,
               height: height,
               backgroundColor: backgroundColor,
+              marginRight: isLastItem ? 0 : dp(7.7), 
             }}
             key={index}>
             <Text style={{...styles.filterText, fontSize: fontSize}}>
@@ -50,7 +51,6 @@ const styles = StyleSheet.create({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: dp(7.7),
     paddingLeft: dp(5),
     paddingRight: dp(5),
   },

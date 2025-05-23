@@ -1,21 +1,21 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {BottomSheetView} from '@gorhom/bottom-sheet';
-import {BusinessHeader} from '@components/Business/Header';
-import {dp} from '../../../utils/dp';
-import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-import {Button} from '@styled/buttons';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BottomSheetView } from '@gorhom/bottom-sheet';
+import { BusinessHeader } from '@components/Business/Header';
+import { dp } from '../../../utils/dp';
+import { navigateBottomSheet } from '@navigators/BottomSheetStack';
+import { Button } from '@styled/buttons';
 import useStore from '../../../state/store';
-import {LoadingModal} from '@styled/views/LoadingModal';
-import {CustomModal} from '@styled/views/CustomModal';
-import {PromocodeModal} from '@styled/views/PromocodeModal';
+import { LoadingModal } from '@styled/views/LoadingModal';
+import { CustomModal } from '@styled/views/CustomModal';
+import { PromocodeModal } from '@styled/views/PromocodeModal';
 import PaymentMethods from '@components/PaymentMethods';
 import PaymentSummary from '@components/BottomSheetViews/Payment/PaymentSummary';
 import PointsToggle from '@components/BottomSheetViews/Payment/PointsToggle';
-import {useBonusPoints} from '@hooks/useBonusPoints.ts';
-import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
+import { useBonusPoints } from '@hooks/useBonusPoints.ts';
+import { usePaymentProcess } from '@hooks/usePaymentProcess.ts';
 import PromocodeSection from '@components/BottomSheetViews/Payment/PromocodeSection';
-import {usePromoCode} from '@hooks/usePromoCode.ts';
+import { usePromoCode } from '@hooks/usePromoCode.ts';
 import {
   DiscountType,
   IPersonalPromotion,
@@ -26,10 +26,11 @@ import {
   calculateFinalAmount,
 } from '@utils/paymentHelpers.ts';
 
-import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
+import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 
 const Payment = () => {
-  const {user, loadUser, orderDetails, selectedPos} = useStore.getState();
+  const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
+  const freeOn = orderDetails.free
 
   const order = orderDetails;
 
@@ -54,7 +55,7 @@ const Payment = () => {
     resetPromoCode,
   } = usePromoCode(order.posId || 0);
 
-  const {usedPoints, toggled, applyPoints, togglePoints} = useBonusPoints(
+  const { usedPoints, toggled, applyPoints, togglePoints } = useBonusPoints(
     user,
     order,
     discount,
@@ -172,7 +173,13 @@ const Payment = () => {
           nestedScrollEnabled={true}
           contentContainerStyle={styles.scrollContent}>
           <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
-          <Text style={styles.title}>Оплата</Text>
+          <Text style={styles.title}>
+            {
+              freeOn 
+              ? "Активация пылесоса" 
+              : "Оплата"
+            }
+          </Text>
 
           <View style={styles.paymentCard}>
             <Text style={styles.section}>Ваш выбор</Text>
@@ -184,35 +191,40 @@ const Payment = () => {
             />
 
             <View style={styles.choice}>
-              {selectedPos?.IsLoyaltyMember && (
-                <PointsToggle
-                  user={user}
-                  order={order}
-                  discount={discount}
-                  usedPoints={usedPoints}
-                  toggled={toggled}
-                  onToggle={togglePoints}
-                  applyPoints={applyPoints}
-                />
-              )}
+              {
+                !freeOn &&
+                <>
+                  {selectedPos?.IsLoyaltyMember && (
+                    <PointsToggle
+                      user={user}
+                      order={order}
+                      discount={discount}
+                      usedPoints={usedPoints}
+                      toggled={toggled}
+                      onToggle={togglePoints}
+                      applyPoints={applyPoints}
+                    />
+                  )}
 
-              <PromocodeSection
-                promocode={inputCodeValue}
-                onPress={() => setShowPromocodeModal(true)}
-                quickPromoSelect={handlePromoPress}
-                quickPromoDeselect={() => setPromocode(undefined)}
-              />
+                  <PromocodeSection
+                    promocode={inputCodeValue}
+                    onPress={() => setShowPromocodeModal(true)}
+                    quickPromoSelect={handlePromoPress}
+                    quickPromoDeselect={() => setPromocode(undefined)}
+                  />
+                </>
+              }
+
 
               <View style={styles.badgesContainer}>
                 {discount ? (
                   <View style={styles.badgeWrapper}>
                     <Button
-                      label={`У ВАС ЕСТЬ ПРОМОКОД НА ${
-                        discount.type === DiscountType.CASH
-                          ? discount.discount + '₽'
-                          : discount.discount + '%'
-                      }`}
-                      onClick={() => {}}
+                      label={`У ВАС ЕСТЬ ПРОМОКОД НА ${discount.type === DiscountType.CASH
+                        ? discount.discount + '₽'
+                        : discount.discount + '%'
+                        }`}
+                      onClick={() => { }}
                       color="blue"
                       width={184}
                       height={31}
@@ -226,7 +238,7 @@ const Payment = () => {
                   <View style={styles.badgeWrapper}>
                     <Button
                       label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
-                      onClick={() => {}}
+                      onClick={() => { }}
                       color="blue"
                       width={184}
                       height={31}
@@ -238,21 +250,38 @@ const Payment = () => {
               </View>
             </View>
 
-            <PaymentMethods
-              selectedMethod={paymentMethod}
-              onSelectMethod={setPaymentMethod}
-            />
+            {
+              !freeOn &&
+              <PaymentMethods
+                selectedMethod={paymentMethod}
+                onSelectMethod={setPaymentMethod}
+              />
+            }
 
             <View style={styles.paymentActions}>
-              <Button
-                label={`Оплатить ${finalOrderCost} ₽`}
-                onClick={processPayment}
-                color="blue"
-                height={43}
-                fontSize={18}
-                fontWeight={'600'}
-                showLoading={loading}
-              />
+              {
+                freeOn
+                  ?
+                  <Button
+                    label="Активировать"
+                    onClick={processPayment}
+                    color="blue"
+                    height={43}
+                    fontSize={18}
+                    fontWeight={'600'}
+                    showLoading={loading}
+                  />
+                  :
+                  <Button
+                    label={`Оплатить ${finalOrderCost} ₽`}
+                    onClick={processPayment}
+                    color="blue"
+                    height={43}
+                    fontSize={18}
+                    fontWeight={'600'}
+                    showLoading={loading}
+                  />
+              }
 
               <TouchableOpacity
                 style={styles.cancelButton}
@@ -325,4 +354,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Payment};
+export { Payment };
