@@ -140,6 +140,7 @@ export const usePaymentProcess = (
         rewardPointsUsed: pointsSum,
         carWashId: Number(order.posId),
         bayNumber: Number(order.bayNumber),
+        bayType: order.bayType,
       };
 
       // Add promo code if available

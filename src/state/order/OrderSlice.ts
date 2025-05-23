@@ -24,6 +24,7 @@ export type OrderDetailsType = {
   carwashIndex?: number;
   status?: OrderStatus; // New field for order status
   free?: boolean;
+  bayType?: string | null;
 };
 
 export interface OrderSlice {
@@ -58,6 +59,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
     orderDate: null,
     status: OrderStatus.Created,
     free: false,
+    bayType: "",
   },
   setOrderDetails: (orderDetails: OrderDetailsType) =>
     set(state => ({
@@ -83,6 +85,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
         orderDate: null,
         status: OrderStatus.Created,
         free: false,
+        bayType: "",
       },
     })),
 });

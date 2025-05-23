@@ -22,7 +22,7 @@ import { getFreeVacuum } from '@services/api/user/index.ts';
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails, bottomSheetRef, bottomSheetSnapPoints, setFreeVacuum} =
+  const {business, orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints, setFreeVacuum} =
     useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
@@ -30,8 +30,11 @@ const BusinessInfo = () => {
   const modalCallback = async (bayType: string) => {
     if (true) {
       // здесь можно добавить подгрузку бесплатных пылесосов
-      const data = await getFreeVacuum();
-      setFreeVacuum(data);
+      if (bayType === "VACUUM") {
+        setOrderDetails({...orderDetails, bayType: bayType});
+        const data = await getFreeVacuum();
+        setFreeVacuum(data);        
+      }
       navigateBottomSheet('Boxes', {bayType: bayType});
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],

@@ -4,4 +4,5 @@ export interface ICreateOrderRequest {
   promoCodeId?: number;
   carWashId: number;
   bayNumber: number;
+  bayType?: string | null;
 }
