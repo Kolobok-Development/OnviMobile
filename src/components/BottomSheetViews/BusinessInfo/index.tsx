@@ -30,7 +30,7 @@ const BusinessInfo = () => {
   const modalCallback = async (bayType: string) => {
     if (true) {
       // здесь можно добавить подгрузку бесплатных пылесосов
-      if (bayType === "VACUUM") {
+      if (bayType === "VACUUME") {
         setOrderDetails({...orderDetails, bayType: bayType});
         const data = await getFreeVacuum();
         setFreeVacuum(data);        
@@ -152,7 +152,7 @@ const BusinessInfo = () => {
             height={47}
             fontSize={16}
             fontWeight={'600'}
-            onClick={() => modalCallback('VACUUM')}
+            onClick={() => modalCallback('VACUUME')}
           />
         ) : (
           <></>
