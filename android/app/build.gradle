@@ -113,8 +113,8 @@ android {
     }
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
-            // signingConfig signingConfigs.stage
+            // signingConfig signingConfigs.debug
+            signingConfig signingConfigs.stage
             matchingFallbacks = ['debug', 'release']
         }
         release {

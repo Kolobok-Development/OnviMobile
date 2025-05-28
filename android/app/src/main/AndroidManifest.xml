@@ -54,6 +54,6 @@
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ark3Xn0ur4EM89pB25kblcldzxmQUqEJ"/>
         <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_cqg23l4rq1rH02cDW5odvjlnxxoQLsA3" />
         <!-- Set to `true` to use `BranchKey.test` -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="true" />
+        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
     </application>
 </manifest>
