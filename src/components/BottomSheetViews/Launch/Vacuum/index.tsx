@@ -43,7 +43,7 @@ export default function VacuumLaunch() {
   const isOpened = isBottomSheetOpen;
 
   const freeVacOn = freeVacuum.remains > 0;
- 
+
   return (
     <>
       {

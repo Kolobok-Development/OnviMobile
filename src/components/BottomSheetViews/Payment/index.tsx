@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BusinessHeader } from '@components/Business/Header';
 import { dp } from '../../../utils/dp';
@@ -27,6 +27,7 @@ import {
 } from '@utils/paymentHelpers.ts';
 
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
+import PaymentLoading from './PaymentLoading/index.tsx';
 
 const Payment = () => {
   const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
@@ -65,6 +66,7 @@ const Payment = () => {
     loading,
     error,
     orderStatus,
+    setOrderStatus,
     processPayment,
     processFreePayment,
     clearError,
@@ -133,7 +135,7 @@ const Payment = () => {
 
   return (
     <BottomSheetView style={styles.mainContainer}>
-      <CustomModal
+      {/* <CustomModal
         isVisible={paymentErrorModalState}
         text={error ?? ''}
         onClick={() => {
@@ -141,9 +143,9 @@ const Payment = () => {
           resetPromoCode();
           setPaymentErrorModalState(false);
         }}
-      />
+      /> */}
 
-      <LoadingModal
+      {/* <LoadingModal
         isVisible={!!orderStatus}
         color={'#FFFFFF'}
         status={orderStatus || 'start'}
@@ -156,7 +158,24 @@ const Payment = () => {
         }}
         modalStyle={{}}
         textStyle={{}}
-      />
+      /> */}
+
+      <Modal
+        transparent={true}
+        animationType="slide"
+        visible={!!orderStatus}
+        onRequestClose={() => { }}>
+        <PaymentLoading
+          orderStatus={orderStatus}
+          error={error}
+          loading={loading}
+          onClick={() => {
+            clearError();
+            resetPromoCode();
+            setOrderStatus(null);
+          }} />
+      </Modal>
+
 
       {showPromocodeModal ? (
         <PromocodeModal
@@ -176,9 +195,9 @@ const Payment = () => {
           <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
           <Text style={styles.title}>
             {
-              freeOn 
-              ? "Активация пылесоса" 
-              : "Оплата"
+              freeOn
+                ? "Активация пылесоса"
+                : "Оплата"
             }
           </Text>
 
@@ -252,8 +271,8 @@ const Payment = () => {
             </View>
 
             {
-              !freeOn &&
-              <PaymentMethods
+              !freeOn &&  
+              <PaymentMethods 
                 selectedMethod={paymentMethod}
                 onSelectMethod={setPaymentMethod}
               />
@@ -262,7 +281,7 @@ const Payment = () => {
             <View style={styles.paymentActions}>
               {
                 freeOn
-                  ?
+                  ?     
                   <Button
                     label="Активировать"
                     onClick={processFreePayment}

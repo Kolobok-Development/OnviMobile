@@ -21,44 +21,65 @@ enum ORDER {
 export async function create(
   body: ICreateOrderRequest,
 ): Promise<ICreateOrderResponse> {
-  const response = await userApiInstance.post<
-    IUserApiResponse<ICreateOrderResponse>
-  >(ORDER.CREATE_ORDER_URL, body);
-
-  return response.data.data;
+  try {
+    const response = await userApiInstance.post<IUserApiResponse<ICreateOrderResponse>>(
+      ORDER.CREATE_ORDER_URL,
+      body
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 }
+
 export async function validatePromoCode(
   body: IValidatePromoCodeRequest,
 ): Promise<IValidatePromoCodeResponse> {
-  const response = await userApiInstance.post<
-    IUserApiResponse<IValidatePromoCodeResponse>
-  >(ORDER.VALIDATE_PROMOCODE_URL, body);
-  return response.data.data;
+  try {
+    const response = await userApiInstance.post<
+      IUserApiResponse<IValidatePromoCodeResponse>
+    >(ORDER.VALIDATE_PROMOCODE_URL, body);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 }
+
 export async function pingPos(
   params: IPingPosRequestParams,
 ): Promise<IPingPosResponse> {
-  const response = await userApiInstance.get<
-    IUserApiResponse<IPingPosResponse>
-  >(ORDER.PING_POS_URL, {params});
-  return response.data.data;
+  try {
+    const response = await userApiInstance.get<
+      IUserApiResponse<IPingPosResponse>
+    >(ORDER.PING_POS_URL, { params });
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function register(
   body: IRegisterOrderRequest,
 ): Promise<IRegisterOrderResponse> {
-  const response = await userApiInstance.post<
-    IUserApiResponse<IRegisterOrderResponse>
-  >(ORDER.REGISTER_ORDER, body);
-  return response.data.data;
+  try {
+    const response = await userApiInstance.post<
+      IUserApiResponse<IRegisterOrderResponse>
+    >(ORDER.REGISTER_ORDER, body);
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 }
 
 export async function getOrderByOrderId(
   id: number,
 ): Promise<IGetOrderResponse> {
-  const response = await userApiInstance.get(
-    ORDER.GET_ORDER_BY_ORDER_ID + `/${id}`,
-  );
-
-  return response.data.data;
+  try {
+    const response = await userApiInstance.get(
+      ORDER.GET_ORDER_BY_ORDER_ID + `/${id}`,
+    );
+    return response.data.data;
+  } catch (error) {
+    throw error;
+  }
 }

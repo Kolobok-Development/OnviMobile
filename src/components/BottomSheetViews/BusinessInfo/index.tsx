@@ -33,6 +33,7 @@ const BusinessInfo = () => {
       if (bayType === "VACUUME") {
         setOrderDetails({...orderDetails, bayType: bayType});
         const data = await getFreeVacuum();
+        console.log("getFreeVacuum: ", data);
         setFreeVacuum(data);        
       }
       navigateBottomSheet('Boxes', {bayType: bayType});

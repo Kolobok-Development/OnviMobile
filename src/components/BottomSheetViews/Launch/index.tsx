@@ -38,7 +38,7 @@ const Launch = () => {
     return <PortalLaunch isOpened={isOpened} onSelect={onSelect} />;
   }
 
-  if (type === 'VACUUM') {
+  if (type === 'VACUUME') {
     return <VacuumLaunch />;
   }
   return <DefaultLaunch />;
