@@ -80,7 +80,7 @@ const PaymentLoading: React.FC<IPaymentLoading> = ({ orderStatus, error, loading
                 }}
               />
             )}
-            <Text style={{ marginBottom: dp(20) }}>{!error && orderStatus ? orderStatusText[orderStatus] : error}</Text>
+            <Text style={{ marginBottom: dp(20), textAlign: 'center'}}>{!error && orderStatus ? orderStatusText[orderStatus] : error}</Text>
             {error &&
               <Button
                 onClick={onClick}

@@ -59,76 +59,77 @@ export const usePaymentProcess = (
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
-    }
-    switch (error.innerCode) {
-      case ORDER_ERROR_CODES.PROCESSING_ERROR:
-        console.error("Processing Error:", error.message);
-        setError('Ошибки обработки');
-        break;
-      case ORDER_ERROR_CODES.ORDER_NOT_FOUND:
-        console.error("Order Not Found:", error.message);
-        setError('Заказ не найден');
-        break;
-      case ORDER_ERROR_CODES.INVALID_ORDER_STATE:
-        console.error("Invalid Order State:", error.message);
-        setError('Недействительное состояние заказа');
-        break;
-      case ORDER_ERROR_CODES.PAYMENT_CANCELED:
-        console.error("Payment Canceled:", error.message);
-        setError('Платеж отменен');
-        break;
-      case ORDER_ERROR_CODES.PAYMENT_TIMEOUT:
-        console.error("Payment Timeout:", error.message);
-        setError('Тайм-аут платежа');
-        break;
-      case ORDER_ERROR_CODES.ORDER_CREATION_FAILED:
-        console.error("Order Creation Failed:", error.message);
-        setError('Не удалось создать заказ');
-        break;
-      case ORDER_ERROR_CODES.INSUFFICIENT_REWARD_POINTS:
-        console.error("Insufficient Reward Points:", error.message);
-        setError('Недостаточно бонусных баллов');
-        break;
-      case ORDER_ERROR_CODES.REWARD_POINTS_WITHDRAWAL_FAILED:
-        console.error("Reward Points Withdrawal Failed:", error.message);
-        setError('Не удалось списать бонусные баллы');
-        break;
-      case ORDER_ERROR_CODES.CARD_FOR_ORDER_NOT_FOUND:
-        console.error("Card for Order Not Found:", error.message);
-        setError('Карта для заказа не найдена');
-        break;
-      case ORDER_ERROR_CODES.INSUFFICIENT_FREE_VACUUM:
-        console.error("Insufficient Free Vacuum:", error.message);
-        setError('Недостаточно свободных пылесосов');
-        break;
-      case PAYMENT_ERROR_CODES.PROCESSING_ERROR:
-        console.error("Payment Processing Error:", error.message);
-        setError('Ошибка обработки платежа');
-        break;
-      case PAYMENT_ERROR_CODES.PAYMENT_REGISTRATION_FAILED:
-        console.error("Payment Registration Failed:", error.message);
-        setError('Не удалось зарегистрировать платеж');
-        break;
-      case PAYMENT_ERROR_CODES.INVALID_WEBHOOK_SIGNATURE:
-        console.error("Invalid Webhook Signature:", error.message);
-        setError('Недействительная подпись вебхука');
-        break;
-      case PAYMENT_ERROR_CODES.MISSING_ORDER_ID:
-        console.error("Missing Order ID:", error.message);
-        setError('Отсутствует идентификатор заказа');
-        break;
-      case PAYMENT_ERROR_CODES.MISSING_PAYMENT_ID:
-        console.error("Missing Payment ID:", error.message);
-        setError('Отсутствует идентификатор платежа');
-        break;
-      case PAYMENT_ERROR_CODES.REFUND_FAILED:
-        console.error("Refund Failed:", error.message);
-        setError('Не удалось вернуть средства');
-        break;
-      default:
-        console.error("Unknown Error:", error.message);
-        setError('Неизвестная ошибка');
-        break;
+    } else {
+      switch (error.innerCode) {
+        case ORDER_ERROR_CODES.PROCESSING_ERROR:
+          console.error("Processing Error:", error.message);
+          setError('Ошибки обработки');
+          break;
+        case ORDER_ERROR_CODES.ORDER_NOT_FOUND:
+          console.error("Order Not Found:", error.message);
+          setError('Заказ не найден');
+          break;
+        case ORDER_ERROR_CODES.INVALID_ORDER_STATE:
+          console.error("Invalid Order State:", error.message);
+          setError('Недействительное состояние заказа');
+          break;
+        case ORDER_ERROR_CODES.PAYMENT_CANCELED:
+          console.error("Payment Canceled:", error.message);
+          setError('Платеж отменен');
+          break;
+        case ORDER_ERROR_CODES.PAYMENT_TIMEOUT:
+          console.error("Payment Timeout:", error.message);
+          setError('Тайм-аут платежа');
+          break;
+        case ORDER_ERROR_CODES.ORDER_CREATION_FAILED:
+          console.error("Order Creation Failed:", error.message);
+          setError('Не удалось создать заказ');
+          break;
+        case ORDER_ERROR_CODES.INSUFFICIENT_REWARD_POINTS:
+          console.error("Insufficient Reward Points:", error.message);
+          setError('Недостаточно бонусных баллов');
+          break;
+        case ORDER_ERROR_CODES.REWARD_POINTS_WITHDRAWAL_FAILED:
+          console.error("Reward Points Withdrawal Failed:", error.message);
+          setError('Не удалось списать бонусные баллы');
+          break;
+        case ORDER_ERROR_CODES.CARD_FOR_ORDER_NOT_FOUND:
+          console.error("Card for Order Not Found:", error.message);
+          setError('Карта для заказа не найдена');
+          break;
+        case ORDER_ERROR_CODES.INSUFFICIENT_FREE_VACUUM:
+          console.error("Insufficient Free Vacuum:", error.message);
+          setError('Недостаточно свободных пылесосов');
+          break;
+        case PAYMENT_ERROR_CODES.PROCESSING_ERROR:
+          console.error("Payment Processing Error:", error.message);
+          setError('Ошибка обработки платежа');
+          break;
+        case PAYMENT_ERROR_CODES.PAYMENT_REGISTRATION_FAILED:
+          console.error("Payment Registration Failed:", error.message);
+          setError('Не удалось зарегистрировать платеж');
+          break;
+        case PAYMENT_ERROR_CODES.INVALID_WEBHOOK_SIGNATURE:
+          console.error("Invalid Webhook Signature:", error.message);
+          setError('Недействительная подпись вебхука');
+          break;
+        case PAYMENT_ERROR_CODES.MISSING_ORDER_ID:
+          console.error("Missing Order ID:", error.message);
+          setError('Отсутствует идентификатор заказа');
+          break;
+        case PAYMENT_ERROR_CODES.MISSING_PAYMENT_ID:
+          console.error("Missing Payment ID:", error.message);
+          setError('Отсутствует идентификатор платежа');
+          break;
+        case PAYMENT_ERROR_CODES.REFUND_FAILED:
+          console.error("Refund Failed:", error.message);
+          setError('Не удалось вернуть средства');
+          break;
+        default:
+          console.error("Unknown Error:", error.message);
+          setError('Неизвестная ошибка');
+          break;
+      }
     }
   }
 
