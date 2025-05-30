@@ -41,6 +41,7 @@ import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.t
 const Main = () => {
   const {
     isBottomSheetOpen,
+    setIsBottomSheetOpen,
     setNearByPos,
     setBusiness,
     location,
@@ -132,6 +133,7 @@ const Main = () => {
     if (!campaignLoading && campaignData) {
       const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
       if (gazpromCampaign) {
+        setIsBottomSheetOpen(true);
         handleCampaignItemPress(gazpromCampaign);
       }
     }

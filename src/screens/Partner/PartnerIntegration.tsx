@@ -121,7 +121,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
     console.log('URL TO GAZPROM');
     console.log(url);
     if (referenceToken) {
-      handleActivation();
+      // handleActivation();
       setReferenceToken(null);
     }
     
