@@ -17,7 +17,7 @@ import { ICreateOrderResponse } from '../types/api/order/res/ICreateOrderRespons
 import { DiscountValueType } from '@hooks/usePromoCode.ts';
 import { PaymentMethodType } from '@styled/buttons/PaymentMethodButton';
 import { getOrderByOrderId } from '@services/api/order';
-import { ORDER_ERROR_CODES, PAYMENT_ERROR_CODES } from '../types/api/constants/index.ts';
+import { ORDER_ERROR_CODES, PAYMENT_ERROR_CODES, OTHER_ERROR_CODES } from '../types/api/constants/index.ts';
 
 enum OrderProcessingStatus {
   START = 'start',
@@ -53,80 +53,104 @@ export const usePaymentProcess = (
    * Process payment and create order
    */
   const errorHandler = (error: any) => {
-    setLoading(false);
+    setLoading(false);    
     if (
       error.code === 'ERROR_PAYMENT_CANCELLED' ||
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
     } else {
-      switch (error.innerCode) {
+      switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
-          console.error("Processing Error:", error.message);
+          console.error("Processing Error:", error.response.data.message);
           setError('Ошибки обработки');
           break;
         case ORDER_ERROR_CODES.ORDER_NOT_FOUND:
-          console.error("Order Not Found:", error.message);
+          console.error("Order Not Found:", error.response.data.message);
           setError('Заказ не найден');
           break;
         case ORDER_ERROR_CODES.INVALID_ORDER_STATE:
-          console.error("Invalid Order State:", error.message);
+          console.error("Invalid Order State:", error.response.data.message);
           setError('Недействительное состояние заказа');
           break;
         case ORDER_ERROR_CODES.PAYMENT_CANCELED:
-          console.error("Payment Canceled:", error.message);
+          console.error("Payment Canceled:", error.response.data.message);
           setError('Платеж отменен');
           break;
         case ORDER_ERROR_CODES.PAYMENT_TIMEOUT:
-          console.error("Payment Timeout:", error.message);
-          setError('Тайм-аут платежа');
+          console.error("Payment Timeout:", error.response.data.message);
+          setError('');
           break;
         case ORDER_ERROR_CODES.ORDER_CREATION_FAILED:
-          console.error("Order Creation Failed:", error.message);
+          console.error("Order Creation Failed:", error.response.data.message);
           setError('Не удалось создать заказ');
           break;
         case ORDER_ERROR_CODES.INSUFFICIENT_REWARD_POINTS:
-          console.error("Insufficient Reward Points:", error.message);
+          console.error("Insufficient Reward Points:", error.response.data.message);
           setError('Недостаточно бонусных баллов');
           break;
         case ORDER_ERROR_CODES.REWARD_POINTS_WITHDRAWAL_FAILED:
-          console.error("Reward Points Withdrawal Failed:", error.message);
+          console.error("Reward Points Withdrawal Failed:", error.response.data.message);
           setError('Не удалось списать бонусные баллы');
           break;
         case ORDER_ERROR_CODES.CARD_FOR_ORDER_NOT_FOUND:
-          console.error("Card for Order Not Found:", error.message);
+          console.error("Card for Order Not Found:", error.response.data.message);
           setError('Карта для заказа не найдена');
           break;
         case ORDER_ERROR_CODES.INSUFFICIENT_FREE_VACUUM:
-          console.error("Insufficient Free Vacuum:", error.message);
+          console.error("Insufficient Free Vacuum:", error.response.data.message);
           setError('Недостаточно свободных пылесосов');
           break;
         case PAYMENT_ERROR_CODES.PROCESSING_ERROR:
-          console.error("Payment Processing Error:", error.message);
+          console.error("Payment Processing Error:", error.response.data.message);
           setError('Ошибка обработки платежа');
           break;
         case PAYMENT_ERROR_CODES.PAYMENT_REGISTRATION_FAILED:
-          console.error("Payment Registration Failed:", error.message);
+          console.error("Payment Registration Failed:", error.response.data.message);
           setError('Не удалось зарегистрировать платеж');
           break;
         case PAYMENT_ERROR_CODES.INVALID_WEBHOOK_SIGNATURE:
-          console.error("Invalid Webhook Signature:", error.message);
+          console.error("Invalid Webhook Signature:", error.response.data.message);
           setError('Недействительная подпись вебхука');
           break;
         case PAYMENT_ERROR_CODES.MISSING_ORDER_ID:
-          console.error("Missing Order ID:", error.message);
+          console.error("Missing Order ID:", error.response.data.message);
           setError('Отсутствует идентификатор заказа');
           break;
         case PAYMENT_ERROR_CODES.MISSING_PAYMENT_ID:
-          console.error("Missing Payment ID:", error.message);
+          console.error("Missing Payment ID:", error.response.data.message);
           setError('Отсутствует идентификатор платежа');
           break;
         case PAYMENT_ERROR_CODES.REFUND_FAILED:
-          console.error("Refund Failed:", error.message);
+          console.error("Refund Failed:", error.response.data.message);
           setError('Не удалось вернуть средства');
           break;
+        case OTHER_ERROR_CODES.BAY_IS_BUSY_ERROR_CODE:
+          console.error("Bay Is Busy:", error.response.data.message);
+          setError('Пост занят');
+          break;
+        case OTHER_ERROR_CODES.CARWASH_UNAVALIBLE_ERROR_CODE:
+          console.error("Carwash Unavalible:", error.response.data.message);
+          setError('Автомойка недоступна');
+          break;
+        case OTHER_ERROR_CODES.CARWASH_START_FAILED:
+          console.error("Carwash Start Failed:", error.response.data.message);
+          setError('Ошибка запуска автомойки');
+          break;
+        case OTHER_ERROR_CODES.PROMO_CODE_NOT_FOUND_ERROR_CODE:
+          console.error("Promocode Not Found:", error.response.data.message);
+          setError('Промокод не найден');
+          break;
+        case OTHER_ERROR_CODES.INVALID_PROMO_CODE_ERROR_CODE:
+          console.error("Invalid Promo Code:", error.response.data.message);
+          setError('Недействительный промокод');
+          break;
+        case OTHER_ERROR_CODES.SERVER_ERROR:
+          console.error("Server Error", error.response.data.message);
+          setError('Ошибка сервера');
+          break;
         default:
-          console.error("Unknown Error:", error.message);
+          console.error("Unknown Error:", error.response.data.message);
           setError('Неизвестная ошибка');
           break;
       }
