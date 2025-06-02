@@ -35,6 +35,8 @@ target 'OnviMobile' do
   pod 'react-native-config/Extension', :path => '../node_modules/react-native-config'
 
   use_frameworks! :linkage => :static
+    pod 'react-native-branch', path: '../node_modules/react-native-branch'
+  
   $RNFirebaseAsStaticFramework = true
   use_react_native!(
     :path => config[:reactNativePath],

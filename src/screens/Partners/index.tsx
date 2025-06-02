@@ -36,6 +36,8 @@ const Partners = () => {
 
   const handlePartnerPress = (data: Partner) => {
     navigation.navigate('Партнер', {data: data});
+    console.log("partnersData", partnersData);
+    console.log("data", data);
   };
 
   const renderItem = ({item}: {item: Partner}) => {

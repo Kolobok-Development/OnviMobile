@@ -41,6 +41,7 @@ export type RootStackParamList = {
   };
   Campaign: {
     data?: Campaign | null;
+    token?: string;
   };
   About: {};
 };

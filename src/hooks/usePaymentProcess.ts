@@ -53,7 +53,7 @@ export const usePaymentProcess = (
    * Process payment and create order
    */
   const errorHandler = (error: any) => {
-    setLoading(false);    
+    setLoading(false);
     if (
       error.code === 'ERROR_PAYMENT_CANCELLED' ||
       error.code === 'E_PAYMENT_CANCELLED'
@@ -344,6 +344,9 @@ export const usePaymentProcess = (
               navigateBottomSheet('PostPayment', {});
               setOrderStatus(null);
             }, 3000)
+          } else if (response.status === 'failed') {
+            setError('Ошибка оборудования');
+            setLoading(false);
           } else {
             attempts++;
             if (attempts >= maxAttempts) {
