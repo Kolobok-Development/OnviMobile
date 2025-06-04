@@ -7,3 +7,4 @@ export {Search} from './Search';
 export {Notifications} from './Notifications';
 export {History} from './History';
 export {PostPayment} from './PostPayment';
+export {PaymentLoading} from './PaymentLoading';

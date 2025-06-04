@@ -27,7 +27,6 @@ import {
 } from '@utils/paymentHelpers.ts';
 
 import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
-import PaymentLoading from './PaymentLoading/index.tsx';
 
 const Payment = () => {
   const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
@@ -41,8 +40,6 @@ const Payment = () => {
    */
 
   const [finalOrderCost, setFinalOrderCost] = useState<number>(order.sum);
-  const [paymentErrorModalState, setPaymentErrorModalState] =
-    useState<boolean>(false);
 
   const {
     inputCodeValue,
@@ -97,12 +94,6 @@ const Payment = () => {
   };
 
   const [showPromocodeModal, setShowPromocodeModal] = useState(false);
-
-  useEffect(() => {
-    if (error) {
-      setPaymentErrorModalState(true);
-    }
-  }, [error]);
 
   // Effect to update UI when promo code is validated
   useEffect(() => {
@@ -159,23 +150,6 @@ const Payment = () => {
         modalStyle={{}}
         textStyle={{}}
       /> */}
-
-      <Modal
-        transparent={true}
-        animationType="slide"
-        visible={!!orderStatus}
-        onRequestClose={() => { }}>
-        <PaymentLoading
-          orderStatus={orderStatus}
-          error={error}
-          loading={loading}
-          onClick={() => {
-            clearError();
-            resetPromoCode();
-            setOrderStatus(null);
-          }} />
-      </Modal>
-
 
       {showPromocodeModal ? (
         <PromocodeModal
@@ -271,8 +245,8 @@ const Payment = () => {
             </View>
 
             {
-              !freeOn &&  
-              <PaymentMethods 
+              !freeOn &&
+              <PaymentMethods
                 selectedMethod={paymentMethod}
                 onSelectMethod={setPaymentMethod}
               />
@@ -281,10 +255,20 @@ const Payment = () => {
             <View style={styles.paymentActions}>
               {
                 freeOn
-                  ?     
+                  ?
                   <Button
                     label="Активировать"
-                    onClick={processFreePayment}
+                    onClick={() => {
+                      navigateBottomSheet('PaymentLoading', {
+                        user,
+                        order,
+                        discount,
+                        usedPoints,
+                        promoCodeId,
+                        loadUser,
+                        freeOn
+                      });
+                    }}
                     color="blue"
                     height={43}
                     fontSize={18}
@@ -294,7 +278,17 @@ const Payment = () => {
                   :
                   <Button
                     label={`Оплатить ${finalOrderCost} ₽`}
-                    onClick={processPayment}
+                    onClick={() => {
+                      navigateBottomSheet('PaymentLoading', {
+                        user,
+                        order,
+                        discount,
+                        usedPoints,
+                        promoCodeId,
+                        loadUser,
+                        freeOn
+                      });
+                    }}
                     color="blue"
                     height={43}
                     fontSize={18}
