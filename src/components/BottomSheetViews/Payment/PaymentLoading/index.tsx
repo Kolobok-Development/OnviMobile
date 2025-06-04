@@ -4,14 +4,7 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Button } from '@styled/buttons';
 import { dp } from '@utils/dp.ts';
-
-enum OrderProcessingStatus {
-  START = 'start',
-  PROCESSING = 'processing',
-  END = 'end',
-  WAITING_PAYMENT = 'waiting_payment',
-  POLLING = 'polling',
-}
+import { OrderProcessingStatus } from "../../../../types/api/order/processing/OrderProcessingStatus";
 
 enum orderStatusText {
   start = 'Подготавливаем оборудование...',

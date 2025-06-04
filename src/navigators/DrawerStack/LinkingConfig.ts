@@ -14,7 +14,6 @@ export const config = {
       path: '',
     },
     Промокоды: 'promos',
-    Партнеры: 'partners',
     Настройки: 'settings',
     'О приложении': 'about',
     Партнер: {

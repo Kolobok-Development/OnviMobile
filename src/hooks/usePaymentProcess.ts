@@ -18,16 +18,7 @@ import { DiscountValueType } from '@hooks/usePromoCode.ts';
 import { PaymentMethodType } from '@styled/buttons/PaymentMethodButton';
 import { getOrderByOrderId } from '@services/api/order';
 import { ORDER_ERROR_CODES, PAYMENT_ERROR_CODES, OTHER_ERROR_CODES } from '../types/api/constants/index.ts';
-
-enum OrderProcessingStatus {
-  START = 'start',
-  PROCESSING = 'processing',
-  END = 'end',
-  WAITING_PAYMENT = 'waiting_payment',
-  POLLING = 'polling',
-  PROCESSING_FREE = 'processing_free',
-  END_FREE = 'end_free',
-}
+import { OrderProcessingStatus } from '../types/api/order/processing/OrderProcessingStatus.ts';
 
 export const usePaymentProcess = (
   user: IUser | null,

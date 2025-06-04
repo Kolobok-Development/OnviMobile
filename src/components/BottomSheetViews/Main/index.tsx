@@ -61,11 +61,7 @@ const Main = () => {
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
-    () => getCampaignList('*'),
-    {
-      onSuccess: (data) => {
-      },
-    }
+    () => getCampaignList('*')
   );
 
   const {

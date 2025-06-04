@@ -10,8 +10,6 @@ import {useTheme} from '@context/ThemeProvider';
 import {Settings} from '@screens/Settings';
 import {About} from '@screens/About';
 import useStore from '../../state/store';
-import {Partners} from '@screens/Partners';
-import {Partner} from '@screens/Partner';
 
 import {PromosInput} from '@screens/PromosInput';
 
@@ -56,10 +54,8 @@ const DrawerStack = () => {
       </Drawer.Screen>
 
       <Drawer.Screen name="Промокоды">{() => <Promos />}</Drawer.Screen>
-      <Drawer.Screen name="Партнеры">{() => <Partners />}</Drawer.Screen>
       <Drawer.Screen name="Настройки">{() => <Settings />}</Drawer.Screen>
       <Drawer.Screen name="О приложении">{() => <About />}</Drawer.Screen>
-      <Drawer.Screen name="Партнер">{() => <Partner />}</Drawer.Screen>
       <Drawer.Screen name="Ввод Промокода">
         {() => <PromosInput />}
       </Drawer.Screen>
