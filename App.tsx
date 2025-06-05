@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {ThemeProvider} from './src/context/ThemeProvider';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { ThemeProvider } from './src/context/ThemeProvider';
 
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Application} from './src/components/Application';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Application } from './src/components/Application';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {IntlProvider} from 'react-intl';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { IntlProvider } from 'react-intl';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import NetInfo from '@react-native-community/netinfo';
 import useStore from './src/state/store';
 import DeviceInfo from 'react-native-device-info';
-import {createUserMeta, updateUserMeta} from './src/services/api/user';
-import {DeviceMeta} from './src/types/models/User';
-import {hasMetaDataChanged} from './src/services/validation/meta.validator';
+import { createUserMeta, updateUserMeta } from './src/services/api/user';
+import { DeviceMeta } from './src/types/models/User';
+import { hasMetaDataChanged } from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
 
 import {
@@ -24,7 +24,7 @@ import {
 
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
-import { DdSdkReactNative, DdSdkReactNativeConfiguration } from '@datadog/mobile-react-native';
+import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider } from '@datadog/mobile-react-native';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -48,26 +48,30 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
   };
 };
 
-const config = new DdSdkReactNativeConfiguration(
-  '<CLIENT_TOKEN>',
-  '<ENVIRONMENT_NAME>',
-  '<RUM_APPLICATION_ID>',
-  true, // track User interactions (e.g., Tap on buttons)
-  true, // track XHR resources
-  true  // track errors
-);
-config.site = '<DATADOG_SITE>'; // e.g., 'US1', 'EU1', 'US3', etc.
+const config = new DatadogProviderConfiguration(
+  "puba21093aa63718370f3d12b6069ca901c",
+  "prod",
+  "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
+  true, // track User interactions (e.g.: Tap on buttons. You can use 'accessibilityLabel' element property to give tap action the name, otherwise element type will be reported)
+  true, // track XHR Resources
+  true // track Errors
+)
+config.site = 'US1'; // e.g., 'US1', 'EU1', 'US3', etc.
 config.serviceName = 'onvi-mobile';
-config.nativeCrashReportEnabled = true;
+// config.nativeCrashReportEnabled = true;
+// config.sessionSamplingRate = 100;
 
-DdSdkReactNative.initialize(config).then(() => {
-  console.log('Datadog initialized');
-});
-
+DdSdkReactNative.initialize(config)
+  .then(() => {
+    console.log('Datadog initialized successfully');
+  })
+  .catch(error => {
+    console.error('Failed to initialize Datadog:', error);
+  });
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore.getState();
+  const { loadUser, user, fcmToken } = useStore.getState();
 
   configureReanimatedLogger({
     level: ReanimatedLogLevel.error,
@@ -141,19 +145,21 @@ function App(): React.JSX.Element {
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <ThemeProvider>
-      <RemoteNotifications />
-      <IntlProvider locale={'ru'}>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <SafeAreaView style={styles.container}>
-            <View style={{height: Dimensions.get('window').height}}>
-              {!isConnected && <FlashMessage position="top" />}
-              <Application />
-            </View>
-          </SafeAreaView>
-        </GestureHandlerRootView>
-      </IntlProvider>
-    </ThemeProvider>
+    <DatadogProvider configuration={config}>
+      <ThemeProvider>
+        <RemoteNotifications />
+        <IntlProvider locale={'ru'}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.container}>
+              <View style={{ height: Dimensions.get('window').height }}>
+                {!isConnected && <FlashMessage position="top" />}
+                <Application />
+              </View>
+            </SafeAreaView>
+          </GestureHandlerRootView>
+        </IntlProvider>
+      </ThemeProvider>
+    </DatadogProvider>
   );
 }
 
