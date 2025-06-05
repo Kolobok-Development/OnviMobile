@@ -9,19 +9,16 @@ import {
   SafeAreaView,
   Pressable,
   Platform,
+  Modal,
 } from 'react-native';
 import {dp} from '../../utils/dp';
-
 import {useNavigation} from '@react-navigation/core';
-
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
-
 import {getBalance} from '@services/api/balance';
 import {transferBalance} from '@services/api/balance';
 import TransferFailModal from '@components/TransferBalance/TransferFailModal';
 import TransferSuccessModal from '@components/TransferBalance/TransferSuccessModal';
 import TransferBalanceOnboardingStory from '@components/TransferBalance/OnboardingStory';
-
 import useStore from '../../state/store';
 import ScreenHeader from '@components/ScreenHeader';
 
@@ -37,9 +34,9 @@ const TransferBalance = () => {
   const [error, setError] = useState<string>('');
   const [showContent, setShowContent] = useState<boolean>(false);
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
-
   const [transferFailModal, setTransferFailModal] = useState(false);
   const [transferSuccessModal, setTransferSuccessModal] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const {loadUser} = useStore.getState();
 
@@ -72,6 +69,11 @@ const TransferBalance = () => {
       });
   };
 
+  const confirmTransfer = () => {
+    setModalVisible(false);
+    transfer();
+  };
+
   const transfer = async () => {
     transferBalance({
       devNomer: cardNumber.replaceAll('-', ''),
@@ -87,19 +89,17 @@ const TransferBalance = () => {
       });
   };
 
-  // const isCardNumberValid = cardNumber.length === 19;
   const buttonStyles = [styles.button, {backgroundColor: '#3461FF'}];
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Onboarding Story - shown at first visit or when manually triggered */}
       {(!showContent || showInstructions) && (
         <TransferBalanceOnboardingStory
           onComplete={() => {
             setShowContent(true);
             setShowInstructions(false);
           }}
-          isManualTrigger={showInstructions} // Pass true for manual triggers
+          isManualTrigger={showInstructions}
         />
       )}
 
@@ -200,16 +200,43 @@ const TransferBalance = () => {
         {!balance ? (
           <TouchableOpacity
             style={buttonStyles}
-            // disabled={!isCardNumberValid}
             onPress={findBalance}>
             <Text style={styles.buttonText}>Найти</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={buttonStyles} onPress={transfer}>
+          <TouchableOpacity style={buttonStyles} onPress={() => setModalVisible(true)}>
             <Text style={styles.buttonText}>Перенести</Text>
           </TouchableOpacity>
         )}
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.centeredView}>
+          <View style={styles.modalOverlay} />
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>В случае переноса баланса, доступ к старому мобильному приложению закроется.</Text>
+            <Text style={styles.modalText}>Вы уверены, что хотите перенести баланс?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.buttonClose]}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.buttonText}>Отмена</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.buttonConfirm]}
+                onPress={confirmTransfer}>
+                <Text style={styles.buttonText}>Да</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       <TransferFailModal
         visible={transferFailModal}
@@ -353,6 +380,57 @@ const styles = StyleSheet.create({
         lineHeight: dp(40),
       },
     }),
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalOverlay: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    zIndex: 1,
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    width: '48%',
+    alignItems: 'center',
+  },
+  buttonClose: {
+    backgroundColor: '#ccc',
+  },
+  buttonConfirm: {
+    backgroundColor: '#3461FF',
   },
 });
 
