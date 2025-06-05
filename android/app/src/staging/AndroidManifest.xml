@@ -1,4 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -46,15 +46,19 @@
               <data android:host="onvione.ru" />
               <data android:scheme="https" android:host="wrzx5.app.link" />
               <data android:scheme="https" android:host="wrzx5-alternate.app.link" />
+              <data android:scheme="https" android:host="wrzx5.test-app.link" />
               <!-- Add path if needed, for example: -->
               <!-- <data android:pathPattern="/.*" /> -->
           </intent-filter>
+
       </activity>
-        <!-- Branch keys -->
-        <!-- (Omit if setting keys in branch.json) -->
         <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ark3Xn0ur4EM89pB25kblcldzxmQUqEJ"/>
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="secret_live_KjyXkwVc0JaZkYEbz8iyQo8XrF34T92O" />
+        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_cqg23l4rq1rH02cDW5odvjlnxxoQLsA3" />
         <!-- Set to `true` to use `BranchKey.test` -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+       <meta-data
+            android:name="io.branch.sdk.TestMode"
+            android:value="true"
+            tools:replace="android:value" 
+        />
     </application>
 </manifest>

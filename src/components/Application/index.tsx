@@ -1,19 +1,20 @@
-import React, {useEffect, useState} from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {AuthStack} from '@navigators/AuthStack';
-import {DrawerStack} from '@navigators/DrawerStack';
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { AuthStack } from '@navigators/AuthStack';
+import { DrawerStack } from '@navigators/DrawerStack';
 
 import Toast from 'react-native-toast-message';
-import {toastConfig} from '@styled/alerts/toasts';
+import { toastConfig } from '@styled/alerts/toasts';
 
 import useStore from '../../state/store';
-import {navigationRef} from '../../services/api/interceptors';
-import {config} from '@navigators/DrawerStack/LinkingConfig.ts';
-import {Linking} from 'react-native';
-import branch, {BranchEvent} from 'react-native-branch';
+import { navigationRef } from '../../services/api/interceptors';
+import { config } from '@navigators/DrawerStack/LinkingConfig.ts';
+import { Linking } from 'react-native';
+import branch, { BranchEvent } from 'react-native-branch';
 
 const Application = () => {
   const isAuthenticated = useStore().isAuthenticated;
+  const setReferenceToken = useStore().setReferenceToken;
   const [isReady, setIsReady] = useState(false);
 
   // Enhanced linking configuration
@@ -32,7 +33,7 @@ const Application = () => {
       return null;
     },
     subscribe(listener: any) {
-      const onReceiveURL = ({url}) => listener(url);
+      const onReceiveURL = ({ url }) => listener(url);
 
       // Listen to incoming links from deep linking
       const subscription = Linking.addEventListener('url', onReceiveURL);
@@ -43,6 +44,7 @@ const Application = () => {
       };
     },
   };
+
 
   // Handle initial deep link
   useEffect(() => {
@@ -77,6 +79,13 @@ const Application = () => {
 
       // We don't need to do anything special with the params
       // The user will be sent to Home page or Login based on authentication status
+      const branchParams = JSON.stringify(params, null, 2);
+      console.log('Branch params:', branchParams);
+      if (params && params['reference']) {
+        const reference = params['reference'].toString();
+        console.log('Reference from Branch URL:', reference);
+        setReferenceToken(reference);
+      }
     });
 
     return () => unsubscribeFromBranch();
@@ -109,4 +118,4 @@ const Application = () => {
   );
 };
 
-export {Application};
+export { Application };

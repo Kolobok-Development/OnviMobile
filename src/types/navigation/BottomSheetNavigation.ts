@@ -2,6 +2,9 @@ import {NavigationProp, RouteProp} from '@react-navigation/native';
 
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {Campaign, NewsPost, Price, Tag} from '../api/app/types.ts';
+import { IUser } from '../models/User.ts';
+import { DiscountType } from '../models/PersonalPromotion.ts';
+import { OrderDetailsType } from 'src/state/order/OrderSlice.ts';
 
 export type RootStackParamList = {
   Main: {
@@ -41,8 +44,18 @@ export type RootStackParamList = {
   };
   Campaign: {
     data?: Campaign | null;
+    token?: string;
   };
   About: {};
+  PaymentLoading: {
+    user: IUser | null;
+    order: OrderDetailsType | null;
+    discount: DiscountType | null;
+    usedPoints: number;
+    promoCodeId: number;
+    loadUser?: () => Promise<void>;
+    freeOn: boolean;
+  };
 };
 
 export type GeneralBottomSheetNavigationProp<

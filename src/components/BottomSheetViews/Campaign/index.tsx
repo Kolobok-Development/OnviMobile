@@ -1,23 +1,24 @@
-import {Image, Linking, StyleSheet, Text, View} from 'react-native';
-import {dp} from '../../../utils/dp';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import {useRoute} from '@react-navigation/native';
+import { Image, Linking, StyleSheet, Text, View } from 'react-native';
+import { dp } from '../../../utils/dp';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useRoute } from '@react-navigation/native';
 
-import React, {useEffect, useState} from 'react';
-import {Campaign as CampaignType} from '../../../types/api/app/types.ts';
+import React, { useEffect, useState } from 'react';
+import { Campaign as CampaignType } from '../../../types/api/app/types.ts';
 import Markdown from 'react-native-markdown-display';
-import {Button} from '@styled/buttons';
+import { Button } from '@styled/buttons';
 
 import useStore from '../../../state/store';
 
 import CampaignPlaceholder from './CampaignPlaceholder';
 
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import { GeneralBottomSheetRouteProp } from '../../../types/navigation/BottomSheetNavigation.ts';
+import { PartnerIntegration } from '@screens/Partner/PartnerIntegration.tsx';
 
 const Campaign = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();
 
-  const {isBottomSheetOpen} = useStore.getState();
+  const { isBottomSheetOpen } = useStore.getState();
 
   const [campaign, setCampaign] = useState<CampaignType | null>(null);
 
@@ -29,17 +30,17 @@ const Campaign = () => {
 
   return (
     <BottomSheetScrollView
-      contentContainerStyle={{...styles.container, backgroundColor: 'white'}}
+      contentContainerStyle={{ ...styles.container, backgroundColor: 'white' }}
       nestedScrollEnabled={true}
       scrollEnabled={isBottomSheetOpen}>
       <View
-        style={{display: 'flex', flexDirection: 'column', marginTop: dp(20)}}>
+        style={{ display: 'flex', flexDirection: 'column', marginTop: dp(20) }}>
         {!campaign ? (
           <CampaignPlaceholder />
         ) : (
           <>
             <Image
-              source={{uri: campaign.attributes.image.data.attributes.url}}
+              source={{ uri: campaign.attributes.image.data.attributes.url }}
               style={{
                 width: '100%',
                 flex: 1,
@@ -67,26 +68,36 @@ const Campaign = () => {
               {/* @ts-ignore */}
               <Markdown
                 style={{
-                  body: {color: '#000', fontSize: dp(15)},
-                  link: {color: 'blue'},
+                  body: { color: '#000', fontSize: dp(15) },
+                  link: { color: 'blue' },
                 }}>
                 {campaign.attributes.content}
               </Markdown>
 
               <View style={styles.btn}>
-                {campaign.attributes.button_title && (
-                  <Button
-                    label={campaign.attributes.button_title}
-                    color={'blue'}
-                    width={dp(155)}
-                    fontSize={dp(13)}
-                    onClick={() => {
-                      if (campaign.attributes.url) {
-                        Linking.openURL(campaign.attributes.url);
-                      }
-                    }}
-                  />
-                )}
+                {
+                  campaign.attributes.slug === "gazprom-bonus"
+                    ?
+                    <>
+                      {campaign && <PartnerIntegration partner={campaign} />}
+                    </>
+                    :
+                    <>
+                      {campaign.attributes.button_title && (
+                        <Button
+                          label={campaign.attributes.button_title}
+                          color={'blue'}
+                          width={dp(155)}
+                          fontSize={dp(13)}
+                          onClick={() => {
+                            if (campaign.attributes.url) {
+                              Linking.openURL(campaign.attributes.url);
+                            }
+                          }}
+                        />
+                      )}
+                    </>
+                }
               </View>
             </View>
           </>
@@ -123,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Campaign};
+export { Campaign };

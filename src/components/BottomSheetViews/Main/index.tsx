@@ -36,9 +36,12 @@ import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
+import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.ts';
 
 const Main = () => {
   const {
+    isBottomSheetOpen,
+    setIsBottomSheetOpen,
     setNearByPos,
     setBusiness,
     location,
@@ -47,7 +50,7 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const {setSelectedPos} = useStore.getState();
+  const {setSelectedPos, referenceToken, setGazpromToken} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -58,7 +61,7 @@ const Main = () => {
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
-    () => getCampaignList('*'),
+    () => getCampaignList('*')
   );
 
   const {
@@ -117,6 +120,19 @@ const Main = () => {
 
   const isNearestCarWashSet = useRef(false);
 
+  const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
+    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});        
+    data?.token && setGazpromToken(data.token);
+    
+    if (!campaignLoading && campaignData) {
+      const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
+      if (gazpromCampaign) {
+        setIsBottomSheetOpen(true);
+        handleCampaignItemPress(gazpromCampaign);
+      }
+    }
+  }
+
   useEffect(() => {
     if (
       !isNearestCarWashSet.current &&
@@ -127,7 +143,14 @@ const Main = () => {
       findNearestCarWash();
       isNearestCarWashSet.current = true;
     }
-  }, [location, posList]);
+    
+  }, [location, posList, campaignLoading, campaignData]);
+
+  useEffect(() => {
+    if (referenceToken && campaignData) {
+      getTokenAndRedirectToGPBWidget(referenceToken);
+    }
+  }, [campaignLoading, referenceToken]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
@@ -148,6 +171,7 @@ const Main = () => {
   };
 
   const renderCampaignItem = ({item}: {item: Campaign}) => {
+    
     return (
       <TouchableOpacity
         onPress={() => {

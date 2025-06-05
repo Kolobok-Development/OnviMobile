@@ -10,6 +10,7 @@ import {userApiInstance} from '@services/api/axiosConfig.ts';
 import {ICreateUserMetaRequest} from '../../../types/api/user/req/ICreateUserMetaRequest.ts';
 import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMetaRequest.ts';
 import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
+import { IGetFreeVacuum } from 'src/types/api/user/res/IGetFreeVacuum.ts';
 
 enum ACCOUNT {
   GET_MET_URL = '/account/me',
@@ -21,6 +22,7 @@ enum ACCOUNT {
   UPDATE_NOTIFICATION_URL = '/account/notifications',
   CREATE_ACCOUNT_META = '/account/meta/create',
   UPDATE_ACCOUNT_META = '/account/meta/update',
+  GET_FREE_VACUUM = '/account/free-vacuum',
 }
 
 export async function getMe(): Promise<IUser> {
@@ -116,4 +118,9 @@ export async function deleteAccount(): Promise<number> {
   const response = await userApiInstance.delete(ACCOUNT.UPDATE_ACCOUNT_URL);
   console.log(JSON.stringify(response, null, 2));
   return response.status;
+}
+
+export async function getFreeVacuum(): Promise<IGetFreeVacuum> {
+  const response = await userApiInstance.get<IUserApiResponse<IGetFreeVacuum>>(ACCOUNT.GET_FREE_VACUUM);
+  return response.data.data;
 }

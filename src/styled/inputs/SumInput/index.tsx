@@ -34,6 +34,7 @@ interface ISumInput {
     shadowOpacity: number;
     shadowRadius: number;
   };
+  disabled?: boolean;
 }
 
 const MIN_FILL_HEIGHT = 20; // Minimum fill height in pixels
@@ -50,6 +51,7 @@ const SumInput: React.FC<ISumInput> = ({
   onComplete = () => {},
   inputBackgroundColor = '#FFFFFF',
   shadowProps,
+  disabled = false,
 }) => {
   const calculateBaseStyles = () => ({
     width,
@@ -62,7 +64,7 @@ const SumInput: React.FC<ISumInput> = ({
     borderRadius,
   ]);
 
-  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} =
+  const { shadowColor, shadowOffset, shadowOpacity, shadowRadius } =
     shadowProps || {};
 
   const calculateShadowStyles = () => ({
@@ -121,8 +123,8 @@ const SumInput: React.FC<ISumInput> = ({
   };
 
   // PanResponder handlers
-  const onStartShouldSetPanResponder = () => true;
-  const onMoveShouldSetPanResponder = () => false;
+  const onStartShouldSetPanResponder = () => !disabled;
+  const onMoveShouldSetPanResponder = () => !disabled;
   const onPanResponderTerminationRequest = () => false;
   const onPanResponderGrant = () => {
     _moveStartValue.value = _value.value;
@@ -163,7 +165,7 @@ const SumInput: React.FC<ISumInput> = ({
 
   const sliderStyle = useAnimatedStyle(() => {
     // Calculate the ratio based on gesture value
-    const effectiveValue = _gestureValue.value;
+    const effectiveValue = disabled ? maxValue : _gestureValue.value;
 
     // Calculate the ratio
     const ratio = (effectiveValue - minValue) / (maxValue - minValue);
@@ -207,7 +209,7 @@ const SumInput: React.FC<ISumInput> = ({
           circleBaseStyles,
           {backgroundColor: inputBackgroundColor},
         ]}
-        {...panResponder.panHandlers}>
+        {...(!disabled ? panResponder.panHandlers : {})}>
         <Animated.View
           style={[
             {
@@ -241,7 +243,6 @@ const styles = StyleSheet.create({
   anim: {},
 });
 export {SumInput};
-
 /*
 ****Lottie animation option*******
 <Lottie source={require('../../../assets/lottie/RbBhBl8Jeb.json')}

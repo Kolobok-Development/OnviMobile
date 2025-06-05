@@ -12,6 +12,7 @@ import {
   Notifications,
   History,
   PostPayment,
+  PaymentLoading
 } from '@components/BottomSheetViews';
 import {Search} from '@components/BottomSheetViews/Search';
 import {Filters} from '@components/BottomSheetViews/Filters';
@@ -109,7 +110,7 @@ const BottomSheetStack = React.memo(
           ) {
             setIsMainScreen(true);
             setShowBurgerButton(true);
-          } else if (currentRoute?.name === 'PostPayment') {
+          } else if (currentRoute?.name === 'PostPayment' || currentRoute?.name === 'PaymentLoading') {
             setShowBurgerButton(false);
           } else {
             setIsMainScreen(false);
@@ -192,6 +193,11 @@ const BottomSheetStack = React.memo(
             name="PostPayment"
             key="PostPaymentScreen"
             component={PostPayment}
+          />
+          <RootStack.Screen
+            name="PaymentLoading"
+            key="PaymentLoadingScreen"
+            component={PaymentLoading}
           />
         </RootStack.Navigator>
       </NavigationContainer>

@@ -17,17 +17,25 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
+import { getFreeVacuum } from '@services/api/user/index.ts';
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails, bottomSheetRef, bottomSheetSnapPoints} =
+  const {business, orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints, setFreeVacuum} =
     useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
-  const modalCallback = (bayType: string) => {
+  const modalCallback = async (bayType: string) => {
     if (true) {
+      // здесь можно добавить подгрузку бесплатных пылесосов
+      if (bayType === "VACUUME") {
+        setOrderDetails({...orderDetails, bayType: bayType});
+        const data = await getFreeVacuum();
+        console.log("getFreeVacuum: ", data);
+        setFreeVacuum(data);        
+      }
       navigateBottomSheet('Boxes', {bayType: bayType});
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
@@ -145,7 +153,7 @@ const BusinessInfo = () => {
             height={47}
             fontSize={16}
             fontWeight={'600'}
-            onClick={() => modalCallback('VACUUM')}
+            onClick={() => modalCallback('VACUUME')}
           />
         ) : (
           <></>

@@ -21,12 +21,13 @@ enum ORDER {
 export async function create(
   body: ICreateOrderRequest,
 ): Promise<ICreateOrderResponse> {
-  const response = await userApiInstance.post<
-    IUserApiResponse<ICreateOrderResponse>
-  >(ORDER.CREATE_ORDER_URL, body);
-
+  const response = await userApiInstance.post<IUserApiResponse<ICreateOrderResponse>>(
+    ORDER.CREATE_ORDER_URL,
+    body
+  );
   return response.data.data;
 }
+
 export async function validatePromoCode(
   body: IValidatePromoCodeRequest,
 ): Promise<IValidatePromoCodeResponse> {
@@ -35,12 +36,13 @@ export async function validatePromoCode(
   >(ORDER.VALIDATE_PROMOCODE_URL, body);
   return response.data.data;
 }
+
 export async function pingPos(
   params: IPingPosRequestParams,
 ): Promise<IPingPosResponse> {
   const response = await userApiInstance.get<
     IUserApiResponse<IPingPosResponse>
-  >(ORDER.PING_POS_URL, {params});
+  >(ORDER.PING_POS_URL, { params });
   return response.data.data;
 }
 
@@ -59,6 +61,5 @@ export async function getOrderByOrderId(
   const response = await userApiInstance.get(
     ORDER.GET_ORDER_BY_ORDER_ID + `/${id}`,
   );
-
   return response.data.data;
 }

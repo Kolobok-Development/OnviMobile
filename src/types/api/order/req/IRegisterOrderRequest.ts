@@ -5,4 +5,5 @@ export interface IRegisterOrderRequest {
   amount: string;
   description: string;
   receiptReturnPhoneNumber: string;
+  err?: number
 }
