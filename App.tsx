@@ -24,6 +24,7 @@ import {
 
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
+import { DdSdkReactNative, DdSdkReactNativeConfiguration } from '@datadog/mobile-react-native';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -46,6 +47,23 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
     manufacturer,
   };
 };
+
+const config = new DdSdkReactNativeConfiguration(
+  '<CLIENT_TOKEN>',
+  '<ENVIRONMENT_NAME>',
+  '<RUM_APPLICATION_ID>',
+  true, // track User interactions (e.g., Tap on buttons)
+  true, // track XHR resources
+  true  // track errors
+);
+config.site = '<DATADOG_SITE>'; // e.g., 'US1', 'EU1', 'US3', etc.
+config.serviceName = 'onvi-mobile';
+config.nativeCrashReportEnabled = true;
+
+DdSdkReactNative.initialize(config).then(() => {
+  console.log('Datadog initialized');
+});
+
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
