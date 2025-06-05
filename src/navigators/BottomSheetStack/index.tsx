@@ -110,7 +110,7 @@ const BottomSheetStack = React.memo(
           ) {
             setIsMainScreen(true);
             setShowBurgerButton(true);
-          } else if (currentRoute?.name === 'PostPayment') {
+          } else if (currentRoute?.name === 'PostPayment' || currentRoute?.name === 'PaymentLoading') {
             setShowBurgerButton(false);
           } else {
             setIsMainScreen(false);
