@@ -38,7 +38,7 @@ const Legals = () => {
                     );
                   }}>
                   <Text style={styles.rowLabel}>
-                    Политика конфедициальности
+                    Политика конфиденциальности
                   </Text>
                   <Image
                     style={{
@@ -58,7 +58,7 @@ const Legals = () => {
                       'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
                     )
                   }>
-                  <Text style={styles.rowLabel}>Программа лояльнсти</Text>
+                  <Text style={styles.rowLabel}>Программа лояльности</Text>
                   <Image
                     style={{
                       height: dp(24),
