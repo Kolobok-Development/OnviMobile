@@ -57,7 +57,7 @@
     "react-native": "^0.73.3",
     "react-native-branch": "^6.5.0",
     "react-native-config": "^1.5.5",
-    "react-native-device-info": "^13.1.0",
+    "react-native-device-info": "^14.0.4",
     "react-native-encrypted-storage": "^4.0.3",
     "react-native-feather": "^1.1.2",
     "react-native-flash-message": "^0.4.2",

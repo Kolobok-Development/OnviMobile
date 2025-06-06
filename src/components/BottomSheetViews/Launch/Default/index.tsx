@@ -29,8 +29,6 @@ import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
 } from '../../../../types/navigation/BottomSheetNavigation.ts';
-import { RumActionType } from '@datadog/mobile-react-native';
-import { DdLogs } from '@datadog/mobile-react-native';
 
 export default function DefaultLaunch() {
   const {theme} = useTheme();
@@ -243,7 +241,6 @@ export default function DefaultLaunch() {
               ...orderDetails,
               sum: cost,
             });
-            DdLogs.info('This is an informational message');            
             navigation.navigate('Payment', {});
           }}
           color="blue"

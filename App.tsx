@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-
 import { Dimensions, StyleSheet, View } from 'react-native';
 import { ThemeProvider } from './src/context/ThemeProvider';
-
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Application } from './src/components/Application';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { IntlProvider } from 'react-intl';
 import FlashMessage, { showMessage } from 'react-native-flash-message';
@@ -16,15 +13,13 @@ import { createUserMeta, updateUserMeta } from './src/services/api/user';
 import { DeviceMeta } from './src/types/models/User';
 import { hasMetaDataChanged } from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
-
 import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
-
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
-import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider } from '@datadog/mobile-react-native';
+import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider, DdLogs } from '@datadog/mobile-react-native';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -48,26 +43,44 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
   };
 };
 
-const config = new DatadogProviderConfiguration(
-  "puba21093aa63718370f3d12b6069ca901c",
-  "prod",
-  "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
-  true, // track User interactions (e.g.: Tap on buttons. You can use 'accessibilityLabel' element property to give tap action the name, otherwise element type will be reported)
-  true, // track XHR Resources
-  true // track Errors
-)
-config.site = 'US1'; // e.g., 'US1', 'EU1', 'US3', etc.
-config.serviceName = 'onvi-mobile';
-// config.nativeCrashReportEnabled = true;
-// config.sessionSamplingRate = 100;
+let datadogConfig;
 
-DdSdkReactNative.initialize(config)
-  .then(() => {
+const initializeDatadog = async () => {
+  try {
+    const deviceId = await DeviceInfo.getUniqueId();
+    console.log("deviceId:", deviceId);
+    
+
+    datadogConfig = new DatadogProviderConfiguration(
+      "puba21093aa63718370f3d12b6069ca901c",
+      "production",
+      "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
+      true,
+      true,
+      true
+    );
+
+    datadogConfig.site = "EU1";
+    datadogConfig.longTaskThresholdMs = 100;
+    datadogConfig.nativeCrashReportEnabled = true;
+    datadogConfig.sessionSamplingRate = 100;
+    datadogConfig.serviceName = 'onvi-mobile';
+
+    await DdSdkReactNative.initialize(datadogConfig);
+    
+    await DdSdkReactNative.setUserInfo({
+      id: deviceId,
+    });
+
     console.log('Datadog initialized successfully');
-  })
-  .catch(error => {
+  } catch (error) {
     console.error('Failed to initialize Datadog:', error);
-  });
+  }
+};
+
+initializeDatadog().catch(error => {
+  console.error('Failed to initialize Datadog:', error);
+});
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
@@ -145,7 +158,7 @@ function App(): React.JSX.Element {
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <DatadogProvider configuration={config}>
+    <DatadogProvider configuration={datadogConfig}>
       <ThemeProvider>
         <RemoteNotifications />
         <IntlProvider locale={'ru'}>
