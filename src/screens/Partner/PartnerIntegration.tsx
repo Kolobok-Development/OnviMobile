@@ -54,9 +54,17 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
   });
 
   useEffect(() => {
+
+    setReferenceToken(null);
+
     getGazpromSubscriptionData()
       .then(data => {
         if (data.status !== "ABSENT") {
+
+          if (gazpromToken) {
+            setAuthToken(gazpromToken);
+          }
+
           setSubscriptionData(data);
           const expirationAt = data.expiration_at as string;
           const formattedDate = expirationAt.replace("T", " ").replace("Z", "");
@@ -84,16 +92,11 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
   /**
    * useEffect to wait for authentication before setting authToken
    */
-  useEffect(() => {
-    if (gazpromToken) {
-      setAuthToken(gazpromToken);
-      setReferenceToken(null);
-    } else {
-      if (!isMutating && partnerData?.token) {
-        setAuthToken(partnerData.token);
-      }
-    }
-  }, [isMutating, partnerData]);
+  // useEffect(() => {
+  //   if (!isMutating && partnerData?.token) {
+  //     setAuthToken(partnerData.token);
+  //   }
+  // }, [isMutating, partnerData]);
 
   /**
    * Optimized function to handle activation
@@ -134,7 +137,6 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
     // }
     setModalVisible(true);
     setGazpromToken(null);
-
 
     // }, [authToken, isRedirectIntegration]);
   }, [authToken]);
