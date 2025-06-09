@@ -87,6 +87,29 @@ PODS:
     - React-Core
   - ClickstreamSDK (1.5.0)
   - CocoaAsyncSocket (7.6.5)
+  - DatadogCore (2.27.0):
+    - DatadogInternal (= 2.27.0)
+  - DatadogCrashReporting (2.27.0):
+    - DatadogInternal (= 2.27.0)
+    - PLCrashReporter (~> 1.12.0)
+  - DatadogInternal (2.27.0)
+  - DatadogLogs (2.27.0):
+    - DatadogInternal (= 2.27.0)
+  - DatadogRUM (2.27.0):
+    - DatadogInternal (= 2.27.0)
+  - DatadogSDKReactNative (2.8.2):
+    - DatadogCore (~> 2.27.0)
+    - DatadogCrashReporting (~> 2.27.0)
+    - DatadogLogs (~> 2.27.0)
+    - DatadogRUM (~> 2.27.0)
+    - DatadogTrace (~> 2.27.0)
+    - DatadogWebViewTracking (~> 2.27.0)
+    - React-Core
+  - DatadogTrace (2.27.0):
+    - DatadogInternal (= 2.27.0)
+    - OpenTelemetrySwiftApi (= 1.13.1)
+  - DatadogWebViewTracking (2.27.0):
+    - DatadogInternal (= 2.27.0)
   - DoubleConversion (1.1.6)
   - FBLazyVector (0.73.3)
   - FBReactNativeSpec (0.73.3):
@@ -169,6 +192,12 @@ PODS:
   - KTVHTTPCache (2.0.1):
     - KTVCocoaHTTPServer
   - libevent (2.1.12)
+  - lottie-ios (4.5.0)
+  - lottie-react-native (7.2.2):
+    - glog
+    - lottie-ios (= 4.5.0)
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - MapboxCommon (23.11.4)
   - MapboxCoreMaps (10.19.2):
     - MapboxCommon (~> 23.11)
@@ -191,6 +220,8 @@ PODS:
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
   - OpenSSL-Universal (3.3.3001)
+  - OpenTelemetrySwiftApi (1.13.1)
+  - PLCrashReporter (1.12.0)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2022.05.16.00):
     - boost
@@ -1274,7 +1305,7 @@ PODS:
     - React-Core
   - RNCMaskedView (0.3.1):
     - React-Core
-  - RNDeviceInfo (13.1.0):
+  - RNDeviceInfo (14.0.4):
     - React-Core
   - RNFBApp (19.2.2):
     - Firebase/CoreOnly (= 10.24.0)
@@ -1375,12 +1406,14 @@ PODS:
 DEPENDENCIES:
   - boost (from `../node_modules/react-native/third-party-podspecs/boost.podspec`)
   - BVLinearGradient (from `../node_modules/react-native-linear-gradient`)
+  - "DatadogSDKReactNative (from `../node_modules/@datadog/mobile-react-native`)"
   - DoubleConversion (from `../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
   - FBReactNativeSpec (from `../node_modules/react-native/React/FBReactNativeSpec`)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - lottie-react-native (from `../node_modules/lottie-react-native`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -1490,6 +1523,13 @@ SPEC REPOS:
     - BranchSDK
     - ClickstreamSDK
     - CocoaAsyncSocket
+    - DatadogCore
+    - DatadogCrashReporting
+    - DatadogInternal
+    - DatadogLogs
+    - DatadogRUM
+    - DatadogTrace
+    - DatadogWebViewTracking
     - Firebase
     - FirebaseCore
     - FirebaseCoreExtension
@@ -1503,6 +1543,7 @@ SPEC REPOS:
     - KTVCocoaHTTPServer
     - KTVHTTPCache
     - libevent
+    - lottie-ios
     - MapboxCommon
     - MapboxCoreMaps
     - MapboxMaps
@@ -1511,6 +1552,8 @@ SPEC REPOS:
     - MMKVCore
     - nanopb
     - OpenSSL-Universal
+    - OpenTelemetrySwiftApi
+    - PLCrashReporter
     - PromisesObjC
     - SocketRocket
     - SPaySDK
@@ -1521,6 +1564,8 @@ EXTERNAL SOURCES:
     :podspec: "../node_modules/react-native/third-party-podspecs/boost.podspec"
   BVLinearGradient:
     :path: "../node_modules/react-native-linear-gradient"
+  DatadogSDKReactNative:
+    :path: "../node_modules/@datadog/mobile-react-native"
   DoubleConversion:
     :podspec: "../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   FBLazyVector:
@@ -1532,6 +1577,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-11-17-RNv0.73.0-21043a3fc062be445e56a2c10ecd8be028dd9cc5
+  lottie-react-native:
+    :path: "../node_modules/lottie-react-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1697,6 +1744,14 @@ SPEC CHECKSUMS:
   BVLinearGradient: cb006ba232a1f3e4f341bb62c42d1098c284da70
   ClickstreamSDK: 591cbf0c2f96bcaba6a36365a94a19f4463a1ae5
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
+  DatadogCore: 68aee4ffcc3ea17a3b0aa527907757883fc72c84
+  DatadogCrashReporting: e6a83b143394e28c9c1cb48c5cfb18eff507b3be
+  DatadogInternal: 3c5cae6772295fd175a9de11e4747a9322aaa4e7
+  DatadogLogs: 09d6358dc7682f9d3eaea85dd418f82d2db3560c
+  DatadogRUM: 0f267df8c9c8579a291870c2bce4549587391a07
+  DatadogSDKReactNative: 736147eb9dcc6f9f44087ff9a2da707fb271ea6e
+  DatadogTrace: f46c8220c73463d09741013f385a6e27cd39185b
+  DatadogWebViewTracking: dc8376420c8686efd09d00752bc1034b639d180b
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   FBLazyVector: 70590b4f9e8ae9b0ce076efacea3abd7bc585ace
   FBReactNativeSpec: e47ea8c8f044c25e41a4fa5e8b7ff3923d3e0a94
@@ -1717,6 +1772,8 @@ SPEC CHECKSUMS:
   KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
   KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  lottie-ios: a881093fab623c467d3bce374367755c272bdd59
+  lottie-react-native: 4b934ed8c339493a5425cde000fb23fa01052e8d
   MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
   MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
   MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
@@ -1726,6 +1783,8 @@ SPEC CHECKSUMS:
   MoneyAuth: 0e664ce8ac74dfc60b0207257684e2cbcce0fffd
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   OpenSSL-Universal: 6082b0bf950e5636fe0d78def171184e2b3899c2
+  OpenTelemetrySwiftApi: aaee576ed961e0c348af78df58b61300e95bd104
+  PLCrashReporter: db59ef96fa3d25f3650040d02ec2798cffee75f2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: cd21f1661364f975ae76b3308167ad66b09f53f5
   RCTRequired: 9b898847f76977a6dfed2a08f4c5ed37add75ec0
@@ -1781,7 +1840,7 @@ SPEC CHECKSUMS:
   RNCCheckbox: 450ce156f3e29e25efa0315c96cfbabe5a39ded1
   RNCClipboard: 4598dae0fe33e2aa130d9d213e2007be78310266
   RNCMaskedView: de80352547bd4f0d607bf6bab363d826822bd126
-  RNDeviceInfo: 014029374ada3164b6c40fe74041dca2f98b42d6
+  RNDeviceInfo: d863506092aef7e7af3a1c350c913d867d795047
   RNFBApp: e905ce948d9290555d9ab1303449827eb5119b5c
   RNFBMessaging: 88d044afc7b581ab057c85334d05ad91f6dd852c
   RNFlashList: 252bed1014df7f9e7f9ac4585f801af2b52497eb
