@@ -84,6 +84,9 @@ const createSocket = (url: string, accessToken?: string) => {
     socket = io(url, {
       transports: ['websocket'],
       query: { token: accessToken },
+      reconnection: true, // Включаем автоматическое повторное подключение
+      reconnectionAttempts: 5, // Количество попыток повторного подключения
+      reconnectionDelay: 1000, // Задержка между попытками повторного подключения
     });
 
     socket.on('connect', () => {
@@ -101,7 +104,7 @@ const createSocket = (url: string, accessToken?: string) => {
   return socket;
 };
 
-const useWebSocket= (url: string, accessToken?: string): Socket | null => {
+const useWebSocket = (url: string, accessToken?: string): Socket | null => {
   const [readySocket, setReadySocket] = useState<Socket | null>(null);
 
   useEffect(() => {
@@ -112,7 +115,7 @@ const useWebSocket= (url: string, accessToken?: string): Socket | null => {
       // Не отключаем socket, чтобы сохранить синглтон
       // Очистка подписок будет в компоненте
     };
-  }, []);
+  }, [url, accessToken]);
 
   return readySocket;
 };

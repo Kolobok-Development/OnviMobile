@@ -28,26 +28,37 @@ const Balance = ({ bottomSheetIndex }: BalanceProps) => {
     accessToken,
   } = useStore();
 
-  const socket = useWebSocket('https://kolobok-development-onvi-mobile-188a.twc1.net', accessToken);
+  const socket = useWebSocket('wss://kolobok-development-onvi-mobile-188a.twc1.net', accessToken);
 
   useEffect(() => {
     if (!socket) return;
 
-    socket.emit('request_balance');
-    console.log('Запрос на обновление баланса отправлен');
+    const requestBalance = () => {
+      setTimeout(() => { 
+        socket.emit('request_balance');
+      console.log('Запрос на обновление баланса отправлен');
+      }, 5000)
+    };
 
     const onBalanceUpdate = (data: number) => {
       console.log('Получено обновление баланса:', data);
       setUserBalance(data);
     };
 
+    const onConnect = () => {
+      console.log('WebSocket подключение установлено');
+      requestBalance();
+    };
+
+    socket.on('connect', onConnect);
     socket.on('balance_update', onBalanceUpdate);
 
     return () => {
+      socket.off('connect', onConnect);
       socket.off('balance_update', onBalanceUpdate);
       console.log('Слушатель balance_update очищен');
     };
-  }, [setUserBalance]);
+  }, [socket, setUserBalance]);
 
   // const { message, connected, requestBalance } = useSocket(socketUrl, accessToken);
 
