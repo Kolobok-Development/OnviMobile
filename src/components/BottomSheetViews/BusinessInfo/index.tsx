@@ -29,9 +29,8 @@ const BusinessInfo = () => {
 
   const modalCallback = async (bayType: string) => {
     if (true) {
-      // здесь можно добавить подгрузку бесплатных пылесосов
+      setOrderDetails({...orderDetails, bayType: bayType});
       if (bayType === "VACUUME") {
-        setOrderDetails({...orderDetails, bayType: bayType});
         const data = await getFreeVacuum();
         console.log("getFreeVacuum: ", data);
         setFreeVacuum(data);        
