@@ -1,5 +1,4 @@
-import React from 'react';
-
+import React, { useEffect } from 'react';
 import {
   TouchableOpacity,
   StyleSheet,
@@ -8,25 +7,80 @@ import {
   View,
   Platform,
 } from 'react-native';
-
-import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-
-import {dp} from '../../utils/dp';
-
-import {useTheme} from '@context/ThemeProvider';
-
+import { navigateBottomSheet } from '@navigators/BottomSheetStack';
+import { dp } from '../../utils/dp';
+import { useTheme } from '@context/ThemeProvider';
 import useStore from '../../state/store';
-
 import BalancePlaceholder from './BalancePlaceholder';
+import useWebSocket from '@hooks/useWebSocket';
 
 interface BalanceProps {
   bottomSheetIndex: number;
 }
 
-const Balance = ({bottomSheetIndex}: BalanceProps) => {
-  const {theme} = useTheme();
+const Balance = ({ bottomSheetIndex }: BalanceProps) => {
+  const { theme } = useTheme();
+  const {
+    user,
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setUserBalance,
+    accessToken,
+  } = useStore();
 
-  const {user, bottomSheetRef, bottomSheetSnapPoints} = useStore();
+  const socket = useWebSocket('https://kolobok-development-onvi-mobile-188a.twc1.net', accessToken);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.emit('request_balance');
+    console.log('Запрос на обновление баланса отправлен');
+
+    const onBalanceUpdate = (data: number) => {
+      console.log('Получено обновление баланса:', data);
+      setUserBalance(data);
+    };
+
+    socket.on('balance_update', onBalanceUpdate);
+
+    return () => {
+      socket.off('balance_update', onBalanceUpdate);
+      console.log('Слушатель balance_update очищен');
+    };
+  }, [setUserBalance]);
+
+  // const { message, connected, requestBalance } = useSocket(socketUrl, accessToken);
+
+  // useEffect(() => {
+  //   if (connected) {
+  //     console.log('💥 WebSocket connected, requesting balance...');
+  //     requestBalance();
+  //   }
+  // }, [connected, requestBalance]);
+
+  // useEffect(() => {
+  //   if (message) {
+  //     console.log('💥 Received balance update:', message);
+
+  //     let balance = null;
+
+  //     if (message.balance !== undefined) {
+  //       balance = message.balance;
+  //     } 
+  //     else if (message.data?.balance !== undefined) {
+  //       balance = message.data.balance;
+  //     }
+  //     else if (message.cardBalance !== undefined) {
+  //       balance = message.cardBalance;
+  //     }
+
+  //     if (balance !== null) {
+  //       setUserBalance(balance);
+  //     } else {
+  //       console.error('Received message does not contain balance:', message);
+  //     }
+  //   }
+  // }, [message, setUserBalance]);
 
   return (
     <>
@@ -53,12 +107,11 @@ const Balance = ({bottomSheetIndex}: BalanceProps) => {
             }}>
             <Image
               source={require('../../assets/icons/small-icon.png')}
-              style={{width: dp(30), height: dp(30)}}
+              style={{ width: dp(30), height: dp(30) }}
             />
-            <Text style={{...styles.balance, color: theme.textColor}}>
+            <Text style={{ ...styles.balance, color: theme.textColor }}>
               {user.cards.balance}
             </Text>
-            {/*<NotificationCircle number={4} /> */}
           </TouchableOpacity>
         </View>
       )}
@@ -79,7 +132,7 @@ const styles = StyleSheet.create({
     borderRadius: 45,
     padding: dp(5),
     shadowColor: '#494949',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
     shadowRadius: 10,
     justifyContent: 'space-between',
@@ -99,14 +152,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   androidShadow: {
-    elevation: 4, // Add elevation for Android shadow
+    elevation: 4,
   },
   iosShadow: {
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 2,
   },
 });
 
-export {Balance};
+export { Balance };
