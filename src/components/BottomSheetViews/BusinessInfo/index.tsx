@@ -28,7 +28,6 @@ const BusinessInfo = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = async (bayType: string) => {
-    if (true) {
       setOrderDetails({...orderDetails, bayType: bayType});
       if (bayType === "VACUUME") {
         const data = await getFreeVacuum();
@@ -39,9 +38,6 @@ const BusinessInfo = () => {
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
       );
-    } else {
-      setModalVisible(false);
-    }
   };
 
   const forceForward = () => {
