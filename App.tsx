@@ -19,7 +19,7 @@ import {
 } from 'react-native-reanimated';
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
-import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider, DdLogs } from '@datadog/mobile-react-native';
+import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider } from '@datadog/mobile-react-native';
 
 if (__DEV__) {
   require('./ReactotronConfig');
