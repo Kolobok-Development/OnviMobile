@@ -66,13 +66,21 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
           }
 
           setSubscriptionData(data);
-          const expirationAt = data.expiration_at as string;
-          const formattedDate = expirationAt.replace("T", " ").replace("Z", "");
 
-          Toast.show({
-            type: 'customSuccessToast',
-            text1: `Подписка действует до ${formattedDate}.`,
-          });
+          if (data.expiration_at) {
+            const expirationAt = data.expiration_at;
+            const formattedDate = expirationAt.replace("T", " ").replace("Z", "");
+
+            Toast.show({
+              type: 'customSuccessToast',
+              text1: `Подписка действует до ${formattedDate}.`,
+            });
+          } else {
+            Toast.show({
+              type: 'customSuccessToast',
+              text1: `Срок действия подписки не установлен`,
+            });
+          }
         } else {
           Toast.show({
             type: 'customErrorToast',
@@ -101,7 +109,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
   /**
    * Optimized function to handle activation
    */
-  const handleActivation = useCallback(() => {
+  const handleActivation = () => {
     // if (isRedirectIntegration) {
     trigger()
       .then(data => {
@@ -139,7 +147,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
     setGazpromToken(null);
 
     // }, [authToken, isRedirectIntegration]);
-  }, [authToken]);
+  }
 
   /**
    * Optimized function to close modal
