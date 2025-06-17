@@ -43,44 +43,65 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
   };
 };
 
-let datadogConfig;
-
-const initializeDatadog = async () => {
-  try {
-    const deviceId = await DeviceInfo.getUniqueId();
-    console.log("deviceId:", deviceId);
-    
-
-    datadogConfig = new DatadogProviderConfiguration(
-      "puba21093aa63718370f3d12b6069ca901c",
-      "production",
-      "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
-      true,
-      true,
-      true
-    );
-
-    datadogConfig.site = "EU1";
-    datadogConfig.longTaskThresholdMs = 100;
-    datadogConfig.nativeCrashReportEnabled = true;
-    datadogConfig.sessionSamplingRate = 100;
-    datadogConfig.serviceName = 'onvi-mobile';
-
-    await DdSdkReactNative.initialize(datadogConfig);
-    
-    await DdSdkReactNative.setUserInfo({
-      id: deviceId,
-    });
-
-    console.log('Datadog initialized successfully');
-  } catch (error) {
-    console.error('Failed to initialize Datadog:', error);
-  }
+type DatadogWrapperProps = {
+  children: React.ReactNode;
 };
 
-initializeDatadog().catch(error => {
-  console.error('Failed to initialize Datadog:', error);
-});
+const DatadogWrapper = ({ children }: DatadogWrapperProps) => {
+  const [datadogConfig, setDatadogConfig] = useState<DatadogProviderConfiguration | null>(null);
+  const [initializationError, setInitializationError] = useState(false);
+
+  useEffect(() => {
+    const initializeDatadog = async () => {
+      try {
+        const deviceId = await DeviceInfo.getUniqueId();
+
+        const config = new DatadogProviderConfiguration(
+          "puba21093aa63718370f3d12b6069ca901c",
+          "production",
+          "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
+          true,
+          true,
+          true
+        );
+
+        config.site = "EU1";
+        config.longTaskThresholdMs = 100;
+        config.nativeCrashReportEnabled = true;
+        config.sessionSamplingRate = 100;
+        config.serviceName = 'onvi-mobile';
+
+        await DdSdkReactNative.initialize(config);
+        await DdSdkReactNative.setUserInfo({ id: deviceId });
+
+        console.log('Datadog initialized successfully');
+        setDatadogConfig(config);
+      } catch (error) {
+        console.error('Datadog initialization failed:', error);
+        setInitializationError(true);
+      }
+    };
+
+    initializeDatadog();
+  }, []);
+
+  // Если инициализация еще не завершена
+  if (!datadogConfig && !initializationError) {
+    return null; 
+  }
+
+  // Если произошла ошибка - рендерим без провайдера
+  if (initializationError) {
+    return <>{children}</>;
+  }
+
+  // Успешная инициализация
+  return (
+    <DatadogProvider configuration={datadogConfig!}>
+      {children}
+    </DatadogProvider>
+  );
+};
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
@@ -158,7 +179,7 @@ function App(): React.JSX.Element {
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <DatadogProvider configuration={datadogConfig}>
+    <DatadogWrapper>
       <ThemeProvider>
         <RemoteNotifications />
         <IntlProvider locale={'ru'}>
@@ -172,7 +193,7 @@ function App(): React.JSX.Element {
           </GestureHandlerRootView>
         </IntlProvider>
       </ThemeProvider>
-    </DatadogProvider>
+    </DatadogWrapper>
   );
 }
 
