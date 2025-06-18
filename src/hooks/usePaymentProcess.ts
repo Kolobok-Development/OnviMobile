@@ -238,10 +238,11 @@ export const usePaymentProcess = (
         user,
         paymentMethodTypes,
       );
-
+      
       // Create order request
       const createOrderRequest: ICreateOrderRequest = {
         sum: realSum,
+        originalSum: order.sum,
         rewardPointsUsed: pointsSum,
         carWashId: Number(order.posId),
         bayNumber: Number(order.bayNumber),
@@ -254,7 +255,7 @@ export const usePaymentProcess = (
         createOrderRequest.promoCodeId = promoCodeId;
       }
 
-      // Create order
+      // Create order      
       const orderResult: ICreateOrderResponse = await create(
         createOrderRequest,
       );
