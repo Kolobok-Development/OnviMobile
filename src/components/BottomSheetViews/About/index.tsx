@@ -8,7 +8,7 @@ import {
 import {Platform} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
-
+  import Config from 'react-native-config';
 import {GeneralBottomSheetNavigationProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const About = () => {
@@ -39,10 +39,10 @@ const About = () => {
           </View>
 
           <Text style={[styles.text, styles.appName]}>onvi</Text>
-
+    
           <View style={styles.section}>
             <Text style={styles.header}>Версия приложения</Text>
-            <Text style={styles.text}>1.0.0</Text>
+            <Text style={styles.text}>{Config.APP_VERSION}</Text>
           </View>
 
           <View style={styles.section}>

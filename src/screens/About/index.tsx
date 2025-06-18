@@ -14,6 +14,7 @@ import {useNavigation} from '@react-navigation/core';
 
 import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+import Config from 'react-native-config';
 
 const About = () => {
   const navigation =
@@ -34,7 +35,7 @@ const About = () => {
           <Text style={{...styles.title}}>Onvi</Text>
           <View style={styles.section}>
             <Text style={{...styles.sectionTitle}}>Версия приложения</Text>
-            <Text style={{...styles.text}}>1.0.0</Text>
+            <Text style={{...styles.text}}>{Config.APP_VERSION}</Text>
           </View>
           <View style={styles.section}>
             <Text style={{...styles.sectionTitle}}>
