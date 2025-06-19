@@ -79,6 +79,7 @@
     "react-native-video": "^6.8.2",
     "react-native-video-cache-control": "^1.2.3",
     "react-native-webview": "^13.13.2",
+    "socket.io-client": "^4.8.1",
     "stacktrace-parser": "^0.1.10",
     "swr": "^2.2.5",
     "yarn": "^1.22.21",

@@ -7,19 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A7C5AF33695E395345EB6B4 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		011755DBE66761FA4653B2EE /* Pods_OnviMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53BF6B610607AE27014E382F /* Pods_OnviMobile.framework */; };
+		0A7C5AF33695E395345EB6B4 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		8BAA15962DD4D39700F06DB1 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15952DD4D39700F06DB1 /* CoreServices.framework */; };
-		8BAA15982DD4D3A500F06DB1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15972DD4D3A500F06DB1 /* SystemConfiguration.framework */; };
-		8BAA159A2DD4D3AE00F06DB1 /* AppMetricaWebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15992DD4D3AE00F06DB1 /* AppMetricaWebKit.framework */; };
-		8BAA159C2DD4D3D700F06DB1 /* AppMetricaWebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA159B2DD4D3D700F06DB1 /* AppMetricaWebKit.framework */; };
-		8BAA159E2DD4D3E000F06DB1 /* CoreSpotlight.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA159D2DD4D3E000F06DB1 /* CoreSpotlight.framework */; };
-		8BAA15A02DD4D3E800F06DB1 /* AdServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA159F2DD4D3E800F06DB1 /* AdServices.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8BAA15A22DD4D40100F06DB1 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15A12DD4D40100F06DB1 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8BAA15A42DD4D41400F06DB1 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15A32DD4D41400F06DB1 /* StoreKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		8BAA15A62DD4D42100F06DB1 /* LinkPresentation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8BAA15A52DD4D42100F06DB1 /* LinkPresentation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9D7502E02C85D0B300B594ED /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D7502DF2C85D0B300B594ED /* GoogleService-Info.plist */; };
 		9D7EEE0D2BDFA2D90041B660 /* PaymentGatewayModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9D7EEE0C2BDFA2D90041B660 /* PaymentGatewayModule.m */; };
 		9D7EEE102BDFA3C20041B660 /* PaymentGatewayModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D7EEE0F2BDFA3C20041B660 /* PaymentGatewayModule.swift */; };
@@ -38,7 +30,6 @@
 		9DEAD1632D534BD00044943F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		9DEAD1642D534BD00044943F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		9DEAD1652D534BD00044943F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9D7502DF2C85D0B300B594ED /* GoogleService-Info.plist */; };
-		D5F719CAA4173FDB522CC6EF /* Pods_OnviMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53BF6B610607AE27014E382F /* Pods_OnviMobile.framework */; };
 		E5A57083F0965E8502FB1574 /* Pods_OnviMobile_OnviMobile_Dev.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C8200125F437E68B676AE0D2 /* Pods_OnviMobile_OnviMobile_Dev.framework */; };
 		EB92692F7B4CE5F98626FE0D /* Pods_OnviMobile_OnviMobile_Stage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7AB1868F43D89D27F65108A0 /* Pods_OnviMobile_OnviMobile_Stage.framework */; };
 /* End PBXBuildFile section */
@@ -90,7 +81,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0A7C5AF33695E395345EB6B4 /* BuildFile in Frameworks */,
-				C7D2E58C5FC55E205EF478D7 /* Pods_OnviMobile.framework in Frameworks */,
+				011755DBE66761FA4653B2EE /* Pods_OnviMobile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +261,7 @@
 				9DEAD15B2D534BD00044943F /* Sources */,
 				9DEAD1602D534BD00044943F /* Frameworks */,
 				9DEAD1622D534BD00044943F /* Resources */,
-				9DEAD1662D534BD00044943F /* Bundle React Native code and images */,
+				9DEAD1662D534BD00044943F /* [CP] Copy Pods Resources */,
 				D3EFCCDC9C7D146333E7C7EE /* [CP] Embed Pods Frameworks */,
 				1048FA4F8C921C2F7677C427 /* [CP] Copy Pods Resources */,
 			);
@@ -306,7 +297,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "../../../Downloads/ios-branch-sdk-spm-main" */,
+				8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "ios-branch-sdk-spm-main" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -515,22 +506,21 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
 		};
-		9DEAD1662D534BD00044943F /* Bundle React Native code and images */ = {
+		9DEAD1662D534BD00044943F /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
-				"$(SRCROOT)/.xcode.env.local",
-				"$(SRCROOT)/.xcode.env",
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile-OnviMobile-Stage/Pods-OnviMobile-OnviMobile-Stage-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile-OnviMobile-Stage/Pods-OnviMobile-OnviMobile-Stage-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-OnviMobile-OnviMobile-Stage/Pods-OnviMobile-OnviMobile-Stage-resources.sh\"\n";
 		};
 		BE7AC32CAE6D65B3482D3696 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -572,11 +562,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"",
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"",
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -782,7 +772,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -861,7 +854,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -1077,7 +1073,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "../../../Downloads/ios-branch-sdk-spm-main" */ = {
+		8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "ios-branch-sdk-spm-main" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../../Downloads/ios-branch-sdk-spm-main";
 		};

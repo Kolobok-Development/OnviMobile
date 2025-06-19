@@ -169,6 +169,12 @@ PODS:
   - KTVHTTPCache (2.0.1):
     - KTVCocoaHTTPServer
   - libevent (2.1.12)
+  - lottie-ios (4.5.0)
+  - lottie-react-native (7.2.2):
+    - glog
+    - lottie-ios (= 4.5.0)
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
   - MapboxCommon (23.11.4)
   - MapboxCoreMaps (10.19.2):
     - MapboxCommon (~> 23.11)
@@ -1381,6 +1387,7 @@ DEPENDENCIES:
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
   - hermes-engine (from `../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec`)
   - libevent (~> 2.1.12)
+  - lottie-react-native (from `../node_modules/lottie-react-native`)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCT-Folly/Fabric (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -1503,6 +1510,7 @@ SPEC REPOS:
     - KTVCocoaHTTPServer
     - KTVHTTPCache
     - libevent
+    - lottie-ios
     - MapboxCommon
     - MapboxCoreMaps
     - MapboxMaps
@@ -1532,6 +1540,8 @@ EXTERNAL SOURCES:
   hermes-engine:
     :podspec: "../node_modules/react-native/sdks/hermes-engine/hermes-engine.podspec"
     :tag: hermes-2023-11-17-RNv0.73.0-21043a3fc062be445e56a2c10ecd8be028dd9cc5
+  lottie-react-native:
+    :path: "../node_modules/lottie-react-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -1717,6 +1727,8 @@ SPEC CHECKSUMS:
   KTVCocoaHTTPServer: df8d7b861e603ff8037e9b2138aca2563a6b768d
   KTVHTTPCache: 588c3eb16f6bd1e6fde1e230dabfb7bd4e490a4d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  lottie-ios: a881093fab623c467d3bce374367755c272bdd59
+  lottie-react-native: 4b934ed8c339493a5425cde000fb23fa01052e8d
   MapboxCommon: cc47fafe3fe5408ca49240aa80fa64f27f275711
   MapboxCoreMaps: 35685edba03e44468aed57c3dfd7f8795edafda8
   MapboxMaps: f87023cf0d72b180b40ea0b6fb4b2d7db6b73b71
