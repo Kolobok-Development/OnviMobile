@@ -182,6 +182,7 @@ const Payment = () => {
               order={order}
               user={user}
               selectedPos={selectedPos}
+              finalOrderCost={finalOrderCost}
             />
 
             <View style={styles.choice}>
