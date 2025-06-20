@@ -28,70 +28,41 @@ const Balance = ({ bottomSheetIndex }: BalanceProps) => {
     accessToken,
   } = useStore();
 
+  console.log("создали подключение");
+
   const socket = useWebSocket('wss://kolobok-development-onvi-mobile-188a.twc1.net', accessToken);
 
   useEffect(() => {
     if (!socket) return;
-
-    const requestBalance = () => {
-      setTimeout(() => { 
-        socket.emit('request_balance');
-      console.log('Запрос на обновление баланса отправлен');
-      }, 5000)
-    };
-
+  
+    console.log("Зашли в useEffect");
+  
     const onBalanceUpdate = (data: number) => {
       console.log('Получено обновление баланса:', data);
       setUserBalance(data);
     };
-
+  
     const onConnect = () => {
       console.log('WebSocket подключение установлено');
-      requestBalance();
+      socket.emit('request_balance');
     };
-
+  
+    const onAuthError = (error: any) => {
+      console.error('Authentication failed:', error);
+      // Пересоздаём соединение с новым токеном
+    };
+  
     socket.on('connect', onConnect);
     socket.on('balance_update', onBalanceUpdate);
-
+    socket.on('auth_error', onAuthError);
+  
     return () => {
       socket.off('connect', onConnect);
       socket.off('balance_update', onBalanceUpdate);
-      console.log('Слушатель balance_update очищен');
+      socket.off('auth_error', onAuthError);
+      socket.disconnect(); // Важно: отключаем сокет
     };
-  }, [socket, setUserBalance]);
-
-  // const { message, connected, requestBalance } = useSocket(socketUrl, accessToken);
-
-  // useEffect(() => {
-  //   if (connected) {
-  //     console.log('💥 WebSocket connected, requesting balance...');
-  //     requestBalance();
-  //   }
-  // }, [connected, requestBalance]);
-
-  // useEffect(() => {
-  //   if (message) {
-  //     console.log('💥 Received balance update:', message);
-
-  //     let balance = null;
-
-  //     if (message.balance !== undefined) {
-  //       balance = message.balance;
-  //     } 
-  //     else if (message.data?.balance !== undefined) {
-  //       balance = message.data.balance;
-  //     }
-  //     else if (message.cardBalance !== undefined) {
-  //       balance = message.cardBalance;
-  //     }
-
-  //     if (balance !== null) {
-  //       setUserBalance(balance);
-  //     } else {
-  //       console.error('Received message does not contain balance:', message);
-  //     }
-  //   }
-  // }, [message, setUserBalance]);
+  }, [socket]);
 
   return (
     <>
