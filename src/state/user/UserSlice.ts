@@ -26,6 +26,7 @@ export interface UserSlice {
   loading: boolean;
   freeVacuum: { limit: number, remains: number };
   setUser: (user: IUser | null) => void;
+  setUserBalance: (balance: number) => void;
   setAccessToken: (accessToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setFcmToken: (fcmToken: string | null) => void;
@@ -61,6 +62,22 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   refreshRetryCounter: MAX_REFRESH_RETRIES,
   freeVacuum: { limit: 0, remains: 0 },
   setUser: user => set({user}),
+  setUserBalance: (balance: number) => {
+    set((state) => {
+      if (state.user && state.user.cards) {
+        return {
+          user: {
+            ...state.user, 
+            cards: {
+              ...state.user.cards, 
+              balance, 
+            },
+          },
+        };
+      }
+      return state;
+    });
+  },
   setAccessToken: accessToken => set({accessToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
   setLoading: loading => set({loading}),

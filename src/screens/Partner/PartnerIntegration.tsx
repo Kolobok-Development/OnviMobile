@@ -1,28 +1,30 @@
-import React, {useState, useCallback, useEffect} from 'react';
-import {View, Modal, ActivityIndicator} from 'react-native';
-import {Button} from '@styled/buttons';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, Modal, ActivityIndicator } from 'react-native';
+import { Button } from '@styled/buttons';
 import PromoModal from '@components/PromoModal';
-import {Campaign, Partner as PartnerType} from '../../types/api/app/types';
-import {getGazpromAuthToken} from '@services/api/partners';
-import {dp} from '@utils/dp.ts';
+import { Campaign, Partner as PartnerType } from '../../types/api/app/types';
+import { getGazpromAuthToken, getGazpromSubscriptionData } from '@services/api/partners';
+import { dp } from '@utils/dp.ts';
 import useSWRMutation from 'swr/mutation';
 import Toast from 'react-native-toast-message';
 import RNGPBonus from '@setpartnerstv/react-native-gpbonus-sdk';
 import useStore from '../../state/store';
+import { IGazpromSubscriptionResponseData } from 'src/types/api/partner/res';
 
 
 interface PartnerIntegrationProps {
   partner: Campaign;
 }
 
-const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
-  
+const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
+
   const [modalVisible, setModalVisible] = useState(false);
   const [authToken, setAuthToken] = useState<string | null>(null);
   const [webViewError, setWebViewError] = useState(null);
   const [url, setUrl] = useState<string | null>(null);
+  const [subscriptionData, setSubscriptionData] = useState<IGazpromSubscriptionResponseData | null>(null);
 
-  const {referenceToken, setReferenceToken, gazpromToken, setGazpromToken} = useStore.getState();
+  const { setReferenceToken, gazpromToken, setGazpromToken } = useStore.getState();
 
   // Fetch auth token *only* for redirect integration
   // const isRedirectIntegration =
@@ -52,29 +54,66 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   });
 
   useEffect(() => {
-    console.log(partnerData);
-  }, [partnerData]);
+
+    setReferenceToken(null);
+
+    getGazpromSubscriptionData()
+      .then(data => {
+        if (data.status !== "ABSENT") {
+
+          if (gazpromToken) {
+            setAuthToken(gazpromToken);
+          }
+
+          setSubscriptionData(data);
+
+          if (data.expiration_at) {
+            const expirationAt = data.expiration_at;
+            const formattedDate = expirationAt.replace("T", " ").replace("Z", "");
+
+            Toast.show({
+              type: 'customSuccessToast',
+              text1: `Подписка действует до ${formattedDate}.`,
+            });
+          } else {
+            Toast.show({
+              type: 'customSuccessToast',
+              text1: `Срок действия подписки не установлен`,
+            });
+          }
+        } else {
+          Toast.show({
+            type: 'customErrorToast',
+            text1: 'Подписка не активна.',
+          });
+        }
+      })
+      .catch(error => {
+        console.error("Ошибка при получении данных о подписке:", error);
+        Toast.show({
+          type: 'customErrorToast',
+          text1: 'Произошла ошибка при получении данных о подписке.',
+        });
+      });
+  }, []);
+
   /**
    * useEffect to wait for authentication before setting authToken
    */
-  useEffect(() => {
-    if (gazpromToken) {
-      setAuthToken(gazpromToken);
-      setGazpromToken(null);      
-    } else {
-      if (!isMutating && partnerData?.token) {
-        setAuthToken(partnerData.token);
-      }
-    }
-  }, [isMutating, partnerData]);
+  // useEffect(() => {
+  //   if (!isMutating && partnerData?.token) {
+  //     setAuthToken(partnerData.token);
+  //   }
+  // }, [isMutating, partnerData]);
 
   /**
    * Optimized function to handle activation
    */
-  const handleActivation = useCallback(() => {
+  const handleActivation = () => {
     // if (isRedirectIntegration) {
-      trigger()
-        .then(data => {
+    trigger()
+      .then(data => {
+        if (!authToken) {
           setAuthToken(data?.token);
           const queryParams = {
             utm_source: 'moy-ka_ds',
@@ -105,7 +144,6 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
     setModalVisible(true);
   }, [authToken]);
 
-
   const handleClose = useCallback(() => {
     setModalVisible(false);
     if (webViewError) {
@@ -132,9 +170,9 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   }, []);
 
   return (
-    <View style={{paddingTop: dp(30)}}>
+    <View style={{ paddingTop: dp(30) }}>
       <Button
-        label={partner.attributes.button_title}
+        label={subscriptionData ? "Открыть" : partner.attributes.button_title}
         width={dp(150)}
         color="blue"
         fontSize={14}
@@ -165,7 +203,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
 
       {/* WebView for `redirect` integration type - Opens only when AuthToken is Ready */}
       {/* {isRedirectIntegration && modalVisible && authToken && ( */}
-      { modalVisible && authToken && (
+      {modalVisible && authToken && (
         <Modal visible={modalVisible} animationType="slide" transparent>
           <RNGPBonus
             // widgetUrl={url ? url : partner.attributes.itegration_data?.url}
@@ -197,7 +235,7 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
 
       {/* Show Loading UI if we are still fetching token */}
       {/* {isRedirectIntegration && modalVisible && !authToken && ( */}
-      { modalVisible && !authToken && (
+      {modalVisible && !authToken && (
         <Modal visible={modalVisible} animationType="slide" transparent>
           {!webViewError && (
             <View
@@ -216,4 +254,4 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
   );
 };
 
-export {PartnerIntegration};
+export { PartnerIntegration };

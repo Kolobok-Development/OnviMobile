@@ -25,6 +25,7 @@ import {RouteProp, useRoute} from '@react-navigation/native';
 import {Copy} from 'react-native-feather';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ScreenHeader from '@components/ScreenHeader/index.tsx';
+import useStore from '../../state/store';
 
 type PromoInputRouteProp = RouteProp<DrawerParamList, 'Ввод Промокода'>;
 
@@ -35,6 +36,7 @@ const PromosInput = () => {
 
   const route = useRoute<PromoInputRouteProp>();
   const {promocode, type} = route.params;
+  const {setUserBalance} = useStore.getState();
 
   const {trigger, isMutating} = useSWRMutation(
     'applyUserPromo',
@@ -64,11 +66,14 @@ const PromosInput = () => {
           text1: message,
         });
       },
-      onSuccess: () =>
+      onSuccess: (data) => {
+        data.totalPoints && setUserBalance(data.totalPoints);
+      
         Toast.show({
           type: 'customSuccessToast',
           text1: 'Промокод успешно применен',
-        }),
+        })
+      }
     },
   );
 
