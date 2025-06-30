@@ -28,15 +28,14 @@ import { getCampaignList } from '@services/api/campaign';
 import { getNewsList } from '@services/api/news';
 import Modal from '@styled/Modal';
 import CampaignPlaceholder from './CampaignPlaceholder';
-import { GeneralBottomSheetRouteProp } from '../../../types/navigation/BottomSheetNavigation.ts';
-import { Button } from '@styled/buttons';
-import { Campaign, CarWashLocation } from '../../../types/api/app/types.ts';
+import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import {Button} from '@styled/buttons';
+import {Campaign, CarWashLocation} from '../../../types/api/app/types.ts';
 
-import { getStoryView } from '@services/api/story-view';
-import { StoryViewPlaceholder } from '@components/StoryView/StoryViewPlaceholder.tsx';
-import { transformContentDataToUserStories } from '../../../shared/mappers/StoryViewMapper.ts';
-import { StoryView } from '@components/StoryView';
-import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.ts';
+import {getStoryView} from '@services/api/story-view';
+import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
+import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
+import {StoryView} from '@components/StoryView';
 
 const Main = () => {
   const {
@@ -50,7 +49,7 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const { setSelectedPos, referenceToken, setGazpromToken } = useStore.getState();
+  const {setSelectedPos} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -120,18 +119,6 @@ const Main = () => {
 
   const isNearestCarWashSet = useRef(false);
 
-  const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
-    const authTokenData = await getGazpromAuthTokenFromReference({ reference: referenceToken });
-    console.log("gazpromToken: ", authTokenData.token);
-    authTokenData?.token && setGazpromToken(authTokenData.token);
-    if (!campaignLoading && campaignData) {
-      const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
-      if (gazpromCampaign) {
-        setIsBottomSheetOpen(true);
-        handleCampaignItemPress(gazpromCampaign);
-      }
-    }
-  }
 
   useEffect(() => {
     if (
@@ -146,11 +133,6 @@ const Main = () => {
 
   }, [location, posList, campaignLoading, campaignData]);
 
-  useEffect(() => {
-    if (referenceToken && campaignData) {
-      getTokenAndRedirectToGPBWidget(referenceToken);
-    }
-  }, [campaignLoading, referenceToken]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {

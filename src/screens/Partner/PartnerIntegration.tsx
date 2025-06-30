@@ -115,43 +115,35 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
       .then(data => {
         if (!authToken) {
           setAuthToken(data?.token);
-        }
-        const queryParams = {
-          utm_source: 'moy-ka_ds',
-          utm_medium: 'partner_widget',
-          utm_campaign: 'online',
-          utm_content: 'mobapp',
-        };
+          const queryParams = {
+            utm_source: 'moy-ka_ds',
+            utm_medium: 'partner_widget',
+            utm_campaign: 'online',
+            utm_content: 'mobapp',
+          };
 
-        const queryString = Object.keys(queryParams)
-          .map(
-            key =>
-              `${encodeURIComponent(key)}=${encodeURIComponent(
-                queryParams[key],
-              )}`,
-          )
-          .join('&');
+          const queryString = Object.keys(queryParams)
+            .map(
+              key =>
+                `${encodeURIComponent(key)}=${encodeURIComponent(
+                  queryParams[key],
+                )}`,
+            )
+            .join('&');
 
-        // const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
-        const widgetUrlWithParams = `${partner.attributes.url}?${queryString}`;
-        console.log('URL ++++++ ', widgetUrlWithParams);
-        setUrl(widgetUrlWithParams);
-      })
-      .catch(err => {
-        console.log('err: ', err);
-        showErrorToast('Не получилось открыть виджет...');
-        setModalVisible(false);
-      });
-    // }
+          // const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
+          const widgetUrlWithParams = `${partner.attributes.url}?${queryString}`;
+          console.log('URL ++++++ ', widgetUrlWithParams);
+          setUrl(widgetUrlWithParams);
+        })
+        .catch(err => {
+          console.log('err: ', err);
+          showErrorToast('Не получилось открыть виджет...');
+          setModalVisible(false);
+        });
     setModalVisible(true);
-    setGazpromToken(null);
+  }, [authToken]);
 
-    // }, [authToken, isRedirectIntegration]);
-  }
-
-  /**
-   * Optimized function to close modal
-   */
   const handleClose = useCallback(() => {
     setModalVisible(false);
     if (webViewError) {
@@ -159,9 +151,17 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
     }
   }, []);
 
-  /**
-   * Handle web
-   */
+  useEffect(() => {
+    console.log('URL TO GAZPROM');
+    console.log(url);
+    if (referenceToken) {
+      handleActivation();
+      setReferenceToken(null);
+    }
+    
+  }, [url]);
+
+
   const handleWebViewError = useCallback((error: any) => {
     console.error('WebView Error:', error);
     setWebViewError(error);

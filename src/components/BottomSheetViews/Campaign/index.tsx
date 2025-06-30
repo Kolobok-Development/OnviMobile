@@ -13,7 +13,6 @@ import useStore from '../../../state/store';
 import CampaignPlaceholder from './CampaignPlaceholder';
 
 import { GeneralBottomSheetRouteProp } from '../../../types/navigation/BottomSheetNavigation.ts';
-import { PartnerIntegration } from '@screens/Partner/PartnerIntegration.tsx';
 
 const Campaign = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'Campaign'>>();
@@ -75,29 +74,19 @@ const Campaign = () => {
               </Markdown>
 
               <View style={styles.btn}>
-                {
-                  campaign.attributes.slug === "gazprom-bonus"
-                    ?
-                    <>
-                      {campaign && <PartnerIntegration partner={campaign} />}
-                    </>
-                    :
-                    <>
-                      {campaign.attributes.button_title && (
-                        <Button
-                          label={campaign.attributes.button_title}
-                          color={'blue'}
-                          width={dp(155)}
-                          fontSize={dp(13)}
-                          onClick={() => {
-                            if (campaign.attributes.url) {
-                              Linking.openURL(campaign.attributes.url);
-                            }
-                          }}
-                        />
-                      )}
-                    </>
-                }
+                  {campaign.attributes.button_title && (
+                    <Button
+                      label={campaign.attributes.button_title}
+                      color={'blue'}
+                      width={dp(155)}
+                      fontSize={dp(13)}
+                      onClick={() => {
+                        if (campaign.attributes.url) {
+                          Linking.openURL(campaign.attributes.url);
+                        }
+                      }}
+                    />
+                  )}
               </View>
             </View>
           </>
