@@ -102,14 +102,10 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
           showErrorToast('Не получилось открыть виджет...');
           setModalVisible(false);
         });
-    // }
     setModalVisible(true);
-  // }, [authToken, isRedirectIntegration]);
   }, [authToken]);
 
-  /**
-   * Optimized function to close modal
-   */
+
   const handleClose = useCallback(() => {
     setModalVisible(false);
     if (webViewError) {
@@ -121,15 +117,13 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({partner}) => {
     console.log('URL TO GAZPROM');
     console.log(url);
     if (referenceToken) {
-      // handleActivation();
+      handleActivation();
       setReferenceToken(null);
     }
     
   }, [url]);
 
-  /**
-   * Handle web
-   */
+
   const handleWebViewError = useCallback((error: any) => {
     console.error('WebView Error:', error);
     setWebViewError(error);

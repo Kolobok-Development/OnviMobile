@@ -21,16 +21,12 @@ export interface UserSlice {
   isAuthenticated: boolean;
   user: IUser | null;
   accessToken: string | null;
-  referenceToken: string | null;
-  gazpromToken: string | null;
   expiredDate: string | null;
   fcmToken: string | null;
   loading: boolean;
   freeVacuum: { limit: number, remains: number };
   setUser: (user: IUser | null) => void;
   setAccessToken: (accessToken: string | null) => void;
-  setReferenceToken: (accessToken: string | null) => void;
-  setGazpromToken: (gazpromToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setFcmToken: (fcmToken: string | null) => void;
   setLoading: (loading: boolean) => void;
@@ -60,16 +56,12 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   user: null,
   fcmToken: null,
   accessToken: null,
-  referenceToken: null,
-  gazpromToken: null,
   expiredDate: null,
   loading: true,
   refreshRetryCounter: MAX_REFRESH_RETRIES,
   freeVacuum: { limit: 0, remains: 0 },
   setUser: user => set({user}),
   setAccessToken: accessToken => set({accessToken}),
-  setReferenceToken: referenceToken => set({referenceToken}),
-  setGazpromToken: gazpromToken => set({gazpromToken}),
   setExpiredDate: expiredDate => set({expiredDate}),
   setLoading: loading => set({loading}),
   setFreeVacuum: freeVacuum => set({freeVacuum}),

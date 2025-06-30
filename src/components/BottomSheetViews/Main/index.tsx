@@ -36,7 +36,6 @@ import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
-import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.ts';
 
 const Main = () => {
   const {
@@ -50,7 +49,7 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const {setSelectedPos, referenceToken, setGazpromToken} = useStore.getState();
+  const {setSelectedPos} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -120,18 +119,6 @@ const Main = () => {
 
   const isNearestCarWashSet = useRef(false);
 
-  const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
-    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});        
-    data?.token && setGazpromToken(data.token);
-    
-    if (!campaignLoading && campaignData) {
-      const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
-      if (gazpromCampaign) {
-        setIsBottomSheetOpen(true);
-        handleCampaignItemPress(gazpromCampaign);
-      }
-    }
-  }
 
   useEffect(() => {
     if (
@@ -146,11 +133,6 @@ const Main = () => {
     
   }, [location, posList, campaignLoading, campaignData]);
 
-  useEffect(() => {
-    if (referenceToken && campaignData) {
-      getTokenAndRedirectToGPBWidget(referenceToken);
-    }
-  }, [campaignLoading, referenceToken]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {

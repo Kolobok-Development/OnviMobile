@@ -14,7 +14,6 @@ import branch, { BranchEvent } from 'react-native-branch';
 
 const Application = () => {
   const isAuthenticated = useStore().isAuthenticated;
-  const setReferenceToken = useStore().setReferenceToken;
   const [isReady, setIsReady] = useState(false);
 
   // Enhanced linking configuration
@@ -81,11 +80,6 @@ const Application = () => {
       // The user will be sent to Home page or Login based on authentication status
       const branchParams = JSON.stringify(params, null, 2);
       console.log('Branch params:', branchParams);
-      if (params && params['reference']) {
-        const reference = params['reference'].toString();
-        console.log('Reference from Branch URL:', reference);
-        setReferenceToken(reference);
-      }
     });
 
     return () => unsubscribeFromBranch();
