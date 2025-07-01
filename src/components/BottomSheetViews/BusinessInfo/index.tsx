@@ -28,10 +28,8 @@ const BusinessInfo = () => {
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = async (bayType: string) => {
-    if (true) {
-      // здесь можно добавить подгрузку бесплатных пылесосов
+      setOrderDetails({...orderDetails, bayType: bayType});
       if (bayType === "VACUUME") {
-        setOrderDetails({...orderDetails, bayType: bayType});
         const data = await getFreeVacuum();
         console.log("getFreeVacuum: ", data);
         setFreeVacuum(data);        
@@ -40,9 +38,6 @@ const BusinessInfo = () => {
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
       );
-    } else {
-      setModalVisible(false);
-    }
   };
 
   const forceForward = () => {

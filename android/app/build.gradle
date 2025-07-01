@@ -86,8 +86,10 @@ android {
         applicationId "com.onvimobile"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 8
-        versionName "1.1.4"
+
+        versionCode project.env.ANDROID_VERSION_CODE.toInteger()
+        versionName project.env.ANDROID_VERSION_NAME
+
         resValue 'string', 'build_config_package','com.onvimobile'
         resValue 'string', 'ym_app_scheme', 'onvione'
     }

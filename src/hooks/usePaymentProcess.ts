@@ -7,6 +7,7 @@ import {
   calculateActualPointsUsed,
   calculateFinalAmount,
   createPaymentConfig,
+  calculateActualDiscount,
 } from '@utils/paymentHelpers.ts';
 import { create, pingPos, register } from '@services/api/order';
 import { PaymentMethodTypesEnum } from '../types/PaymentType.ts';
@@ -187,16 +188,18 @@ export const usePaymentProcess = (
       const apiKey: string = paymentConfig.apiKey.toString();
       const storeId: string = paymentConfig.storeId.toString();
 
-      // Calculate payment amounts
-      const realSum = calculateFinalAmount(
-        order.sum,
-        discount?.discount ?? 0,
-        usedPoints,
-      );
+      const actualDiscount = calculateActualDiscount(discount, order.sum);
+
       const pointsSum = calculateActualPointsUsed(
         order.sum,
-        discount ? discount.discount : 0,
+        actualDiscount,
         usedPoints,
+      );
+
+      const realSum = calculateFinalAmount(
+        order.sum,
+        actualDiscount,
+        pointsSum,
       );
 
       // Check bay status
@@ -243,10 +246,11 @@ export const usePaymentProcess = (
         user,
         paymentMethodTypes,
       );
-
+      
       // Create order request
       const createOrderRequest: ICreateOrderRequest = {
         sum: realSum,
+        originalSum: order.sum,
         rewardPointsUsed: pointsSum,
         carWashId: Number(order.posId),
         bayNumber: Number(order.bayNumber),
@@ -259,7 +263,7 @@ export const usePaymentProcess = (
         createOrderRequest.promoCodeId = promoCodeId;
       }
 
-      // Create order
+      // Create order      
       const orderResult: ICreateOrderResponse = await create(
         createOrderRequest,
       );

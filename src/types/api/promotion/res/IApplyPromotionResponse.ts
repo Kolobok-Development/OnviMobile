@@ -12,4 +12,5 @@ export interface IApplyPromotionResponse {
   createdBy: number;
   title: string;
   description: string;
+  totalPoints?: number;
 }

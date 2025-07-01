@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState, useRef} from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,21 +11,21 @@ import {
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 // styled components
-import {Card} from '@styled/cards';
+import { Card } from '@styled/cards';
 import useStore from '../../../state/store';
-import {useTheme} from '@context/ThemeProvider';
-import {BLUE, BLACKTWO, WHITE, GREY} from '../../../utils/colors';
-import {dp} from '../../../utils/dp';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
-import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
-import {Search} from 'react-native-feather';
+import { useTheme } from '@context/ThemeProvider';
+import { BLUE, BLACKTWO, WHITE, GREY } from '../../../utils/colors';
+import { dp } from '../../../utils/dp';
+import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { navigateBottomSheet } from '@navigators/BottomSheetStack';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { Search } from 'react-native-feather';
 // @ts-ignore
 import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
 import calculateDistance from '@utils/calculateDistance.ts';
 import useSWR from 'swr';
-import {getCampaignList} from '@services/api/campaign';
-import {getNewsList} from '@services/api/news';
+import { getCampaignList } from '@services/api/campaign';
+import { getNewsList } from '@services/api/news';
 import Modal from '@styled/Modal';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
@@ -36,7 +36,6 @@ import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
-import { getGazpromAuthTokenFromReference } from '@services/api/partners/index.ts';
 
 const Main = () => {
   const {
@@ -50,16 +49,16 @@ const Main = () => {
     bottomSheetSnapPoints,
   } = useStore.getState();
 
-  const {setSelectedPos, referenceToken, setGazpromToken} = useStore.getState();
+  const {setSelectedPos} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
 
-  const {theme} = useTheme();
+  const { theme } = useTheme();
   const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
 
   // API Calls
-  const {isLoading: campaignLoading, data: campaignData} = useSWR(
+  const { isLoading: campaignLoading, data: campaignData } = useSWR(
     ['getCampaignList'],
     () => getCampaignList('*')
   );
@@ -120,18 +119,6 @@ const Main = () => {
 
   const isNearestCarWashSet = useRef(false);
 
-  const getTokenAndRedirectToGPBWidget = async (referenceToken: string) => {
-    const data = await getGazpromAuthTokenFromReference({reference: referenceToken});        
-    data?.token && setGazpromToken(data.token);
-    
-    if (!campaignLoading && campaignData) {
-      const gazpromCampaign = campaignData.find(item => item.attributes.slug === "gazprom-bonus");
-      if (gazpromCampaign) {
-        setIsBottomSheetOpen(true);
-        handleCampaignItemPress(gazpromCampaign);
-      }
-    }
-  }
 
   useEffect(() => {
     if (
@@ -143,14 +130,9 @@ const Main = () => {
       findNearestCarWash();
       isNearestCarWashSet.current = true;
     }
-    
+
   }, [location, posList, campaignLoading, campaignData]);
 
-  useEffect(() => {
-    if (referenceToken && campaignData) {
-      getTokenAndRedirectToGPBWidget(referenceToken);
-    }
-  }, [campaignLoading, referenceToken]);
 
   const handleLaunchCarWash = () => {
     if (nearByPos) {
@@ -170,8 +152,8 @@ const Main = () => {
     });
   };
 
-  const renderCampaignItem = ({item}: {item: Campaign}) => {
-    
+  const renderCampaignItem = ({ item }: { item: Campaign }) => {
+
     return (
       <TouchableOpacity
         onPress={() => {
@@ -179,7 +161,7 @@ const Main = () => {
         }}
         style={styles.campaigns}>
         <Image
-          source={{uri: item.attributes.image.data.attributes.url}}
+          source={{ uri: item.attributes.image.data.attributes.url }}
           style={{
             width: dp(340),
             height: dp(190),
@@ -192,10 +174,10 @@ const Main = () => {
 
   return (
     <BottomSheetScrollView
-      contentContainerStyle={{flexGrow: 1}}
+      contentContainerStyle={{ flexGrow: 1 }}
       nestedScrollEnabled={true}
       scrollEnabled={true}>
-      <View style={{flexGrow: 1}}>
+      <View style={{ flexGrow: 1 }}>
         <Modal
           visible={nearByModal}
           onClose={() => setNearByModal(false)}
@@ -224,7 +206,7 @@ const Main = () => {
           </View>
         </Modal>
         <Card>
-          <View style={{...styles.row, marginBottom: dp(16)}}>
+          <View style={{ ...styles.row, marginBottom: dp(16) }}>
             <TouchableOpacity
               style={{
                 backgroundColor: '#D8D9DD',
@@ -245,7 +227,7 @@ const Main = () => {
                 stroke={'#000000'}
                 width={dp(20)}
                 height={dp(20)}
-                style={{marginLeft: dp(15)}}
+                style={{ marginLeft: dp(15) }}
               />
               <Text
                 style={{
@@ -273,7 +255,7 @@ const Main = () => {
                   height: dp(45),
                   resizeMode: 'contain',
                 }}
-                //Change your icon image here
+              //Change your icon image here
               />
             </TouchableOpacity>
           </View>
@@ -286,7 +268,7 @@ const Main = () => {
               }}>
               <View style={styles.label}>
                 <Text
-                  style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
+                  style={{ color: WHITE, fontSize: dp(16), fontWeight: '700' }}>
                   Моемся
                 </Text>
               </View>
@@ -300,14 +282,14 @@ const Main = () => {
                     flexShrink: 1,
                   }}>
                   {nearByPos &&
-                  nearByPos.carwashes &&
-                  nearByPos.carwashes.length
+                    nearByPos.carwashes &&
+                    nearByPos.carwashes.length
                     ? `${nearByPos.carwashes[0].name}`
                     : ''}
                 </Text>
                 <Image
                   source={require('../../../assets/icons/small-icon.png')}
-                  style={{width: 30, height: 30}}
+                  style={{ width: 30, height: 30 }}
                 />
               </View>
             </TouchableOpacity>
@@ -320,7 +302,7 @@ const Main = () => {
               }}>
               <View style={styles.label}>
                 <Text
-                  style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
+                  style={{ color: WHITE, fontSize: dp(16), fontWeight: '700' }}>
                   Промокоды
                 </Text>
               </View>
@@ -339,7 +321,7 @@ const Main = () => {
               )}
             </>
           )}
-          <View style={{...styles.newsRow}}>
+          <View style={{ ...styles.newsRow }}>
             <Text
               style={{
                 color: theme.textColor,
@@ -358,7 +340,7 @@ const Main = () => {
                   {newsData[0] && (
                     <View style={styles.leftNewsColumn}>
                       <TouchableOpacity
-                        style={{flex: 1}}
+                        style={{ flex: 1 }}
                         onPress={() =>
                           navigateBottomSheet('Post', {
                             data: newsData[0],
@@ -413,11 +395,11 @@ const Main = () => {
               )}
             </>
           )}
-          <View style={{flex: 1, paddingBottom: dp(50), marginTop: dp(10)}}>
+          <View style={{ flex: 1, paddingBottom: dp(50), marginTop: dp(10) }}>
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
-              <View style={{flex: 1}}>
+              <View style={{ flex: 1 }}>
                 {campaignData && (
                   <Carousel
                     loop
@@ -474,7 +456,7 @@ const PostsPlaceholder = () => {
   );
 };
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -595,4 +577,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export {Main};
+export { Main };

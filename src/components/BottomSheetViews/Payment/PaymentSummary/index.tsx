@@ -11,10 +11,11 @@ interface PaymentSummaryProps {
   order: OrderDetailsType;
   user: IUser | null;
   selectedPos: CarWash | null;
+  finalOrderCost: number;
 }
 
 const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
-  ({order, user, selectedPos}) => {
+  ({order, user, selectedPos, finalOrderCost}) => {
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -42,7 +43,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
                 </View>
               ) : (
                 <Text style={styles.itemPrice}>
-                  {order.sum ? Math.round((order.sum * user.tariff) / 100) : 0}{' '}
+                  {(finalOrderCost * user.tariff / 100) < 1 ? 0 : Math.ceil(finalOrderCost * user.tariff / 100)}{' '}
                   ₽
                 </Text>
               )}
