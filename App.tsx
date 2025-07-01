@@ -1,29 +1,25 @@
-import React, {useEffect, useState} from 'react';
-
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {ThemeProvider} from './src/context/ThemeProvider';
-
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Application} from './src/components/Application';
-
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {IntlProvider} from 'react-intl';
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { ThemeProvider } from './src/context/ThemeProvider';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { Application } from './src/components/Application';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { IntlProvider } from 'react-intl';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import NetInfo from '@react-native-community/netinfo';
 import useStore from './src/state/store';
 import DeviceInfo from 'react-native-device-info';
-import {createUserMeta, updateUserMeta} from './src/services/api/user';
-import {DeviceMeta} from './src/types/models/User';
-import {hasMetaDataChanged} from './src/services/validation/meta.validator';
+import { createUserMeta, updateUserMeta } from './src/services/api/user';
+import { DeviceMeta } from './src/types/models/User';
+import { hasMetaDataChanged } from './src/services/validation/meta.validator';
 import RemoteNotifications from './src/services/push-notifications/RemoteNotifications';
-
 import {
   configureReanimatedLogger,
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
-
 import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
+import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider } from '@datadog/mobile-react-native';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -47,9 +43,69 @@ const getLocalMetaData = async (): Promise<DeviceMeta> => {
   };
 };
 
+type DatadogWrapperProps = {
+  children: React.ReactNode;
+};
+
+const DatadogWrapper = ({ children }: DatadogWrapperProps) => {
+  const [datadogConfig, setDatadogConfig] = useState<DatadogProviderConfiguration | null>(null);
+  const [initializationError, setInitializationError] = useState(false);
+
+  useEffect(() => {
+    const initializeDatadog = async () => {
+      try {
+        const deviceId = await DeviceInfo.getUniqueId();
+
+        const config = new DatadogProviderConfiguration(
+          "puba21093aa63718370f3d12b6069ca901c",
+          "production",
+          "1224164e-aeb1-46b7-a6ef-ec198d1946f7",
+          true,
+          true,
+          true
+        );
+
+        config.site = "EU1";
+        config.longTaskThresholdMs = 100;
+        config.nativeCrashReportEnabled = true;
+        config.sessionSamplingRate = 100;
+        config.serviceName = 'onvi-mobile';
+
+        await DdSdkReactNative.initialize(config);
+        await DdSdkReactNative.setUserInfo({ id: deviceId });
+
+        console.log('Datadog initialized successfully');
+        setDatadogConfig(config);
+      } catch (error) {
+        console.error('Datadog initialization failed:', error);
+        setInitializationError(true);
+      }
+    };
+
+    initializeDatadog();
+  }, []);
+
+  // Если инициализация еще не завершена
+  if (!datadogConfig && !initializationError) {
+    return null; 
+  }
+
+  // Если произошла ошибка - рендерим без провайдера
+  if (initializationError) {
+    return <>{children}</>;
+  }
+
+  // Успешная инициализация
+  return (
+    <DatadogProvider configuration={datadogConfig!}>
+      {children}
+    </DatadogProvider>
+  );
+};
+
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore.getState();
+  const { loadUser, user, fcmToken } = useStore.getState();
 
   configureReanimatedLogger({
     level: ReanimatedLogLevel.error,
@@ -123,19 +179,21 @@ function App(): React.JSX.Element {
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <ThemeProvider>
-      <RemoteNotifications />
-      <IntlProvider locale={'ru'}>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <SafeAreaView style={styles.container}>
-            <View style={{height: Dimensions.get('window').height}}>
-              {!isConnected && <FlashMessage position="top" />}
-              <Application />
-            </View>
-          </SafeAreaView>
-        </GestureHandlerRootView>
-      </IntlProvider>
-    </ThemeProvider>
+    <DatadogWrapper>
+      <ThemeProvider>
+        <RemoteNotifications />
+        <IntlProvider locale={'ru'}>
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <SafeAreaView style={styles.container}>
+              <View style={{ height: Dimensions.get('window').height }}>
+                {!isConnected && <FlashMessage position="top" />}
+                <Application />
+              </View>
+            </SafeAreaView>
+          </GestureHandlerRootView>
+        </IntlProvider>
+      </ThemeProvider>
+    </DatadogWrapper>
   );
 }
 

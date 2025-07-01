@@ -20,6 +20,7 @@ import { PaymentMethodType } from '@styled/buttons/PaymentMethodButton';
 import { getOrderByOrderId } from '@services/api/order';
 import { ORDER_ERROR_CODES, PAYMENT_ERROR_CODES, OTHER_ERROR_CODES } from '../types/api/constants/index.ts';
 import { OrderProcessingStatus } from '../types/api/order/processing/OrderProcessingStatus.ts';
+import { DdLogs } from '@datadog/mobile-react-native';
 
 export const usePaymentProcess = (
   user: IUser | null,
@@ -51,7 +52,11 @@ export const usePaymentProcess = (
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
+      DdLogs.error("Payment process error: ", { error: error.code});
     } else {
+      const errorCode = error.response?.data?.code || 'Unknown error code';
+      const errorMessage = error.response?.data?.message || 'No additional message';
+      DdLogs.error("Payment process error:", { error: errorCode, message: errorMessage });
       switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
           console.error("Processing Error:", error.response.data.message);
@@ -334,6 +339,7 @@ export const usePaymentProcess = (
           if (response.status === 'completed') {
             setOrderStatus(OrderProcessingStatus.END);
             setLoading(false);
+            DdLogs.info("Successful order creation", { order });
             // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
             setTimeout(() => {
               navigateBottomSheet('PostPayment', {});
@@ -341,11 +347,13 @@ export const usePaymentProcess = (
             }, 3000)
           } else if (response.status === 'failed') {
             setError('Ошибка оборудования');
+            DdLogs.error("Equipment error", { order });
             setLoading(false);
           } else {
             attempts++;
             if (attempts >= maxAttempts) {
               setError('⏳ Время ожидания оплаты истекло. Попробуйте снова.');
+              DdLogs.error("Payment time expired", { order });
               setLoading(false);
               // setOrderStatus(null);
             } else {
@@ -434,6 +442,7 @@ export const usePaymentProcess = (
         if (response.status === 'completed') {
           setOrderStatus(OrderProcessingStatus.END_FREE);
           setLoading(false);
+          DdLogs.info("Successful order creation (free vacuume)", { order });
           // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
           setTimeout(() => {
             navigateBottomSheet('PostPayment', {});
@@ -441,11 +450,13 @@ export const usePaymentProcess = (
           }, 3000)
         } else if (response.status === 'failed') {
           setError('Ошибка оборудования');
+          DdLogs.error("Equipment error", { order });
           setLoading(false);
         } else {
           attempts++;
           if (attempts >= maxAttempts) {
             setError('⏳ Время ожидания истекло. Попробуйте снова.');
+            DdLogs.error("Payment time expired (free vacuume)", { order });
             setLoading(false);
           } else {
             setTimeout(pollOrderStatus, pollInterval);

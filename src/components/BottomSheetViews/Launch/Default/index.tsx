@@ -241,7 +241,6 @@ export default function DefaultLaunch() {
               ...orderDetails,
               sum: cost,
             });
-
             navigation.navigate('Payment', {});
           }}
           color="blue"
