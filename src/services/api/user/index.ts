@@ -11,6 +11,7 @@ import {ICreateUserMetaRequest} from '../../../types/api/user/req/ICreateUserMet
 import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMetaRequest.ts';
 import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
 import { IGetFreeVacuum } from 'src/types/api/user/res/IGetFreeVacuum.ts';
+import { IgetActiveClientPromotionsParams } from 'src/types/api/promotion/req/IApplyPromotionRequest.ts';
 
 enum ACCOUNT {
   GET_MET_URL = '/account/me',
@@ -73,12 +74,14 @@ export async function updateAllowNotificationSending(
   await userApiInstance.patch(ACCOUNT.UPDATE_NOTIFICATION_URL, {notification});
 }
 
-export async function getActiveClientPromotions(): Promise<
+export async function getActiveClientPromotions(
+  params: IgetActiveClientPromotionsParams
+): Promise<
   IPersonalPromotion[]
 > {
   const response = await userApiInstance.get<
     IUserApiResponse<IPersonalPromotion[]>
-  >(ACCOUNT.GET_ACTIVE_PROMOTIONS);
+  >(ACCOUNT.GET_ACTIVE_PROMOTIONS, {params});
 
   return response.data.data;
 }

@@ -25,9 +25,17 @@ import {getActiveClientPromotions} from '@services/api/user';
 import {getGlobalPromotions} from '@services/api/promotion';
 import {PersonalPromoPlaceholder} from '@screens/Promos/PersonalPromoPlaceholder.tsx';
 import ScreenHeader from '@components/ScreenHeader';
+import useStore from '../../state/store.ts';
 
 const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
+
+  const { location } = useStore.getState();
+
+  const locationParams = {
+    latitude: Number(location?.latitude),
+    longitude: Number(location?.longitude),
+  };
 
   const {
     isLoading: isGlobalPromoLoading,
@@ -39,7 +47,7 @@ const Promos = () => {
     isLoading: isPersonalPromoLoading,
     data: personalPromo,
     error: personalError,
-  } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions());
+  } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions(locationParams));
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
