@@ -419,6 +419,7 @@ export const usePaymentProcess = (
 
       const orderRequest: ICreateOrderRequest = {
         sum: order.sum,
+        originalSum: order.sum,
         rewardPointsUsed: 0,
         carWashId: Number(order.posId),
         bayNumber: Number(order.bayNumber),
