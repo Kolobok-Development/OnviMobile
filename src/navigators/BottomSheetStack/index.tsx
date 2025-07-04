@@ -1,29 +1,97 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, Suspense} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {ActivityIndicator, View} from 'react-native';
 import useStore from '../../state/store';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
-import {
-  Launch,
-  Main,
-  Notifications,
-  History,
-  PostPayment,
-  PaymentLoading
-} from '@components/BottomSheetViews';
-import {Search} from '@components/BottomSheetViews/Search';
-import {Filters} from '@components/BottomSheetViews/Filters';
-import {Business} from '@components/BottomSheetViews';
-import {BusinessInfo} from '@components/BottomSheetViews/BusinessInfo';
-import {Boxes} from '@components/BottomSheetViews/Boxes';
-import {Payment} from '@components/BottomSheetViews';
-import {AddCard} from '@components/BottomSheetViews/AddCard';
-import {Post} from '@components/BottomSheetViews/Post';
-import {Campaign} from '@components/BottomSheetViews/Campaign';
+// Lazy load components
+const Launch = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Launch,
+  })),
+);
+const Main = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Main,
+  })),
+);
+const Notifications = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Notifications,
+  })),
+);
+const History = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.History,
+  })),
+);
+const PostPayment = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.PostPayment,
+  })),
+);
+const PaymentLoading = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.PaymentLoading,
+  })),
+);
+const Search = React.lazy(() =>
+  import('@components/BottomSheetViews/Search').then(module => ({
+    default: module.Search,
+  })),
+);
+const Filters = React.lazy(() =>
+  import('@components/BottomSheetViews/Filters').then(module => ({
+    default: module.Filters,
+  })),
+);
+const Business = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Business,
+  })),
+);
+const BusinessInfo = React.lazy(() =>
+  import('@components/BottomSheetViews/BusinessInfo').then(module => ({
+    default: module.BusinessInfo,
+  })),
+);
+const Boxes = React.lazy(() =>
+  import('@components/BottomSheetViews/Boxes').then(module => ({
+    default: module.Boxes,
+  })),
+);
+const Payment = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Payment,
+  })),
+);
+const AddCard = React.lazy(() =>
+  import('@components/BottomSheetViews/AddCard').then(module => ({
+    default: module.AddCard,
+  })),
+);
+const Post = React.lazy(() =>
+  import('@components/BottomSheetViews/Post').then(module => ({
+    default: module.Post,
+  })),
+);
+const Campaign = React.lazy(() =>
+  import('@components/BottomSheetViews/Campaign').then(module => ({
+    default: module.Campaign,
+  })),
+);
+
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+
+// Loading component
+const LoadingScreen = () => (
+  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <ActivityIndicator size="large" />
+  </View>
+);
 
 const navTheme = {
   ...DefaultTheme,
@@ -110,7 +178,10 @@ const BottomSheetStack = React.memo(
           ) {
             setIsMainScreen(true);
             setShowBurgerButton(true);
-          } else if (currentRoute?.name === 'PostPayment' || currentRoute?.name === 'PaymentLoading') {
+          } else if (
+            currentRoute?.name === 'PostPayment' ||
+            currentRoute?.name === 'PaymentLoading'
+          ) {
             setShowBurgerButton(false);
           } else {
             setIsMainScreen(false);
@@ -123,82 +194,126 @@ const BottomSheetStack = React.memo(
           <RootStack.Screen
             name="Main"
             key="MainScreen"
-            component={Main}
             initialParams={{
               drawerNavigation,
               active,
-            }}
-          />
+            }}>
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Main {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="Search"
             key="SearchScreen"
-            component={Search}
-            initialParams={{setCamera}}
-          />
-          <RootStack.Screen
-            name="Filters"
-            key="FiltersScreen"
-            component={Filters}
-          />
-          <RootStack.Screen
-            name="Business"
-            key="BusinessScreen"
-            component={Business}
-          />
-          <RootStack.Screen
-            name="BusinessInfo"
-            key="BusinessInfoScreen"
-            component={BusinessInfo}
-          />
+            initialParams={{setCamera}}>
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Search {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Filters" key="FiltersScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Filters {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Business" key="BusinessScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Business {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="BusinessInfo" key="BusinessInfoScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <BusinessInfo {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="Boxes"
             key="BoxesScreen"
-            component={Boxes}
-            initialParams={{active}}
-          />
+            initialParams={{active}}>
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Boxes {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="Launch"
             key="LaunchScreen"
-            component={Launch}
-            initialParams={{active}}
-          />
-          <RootStack.Screen
-            name="Notifications"
-            key="NotificationsScreen"
-            component={Notifications}
-          />
+            initialParams={{active}}>
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Launch {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Notifications" key="NotificationsScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Notifications {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="History"
             key="HistoryScreen"
-            component={History}
-            initialParams={{drawerNavigation}}
-          />
-          <RootStack.Screen
-            name="Payment"
-            key="PaymentScreen"
-            component={Payment}
-          />
-          <RootStack.Screen
-            name="AddCard"
-            key="AddCardScreen"
-            component={AddCard}
-          />
-          <RootStack.Screen name="Post" key="PostScreen" component={Post} />
-          <RootStack.Screen
-            name="Campaign"
-            key="CampaignScreen"
-            component={Campaign}
-          />
-          <RootStack.Screen
-            name="PostPayment"
-            key="PostPaymentScreen"
-            component={PostPayment}
-          />
-          <RootStack.Screen
-            name="PaymentLoading"
-            key="PaymentLoadingScreen"
-            component={PaymentLoading}
-          />
+            initialParams={{drawerNavigation}}>
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <History {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Payment" key="PaymentScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Payment {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="AddCard" key="AddCardScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <AddCard {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Post" key="PostScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Post {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Campaign" key="CampaignScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Campaign {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="PostPayment" key="PostPaymentScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <PostPayment {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="PaymentLoading" key="PaymentLoadingScreen">
+            {props => (
+              <Suspense fallback={<LoadingScreen />}>
+                <PaymentLoading {...props} />
+              </Suspense>
+            )}
+          </RootStack.Screen>
         </RootStack.Navigator>
       </NavigationContainer>
     );

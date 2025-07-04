@@ -1,25 +1,31 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
+import {ActivityIndicator, View} from 'react-native';
 
 const Drawer = createDrawerNavigator();
 
-import {Home} from '@screens/Home';
-import {Promos} from '@screens/Promos';
+// Lazy load screens
+const Home = React.lazy(() => import('@screens/Home').then(module => ({default: module.Home})));
+const Promos = React.lazy(() => import('@screens/Promos').then(module => ({default: module.Promos})));
+const Settings = React.lazy(() => import('@screens/Settings').then(module => ({default: module.Settings})));
+const About = React.lazy(() => import('@screens/About').then(module => ({default: module.About})));
+const PromosInput = React.lazy(() => import('@screens/PromosInput').then(module => ({default: module.PromosInput})));
+const TransferBalance = React.lazy(() => import('@screens/TransferBalance').then(module => ({default: module.TransferBalance})));
+const Legals = React.lazy(() => import('@screens/Legals').then(module => ({default: module.Legals})));
 
 import {useTheme} from '@context/ThemeProvider';
-import {Settings} from '@screens/Settings';
-import {About} from '@screens/About';
 import useStore from '../../state/store';
-
-import {PromosInput} from '@screens/PromosInput';
 
 //CustomDrawerContent
 import {CustomDrawerContent} from './CustomDrawerContent';
-import {Legals} from '@screens/Legals';
 import {DrawerNavProp} from '../../types/navigation/DrawerNavigation.ts';
-import {TransferBalance} from '@screens/TransferBalance';
-import { config } from "@navigators/DrawerStack/LinkingConfig.ts";
 
+// Loading component
+const LoadingScreen = () => (
+  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+    <ActivityIndicator size="large" />
+  </View>
+);
 
 const DrawerStack = () => {
   const {theme} = useTheme();
@@ -33,6 +39,7 @@ const DrawerStack = () => {
         drawerStyle: {
           backgroundColor: theme.mainColor,
         },
+        lazy: true,
       }}
       initialRouteName={'Главная'}
       /* eslint-disable-next-line react/no-unstable-nested-components */
@@ -50,20 +57,54 @@ const DrawerStack = () => {
         );
       }}>
       <Drawer.Screen name="Главная">
-        {props => <Home navigation={props.navigation} />}
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Home navigation={props.navigation} />
+          </Suspense>
+        )}
       </Drawer.Screen>
 
-      <Drawer.Screen name="Промокоды">{() => <Promos />}</Drawer.Screen>
-      <Drawer.Screen name="Настройки">{() => <Settings />}</Drawer.Screen>
-      <Drawer.Screen name="О приложении">{() => <About />}</Drawer.Screen>
+      <Drawer.Screen name="Промокоды">
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Promos />
+          </Suspense>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Настройки">
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Settings />
+          </Suspense>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="О приложении">
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <About />
+          </Suspense>
+        )}
+      </Drawer.Screen>
       <Drawer.Screen name="Ввод Промокода">
-        {() => <PromosInput />}
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <PromosInput />
+          </Suspense>
+        )}
       </Drawer.Screen>
       <Drawer.Screen name="Перенести баланс">
-        {() => <TransferBalance />}
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <TransferBalance />
+          </Suspense>
+        )}
       </Drawer.Screen>
       <Drawer.Screen name="Правовые документы">
-        {() => <Legals />}
+        {props => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Legals />
+          </Suspense>
+        )}
       </Drawer.Screen>
     </Drawer.Navigator>
   );
