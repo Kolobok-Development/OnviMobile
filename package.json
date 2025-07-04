@@ -27,7 +27,14 @@
     "aos:PD-apk": "cp .env.production .env && yarn setProduction && yarn aos:bundle:assets && cd android && ./gradlew assembleProductionDebug && killall -9 java",
     "aos:PR-apk": "cp .env.production .env && yarn setProduction && yarn aos:bundle:assets && cd android && ./gradlew assembleProductionRelease && killall -9 java",
     "aos:PR-Bundle": "cp .env.production .env && yarn setProduction && yarn aos:bundle:assets && cd android && ./gradlew bundleProductionRelease && killall -9 java",
-    "test": "jest"
+    "test": "jest",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@datadog/mobile-react-native": "^2.8.2",
@@ -98,7 +105,9 @@
     "babel-jest": "^29.6.3",
     "babel-plugin-module-resolver": "^5.0.0",
     "eslint": "^8.19.0",
+    "husky": "^9.1.7",
     "jest": "^29.6.3",
+    "lint-staged": "^16.1.2",
     "prettier": "2.8.8",
     "react-test-renderer": "18.2.0",
     "reactotron-apisauce": "^3.0.6",
