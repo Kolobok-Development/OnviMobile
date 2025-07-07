@@ -173,7 +173,6 @@ const Payment = () => {
                       ? discount.discount + '₽'
                       : discount.discount + '%'
                       }`}
-                    onClick={() => { }}
                     color="blue"
                     width={184}
                     height={31}
@@ -187,7 +186,6 @@ const Payment = () => {
                 <View style={styles.badgeWrapper}>
                   <Button
                     label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
-                    onClick={() => { }}
                     color="blue"
                     width={184}
                     height={31}
