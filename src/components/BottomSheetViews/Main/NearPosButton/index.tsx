@@ -11,10 +11,8 @@ import Modal from '@styled/Modal';
 import {Button} from '@styled/buttons';
 
 export default function NearPosButton() {
-  const {bottomSheetRef, bottomSheetSnapPoints, setBusiness} =
+  const {bottomSheetRef, bottomSheetSnapPoints, setBusiness, setNearByPos} =
     useStore.getState();
-
-  const {setNearByPos} = useStore.getState();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -64,7 +62,12 @@ export default function NearPosButton() {
   };
 
   useEffect(() => {
-    if (location && posList && posList.length > 0) {
+    if (
+      !isNearestCarWashSet.current &&
+      location &&
+      posList &&
+      posList.length > 0
+    ) {
       findNearestCarWash();
     }
   }, [location, posList]);

@@ -8,6 +8,8 @@ const LoadingScreen = () => (
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: WHITE,
+      borderTopLeftRadius: 25,
+      borderTopRightRadius: 25,
     }}>
     <ActivityIndicator size="large" color={YELLOW} />
   </View>
