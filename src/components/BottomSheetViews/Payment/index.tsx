@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, Pressable, View, ScrollView } from 'react-native';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BusinessHeader } from '@components/Business/Header';
 import { dp } from '../../../utils/dp';
@@ -25,8 +25,6 @@ import {
   calculateActualPointsUsed,
   calculateFinalAmount,
 } from '@utils/paymentHelpers.ts';
-
-import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 
 const Payment = () => {
   const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
@@ -126,9 +124,7 @@ const Payment = () => {
 
   return (
     <BottomSheetView style={styles.mainContainer}>
-      <GHScrollView
-        nestedScrollEnabled={true}
-        contentContainerStyle={styles.scrollContent}>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
         <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
         <Text style={styles.title}>
           {freeOn ? "Активация пылесоса" : "Оплата"}
@@ -250,14 +246,14 @@ const Payment = () => {
                 showLoading={loading}
               />
             )}
-            <TouchableOpacity
+            <Pressable
               style={styles.cancelButton}
               onPress={() => navigateBottomSheet('Main', {})}>
               <Text style={styles.cancelText}>Отменить заказ</Text>
-            </TouchableOpacity>
+            </Pressable>
           </View>
         </View>
-      </GHScrollView>
+      </ScrollView>
 
       <PromocodeModal
         visible={showPromocodeModal}
