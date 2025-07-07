@@ -4,9 +4,7 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 const Drawer = createDrawerNavigator();
 
 // Lazy load screens
-const Home = React.lazy(() =>
-  import('@screens/Home').then(module => ({default: module.Home})),
-);
+import {Home} from '@screens/Home';
 const Promos = React.lazy(() =>
   import('@screens/Promos').then(module => ({default: module.Promos})),
 );
@@ -69,50 +67,46 @@ const DrawerStack = () => {
         );
       }}>
       <Drawer.Screen name="Главная">
-        {props => (
-          <Suspense fallback={<LoadingScreen />}>
-            <Home navigation={props.navigation} />
-          </Suspense>
-        )}
+        {props => <Home navigation={props.navigation} />}
       </Drawer.Screen>
 
       <Drawer.Screen name="Промокоды">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <Promos />
           </Suspense>
         )}
       </Drawer.Screen>
       <Drawer.Screen name="Настройки">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <Settings />
           </Suspense>
         )}
       </Drawer.Screen>
       <Drawer.Screen name="О приложении">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <About />
           </Suspense>
         )}
       </Drawer.Screen>
       <Drawer.Screen name="Ввод Промокода">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <PromosInput />
           </Suspense>
         )}
       </Drawer.Screen>
       <Drawer.Screen name="Перенести баланс">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <TransferBalance />
           </Suspense>
         )}
       </Drawer.Screen>
       <Drawer.Screen name="Правовые документы">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <Legals />
           </Suspense>
