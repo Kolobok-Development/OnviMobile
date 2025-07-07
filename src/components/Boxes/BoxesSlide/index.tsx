@@ -1,99 +1,81 @@
-import {useState} from 'react';
-
-import {StyleSheet, Dimensions, View} from 'react-native';
-
+import React, {useCallback} from 'react';
+import {StyleSheet, Dimensions, FlatList} from 'react-native';
 import {horizontalScale} from '../../../utils/metrics';
-
-import {ScrollView} from 'react-native-gesture-handler';
-
 import {dp} from '../../../utils/dp';
-
 import {Box} from '@components/Boxes/Box';
-
 import useStore from '../../../state/store';
 
 const width = Dimensions.get('window').width;
 
+interface BoxItem {
+  number: number;
+}
+
 interface BoxesSlideProps {
-  boxes: any;
+  boxes: BoxItem[];
   navigation: any;
   params: any;
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const {orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints} = useStore.getState();
+  const {orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints} = 
+    useStore.getState();
+  
+  const contentPadding = (width - (horizontalScale(92) * boxes.length)) / 2;
 
-  const [active, setActive] = useState(orderDetails.bayNumber);
+  const handleBoxPress = useCallback((boxNumber: number) => {
+    setOrderDetails({
+      ...orderDetails,
+      bayNumber: boxNumber,
+    });
+
+    bottomSheetRef?.current?.snapToPosition(
+      bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+    );
+    
+    navigation.navigate('Launch', {bayType: params.bayType});
+  }, [orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints, navigation, params]);
+
+  const renderItem = useCallback(({item}: {item: BoxItem}) => (
+    <Box
+      label={item.number.toString()}
+      onClick={() => handleBoxPress(item.number)}
+      active={orderDetails.bayNumber === item.number}
+    />
+  ), [handleBoxPress, orderDetails.bayNumber]);
 
   return (
-    <ScrollView
+    <FlatList
+      data={boxes}
+      renderItem={renderItem}
+      keyExtractor={(item, index) => `box-${item.number}-${index}`}
       horizontal
-      style={styles.container}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}>
-      <View
-        style={{
-          width: (width - (horizontalScale(92) * 3) / 2 - 10 - dp(22)) / 2,
-        }}
-      />
-      {boxes.map((box: any, key: number) => {
-        return (
-          <Box
-            key={'box-' + key}
-            label={box.number}
-            onClick={() => {
-              setActive(key);
-              setOrderDetails({
-                ...orderDetails,
-                bayNumber: box.number,
-              });
-
-              if (key !== undefined) {
-                bottomSheetRef?.current?.snapToPosition(
-                  bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
-                );
-
-                navigation.navigate('Launch', {bayType: params.bayType});
-              }
-            }}
-            active={active !== null && active === key}
-          />
-        );
+      showsHorizontalScrollIndicator={false}
+      contentContainerStyle={[
+        styles.container, 
+        {
+          paddingLeft: contentPadding,
+          paddingRight: contentPadding,
+        }
+      ]}
+      initialNumToRender={4}
+      maxToRenderPerBatch={4}
+      windowSize={3}
+      getItemLayout={(data, index) => ({
+        length: dp(94.4),
+        offset: dp(94.4) * index,
+        index,
       })}
-      <View
-        style={{
-          width: (width - (horizontalScale(92) * 3) / 2 - 10 - dp(22)) / 2,
-          flex: 1,
-        }}
-      />
-    </ScrollView>
+    />
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-  },
-  box: {
-    width: dp(94.4),
-    height: dp(91.8),
-    margin: 10,
-    backgroundColor: 'rgba(245, 245, 245, 1)',
-    borderRadius: dp(21),
-    display: 'flex',
+    flexGrow: 1,
+    paddingVertical: dp(10),
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  activeBox: {
-    width: dp(94.4),
-    height: dp(91.8),
-    margin: 10,
-    backgroundColor: 'rgba(191, 250, 0, 1)',
-    borderRadius: dp(21),
-  },
-  boxText: {
-    fontSize: dp(48),
-    fontWeight: '600',
+    alignItems: 'center', 
   },
 });
 
