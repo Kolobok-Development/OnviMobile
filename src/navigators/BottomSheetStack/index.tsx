@@ -1,21 +1,17 @@
-import React, {useEffect, Suspense} from 'react';
+import React, {Suspense} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {ActivityIndicator, View} from 'react-native';
 import useStore from '../../state/store';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {createNavigationContainerRef} from '@react-navigation/native';
+
+import {Main} from '@components/BottomSheetViews';
 
 // Lazy load components
 const Launch = React.lazy(() =>
   import('@components/BottomSheetViews').then(module => ({
     default: module.Launch,
-  })),
-);
-const Main = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.Main,
   })),
 );
 const Notifications = React.lazy(() =>
@@ -88,7 +84,13 @@ import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigati
 
 // Loading component
 const LoadingScreen = () => (
-  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+  <View
+    style={{
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#FFF',
+    }}>
     <ActivityIndicator size="large" />
   </View>
 );
@@ -194,44 +196,40 @@ const BottomSheetStack = React.memo(
           <RootStack.Screen
             name="Main"
             key="MainScreen"
+            component={Main}
             initialParams={{
               drawerNavigation,
               active,
-            }}>
-            {props => (
-              <Suspense fallback={<LoadingScreen />}>
-                <Main {...props} />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+            }}
+          />
           <RootStack.Screen
             name="Search"
             key="SearchScreen"
             initialParams={{setCamera}}>
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Search {...props} />
+                <Search />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Filters" key="FiltersScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Filters {...props} />
+                <Filters />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Business" key="BusinessScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Business {...props} />
+                <Business />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="BusinessInfo" key="BusinessInfoScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <BusinessInfo {...props} />
+                <BusinessInfo />
               </Suspense>
             )}
           </RootStack.Screen>
@@ -239,9 +237,9 @@ const BottomSheetStack = React.memo(
             name="Boxes"
             key="BoxesScreen"
             initialParams={{active}}>
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Boxes {...props} />
+                <Boxes />
               </Suspense>
             )}
           </RootStack.Screen>
@@ -249,16 +247,16 @@ const BottomSheetStack = React.memo(
             name="Launch"
             key="LaunchScreen"
             initialParams={{active}}>
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Launch {...props} />
+                <Launch />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Notifications" key="NotificationsScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Notifications {...props} />
+                <Notifications />
               </Suspense>
             )}
           </RootStack.Screen>
@@ -266,51 +264,51 @@ const BottomSheetStack = React.memo(
             name="History"
             key="HistoryScreen"
             initialParams={{drawerNavigation}}>
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <History {...props} />
+                <History />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Payment" key="PaymentScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Payment {...props} />
+                <Payment />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="AddCard" key="AddCardScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <AddCard {...props} />
+                <AddCard />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Post" key="PostScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Post {...props} />
+                <Post />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="Campaign" key="CampaignScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <Campaign {...props} />
+                <Campaign />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="PostPayment" key="PostPaymentScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <PostPayment {...props} />
+                <PostPayment />
               </Suspense>
             )}
           </RootStack.Screen>
           <RootStack.Screen name="PaymentLoading" key="PaymentLoadingScreen">
-            {props => (
+            {() => (
               <Suspense fallback={<LoadingScreen />}>
-                <PaymentLoading {...props} />
+                <PaymentLoading />
               </Suspense>
             )}
           </RootStack.Screen>

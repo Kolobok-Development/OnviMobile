@@ -27,7 +27,7 @@ const AuthStack = () => {
       }}
       initialRouteName="SignIn">
       <RootStack.Screen name="SignIn">
-        {props => (
+        {() => (
           <Suspense fallback={<LoadingScreen />}>
             <SignIn />
           </Suspense>

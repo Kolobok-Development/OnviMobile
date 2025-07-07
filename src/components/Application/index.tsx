@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { AuthStack } from '@navigators/AuthStack';
-import { DrawerStack } from '@navigators/DrawerStack';
+import React, {useEffect, useState} from 'react';
+import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
+import {AuthStack} from '@navigators/AuthStack';
+import {DrawerStack} from '@navigators/DrawerStack';
 
 import Toast from 'react-native-toast-message';
-import { toastConfig } from '@styled/alerts/toasts';
+import {toastConfig} from '@styled/alerts/toasts';
 
 import useStore from '../../state/store';
-import { navigationRef } from '../../services/api/interceptors';
-import { config } from '@navigators/DrawerStack/LinkingConfig.ts';
-import { Linking } from 'react-native';
-import branch, { BranchEvent } from 'react-native-branch';
+import {navigationRef} from '../../services/api/interceptors';
+import {config} from '@navigators/DrawerStack/LinkingConfig.ts';
+import {Linking} from 'react-native';
+import branch from 'react-native-branch';
 
 const Application = () => {
   const isAuthenticated = useStore().isAuthenticated;
   const [isReady, setIsReady] = useState(false);
 
-  // Enhanced linking configuration
-  const linking = {
+  // Enhanced linking configurationr
+  const linking: LinkingOptions<{}> = {
     prefixes: ['https://onvione.ru', 'http://onvione.ru', 'onvione://'],
     config,
     // Handle any custom URL processing if needed
@@ -31,8 +31,8 @@ const Application = () => {
       // Check if we have any stored state to restore
       return null;
     },
-    subscribe(listener: any) {
-      const onReceiveURL = ({ url }) => listener(url);
+    subscribe(listener) {
+      const onReceiveURL = ({url}: {url: string}) => listener(url);
 
       // Listen to incoming links from deep linking
       const subscription = Linking.addEventListener('url', onReceiveURL);
@@ -43,7 +43,6 @@ const Application = () => {
       };
     },
   };
-
 
   // Handle initial deep link
   useEffect(() => {
@@ -112,4 +111,4 @@ const Application = () => {
   );
 };
 
-export { Application };
+export {Application};
