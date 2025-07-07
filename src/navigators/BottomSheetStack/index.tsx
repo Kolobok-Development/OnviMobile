@@ -1,29 +1,58 @@
-import React, {useEffect} from 'react';
+import React, {Suspense} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import useStore from '../../state/store';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
 import {
-  Launch,
   Main,
-  Notifications,
-  History,
+  Business,
+  BusinessInfo,
+  Boxes,
+  Launch,
+  Payment,
+  AddCard,
   PostPayment,
-  PaymentLoading
+  PaymentLoading,
 } from '@components/BottomSheetViews';
-import {Search} from '@components/BottomSheetViews/Search';
-import {Filters} from '@components/BottomSheetViews/Filters';
-import {Business} from '@components/BottomSheetViews';
-import {BusinessInfo} from '@components/BottomSheetViews/BusinessInfo';
-import {Boxes} from '@components/BottomSheetViews/Boxes';
-import {Payment} from '@components/BottomSheetViews';
-import {AddCard} from '@components/BottomSheetViews/AddCard';
-import {Post} from '@components/BottomSheetViews/Post';
-import {Campaign} from '@components/BottomSheetViews/Campaign';
+
+// Lazy load components
+
+const Notifications = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.Notifications,
+  })),
+);
+const History = React.lazy(() =>
+  import('@components/BottomSheetViews').then(module => ({
+    default: module.History,
+  })),
+);
+const Search = React.lazy(() =>
+  import('@components/BottomSheetViews/Search').then(module => ({
+    default: module.Search,
+  })),
+);
+const Filters = React.lazy(() =>
+  import('@components/BottomSheetViews/Filters').then(module => ({
+    default: module.Filters,
+  })),
+);
+const Post = React.lazy(() =>
+  import('@components/BottomSheetViews/Post').then(module => ({
+    default: module.Post,
+  })),
+);
+const Campaign = React.lazy(() =>
+  import('@components/BottomSheetViews/Campaign').then(module => ({
+    default: module.Campaign,
+  })),
+);
+
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+
+import LoadingScreen from '@navigators/NavigatorLoader';
 
 const navTheme = {
   ...DefaultTheme,
@@ -110,7 +139,10 @@ const BottomSheetStack = React.memo(
           ) {
             setIsMainScreen(true);
             setShowBurgerButton(true);
-          } else if (currentRoute?.name === 'PostPayment' || currentRoute?.name === 'PaymentLoading') {
+          } else if (
+            currentRoute?.name === 'PostPayment' ||
+            currentRoute?.name === 'PaymentLoading'
+          ) {
             setShowBurgerButton(false);
           } else {
             setIsMainScreen(false);
@@ -132,14 +164,20 @@ const BottomSheetStack = React.memo(
           <RootStack.Screen
             name="Search"
             key="SearchScreen"
-            component={Search}
-            initialParams={{setCamera}}
-          />
-          <RootStack.Screen
-            name="Filters"
-            key="FiltersScreen"
-            component={Filters}
-          />
+            initialParams={{setCamera}}>
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Search />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Filters" key="FiltersScreen">
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Filters />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="Business"
             key="BusinessScreen"
@@ -162,17 +200,23 @@ const BottomSheetStack = React.memo(
             component={Launch}
             initialParams={{active}}
           />
-          <RootStack.Screen
-            name="Notifications"
-            key="NotificationsScreen"
-            component={Notifications}
-          />
+          <RootStack.Screen name="Notifications" key="NotificationsScreen">
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Notifications />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="History"
             key="HistoryScreen"
-            component={History}
-            initialParams={{drawerNavigation}}
-          />
+            initialParams={{drawerNavigation}}>
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <History />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="Payment"
             key="PaymentScreen"
@@ -183,12 +227,20 @@ const BottomSheetStack = React.memo(
             key="AddCardScreen"
             component={AddCard}
           />
-          <RootStack.Screen name="Post" key="PostScreen" component={Post} />
-          <RootStack.Screen
-            name="Campaign"
-            key="CampaignScreen"
-            component={Campaign}
-          />
+          <RootStack.Screen name="Post" key="PostScreen">
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Post />
+              </Suspense>
+            )}
+          </RootStack.Screen>
+          <RootStack.Screen name="Campaign" key="CampaignScreen">
+            {() => (
+              <Suspense fallback={<LoadingScreen />}>
+                <Campaign />
+              </Suspense>
+            )}
+          </RootStack.Screen>
           <RootStack.Screen
             name="PostPayment"
             key="PostPaymentScreen"
