@@ -10,9 +10,9 @@ import {
 
 // styled components
 import {Card} from '@styled/cards';
-import useStore from '../../../state/store';
-import {BLACKTWO, WHITE, GREY, BLACK} from '../../../utils/colors';
-import {dp} from '../../../utils/dp';
+import useStore from '@state/store.ts';
+import {BLACKTWO, WHITE, GREY, BLACK} from '@utils/colors.ts';
+import {dp} from '@utils/dp.ts';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
@@ -24,11 +24,13 @@ import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
-import {Campaign} from '../../../types/api/app/types.ts';
+
+import {Campaign} from '@app-types/api/app/types.ts';
 
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
-import {transformContentDataToUserStories} from '../../../shared/mappers/StoryViewMapper.ts';
+
+import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
 import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
