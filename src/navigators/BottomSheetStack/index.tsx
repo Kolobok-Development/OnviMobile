@@ -62,7 +62,7 @@ const LoadingScreen = () => (
       alignItems: 'center',
       backgroundColor: '#FFF',
     }}>
-    <ActivityIndicator size="large" />
+    <ActivityIndicator size="large" color={'#b9f93a'} />
   </View>
 );
 
