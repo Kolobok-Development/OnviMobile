@@ -17,27 +17,33 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
-import { getFreeVacuum } from '@services/api/user/index.ts';
+import {getFreeVacuum} from '@services/api/user/index.ts';
 
 const BusinessInfo = () => {
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {business, orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints, setFreeVacuum} =
-    useStore.getState();
+  const {
+    business,
+    orderDetails,
+    setOrderDetails,
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setFreeVacuum,
+  } = useStore.getState();
 
   const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = async (bayType: string) => {
-      setOrderDetails({...orderDetails, bayType: bayType});
-      if (bayType === "VACUUME") {
-        const data = await getFreeVacuum();
-        console.log("getFreeVacuum: ", data);
-        setFreeVacuum(data);        
-      }
-      navigateBottomSheet('Boxes', {bayType: bayType});
-      bottomSheetRef?.current?.snapToPosition(
-        bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
-      );
+    setOrderDetails({...orderDetails, bayType: bayType});
+    if (bayType === 'VACUUME') {
+      const data = await getFreeVacuum();
+      console.log('getFreeVacuum: ', data);
+      setFreeVacuum(data);
+    }
+    navigateBottomSheet('Boxes', {bayType: bayType});
+    bottomSheetRef?.current?.snapToPosition(
+      bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+    );
   };
 
   const forceForward = () => {
@@ -106,9 +112,8 @@ const BusinessInfo = () => {
           business.carwashes[orderDetails.carwashIndex].tags.length > 0 &&
           business.carwashes[orderDetails.carwashIndex].tags.map(
             (tag: Tag, index: number) => (
-              <View style={{padding: dp(2)}}>
+              <View style={{padding: dp(2)}} key={`tag-${index}`}>
                 <CheckBox
-                  key={index}
                   disable={true}
                   borderRadius={dp(69)}
                   text={'🚀 ' + tag.name}

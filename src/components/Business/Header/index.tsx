@@ -87,14 +87,11 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(20),
     fontWeight: '500',
     paddingBottom: verticalScale(5),
-    // @ts-ignore
-    overflowWrap: 'normal',
     color: '#000',
   },
   text: {
     fontSize: moderateScale(14),
     fontWeight: '300',
-    overflowWrap: 'break-word',
     color: '#000',
   },
   circleImage: {

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {LinkingOptions, NavigationContainer} from '@react-navigation/native';
 import {AuthStack} from '@navigators/AuthStack';
-import {DrawerStack} from '@navigators/DrawerStack';
+import DrawerStack from '@navigators/DrawerStack';
 
 import Toast from 'react-native-toast-message';
 import {toastConfig} from '@styled/alerts/toasts';
