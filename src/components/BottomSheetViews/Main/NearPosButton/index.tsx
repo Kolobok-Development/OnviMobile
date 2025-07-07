@@ -73,24 +73,15 @@ export default function NearPosButton() {
     <>
       <Pressable style={styles.balanceCard} onPress={handleLaunchCarWash}>
         <View style={styles.label}>
-          <Text style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-            Моемся
-          </Text>
+          <Text style={styles.labelText}>Моемся</Text>
         </View>
         <View style={styles.info}>
-          <Text
-            style={{
-              fontSize: dp(10),
-              fontWeight: '700',
-              color: 'white',
-              letterSpacing: 0.5,
-              flexShrink: 1,
-            }}>
+          <Text style={styles.infoText}>
             {nearByPos?.carwashes?.length ? nearByPos.carwashes[0].name : ''}
           </Text>
           <Image
             source={require('../../../../assets/icons/small-icon.png')}
-            style={{width: 30, height: 30}}
+            style={styles.infoImage}
           />
         </View>
       </Pressable>
@@ -138,10 +129,26 @@ const styles = StyleSheet.create({
   label: {
     paddingBottom: dp(8),
   },
+  labelText: {
+    color: WHITE,
+    fontSize: dp(16),
+    fontWeight: '700',
+  },
   info: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  infoText: {
+    fontSize: dp(10),
+    fontWeight: '700',
+    color: 'white',
+    letterSpacing: 0.5,
+    flexShrink: 1,
+  },
+  infoImage: {
+    width: 30,
+    height: 30,
   },
   modalContainer: {
     flex: 1,
