@@ -1,21 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, Pressable, View, ScrollView } from 'react-native';
-import { BottomSheetView } from '@gorhom/bottom-sheet';
-import { BusinessHeader } from '@components/Business/Header';
-import { dp } from '../../../utils/dp';
-import { navigateBottomSheet } from '@navigators/BottomSheetStack';
-import { Button } from '@styled/buttons';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, Pressable, View, ScrollView} from 'react-native';
+import {BottomSheetView} from '@gorhom/bottom-sheet';
+import {BusinessHeader} from '@components/Business/Header';
+import {dp} from '../../../utils/dp';
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+import {Button} from '@styled/buttons';
 import useStore from '../../../state/store';
-import { LoadingModal } from '@styled/views/LoadingModal';
-import { CustomModal } from '@styled/views/CustomModal';
-import { PromocodeModal } from '@styled/views/PromocodeModal';
+import {PromocodeModal} from '@styled/views/PromocodeModal';
 import PaymentMethods from '@components/PaymentMethods';
 import PaymentSummary from '@components/BottomSheetViews/Payment/PaymentSummary';
 import PointsToggle from '@components/BottomSheetViews/Payment/PointsToggle';
-import { useBonusPoints } from '@hooks/useBonusPoints.ts';
-import { usePaymentProcess } from '@hooks/usePaymentProcess.ts';
+import {useBonusPoints} from '@hooks/useBonusPoints.ts';
+import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
 import PromocodeSection from '@components/BottomSheetViews/Payment/PromocodeSection';
-import { usePromoCode } from '@hooks/usePromoCode.ts';
+import {usePromoCode} from '@hooks/usePromoCode.ts';
 import {
   DiscountType,
   IPersonalPromotion,
@@ -27,8 +25,8 @@ import {
 } from '@utils/paymentHelpers.ts';
 
 const Payment = () => {
-  const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
-  const freeOn = orderDetails.free
+  const {user, loadUser, orderDetails, selectedPos} = useStore.getState();
+  const freeOn = orderDetails.free;
 
   const order = orderDetails;
 
@@ -51,7 +49,7 @@ const Payment = () => {
     resetPromoCode,
   } = usePromoCode(order.posId || 0);
 
-  const { usedPoints, toggled, applyPoints, togglePoints } = useBonusPoints(
+  const {usedPoints, toggled, applyPoints, togglePoints} = useBonusPoints(
     user,
     order,
     discount,
@@ -86,14 +84,14 @@ const Payment = () => {
     applyPromoCode(promo.code);
   };
 
-    // Handle search input change
+  // Handle search input change
   const handleSearchChange = (val: string) => {
     setPromocode(val);
   };
 
   const [showPromocodeModal, setShowPromocodeModal] = useState(false);
 
-    // Effect to update UI when promo code is validated
+  // Effect to update UI when promo code is validated
   useEffect(() => {
     if (promoCodeId && showPromocodeModal) {
       setShowPromocodeModal(false);
@@ -127,7 +125,7 @@ const Payment = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
         <Text style={styles.title}>
-          {freeOn ? "Активация пылесоса" : "Оплата"}
+          {freeOn ? 'Активация пылесоса' : 'Оплата'}
         </Text>
 
         <View style={styles.paymentCard}>
@@ -164,15 +162,15 @@ const Payment = () => {
               </>
             )}
 
-
             <View style={styles.badgesContainer}>
               {discount ? (
                 <View style={styles.badgeWrapper}>
                   <Button
-                    label={`У ВАС ЕСТЬ ПРОМОКОД НА ${discount.type === DiscountType.CASH
-                      ? discount.discount + '₽'
-                      : discount.discount + '%'
-                      }`}
+                    label={`У ВАС ЕСТЬ ПРОМОКОД НА ${
+                      discount.type === DiscountType.CASH
+                        ? discount.discount + '₽'
+                        : discount.discount + '%'
+                    }`}
                     color="blue"
                     width={184}
                     height={31}
@@ -214,7 +212,7 @@ const Payment = () => {
                     usedPoints,
                     promoCodeId,
                     loadUser,
-                    freeOn
+                    freeOn,
                   });
                 }}
                 color="blue"
@@ -234,7 +232,7 @@ const Payment = () => {
                     usedPoints,
                     promoCodeId,
                     loadUser,
-                    freeOn
+                    freeOn,
                   });
                 }}
                 color="blue"
@@ -324,4 +322,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { Payment };
+export {Payment};

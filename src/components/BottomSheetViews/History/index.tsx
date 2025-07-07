@@ -105,28 +105,6 @@ const History = () => {
           }}>
           История заказов
         </Text>
-        {/*<Button
-          label="История"
-          onClick={() => switchTab(false)}
-          color={!tab ? 'blue' : 'lightGrey'}
-          width={149}
-          height={43}
-          fontSize={18}
-          fontWeight="600"
-        />*/}
-        {/*<View style={{width: dp(3)}} />
-        <View style={styles.notifications}>
-          <Button
-            label="Уведомления"
-            onClick={() => switchTab(true)}
-            color={tab ? 'blue' : 'lightGrey'}
-            width={189}
-            height={43}
-            fontSize={18}
-            fontWeight="600"
-          />
-          <NotificationCircle number={4} />
-        </View>*/}
       </View>
       {isLoading ? (
         <HistoryPlaceholder />
@@ -134,14 +112,9 @@ const History = () => {
         <>
           <FlatList
             data={orderData}
-            renderItem={order => (
-              <BalanceCard
-                key={`balance-card-${order.index}`}
-                option={order.item}
-              />
-            )}
+            renderItem={order => <BalanceCard option={order.item} />}
             refreshing={isLoading}
-            keyExtractor={(_order, index) => index.toString()}
+            keyExtractor={(_, index) => index.toString()}
             onRefresh={mutate}
             showsVerticalScrollIndicator={false}
             /* eslint-disable-next-line react/no-unstable-nested-components */
