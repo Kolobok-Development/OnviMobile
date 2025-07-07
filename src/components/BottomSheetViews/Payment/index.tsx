@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Modal } from 'react-native';
+import { StyleSheet, Text, Pressable, View, ScrollView } from 'react-native';
 import { BottomSheetView } from '@gorhom/bottom-sheet';
 import { BusinessHeader } from '@components/Business/Header';
 import { dp } from '../../../utils/dp';
@@ -25,8 +25,6 @@ import {
   calculateActualPointsUsed,
   calculateFinalAmount,
 } from '@utils/paymentHelpers.ts';
-
-import { ScrollView as GHScrollView } from 'react-native-gesture-handler';
 
 const Payment = () => {
   const { user, loadUser, orderDetails, selectedPos } = useStore.getState();
@@ -88,14 +86,14 @@ const Payment = () => {
     applyPromoCode(promo.code);
   };
 
-  // Handle search input change
+    // Handle search input change
   const handleSearchChange = (val: string) => {
     setPromocode(val);
   };
 
   const [showPromocodeModal, setShowPromocodeModal] = useState(false);
 
-  // Effect to update UI when promo code is validated
+    // Effect to update UI when promo code is validated
   useEffect(() => {
     if (promoCodeId && showPromocodeModal) {
       setShowPromocodeModal(false);
@@ -126,187 +124,144 @@ const Payment = () => {
 
   return (
     <BottomSheetView style={styles.mainContainer}>
-      {/* <CustomModal
-        isVisible={paymentErrorModalState}
-        text={error ?? ''}
-        onClick={() => {
-          clearError();
-          resetPromoCode();
-          setPaymentErrorModalState(false);
-        }}
-      /> */}
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
+        <Text style={styles.title}>
+          {freeOn ? "Активация пылесоса" : "Оплата"}
+        </Text>
 
-      {/* <LoadingModal
-        isVisible={!!orderStatus}
-        color={'#FFFFFF'}
-        status={orderStatus || 'start'}
-        stageText={{
-          start: 'Подготавливаем оборудование...',
-          processing: 'Зачисляем деньги...',
-          end: 'Удачной мойки',
-          waiting_payment: 'Ожидаем оплату',
-          polling: 'Ещё чуть-чуть',
-        }}
-        modalStyle={{}}
-        textStyle={{}}
-      /> */}
+        <View style={styles.paymentCard}>
+          <Text style={styles.section}>Ваш выбор</Text>
 
-      {showPromocodeModal ? (
-        <PromocodeModal
-          onClose={() => {
-            setShowPromocodeModal(false);
-          }}
-          promocode={inputCodeValue || ''}
-          handleSearchChange={handleSearchChange}
-          apply={debouncedApplyPromoCode}
-          promocodeError={promoError}
-          fetching={isMutating} // replace with actual loading state
-        />
-      ) : (
-        <GHScrollView
-          nestedScrollEnabled={true}
-          contentContainerStyle={styles.scrollContent}>
-          <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
-          <Text style={styles.title}>
-            {
-              freeOn
-                ? "Активация пылесоса"
-                : "Оплата"
-            }
-          </Text>
+          <PaymentSummary
+            order={order}
+            user={user}
+            selectedPos={selectedPos}
+            finalOrderCost={finalOrderCost}
+          />
 
-          <View style={styles.paymentCard}>
-            <Text style={styles.section}>Ваш выбор</Text>
-
-            <PaymentSummary
-              order={order}
-              user={user}
-              selectedPos={selectedPos}
-              finalOrderCost={finalOrderCost}
-            />
-
-            <View style={styles.choice}>
-              {
-                !freeOn &&
-                <>
-                  {selectedPos?.IsLoyaltyMember && (
-                    <PointsToggle
-                      user={user}
-                      order={order}
-                      discount={discount}
-                      usedPoints={usedPoints}
-                      toggled={toggled}
-                      onToggle={togglePoints}
-                      applyPoints={applyPoints}
-                    />
-                  )}
-
-                  <PromocodeSection
-                    promocode={inputCodeValue}
-                    onPress={() => setShowPromocodeModal(true)}
-                    quickPromoSelect={handlePromoPress}
-                    quickPromoDeselect={() => setPromocode(undefined)}
+          <View style={styles.choice}>
+            {!freeOn && (
+              <>
+                {selectedPos?.IsLoyaltyMember && (
+                  <PointsToggle
+                    user={user}
+                    order={order}
+                    discount={discount}
+                    usedPoints={usedPoints}
+                    toggled={toggled}
+                    onToggle={togglePoints}
+                    applyPoints={applyPoints}
                   />
-                </>
-              }
+                )}
+
+                <PromocodeSection
+                  promocode={inputCodeValue}
+                  onPress={() => setShowPromocodeModal(true)}
+                  quickPromoSelect={handlePromoPress}
+                  quickPromoDeselect={() => setPromocode(undefined)}
+                />
+              </>
+            )}
 
 
-              <View style={styles.badgesContainer}>
-                {discount ? (
-                  <View style={styles.badgeWrapper}>
-                    <Button
-                      label={`У ВАС ЕСТЬ ПРОМОКОД НА ${discount.type === DiscountType.CASH
-                        ? discount.discount + '₽'
-                        : discount.discount + '%'
-                        }`}
-                      onClick={() => { }}
-                      color="blue"
-                      width={184}
-                      height={31}
-                      fontSize={10}
-                      fontWeight={'600'}
-                    />
-                  </View>
-                ) : null}
-
-                {usedPoints ? (
-                  <View style={styles.badgeWrapper}>
-                    <Button
-                      label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
-                      onClick={() => { }}
-                      color="blue"
-                      width={184}
-                      height={31}
-                      fontSize={10}
-                      fontWeight={'600'}
-                    />
-                  </View>
-                ) : null}
-              </View>
-            </View>
-
-            {
-              !freeOn &&
-              <PaymentMethods
-                selectedMethod={paymentMethod}
-                onSelectMethod={setPaymentMethod}
-              />
-            }
-
-            <View style={styles.paymentActions}>
-              {
-                freeOn
-                  ?
+            <View style={styles.badgesContainer}>
+              {discount ? (
+                <View style={styles.badgeWrapper}>
                   <Button
-                    label="Активировать"
-                    onClick={() => {
-                      navigateBottomSheet('PaymentLoading', {
-                        user,
-                        order,
-                        discount,
-                        usedPoints,
-                        promoCodeId,
-                        loadUser,
-                        freeOn
-                      });
-                    }}
+                    label={`У ВАС ЕСТЬ ПРОМОКОД НА ${discount.type === DiscountType.CASH
+                      ? discount.discount + '₽'
+                      : discount.discount + '%'
+                      }`}
                     color="blue"
-                    height={43}
-                    fontSize={18}
+                    width={184}
+                    height={31}
+                    fontSize={10}
                     fontWeight={'600'}
-                    showLoading={loading}
                   />
-                  :
-                  <Button
-                    label={`Оплатить ${finalOrderCost} ₽`}
-                    onClick={() => {
-                      navigateBottomSheet('PaymentLoading', {
-                        user,
-                        order,
-                        discount,
-                        usedPoints,
-                        promoCodeId,
-                        loadUser,
-                        freeOn
-                      });
-                    }}
-                    color="blue"
-                    height={43}
-                    fontSize={18}
-                    fontWeight={'600'}
-                    showLoading={loading}
-                  />
-              }
+                </View>
+              ) : null}
 
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => navigateBottomSheet('Main', {})}>
-                <Text style={styles.cancelText}>Отменить заказ</Text>
-              </TouchableOpacity>
+              {usedPoints ? (
+                <View style={styles.badgeWrapper}>
+                  <Button
+                    label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
+                    color="blue"
+                    width={184}
+                    height={31}
+                    fontSize={10}
+                    fontWeight={'600'}
+                  />
+                </View>
+              ) : null}
             </View>
           </View>
-        </GHScrollView>
-      )}
+          {!freeOn && (
+            <PaymentMethods
+              selectedMethod={paymentMethod}
+              onSelectMethod={setPaymentMethod}
+            />
+          )}
+          <View style={styles.paymentActions}>
+            {freeOn ? (
+              <Button
+                label="Активировать"
+                onClick={() => {
+                  navigateBottomSheet('PaymentLoading', {
+                    user,
+                    order,
+                    discount,
+                    usedPoints,
+                    promoCodeId,
+                    loadUser,
+                    freeOn
+                  });
+                }}
+                color="blue"
+                height={43}
+                fontSize={18}
+                fontWeight={'600'}
+                showLoading={loading}
+              />
+            ) : (
+              <Button
+                label={`Оплатить ${finalOrderCost} ₽`}
+                onClick={() => {
+                  navigateBottomSheet('PaymentLoading', {
+                    user,
+                    order,
+                    discount,
+                    usedPoints,
+                    promoCodeId,
+                    loadUser,
+                    freeOn
+                  });
+                }}
+                color="blue"
+                height={43}
+                fontSize={18}
+                fontWeight={'600'}
+                showLoading={loading}
+              />
+            )}
+            <Pressable
+              style={styles.cancelButton}
+              onPress={() => navigateBottomSheet('Main', {})}>
+              <Text style={styles.cancelText}>Отменить заказ</Text>
+            </Pressable>
+          </View>
+        </View>
+      </ScrollView>
+
+      <PromocodeModal
+        visible={showPromocodeModal}
+        onClose={() => setShowPromocodeModal(false)}
+        promocode={inputCodeValue || ''}
+        handleSearchChange={handleSearchChange}
+        apply={debouncedApplyPromoCode}
+        promocodeError={promoError}
+        fetching={isMutating}
+      />
     </BottomSheetView>
   );
 };
