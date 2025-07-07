@@ -2,7 +2,6 @@ import React, {Suspense} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ActivityIndicator, View} from 'react-native';
 import useStore from '../../state/store';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
@@ -53,18 +52,7 @@ const Campaign = React.lazy(() =>
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 
-// Loading component
-const LoadingScreen = () => (
-  <View
-    style={{
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: '#FFF',
-    }}>
-    <ActivityIndicator size="large" color={'#b9f93a'} />
-  </View>
-);
+import LoadingScreen from '@navigators/NavigatorLoader';
 
 const navTheme = {
   ...DefaultTheme,

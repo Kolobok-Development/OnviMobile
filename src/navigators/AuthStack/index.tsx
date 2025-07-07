@@ -1,6 +1,7 @@
 import React, {Suspense} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {ActivityIndicator, View} from 'react-native';
+
+import LoadingScreen from '@navigators/NavigatorLoader';
 
 const SignIn = React.lazy(() =>
   import('@screens/SignIn').then(module => ({default: module.SignIn})),
@@ -9,12 +10,6 @@ const Verification = React.lazy(() =>
   import('@screens/Verification').then(module => ({
     default: module.Verification,
   })),
-);
-
-const LoadingScreen = () => (
-  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <ActivityIndicator size="large" />
-  </View>
 );
 
 const RootStack = createNativeStackNavigator();
