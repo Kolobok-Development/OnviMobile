@@ -6,14 +6,20 @@ import {ActivityIndicator, View} from 'react-native';
 import useStore from '../../state/store';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
-import {Main} from '@components/BottomSheetViews';
+import {
+  Main,
+  Business,
+  BusinessInfo,
+  Boxes,
+  Launch,
+  Payment,
+  AddCard,
+  PostPayment,
+  PaymentLoading,
+} from '@components/BottomSheetViews';
 
 // Lazy load components
-const Launch = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.Launch,
-  })),
-);
+
 const Notifications = React.lazy(() =>
   import('@components/BottomSheetViews').then(module => ({
     default: module.Notifications,
@@ -24,16 +30,6 @@ const History = React.lazy(() =>
     default: module.History,
   })),
 );
-const PostPayment = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.PostPayment,
-  })),
-);
-const PaymentLoading = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.PaymentLoading,
-  })),
-);
 const Search = React.lazy(() =>
   import('@components/BottomSheetViews/Search').then(module => ({
     default: module.Search,
@@ -42,31 +38,6 @@ const Search = React.lazy(() =>
 const Filters = React.lazy(() =>
   import('@components/BottomSheetViews/Filters').then(module => ({
     default: module.Filters,
-  })),
-);
-const Business = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.Business,
-  })),
-);
-const BusinessInfo = React.lazy(() =>
-  import('@components/BottomSheetViews/BusinessInfo').then(module => ({
-    default: module.BusinessInfo,
-  })),
-);
-const Boxes = React.lazy(() =>
-  import('@components/BottomSheetViews/Boxes').then(module => ({
-    default: module.Boxes,
-  })),
-);
-const Payment = React.lazy(() =>
-  import('@components/BottomSheetViews').then(module => ({
-    default: module.Payment,
-  })),
-);
-const AddCard = React.lazy(() =>
-  import('@components/BottomSheetViews/AddCard').then(module => ({
-    default: module.AddCard,
   })),
 );
 const Post = React.lazy(() =>
@@ -219,40 +190,28 @@ const BottomSheetStack = React.memo(
               </Suspense>
             )}
           </RootStack.Screen>
-          <RootStack.Screen name="Business" key="BusinessScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <Business />
-              </Suspense>
-            )}
-          </RootStack.Screen>
-          <RootStack.Screen name="BusinessInfo" key="BusinessInfoScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <BusinessInfo />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+          <RootStack.Screen
+            name="Business"
+            key="BusinessScreen"
+            component={Business}
+          />
+          <RootStack.Screen
+            name="BusinessInfo"
+            key="BusinessInfoScreen"
+            component={BusinessInfo}
+          />
           <RootStack.Screen
             name="Boxes"
             key="BoxesScreen"
-            initialParams={{active}}>
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <Boxes />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+            component={Boxes}
+            initialParams={{active}}
+          />
           <RootStack.Screen
             name="Launch"
             key="LaunchScreen"
-            initialParams={{active}}>
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <Launch />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+            component={Launch}
+            initialParams={{active}}
+          />
           <RootStack.Screen name="Notifications" key="NotificationsScreen">
             {() => (
               <Suspense fallback={<LoadingScreen />}>
@@ -270,20 +229,16 @@ const BottomSheetStack = React.memo(
               </Suspense>
             )}
           </RootStack.Screen>
-          <RootStack.Screen name="Payment" key="PaymentScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <Payment />
-              </Suspense>
-            )}
-          </RootStack.Screen>
-          <RootStack.Screen name="AddCard" key="AddCardScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <AddCard />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+          <RootStack.Screen
+            name="Payment"
+            key="PaymentScreen"
+            component={Payment}
+          />
+          <RootStack.Screen
+            name="AddCard"
+            key="AddCardScreen"
+            component={AddCard}
+          />
           <RootStack.Screen name="Post" key="PostScreen">
             {() => (
               <Suspense fallback={<LoadingScreen />}>
@@ -298,20 +253,16 @@ const BottomSheetStack = React.memo(
               </Suspense>
             )}
           </RootStack.Screen>
-          <RootStack.Screen name="PostPayment" key="PostPaymentScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <PostPayment />
-              </Suspense>
-            )}
-          </RootStack.Screen>
-          <RootStack.Screen name="PaymentLoading" key="PaymentLoadingScreen">
-            {() => (
-              <Suspense fallback={<LoadingScreen />}>
-                <PaymentLoading />
-              </Suspense>
-            )}
-          </RootStack.Screen>
+          <RootStack.Screen
+            name="PostPayment"
+            key="PostPaymentScreen"
+            component={PostPayment}
+          />
+          <RootStack.Screen
+            name="PaymentLoading"
+            key="PaymentLoadingScreen"
+            component={PaymentLoading}
+          />
         </RootStack.Navigator>
       </NavigationContainer>
     );
