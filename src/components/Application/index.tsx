@@ -53,14 +53,12 @@ const Application = () => {
 
         if (initialUrl) {
           // Log for debugging
-          console.log('App opened with URL:', initialUrl);
         }
 
         // Mark navigation as ready
         setIsReady(true);
       } catch (e) {
         // Handle error if needed
-        console.error('Failed to get initial URL:', e);
         setIsReady(true);
       }
     };
@@ -69,17 +67,13 @@ const Application = () => {
 
     const unsubscribeFromBranch = branch.subscribe(({error, params}) => {
       if (error) {
-        console.error('Error from Branch: ' + error);
         return;
       }
 
       // Just log the deep link data for debugging
-      console.log('Deep link detected:', params);
 
       // We don't need to do anything special with the params
       // The user will be sent to Home page or Login based on authentication status
-      const branchParams = JSON.stringify(params, null, 2);
-      console.log('Branch params:', branchParams);
     });
 
     return () => unsubscribeFromBranch();
@@ -88,7 +82,6 @@ const Application = () => {
   // Listen for new deep links while the app is open
   useEffect(() => {
     const subscription = Linking.addEventListener('url', ({url}) => {
-      console.log('Incoming link while app is running:', url);
       // You can add any custom handling of the URL here if needed
     });
 

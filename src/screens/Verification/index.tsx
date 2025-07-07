@@ -46,7 +46,6 @@ const Verification = ({route}: VerificationProps) => {
   const handleCellTextChange = async (text: string, i: number) => {
     if (i === 0) {
       const clippedText = await Clipboard.getString();
-      console.log(' CLIPBOARD ', clippedText);
       if (clippedText.slice(0, 1) === text) {
         input.current?.setValue(clippedText, true);
       }

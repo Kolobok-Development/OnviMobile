@@ -34,7 +34,6 @@ const PostPayment = () => {
 
   const handleTileClick = (tile: any, index: number) => {
     setActiveIndex(index); // Update the active index
-    console.log(tile.label); // Return the label of the clicked tile
   };
 
   const restart = async () => {

@@ -85,8 +85,8 @@ const Settings = () => {
 
   useEffect(() => {
     notificationTrigger(toggle)
-      .then(() => console.log('Success'))
-      .catch(err => console.log(err));
+      .then(() => {})
+      .catch(err => {});
   }, [toggle]);
 
   const handleClosePress = () => {

@@ -63,7 +63,6 @@ const navigateBottomSheet = (name: string, params: any) => {
   if (currentRoute?.name !== name) {
     navigationRef.current?.navigate(name, params);
   } else {
-    console.log(`Already on ${name} screen, skipping navigation`);
   }
 };
 

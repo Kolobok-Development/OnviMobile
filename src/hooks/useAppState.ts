@@ -10,7 +10,6 @@ const useAppState = () => {
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
-      console.log('nextAppState: ', nextAppState);
 
       if (
         previousAppState.current === 'active' &&
