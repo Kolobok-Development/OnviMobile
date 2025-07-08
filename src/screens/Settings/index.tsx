@@ -85,7 +85,6 @@ const Settings = () => {
 
   useEffect(() => {
     notificationTrigger(toggle)
-      .then(() => {})
       .catch(err => {});
   }, [toggle]);
 

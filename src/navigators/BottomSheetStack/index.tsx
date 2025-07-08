@@ -62,7 +62,6 @@ const navigateBottomSheet = (name: string, params: any) => {
   const currentRoute = navigationRef.current?.getCurrentRoute();
   if (currentRoute?.name !== name) {
     navigationRef.current?.navigate(name, params);
-  } else {
   }
 };
 

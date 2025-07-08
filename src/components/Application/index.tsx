@@ -79,17 +79,6 @@ const Application = () => {
     return () => unsubscribeFromBranch();
   }, []);
 
-  // Listen for new deep links while the app is open
-  useEffect(() => {
-    const subscription = Linking.addEventListener('url', ({url}) => {
-      // You can add any custom handling of the URL here if needed
-    });
-
-    return () => {
-      subscription.remove();
-    };
-  }, []);
-
   // Wait until we're ready to render
   if (!isReady) {
     return null; // or a splash screen
