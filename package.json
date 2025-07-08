@@ -112,8 +112,8 @@
     "typescript": "5.0.4"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint",
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
       "tsc --noEmit"
     ]
   },
