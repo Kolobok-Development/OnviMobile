@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   ImageSourcePropType,
-  ScrollView,
+  FlatList,
   StyleSheet,
   Text,
   View,
@@ -48,20 +48,24 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>Способ оплаты</Text>
-      <View style={styles.buttonsContainer}>
-        <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-          {paymentMethods.map(method => (
-            <PaymentMethodButton
-              key={method.id}
-              icon={method.icon}
-              label={method.label}
-              selected={selectedMethod === method.id}
-              onPress={() => onSelectMethod(method.id)}
-              style={styles.methodButton}
-            />
-          ))}
-        </ScrollView>
-      </View>
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        data={paymentMethods}
+        keyExtractor={(item) => `payment-method-${item.id}`}
+        renderItem={({ item }) => (
+          <PaymentMethodButton
+            icon={item.icon}
+            label={item.label}
+            selected={selectedMethod === item.id}
+            onPress={() => onSelectMethod(item.id)}
+            style={styles.methodButton}
+          />
+        )}
+        initialNumToRender={4}    
+        maxToRenderPerBatch={4}   
+        windowSize={5}            
+      />
     </View>
   );
 };
@@ -75,10 +79,6 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: dp(12),
     color: '#000',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
   },
   methodButton: {
     width: scale(85),
