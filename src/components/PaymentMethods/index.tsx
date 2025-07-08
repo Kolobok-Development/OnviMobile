@@ -52,7 +52,7 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
         horizontal
         showsHorizontalScrollIndicator={false}
         data={paymentMethods}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => `payment-method-${item.id}`}
         renderItem={({ item }) => (
           <PaymentMethodButton
             icon={item.icon}
