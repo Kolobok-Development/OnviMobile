@@ -46,7 +46,6 @@ const PaymentMethodButton: React.FC<PaymentMethodButtonProps> = ({
   );
 };
 
-
 const styles = StyleSheet.create({
   paymentButton: {
     backgroundColor: '#FFFFFF',

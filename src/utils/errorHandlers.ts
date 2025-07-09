@@ -67,7 +67,6 @@ export const handleApiError = (error: unknown): string => {
   return 'Произошла ошибка, повторите попытку чуть позже.';
 };
 
-
 export const handlePromoCodeError = (error: unknown): string => {
   if (error && typeof error === 'object' && 'response' in error) {
     const errorResponse = (error as any).response?.data;

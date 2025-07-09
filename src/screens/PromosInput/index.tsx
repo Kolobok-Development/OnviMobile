@@ -30,7 +30,7 @@ import useStore from '../../state/store';
 type PromoInputRouteProp = RouteProp<DrawerParamList, 'Ввод Промокода'>;
 
 const PromosInput = () => {
-  const [code, setCode] = useState('');
+  const [_, setCode] = useState('');
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'Ввод Промокода'>>();
 
@@ -66,14 +66,14 @@ const PromosInput = () => {
           text1: message,
         });
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         data.totalPoints && setUserBalance(data.totalPoints);
-      
+
         Toast.show({
           type: 'customSuccessToast',
           text1: 'Промокод успешно применен',
-        })
-      }
+        });
+      },
     },
   );
 

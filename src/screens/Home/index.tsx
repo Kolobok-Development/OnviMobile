@@ -16,7 +16,7 @@ import {useSnapPoints} from '../../utils/snapPoints';
 
 const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
-  const [bottomSheetIndex, setBottomSheetIndex] = useState(1);
+  const [bottomSheetIndex, _] = useState(1);
 
   // Calculate dynamic snap points based on screen size
   // Use the global snap points hook to ensure consistency across screens
@@ -63,7 +63,6 @@ const Home = React.memo(({navigation}: any) => {
       <BottomSheetStack
         active={true}
         drawerNavigation={navigation}
-        cameraRef={cameraRef}
         setCamera={setCamera}
       />
     ),

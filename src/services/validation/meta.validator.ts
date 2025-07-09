@@ -1,5 +1,4 @@
-import { Meta } from "../../types/models/User.ts";
-
+import {Meta} from '../../types/models/User.ts';
 
 export const hasMetaDataChanged = (
   localMeta: Meta,
@@ -14,7 +13,11 @@ export const hasMetaDataChanged = (
     localMeta.platformVersion,
     remoteMeta.platformVersion,
   );
-  console.log('Comparing manufacturer:', localMeta.manufacturer, remoteMeta.manufacturer);
+  console.log(
+    'Comparing manufacturer:',
+    localMeta.manufacturer,
+    remoteMeta.manufacturer,
+  );
   console.log('Comparing appToken:', localMeta.appToken, remoteMeta.appToken);
   return (
     localMeta.deviceId !== remoteMeta.deviceId ||

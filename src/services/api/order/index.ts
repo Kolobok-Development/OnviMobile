@@ -21,10 +21,9 @@ enum ORDER {
 export async function create(
   body: ICreateOrderRequest,
 ): Promise<ICreateOrderResponse> {
-  const response = await userApiInstance.post<IUserApiResponse<ICreateOrderResponse>>(
-    ORDER.CREATE_ORDER_URL,
-    body
-  );
+  const response = await userApiInstance.post<
+    IUserApiResponse<ICreateOrderResponse>
+  >(ORDER.CREATE_ORDER_URL, body);
   return response.data.data;
 }
 
@@ -42,7 +41,7 @@ export async function pingPos(
 ): Promise<IPingPosResponse> {
   const response = await userApiInstance.get<
     IUserApiResponse<IPingPosResponse>
-  >(ORDER.PING_POS_URL, { params });
+  >(ORDER.PING_POS_URL, {params});
   return response.data.data;
 }
 

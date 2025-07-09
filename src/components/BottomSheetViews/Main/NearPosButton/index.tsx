@@ -35,7 +35,9 @@ export default function NearPosButton() {
   };
 
   const findNearestCarWash = () => {
-    if (!location || !posList?.length) return;
+    if (!location || !posList?.length) {
+      return;
+    }
 
     let nearest: CarWashLocation | null = null;
     let minDistance = Infinity;
