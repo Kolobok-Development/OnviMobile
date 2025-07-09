@@ -135,7 +135,6 @@ const Payment = () => {
                     user={user}
                     order={order}
                     discount={discount}
-                    usedPoints={usedPoints}
                     toggled={toggled}
                     onToggle={togglePoints}
                     applyPoints={applyPoints}
