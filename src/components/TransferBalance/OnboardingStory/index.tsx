@@ -86,7 +86,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error checking onboarding status:', error);
       // On error, proceed without showing onboarding
       onComplete();
       setLoading(false);
@@ -102,7 +101,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       setIsVisible(false);
       onComplete();
     } catch (error) {
-      console.error('Error saving onboarding status:', error);
       setIsVisible(false);
       onComplete();
     }
@@ -117,7 +115,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       setIsVisible(false);
       onComplete();
     } catch (error) {
-      console.error('Error during skip:', error);
       setIsVisible(false);
       onComplete();
     }

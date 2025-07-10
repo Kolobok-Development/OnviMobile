@@ -46,7 +46,6 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
               }));
               return true;
             } catch (error) {
-              console.error('Failed to preload image:', story.url, error);
               return false;
             }
           }
