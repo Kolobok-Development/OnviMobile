@@ -80,7 +80,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.longTaskThresholdMs = 100;
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
-        config.serviceName = 'onvi-mobile-prod';
+        config.serviceName = 'test-flight';
 
         await DdSdkReactNative.initialize(config);
         
