@@ -1,4 +1,5 @@
 import React, {useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {Button} from '@styled/buttons';
@@ -11,17 +12,37 @@ import {
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
 
-enum OrderStatusText {
-  start = 'Подготавливаем оборудование...',
-  processing = 'Зачисляем деньги...',
-  end = 'Оплата прошла успешно!',
-  waiting_payment = 'Ожидаем оплату',
-  polling = 'Ещё чуть-чуть...',
-  processing_free = 'Активируем оборудование...',
-  end_free = 'Активация прошла успешно!',
+// Helper function to get translated order status text
+const getOrderStatusText = (status: OrderProcessingStatus, t: any): string => {
+  switch (status) {
+    case OrderProcessingStatus.START:
+      return t('app.paymentLoading.preparingEquipment');
+    case OrderProcessingStatus.PROCESSING:
+      return t('app.paymentLoading.creditingMoney');
+    case OrderProcessingStatus.END:
+      return t('app.paymentLoading.paymentSuccessful');
+    case OrderProcessingStatus.WAITING_PAYMENT:
+      return t('app.paymentLoading.waitingPayment');
+    case OrderProcessingStatus.POLLING:
+      return t('app.paymentLoading.almostDone');
+    case OrderProcessingStatus.PROCESSING_FREE:
+      return t('app.paymentLoading.activatingEquipment');
+    case OrderProcessingStatus.END_FREE:
+      return t('app.paymentLoading.activationSuccessful');
+    default:
+      return '';
+  }
+};
+
+interface IPaymentLoading {
+  orderStatus: OrderProcessingStatus | null;
+  error: string | null;
+  loading: boolean;
+  onClick: () => void;
 }
 
 const PaymentLoading = () => {
+  const {t} = useTranslation();
   const route = useRoute<GeneralBottomSheetRouteProp<'PaymentLoading'>>();
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Post'>>();
 
@@ -71,12 +92,12 @@ const PaymentLoading = () => {
             />
           )}
           <Text style={styles.text}>
-            {!error && orderStatus ? OrderStatusText[orderStatus] : error}
+            {!error && orderStatus ? getOrderStatusText(orderStatus, t) : error}
           </Text>
           {error && (
             <Button
               onClick={navigation.goBack}
-              label={'Повторить'}
+              label={t('common.buttons.retry')}
               color="blue"
               width={129}
               height={42}

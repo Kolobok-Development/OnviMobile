@@ -1,4 +1,5 @@
 import React, {useEffect, useState, useRef} from 'react';
+import {useTranslation} from 'react-i18next';
 import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import {Button} from '@styled/buttons';
 
@@ -25,6 +26,7 @@ const Verification = ({}: VerificationProps) => {
   const popRef = useRef<PopupRefProps>(null);
 
   const {sendOtp, register, login} = useStore.getState();
+  const {t} = useTranslation();
 
   const {theme} = useTheme();
 
@@ -125,10 +127,10 @@ const Verification = ({}: VerificationProps) => {
       />
       <View style={styles.middleContainer}>
         <Text style={{...styles.text, color: theme.textColor}}>
-          Введите код из СМС
+          {t('app.auth.enterSmsCode')}
         </Text>
         <Text style={styles.descriptionText}>
-          Код отправлен на {route.params.phone}
+          {t('app.auth.codeSentTo')} {route.params.phone}
         </Text>
         <OtpInput
           numberOfDigits={4}
@@ -156,7 +158,7 @@ const Verification = ({}: VerificationProps) => {
         />
         <View style={{paddingTop: dp(100)}}>
           <Button
-            label="Получить новый код"
+            label={t('app.auth.getNewCode')}
             color={!disabled ? 'blue' : 'grey'}
             disabled={!disabled ? false : true}
             onClick={() => {
@@ -167,8 +169,10 @@ const Verification = ({}: VerificationProps) => {
           />
         </View>
         <View style={{paddingTop: dp(20)}}>
-          <Text style={{alignSelf: 'center'}}>Если код не придет,</Text>
-          <Text>можно получить новый через {timer} сек.</Text>
+          <Text style={{alignSelf: 'center'}}>
+            {t('app.auth.codeNotReceived')}
+          </Text>
+          <Text>{t('app.auth.canGetNewIn', {timer})}</Text>
         </View>
       </View>
       <View style={styles.bottomContainer} />
@@ -182,12 +186,12 @@ const Verification = ({}: VerificationProps) => {
             style={styles.checkbox}
           />
           <Text style={styles.termsText}>
-            Даю согласие на обработку персональных данных
+            {t('app.auth.dataProcessingConsent')}
           </Text>
         </View>
         <View style={styles.popupHeader}>
           <Button
-            label="ЗАРЕГИСТРИРОВАТЬСЯ"
+            label={t('common.buttons.register')}
             color="blue"
             disabled={!isPersonalDataCollectionAccepted}
             onClick={() => {
@@ -199,10 +203,12 @@ const Verification = ({}: VerificationProps) => {
         </View>
         <View style={styles.popupInfo}>
           <View style={styles.infoLine}>
-            <Text style={styles.termsText}>Нажимая "Зарегистрироваться",</Text>
+            <Text style={styles.termsText}>
+              {t('app.auth.byClickingRegister')}
+            </Text>
           </View>
           <View style={styles.infoLine}>
-            <Text style={styles.termsText}>Вы принимаете условия</Text>
+            <Text style={styles.termsText}>{t('app.auth.acceptTerms')}</Text>
           </View>
           <View style={styles.infoLine}>
             <Text
@@ -212,7 +218,7 @@ const Verification = ({}: VerificationProps) => {
                   'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
                 )
               }>
-              программы лояльности
+              {t('app.auth.loyaltyProgram')}
             </Text>
           </View>
         </View>

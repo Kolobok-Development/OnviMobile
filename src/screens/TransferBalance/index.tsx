@@ -12,6 +12,7 @@ import {
   Modal,
   Linking,
 } from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {dp} from '../../utils/dp';
 import {useNavigation} from '@react-navigation/core';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
@@ -32,6 +33,7 @@ type FindBalanceResponse = {
 const TransferBalance = () => {
   const [cardNumber, setCardNumber] = useState<string>('');
   const [balance, setBalance] = useState<FindBalanceResponse>();
+  const {t} = useTranslation();
   const [error, setError] = useState<string>('');
   const [showContent, setShowContent] = useState<boolean>(false);
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
@@ -112,25 +114,27 @@ const TransferBalance = () => {
 
       <View style={styles.header}>
         <ScreenHeader
-          screenTitle={'Перенос Баланса'}
+          screenTitle={t('app.transferBalance.transferBalance')}
           btnType="back"
           btnCallback={() => navigation.navigate('Главная')}
         />
       </View>
       <View style={styles.contentContainer}>
-        <Text style={styles.modalTitle}>Перенос баланса</Text>
+        <Text style={styles.modalTitle}>
+          {t('app.transferBalance.transferBalance')}
+        </Text>
         <View>
           <Text style={styles.modalDescription}>
             {!balance
-              ? 'Средства будут перенесены из приложения «Мой-Ка!ДС» в приложение «ONVI».\n \nВведите номер счета лояльности приложения «Мой-Ка!ДС».'
-              : 'Карта найдена, можем осуществить перенос бонусов в приложение «ONVI».'}
+              ? t('app.transferBalance.description')
+              : t('app.transferBalance.cardFound')}
           </Text>
           <TouchableOpacity onPress={() => setShowInstructions(true)}>
             <Text style={styles.instructionsLink}>
-              Как это работает? Посмотреть инструкцию
+              {t('app.transferBalance.howItWorks')}
             </Text>
             <Text style={styles.instructionsLink} onPress={handlePress}>
-              Правила переноса
+              {t('app.transferBalance.transferRules')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -154,7 +158,7 @@ const TransferBalance = () => {
                 />
                 {balance ? (
                   <Text style={{...styles.balanceText, marginTop: 0}}>
-                    {balance?.balance} бонусов
+                    {balance?.balance} {t('common.labels.points')}
                   </Text>
                 ) : (
                   <></>
@@ -175,8 +179,9 @@ const TransferBalance = () => {
                 <View style={styles.overlay}>
                   <View style={styles.inputContainer}>
                     <Text style={styles.balanceText}>
-                      Баланс после переноса {'\n'}
-                      {balance?.balanceAfterTransfer} бонусов
+                      {t('app.transferBalance.balanceAfterTransfer')} {'\n'}
+                      {balance?.balanceAfterTransfer}{' '}
+                      {t('common.labels.points')}
                     </Text>
                   </View>
                 </View>
@@ -186,8 +191,8 @@ const TransferBalance = () => {
               style={{
                 marginTop: dp(10),
               }}>
-              💡 {balance?.bonusAsPromo} бонусов вернутся в виде промокода. Его
-              можно будет найти в разделе{' '}
+              💡 {balance?.bonusAsPromo}{' '}
+              {t('app.transferBalance.bonusesReturn')}{' '}
               <Pressable
                 style={{
                   display: 'flex',
@@ -198,7 +203,7 @@ const TransferBalance = () => {
                     color: 'blue',
                     textDecorationLine: 'underline',
                   }}>
-                  Промокоды
+                  {t('navigation.promos')}
                 </Text>
               </Pressable>
             </Text>
@@ -209,13 +214,15 @@ const TransferBalance = () => {
 
         {!balance ? (
           <TouchableOpacity style={buttonStyles} onPress={findBalance}>
-            <Text style={styles.buttonText}>Найти</Text>
+            <Text style={styles.buttonText}>{t('common.buttons.find')}</Text>
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             style={buttonStyles}
             onPress={() => setModalVisible(true)}>
-            <Text style={styles.buttonText}>Перенести</Text>
+            <Text style={styles.buttonText}>
+              {t('common.buttons.transfer')}
+            </Text>
           </TouchableOpacity>
         )}
       </View>
@@ -231,22 +238,24 @@ const TransferBalance = () => {
           <View style={styles.modalOverlay} />
           <View style={styles.modalView}>
             <Text style={styles.modalText}>
-              Нажимая «Да», вы соглашаетесь с{' '}
+              {t('app.transferBalance.modalTextPart1')}
               <Text style={styles.instructionsLink} onPress={handlePress}>
-                правилами переноса баланса
-              </Text>{' '}
-              и подтверждаете, что ознакомились с условиями.
+                {t('app.transferBalance.modalTextPart2')}
+              </Text>
+              {t('app.transferBalance.modalTextPart3')}
             </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.buttonClose]}
                 onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.buttonText}>Отмена</Text>
+                <Text style={styles.buttonText}>
+                  {t('common.buttons.cancel')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.modalButton, styles.buttonConfirm]}
                 onPress={confirmTransfer}>
-                <Text style={styles.buttonText}>Да</Text>
+                <Text style={styles.buttonText}>{t('common.buttons.yes')}</Text>
               </TouchableOpacity>
             </View>
           </View>

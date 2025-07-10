@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {Button} from '@styled/buttons';
 
+import {useTranslation} from 'react-i18next';
 import {dp} from '../../../utils/dp';
 
 interface IPromocodeModal {
@@ -22,6 +23,8 @@ interface IPromocodeModal {
 }
 
 const PromocodeModal = (props: IPromocodeModal) => {
+  const {t} = useTranslation();
+  
   return (
     <Modal
       visible={props.visible}
@@ -32,18 +35,18 @@ const PromocodeModal = (props: IPromocodeModal) => {
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContainer}>
-              <Text style={styles.titleText}>Введите промокод</Text>
+              <Text style={styles.titleText}>{t('app.promos.enterPromocode')}</Text>
               <View style={styles.textInputGroup}>
                 <TextInput
                   value={props.promocode}
-                  placeholder={'ПРОМОКОД'}
+                  placeholder={t('app.promos.promocode').toLocaleUpperCase()}
                   onChangeText={props.handleSearchChange}
                   style={styles.textInput}
                 />
               </View>
               <View style={styles.buttonContainer}>
                 <Button
-                  label={'Закрыть'}
+                  label={t('common.buttons.close')}
                   color={'blue'}
                   width={dp(140)}
                   height={dp(40)}
@@ -53,7 +56,7 @@ const PromocodeModal = (props: IPromocodeModal) => {
                 />
                 <View style={{width: dp(14)}} />
                 <Button
-                  label={'Применить'}
+                  label={t('common.buttons.apply')}
                   color={'blue'}
                   width={dp(140)}
                   height={dp(40)}

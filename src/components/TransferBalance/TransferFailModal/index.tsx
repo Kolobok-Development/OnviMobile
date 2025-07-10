@@ -4,6 +4,7 @@ import Modal from '@styled/Modal';
 
 import {dp} from '@utils/dp';
 import {Button} from '@styled/buttons';
+import {useTranslation} from 'react-i18next';
 
 interface TransferFailModalProps {
   visible: boolean;
@@ -11,6 +12,8 @@ interface TransferFailModalProps {
 }
 
 const TransferFailModal = ({visible, onClose}: TransferFailModalProps) => {
+  const {t} = useTranslation();
+  
   return (
     <Modal visible={visible} onClose={onClose}>
       <View style={styles.container}>
@@ -19,8 +22,8 @@ const TransferFailModal = ({visible, onClose}: TransferFailModalProps) => {
         </View>
         <View>
           <Text style={styles.message}>
-            <Text style={styles.highlight}>Ошибка.</Text> Повторите попытку или
-            обратитесь в поддержку
+            <Text style={styles.highlight}>{t('app.errors.error')}.</Text> 
+            {t('app.errors.contactSupport')}
           </Text>
         </View>
         <View

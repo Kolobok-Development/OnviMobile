@@ -14,18 +14,21 @@ import {
   GeneralBottomSheetRouteProp,
 } from '@app-types/navigation/BottomSheetNavigation.ts';
 
+import {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
+  const {t} = useTranslation();
   const type = route.params.bayType;
 
   const {business, orderDetails} = useStore.getState();
 
   return (
     <GHScrollView
-      contentContainerStyle={{flexGrow: 1}}
+      contentContainerStyle={{flexGrow: 1}} 
       nestedScrollEnabled={true}>
       <View style={styles.container}>
         <View
@@ -37,14 +40,14 @@ const Boxes = () => {
           <BusinessHeader type="empty" />
 
           <View style={styles.middle}>
-            <Text style={styles.middleText}>Выберите</Text>
+            <Text style={styles.middleText}>{t('app.business.select')}</Text>
             {type === 'BAY' ? (
               <Text style={styles.middleText}>
-                бокс <Text style={[styles.emoji, {lineHeight: 50}]}>🚙</Text>
+                {t('app.business.bay').toLowerCase()} <Text style={[styles.emoji, {lineHeight: 50}]}>🚙</Text>
               </Text>
             ) : (
               <Text style={styles.middleText}>
-                пылесос <Text style={[styles.emoji, {lineHeight: 50}]}>💨</Text>
+                {t('app.business.vacuume').toLowerCase()} <Text style={[styles.emoji, {lineHeight: 50}]}>💨</Text>
               </Text>
             )}
 

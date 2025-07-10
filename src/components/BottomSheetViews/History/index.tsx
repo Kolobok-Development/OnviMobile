@@ -1,3 +1,4 @@
+import {useTranslation} from 'react-i18next';
 import React from 'react';
 import {
   View,
@@ -31,6 +32,7 @@ import {getOrderHistory} from '@services/api/user';
 import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 const History = () => {
+  const {t} = useTranslation();
   const {user} = useStore.getState();
 
   const {data, isLoading, mutate} = useSWR(['getOrderHistory'], () =>
@@ -103,7 +105,7 @@ const History = () => {
             fontWeight: '600',
             letterSpacing: 0.5,
           }}>
-          История заказов
+          {t('app.history.title')}
         </Text>
       </View>
       {isLoading ? (
@@ -120,7 +122,7 @@ const History = () => {
             /* eslint-disable-next-line react/no-unstable-nested-components */
             ListEmptyComponent={() => (
               <>
-                <EmptyPlaceholder text="У вас пока нет заказов" />
+                <EmptyPlaceholder text={t('app.history.noOrders')} />
               </>
             )}
           />

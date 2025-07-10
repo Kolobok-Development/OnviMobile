@@ -8,6 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
+import {useTranslation} from 'react-i18next';
 import {FormattedDate} from 'react-intl';
 
 // Define the component props
@@ -24,6 +25,8 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
   onPress,
   disable = false,
 }) => {
+  const {t} = useTranslation();
+  
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -50,7 +53,7 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
 
       {!disable && (
         <TouchableOpacity style={styles.button} onPress={onPress}>
-          <Text style={styles.buttonText}>Использовать</Text>
+          <Text style={styles.buttonText}>{t('app.promos.use')}</Text>
         </TouchableOpacity>
       )}
     </View>

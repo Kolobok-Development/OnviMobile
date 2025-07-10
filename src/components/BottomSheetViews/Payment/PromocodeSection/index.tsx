@@ -3,6 +3,7 @@ import {Text, TouchableOpacity, View} from 'react-native';
 import {dp} from '@utils/dp.ts';
 import PromotionsSlider from '@components/BottomSheetViews/Payment/PromotionsSlider';
 import {IPersonalPromotion} from '../../../../types/models/PersonalPromotion.ts';
+import {useTranslation} from 'react-i18next';
 
 interface PromocodeSectionProps {
   promocode: string | undefined;
@@ -17,6 +18,8 @@ const PromocodeSection: React.FC<PromocodeSectionProps> = ({
   quickPromoDeselect,
   quickPromoSelect,
 }) => {
+  const {t} = useTranslation();
+
   return (
     <>
       <View
@@ -37,7 +40,7 @@ const PromocodeSection: React.FC<PromocodeSectionProps> = ({
             borderRadius: dp(30),
           }}
           onPress={onPress}>
-          <Text style={{fontSize: dp(10), fontWeight: '500'}}>ПРОМОКОД</Text>
+          <Text style={{fontSize: dp(10), fontWeight: '500'}}>{t('app.promos.promocode').toUpperCase()}</Text>
         </TouchableOpacity>
       </View>
 

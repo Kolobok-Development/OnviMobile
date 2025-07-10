@@ -11,6 +11,7 @@ import {scale} from 'react-native-size-matters';
 import PaymentMethodButton, {
   PaymentMethodType,
 } from '@styled/buttons/PaymentMethodButton';
+import {useTranslation} from 'react-i18next';
 
 interface PaymentMethod {
   id: PaymentMethodType;
@@ -27,27 +28,28 @@ const PaymentMethods: React.FC<PaymentMethodsProps> = ({
   selectedMethod,
   onSelectMethod,
 }) => {
+  const {t} = useTranslation();
   const paymentMethods: PaymentMethod[] = [
     {
       id: 'BANK_CARD',
-      label: 'Банковская карта', // From your image
+      label: t('app.payment.bankCard'),
       icon: require('../../assets/icons/bank_card.png'), // Update path as needed
     },
     {
       id: 'SBP',
-      label: 'СБП',
+      label: t('app.payment.sbp'),
       icon: require('../../assets/icons/sbp_icon.png'), // Update path as needed
     },
     {
       id: 'SBERBANK',
-      label: 'Cбер Pay',
+      label: t('app.payment.sberPay'),
       icon: require('../../assets/icons/sber_pay_icon.png'), // Update path as needed
     },
   ];
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Способ оплаты</Text>
+      <Text style={styles.sectionTitle}>{t('app.payment.paymentMethod')}</Text>
       <View style={styles.buttonsContainer}>
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
           {paymentMethods.map(method => (

@@ -12,15 +12,17 @@ import {useNavigation} from '@react-navigation/core';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {openWebURL} from '@utils/openWebUrl.ts';
 import ScreenHeader from '@components/ScreenHeader';
+import {useTranslation} from 'react-i18next';
 
 const Legals = () => {
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'Правовые документы'>>();
+  const {t} = useTranslation();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
         <ScreenHeader
-          screenTitle="Правовые документы"
+          screenTitle={t('app.legal.legalDocuments')}
           btnType="back"
           btnCallback={() => navigation.navigate('Настройки')}
         />
@@ -37,7 +39,7 @@ const Legals = () => {
                     );
                   }}>
                   <Text style={styles.rowLabel}>
-                    Политика конфиденциальности
+                    {t('app.legal.privacyPolicy')}
                   </Text>
                   <Image
                     style={{
@@ -57,7 +59,9 @@ const Legals = () => {
                       'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
                     )
                   }>
-                  <Text style={styles.rowLabel}>Программа лояльности</Text>
+                  <Text style={styles.rowLabel}>
+                    {t('app.legal.loyaltyProgram')}
+                  </Text>
                   <Image
                     style={{
                       height: dp(24),

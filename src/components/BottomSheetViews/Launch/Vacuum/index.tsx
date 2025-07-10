@@ -26,10 +26,12 @@ import {Button} from '@styled/buttons';
 
 import {GeneralBottomSheetNavigationProp} from '../../../../types/navigation/BottomSheetNavigation.ts';
 import {WHITE} from '@utils/colors.ts';
+import {useTranslation} from 'react-i18next';
 
 export default function VacuumLaunch() {
   const [value, setValue] = useState(50);
-  const measureTypeData = ['рубли'];
+  const {t} = useTranslation();
+  const measureTypeData = [t('common.labels.rubles')];
 
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
@@ -63,7 +65,7 @@ export default function VacuumLaunch() {
               textAlign: 'center',
               color: 'black',
             }}>
-            Бесплатная активация пылесоса
+            {t('app.payment.vacuum.freeActivation')}
           </Text>
           <View style={{...styles.sumSelector, marginTop: dp(30)}}>
             <SumInput
@@ -107,10 +109,10 @@ export default function VacuumLaunch() {
                 lineHeight: verticalScale(20),
                 paddingBottom: verticalScale(4),
               }}>
-              Способ измерения
+              {t('common.labels.measurementMethod')}
             </Text>
             <FilterList
-              data={['шт.']}
+              data={[t('common.labels.pieces')]}
               width={horizontalScale(53)}
               backgroundColor={'#BFFA00'}
             />
@@ -128,10 +130,12 @@ export default function VacuumLaunch() {
                 textAlign: 'center',
                 marginBottom: dp(20),
               }}>
-              Остаток бесплатных включений: {freeVacuum.remains} шт.
+              {t('app.payment.vacuum.remainingFreeActivations', {
+                count: freeVacuum.remains,
+              })}
             </Text>
             <Button
-              label="Включить бесплатно"
+              label={t('app.payment.vacuum.activateFree')}
               onClick={() => {
                 setOrderDetails({
                   ...orderDetails,
@@ -172,7 +176,7 @@ export default function VacuumLaunch() {
                   lineHeight: verticalScale(20),
                   paddingBottom: verticalScale(4),
                 }}>
-                Способ измерения
+                {t('common.labels.measurementMethod')}
               </Text>
               <FilterList
                 data={measureTypeData}
@@ -307,7 +311,7 @@ export default function VacuumLaunch() {
               paddingBottom: dp(90),
             }}>
             <Button
-              label="Оплатить"
+              label={t('common.buttons.pay')}
               onClick={() => {
                 let cost = value ? value : 10;
                 setOrderDetails({

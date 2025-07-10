@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {useNavigation} from '@react-navigation/native';
@@ -31,51 +32,54 @@ export type SelectedFilters = {
   [sectionCode: string]: string[];
 };
 
-const data: {title: Section; data: Filter[]}[] = [
-  {
-    title: {id: 1, name: 'Услуги', code: 'tags'},
-    data: [
-      {code: 'vac', name: 'Пылесос'},
-      {code: 'air', name: 'Воздух'},
-      {code: 'handwash', name: 'Рукомойник'},
-      {code: 'dryer', name: 'Сушка'},
-      {code: 'toilet', name: 'Туалет'},
-      {code: 'dryingarea', name: 'Зона протирки'},
-    ],
-  },
-  {
-    title: {id: 2, name: 'Сеть', code: 'brand'},
-    data: [{code: 'DS', name: 'МОЙ-КА!DS'}],
-  },
-  {
-    title: {id: 3, name: 'Тип', code: 'type'},
-    data: [
-      {code: 'SelfService', name: 'Самообслуживание'},
-      {code: 'Portal', name: 'Робот'},
-    ],
-  },
-];
-const generateQuery = (selectedFilters: SelectedFilters): string => {
-  const queryFilters: string[] = [];
-  Object.entries(selectedFilters).forEach(([sectionCode, filters]) => {
-    filters.forEach(filter => {
-      if (filter === 'Самообслуживание') {
-        queryFilters.push(`${sectionCode}:SelfService`);
-      } else if (filter === 'Робот') {
-        queryFilters.push(`${sectionCode}:Portal`);
-      } else {
-        queryFilters.push(`${sectionCode}:${filter}`);
-      }
-    });
-  });
-  return queryFilters.join(',');
-};
-
 const Filters = () => {
+  const {t} = useTranslation();
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Filters'>>();
 
   const {filters, setFilters, setPosList} = useStore.getState();
+
+  const generateQuery = (selectedFilters: SelectedFilters): string => {
+    const queryFilters: string[] = [];
+    Object.entries(selectedFilters).forEach(([sectionCode, filters]) => {
+      filters.forEach(filter => {
+        if (filter === t('app.filters.selfService')) {
+          queryFilters.push(`${sectionCode}:SelfService`);
+        } else if (filter === t('app.filters.robot')) {
+          queryFilters.push(`${sectionCode}:Portal`);
+        } else {
+          queryFilters.push(`${sectionCode}:${filter}`);
+        }
+      });
+    });
+    return queryFilters.join(',');
+  };
+
+  // Define translated data inside component
+  const data: {title: Section; data: Filter[]}[] = [
+    {
+      title: {id: 1, name: t('app.filters.services'), code: 'tags'},
+      data: [
+        {code: 'vac', name: t('app.filters.vacuum')},
+        {code: 'air', name: t('app.filters.air')},
+        {code: 'handwash', name: t('app.filters.handWash')},
+        {code: 'dryer', name: t('app.filters.dryer')},
+        {code: 'toilet', name: t('app.filters.toilet')},
+        {code: 'dryingarea', name: t('app.filters.dryingArea')},
+      ],
+    },
+    {
+      title: {id: 2, name: t('app.filters.network'), code: 'brand'},
+      data: [{code: 'DS', name: t('app.filters.moykaDS')}],
+    },
+    {
+      title: {id: 3, name: t('app.filters.type'), code: 'type'},
+      data: [
+        {code: 'SelfService', name: t('app.filters.selfService')},
+        {code: 'Portal', name: t('app.filters.robot')},
+      ],
+    },
+  ];
 
   //Local filters
   const [selectedFilters, setSelectedFilters] =
@@ -201,7 +205,7 @@ const Filters = () => {
               flexDirection: 'row',
             }}>
             <Button
-              label={'Сбросить'}
+              label={t('common.buttons.reset')}
               color={'lightGrey'}
               width={dp(120)}
               height={dp(43)}
@@ -211,7 +215,7 @@ const Filters = () => {
             />
             <View style={{width: dp(10)}} />
             <Button
-              label={'Применить'}
+              label={t('common.buttons.apply')}
               color={'blue'}
               width={dp(120)}
               height={dp(43)}

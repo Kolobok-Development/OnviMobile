@@ -10,6 +10,7 @@ import {
   getMaximumApplicablePoints,
 } from '@utils/paymentHelpers.ts';
 import {DiscountValueType} from '@hooks/usePromoCode.ts';
+import {useTranslation} from 'react-i18next';
 
 interface PointsToggleProps {
   user: IUser | null;
@@ -33,6 +34,8 @@ const PointsToggle: React.FC<PointsToggleProps> = ({
 }) => {
   // If user data is not available, show skeleton loader
   const [maxPoints, setMaxPoints] = useState<number>(0);
+      const {t} = useTranslation();
+  
 
   useEffect(() => {
     if (order && order.sum) {
@@ -64,7 +67,7 @@ const PointsToggle: React.FC<PointsToggleProps> = ({
               fontSize: dp(15),
               color: 'rgba(0, 0, 0, 1)',
             }}>
-            Списать бонусы Onvi
+            {t('app.bonus.withdrawOnviBonuses')}
           </Text>
         </View>
         <View
@@ -100,7 +103,7 @@ const PointsToggle: React.FC<PointsToggleProps> = ({
             fontSize: dp(15),
             color: 'rgba(0, 0, 0, 1)',
           }}>
-          Списать бонусы Onvi
+          {t('app.bonus.withdrawOnviBonuses')}
         </Text>
       </View>
       <View

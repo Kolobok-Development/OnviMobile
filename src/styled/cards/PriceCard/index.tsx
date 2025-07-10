@@ -4,6 +4,7 @@ import {View, StyleSheet, Text, Image, TouchableOpacity} from 'react-native';
 // utils
 import {BLACK, BLUE, GREY, WHITE, YELLOW} from '@utils/colors.ts';
 import {horizontalScale, moderateScale, verticalScale} from '@utils/metrics.ts';
+import {useTranslation} from 'react-i18next';
 
 interface PriceCardProps {
   name: string;
@@ -33,6 +34,8 @@ const PriceCard = ({
     }
   };
 
+  const {t} = useTranslation();
+  
   return (
     <TouchableOpacity
       onPress={() => onSelect(name, cost)}
@@ -102,7 +105,7 @@ const PriceCard = ({
               fontSize: moderateScale(15),
               fontWeight: '600',
             }}>
-            7 мин.
+            7 {t('time.minutes')}.
           </Text>
         </View>
       </View>
@@ -133,7 +136,7 @@ const PriceCard = ({
                 fontSize: moderateScale(12),
                 paddingLeft: horizontalScale(5),
               }}>
-              подробнее
+              {t('common.buttons.moreDetails')}
             </Text>
           </View>
         </View>

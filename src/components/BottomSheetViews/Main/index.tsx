@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 // styled components
 import {Card} from '@styled/cards';
@@ -35,6 +36,7 @@ import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 
 const Main = () => {
+  const {t} = useTranslation();
   const {
     bottomSheetRef,
     setIsMainScreen,
@@ -132,7 +134,7 @@ const Main = () => {
                   opacity: 0.15,
                   paddingLeft: dp(7),
                 }}>
-                Поиcк
+                {t('app.main.search')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -166,7 +168,7 @@ const Main = () => {
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Промокоды
+                  {t('navigation.promos')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -191,7 +193,7 @@ const Main = () => {
                 fontSize: dp(24),
                 fontWeight: '600',
               }}>
-              Свежие новости
+              {t('app.main.freshNews')}
             </Text>
           </View>
           {newsLoading || newsError ? (

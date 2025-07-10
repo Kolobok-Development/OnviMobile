@@ -9,10 +9,12 @@ import {Platform} from 'react-native';
 import React from 'react';
 import {useNavigation} from '@react-navigation/native';
 import Config from 'react-native-config';
+import {useTranslation} from 'react-i18next';
 import {GeneralBottomSheetNavigationProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 
 const About = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'About'>>();
+  const {t} = useTranslation();
 
   return (
     <>
@@ -41,24 +43,24 @@ const About = () => {
           <Text style={[styles.text, styles.appName]}>onvi</Text>
 
           <View style={styles.section}>
-            <Text style={styles.header}>Версия приложения</Text>
+            <Text style={styles.header}>{t('app.about.appVersion')}</Text>
             <Text style={styles.text}>{Config.APP_VERSION}</Text>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.header}>Версия операционной системы</Text>
+            <Text style={styles.header}>{t('app.about.osVersion')}</Text>
             <Text style={styles.text}>
               {`${Platform.OS} ${Platform.Version}`}
             </Text>
           </View>
 
           <View style={styles.section}>
-            <Text style={styles.header}>Регион</Text>
-            <Text style={styles.text}>Россия</Text>
+            <Text style={styles.header}>{t('common.labels.region')}</Text>
+            <Text style={styles.text}>{t('common.labels.russia')}</Text>
           </View>
 
           <TouchableOpacity style={styles.supportButton}>
-            <Text style={styles.text}>Написать в поддержку</Text>
+            <Text style={styles.text}>{t('app.about.writeSupport')}</Text>
           </TouchableOpacity>
         </View>
       </GHScrollView>

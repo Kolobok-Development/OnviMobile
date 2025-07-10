@@ -1,6 +1,8 @@
 import {Linking} from 'react-native';
 import Toast from 'react-native-toast-message';
 
+import i18n from '../locales';
+
 export const openWebURL = async (url: string) => {
   try {
     // Check if the link can be opened
@@ -12,13 +14,13 @@ export const openWebURL = async (url: string) => {
     } else {
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось открыть файл',
+        text1: i18n.t('app.errors.failedToOpenFile'),
       });
     }
   } catch (error) {
     Toast.show({
       type: 'customErrorToast',
-      text1: 'Произошла ошибка попробуйте чуть позже',
+      text1: i18n.t('app.errors.genericError'),
     });
   }
 };

@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {Text, View, Image, StyleSheet} from 'react-native';
 
 import Modal from '@styled/Modal';
@@ -18,6 +19,7 @@ import useStore from '../../../state/store.ts';
 import {getFreeVacuum} from '@services/api/user/index.ts';
 
 const BusinessInfo = () => {
+  const {t} = useTranslation();
   const [modalVisible, setModalVisible] = useState(false);
 
   const {
@@ -62,14 +64,18 @@ const BusinessInfo = () => {
               source={require('../../../assets/emojies/thinking.png')}
               style={{width: dp(40), height: dp(40), resizeMode: 'contain'}}
             />
-            <Text style={styles.modalTitle}>Вы далеко от мойки</Text>
-            <Text style={styles.modalText}>Возможно мы что-то напутали</Text>
+            <Text style={styles.modalTitle}>
+              {t('app.business.farFromWash')}
+            </Text>
+            <Text style={styles.modalText}>
+              {t('app.business.somethingWrong')}
+            </Text>
 
             <View style={styles.actionButtons}>
               <View style={{paddingRight: dp(14)}}>
                 <Button
                   onClick={() => setModalVisible(false)}
-                  label="Назад"
+                  label={t('navigation.back')}
                   color="blue"
                   width={129}
                   height={42}
@@ -79,7 +85,7 @@ const BusinessInfo = () => {
               </View>
               <Button
                 onClick={forceForward}
-                label="Все Ок"
+                label={t('common.buttons.allOk')}
                 color="blue"
                 width={129}
                 height={42}
@@ -143,7 +149,7 @@ const BusinessInfo = () => {
           ?.length ? (
           <Button
             color={'blue'}
-            label={'Пылесосемся'}
+            label={t('app.business.letsVacuum')}
             width={147}
             height={47}
             fontSize={16}
@@ -156,7 +162,7 @@ const BusinessInfo = () => {
 
         <Button
           color={'blue'}
-          label={'Моемся'}
+          label={t('app.business.letsWash')}
           width={147}
           height={47}
           fontSize={16}

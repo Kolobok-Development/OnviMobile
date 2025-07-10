@@ -3,6 +3,7 @@ import {StyleSheet, Text, TextInput, View} from 'react-native';
 import {dp} from '../../../utils/dp';
 import {Button} from '@styled/buttons';
 import Modal from '@styled/Modal';
+import {useTranslation} from 'react-i18next';
 
 interface ILoadingModal {
   isVisible: boolean;
@@ -15,6 +16,7 @@ interface ILoadingModal {
 const InputModal = (props: ILoadingModal) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [input, setInput] = useState('');
+  const {t} = useTranslation();
 
   useEffect(() => {
     setModalVisible(props.isVisible);
@@ -40,7 +42,7 @@ const InputModal = (props: ILoadingModal) => {
             <View>
               <Button
                 onClick={props.onClick}
-                label="Активировать"
+                label={t('common.buttons.activate')}
                 color="blue"
                 width={129}
                 height={42}
