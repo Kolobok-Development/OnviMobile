@@ -81,7 +81,6 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
         setDatadogConfig(config);
       } catch (error) {
-        console.error('Datadog initialization failed:', error);
         setInitializationError(true);
       }
     };
@@ -169,7 +168,6 @@ function App(): React.JSX.Element {
             });
           }
         } catch (error: any) {
-          console.error('Error syncing metadata:', error);
         }
       }
     };
