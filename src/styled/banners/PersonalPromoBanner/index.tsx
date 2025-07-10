@@ -8,8 +8,8 @@ import {
   GestureResponderEvent,
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
-import { FormattedDate } from "react-intl";
 import {useTranslation} from 'react-i18next';
+import {FormattedDate} from 'react-intl';
 
 // Define the component props
 interface PersonalPromoBannerProps {

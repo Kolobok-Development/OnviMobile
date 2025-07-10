@@ -71,7 +71,7 @@ const Settings = () => {
     'updateUserData',
     (key, {arg}: {arg: IUpdateAccountRequest}) => update(arg),
     {
-      onError: err => {
+      onError: () => {
         Toast.show({
           type: 'customErrorToast',
           text1: t('app.settings.updateDataError'),
@@ -87,8 +87,7 @@ const Settings = () => {
 
   useEffect(() => {
     notificationTrigger(toggle)
-      .then(() => console.log('Success'))
-      .catch(err => console.log(err));
+      .catch(err => {});
   }, [toggle]);
 
   const handleClosePress = () => {

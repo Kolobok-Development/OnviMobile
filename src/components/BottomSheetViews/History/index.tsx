@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import React from 'react';
 import {
   View,
   Dimensions,
@@ -10,12 +10,12 @@ import {
   FlatList,
 } from 'react-native';
 
-import {dp} from '../../../utils/dp';
+import {dp} from '@utils/dp';
 
-import {WHITE} from '../../../utils/colors';
+import {WHITE} from '@utils/colors';
 
 import {BalanceCard} from '@styled/cards/BalanceCard';
-import useStore from '../../../state/store';
+import useStore from '@state/store';
 
 import {useRoute} from '@react-navigation/native';
 import {Settings} from 'react-native-feather';
@@ -29,7 +29,7 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 const History = () => {
   const {t} = useTranslation();
@@ -92,7 +92,7 @@ const History = () => {
           <TouchableOpacity
             onPress={() => {
               navigateBottomSheet('Main', {});
-              route.params.drawerNavigation.navigate('Настройки');
+              route.params.drawerNavigation?.navigate('Настройки');
             }}>
             <Settings stroke={'white'} width={dp(18)} height={dp(18)} />
           </TouchableOpacity>

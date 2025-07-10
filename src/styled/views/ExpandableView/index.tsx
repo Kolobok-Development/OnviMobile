@@ -3,8 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 import {ArrowUpRight} from 'react-native-feather';
-import { Price } from "../../../types/api/app/types.ts";
 import {useTranslation} from 'react-i18next';
+import {Price} from '../../../types/api/app/types.ts';
 
 type AccordionItemPros = PropsWithChildren<{
   data: Price;
@@ -80,7 +80,10 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity style={styles.toggleBnt} onPress={toggleItem} hitSlop={{ top: 25, bottom: 25, left: 20, right: 20}}>
+          <TouchableOpacity
+            style={styles.toggleBnt}
+            onPress={toggleItem}
+            hitSlop={{top: 25, bottom: 25, left: 20, right: 20}}>
             {expanded ? (
               <Text style={{fontWeight: '500', fontSize: dp(11)}}>
                 ☝️{t('common.buttons.collapse').toLowerCase()}

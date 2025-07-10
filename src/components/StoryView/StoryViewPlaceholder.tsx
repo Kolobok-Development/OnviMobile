@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
-import { dp } from "@utils/dp.ts";
+import {dp} from '@utils/dp.ts';
 
 const StoryViewPlaceholder = () => {
   return (

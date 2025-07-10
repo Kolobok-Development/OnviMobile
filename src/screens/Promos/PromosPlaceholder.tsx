@@ -2,7 +2,6 @@ import React from 'react';
 
 import {dp} from '../../utils/dp';
 
-import {View} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 
 function GlobalPromosPlaceholder() {

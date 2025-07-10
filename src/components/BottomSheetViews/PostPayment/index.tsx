@@ -1,10 +1,10 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {dp} from '@utils/dp.ts';
-import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import React, {useState} from 'react';
 import {Button, Tile} from '@styled/buttons';
 import {Slide} from '@styled/silder';
-import useStore from '../../../state/store.ts';
+import useStore from '@state/store.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
@@ -36,7 +36,6 @@ const PostPayment = () => {
 
   const handleTileClick = (tile: any, index: number) => {
     setActiveIndex(index); // Update the active index
-    console.log(tile.label); // Return the label of the clicked tile
   };
 
   const restart = async () => {
@@ -51,7 +50,7 @@ const PostPayment = () => {
   const finish = () => {
     setOrderDetails({
       posId: null,
-      sum: null,
+      sum: 0,
       bayNumber: null,
       promoCodeId: null,
       rewardPointsUsed: null,

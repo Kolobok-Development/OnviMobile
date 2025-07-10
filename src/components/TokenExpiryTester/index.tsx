@@ -29,16 +29,9 @@ const TokenExpiryTester: React.FC = () => {
   }
 
   const handleTestTokenExpiry = async () => {
-    console.log('🔴 TOKEN EXPIRY TEST: Button pressed');
     try {
-      console.log('🔴 TOKEN EXPIRY TEST: Calling mockTokenExpiry()');
       await mockTokenExpiry();
-      console.log('🔴 TOKEN EXPIRY TEST: mockTokenExpiry completed');
     } catch (error) {
-      console.log(
-        '🔴 TOKEN EXPIRY TEST: Error caught in button handler:',
-        error,
-      );
     }
   };
 

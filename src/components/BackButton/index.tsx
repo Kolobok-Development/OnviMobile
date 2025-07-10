@@ -4,14 +4,14 @@ import {TouchableOpacity, StyleSheet} from 'react-native';
 
 import {ChevronLeft} from 'react-native-feather';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 
-import {dp} from '../../utils/dp';
+import {dp} from '@utils/dp';
 
-import useStore from '../../state/store';
-import {SNAP_POINTS, SCREEN_SNAP_POINTS} from '../../shared/constants';
+import useStore from '@state/store';
+import {SCREEN_SNAP_POINTS} from '@shared/constants';
 
-import {GeneralBottomSheetNavigationProp} from '../../types/navigation/BottomSheetNavigation.ts';
+import {GeneralBottomSheetNavigationProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 interface BackButtonProps {
   callback?: () => void;
@@ -24,8 +24,12 @@ const BackButton = ({
   position = '60%',
   index = undefined,
 }: BackButtonProps) => {
-  const navigation = useNavigation<GeneralBottomSheetNavigationProp<any>>();
-  const route = useRoute();
+  const navigation =
+    useNavigation<
+      GeneralBottomSheetNavigationProp<
+        keyof import('@app-types/navigation/BottomSheetNavigation.ts').RootStackParamList
+      >
+    >();
 
   const {bottomSheetRef} = useStore.getState();
 
@@ -47,12 +51,15 @@ const BackButton = ({
             bottomSheetRef.current.snapToIndex(index);
           } else {
             // Get the current route name after navigation back
-            const previousScreen = navigation.getState().routes[navigation.getState().index]?.name;
-            
+            const previousScreen =
+              navigation.getState().routes[navigation.getState().index]?.name;
+
             if (previousScreen) {
               // Check if we have a defined snap point for this screen
               if (SCREEN_SNAP_POINTS[previousScreen] !== undefined) {
-                bottomSheetRef.current.snapToIndex(SCREEN_SNAP_POINTS[previousScreen]);
+                bottomSheetRef.current.snapToIndex(
+                  SCREEN_SNAP_POINTS[previousScreen] ?? 1,
+                );
               } else if (position) {
                 // Fall back to position parameter if no specific index
                 bottomSheetRef.current.snapToPosition(position);

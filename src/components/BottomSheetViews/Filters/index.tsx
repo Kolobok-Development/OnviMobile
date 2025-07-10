@@ -112,10 +112,10 @@ const Filters = () => {
   // Function to handle submit button press
   const handleSubmit = async () => {
     try {
-      const data = await trigger(generateQuery(selectedFilters)); // Pass the query as an argument
-      if (data) {
+      const submitData = await trigger(generateQuery(selectedFilters)); // Pass the query as an argument
+      if (submitData) {
         setFilters(selectedFilters);
-        setPosList(data.businessesLocations);
+        setPosList(submitData.businessesLocations);
 
         navigation.reset({
           index: 0,
@@ -123,7 +123,6 @@ const Filters = () => {
         });
       }
     } catch (err) {
-      console.log('Error fetching data:', err);
     }
   };
 

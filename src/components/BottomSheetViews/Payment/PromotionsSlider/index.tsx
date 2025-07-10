@@ -8,10 +8,13 @@ import {BLACK, GREY, YELLOW} from '@utils/colors.ts';
 // utils
 import useSWR from 'swr';
 import {getActiveClientPromotions} from '@services/api/user/index.ts';
-import {dp} from '../../../../utils/dp.ts';
+import {dp} from '@utils/dp.ts';
 
 // types
-import { DiscountType, IPersonalPromotion } from "../../../../types/models/PersonalPromotion.ts";
+import {
+  DiscountType,
+  IPersonalPromotion,
+} from '@app-types/models/PersonalPromotion.ts';
 
 interface PromotionsSliderProps {
   value?: string;
@@ -29,7 +32,6 @@ export default function PromotionsSlider({
     data: personalPromo,
     error: personalError,
   } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions());
-
 
   if (personalError) {
     return null;

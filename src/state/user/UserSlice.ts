@@ -1,8 +1,8 @@
-import { IUser } from '../../types/models/User';
-import { StoreSlice } from '../store.ts';
+import {IUser} from '../../types/models/User';
+import {StoreSlice} from '../store.ts';
 
-import { ILoginResponse } from '../../types/api/auth/res/ILoginResponse';
-import { IRegisterResponse } from '../../types/api/auth/res/IRegisterResponse';
+import {ILoginResponse} from '../../types/api/auth/res/ILoginResponse';
+import {IRegisterResponse} from '../../types/api/auth/res/IRegisterResponse';
 
 import LocalStorage from '@services/local-storage';
 import Toast from 'react-native-toast-message';
@@ -12,10 +12,10 @@ import {
   hasAccessTokenCredentials,
 } from '@services/validation/index.validator.ts';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import { deleteAccount, getMe, getTariff } from '@services/api/user';
-import { login, refresh, register, sendOtp } from '@services/api/auth';
-import { DdLogs } from '@datadog/mobile-react-native';
 import i18n from '../../locales';
+import {deleteAccount, getMe, getTariff} from '@services/api/user';
+import {login, refresh, register, sendOtp} from '@services/api/auth';
+import {DdLogs} from '@datadog/mobile-react-native';
 
 const MAX_REFRESH_RETRIES = 3;
 
@@ -26,14 +26,14 @@ export interface UserSlice {
   expiredDate: string | null;
   fcmToken: string | null;
   loading: boolean;
-  freeVacuum: { limit: number, remains: number };
+  freeVacuum: {limit: number; remains: number};
   setUser: (user: IUser | null) => void;
   setUserBalance: (balance: number) => void;
   setAccessToken: (accessToken: string | null) => void;
   setExpiredDate: (expiredDate: string | null) => void;
   setFcmToken: (fcmToken: string | null) => void;
   setLoading: (loading: boolean) => void;
-  setFreeVacuum: (freeVacuum: { limit: number, remains: number }) => void;
+  setFreeVacuum: (freeVacuum: {limit: number; remains: number}) => void;
   mutateRefreshToken: () => Promise<string | null>;
   login: (phone: string, otp: string) => Promise<ILoginResponse | null>;
   register: (
@@ -62,17 +62,17 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   expiredDate: null,
   loading: true,
   refreshRetryCounter: MAX_REFRESH_RETRIES,
-  freeVacuum: { limit: 0, remains: 0 },
+  freeVacuum: {limit: 0, remains: 0},
   setUser: user => set({user}),
   setUserBalance: (balance: number) => {
-    set((state) => {
+    set(state => {
       if (state.user && state.user.cards) {
         return {
           user: {
-            ...state.user, 
+            ...state.user,
             cards: {
-              ...state.user.cards, 
-              balance, 
+              ...state.user.cards,
+              balance,
             },
           },
         };
@@ -88,9 +88,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   mutateRefreshToken: async () => {
     try {
       const refreshRetriesLeft = get().refreshRetryCounter;
-  
+
       if (refreshRetriesLeft <= 0) {
-        console.log('Maximum refresh token attempts reached, signing out...');
         DdLogs.error('Maximum refresh token attempts reached', { refreshRetriesLeft });
         await get().signOut();
         Toast.show({
@@ -101,27 +100,25 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         });
         return null;
       }
-  
+
       const existingSession = await EncryptedStorage.getItem('user_session');
       let existingData: Record<string, any> = {};
       if (existingSession) {
         existingData = JSON.parse(existingSession);
       }
-  
+
       if (!existingData.refreshToken) {
-        console.log('No refresh token found, signing out');
         DdLogs.error('No refresh token found', { existingData });
         await get().signOut();
         return null;
       }
   
-      console.log(`Refresh token attempt ${MAX_REFRESH_RETRIES - refreshRetriesLeft + 1} of ${MAX_REFRESH_RETRIES}`);
       DdLogs.info(`Refresh token attempt ${MAX_REFRESH_RETRIES - refreshRetriesLeft + 1} of ${MAX_REFRESH_RETRIES}`);
   
       const response = await refresh({
         refreshToken: existingData.refreshToken,
       });
-  
+
       if (response) {
         await LocalStorage.set(
           'user_session',
@@ -130,22 +127,21 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
             expiredDate: new Date(response.accessTokenExp).toISOString(),
           }),
         );
-  
+
         set({
           accessToken: response.accessToken,
           expiredDate: new Date(response.accessTokenExp).toISOString(),
           loading: false,
           refreshRetryCounter: MAX_REFRESH_RETRIES,
         });
-  
+
         await get().loadUser();
-        DdLogs.info('Token refreshed successfully', { response });
+        DdLogs.info('Token refreshed successfully', {response});
         return existingData.refreshToken;
       } else {
         throw new Error('Failed to refresh token: Empty response');
       }
     } catch (error: any) {
-      console.log('Error refreshing token:', JSON.stringify(error, null, 2));
       DdLogs.error('Error refreshing token', { error: error.message });
   
       const isRefreshTokenError =
@@ -154,12 +150,11 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         (error?.response?.data?.message &&
           (error.response.data.message.includes('refresh token expired') ||
             error.response.data.message.includes('invalid refresh token')));
-  
+
       const refreshRetriesLeft = get().refreshRetryCounter;
-      set({ loading: false, refreshRetryCounter: refreshRetriesLeft - 1 });
-  
+      set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
+
       if (isRefreshTokenError || refreshRetriesLeft <= 1) {
-        console.log('Refresh token expired or invalid, signing out user');
         DdLogs.error('Refresh token expired or invalid, signing out user', { error });
         await get().signOut();
         Toast.show({
@@ -169,20 +164,20 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           props: { errorCode: 401 },
         });
       }
-  
+
       return null;
     }
   },
   login: async (phone, otp) => {
     try {
       const formattedPhone = phone.replace(/[ \(\)-]+/g, '');
-      const response = await login({ phone: formattedPhone, otp });
+      const response = await login({phone: formattedPhone, otp});
       if (response.type === 'register-required') {
         return response;
       }
       if (response.type === 'login-success') {
-        DdLogs.info("Login success", { phone });
-        const { tokens } = response;
+        DdLogs.info('Login success', {phone});
+        const {tokens} = response;
         if (!tokens) {
           return null;
         }
@@ -222,7 +217,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       });
       return response;
     } catch (error) {
-      console.log('Login error:', error);
       DdLogs.error('Login error', { phone, error })
       Toast.show({
         type: 'customErrorToast',
@@ -249,9 +243,9 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       });
 
       if (response.type === 'register-success') {
-        DdLogs.info("Register success ", { phone });
+        DdLogs.info('Register success ', {phone});
 
-        const { tokens } = response;
+        const {tokens} = response;
 
         const refreshToken = tokens.refreshToken;
 
@@ -288,7 +282,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       });
       return response;
     } catch (error) {
-      console.log('Registration error:', error);
       DdLogs.error('Registration error', { error })
       Toast.show({
         type: 'customErrorToast',
@@ -302,24 +295,22 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
   sendOtp: async phone => {
     try {
       const formattedPhone = phone.replace(/[ \(\)-]+/g, '');
-      await sendOtp({ phone: formattedPhone })
+      await sendOtp({phone: formattedPhone})
         .then(data => {
           Toast.show({
             type: 'customSuccessToast',
             text1: i18n.t('app.authErrors.messageSent'),
           });
-          DdLogs.info("Send OTP message", { phone });
+          DdLogs.info('Send OTP message', {phone});
           return data;
         })
         .catch((err: unknown) => {
-          console.log(JSON.stringify(err, null, 2));
           Toast.show({
             type: 'customErrorToast',
             text1: i18n.t('app.authErrors.smsFailure'),
           });
         });
     } catch (error) {
-      console.log('Send OTP error:', error);
       DdLogs.error('Send OTP error:', { phone, error })
     }
   },
@@ -343,7 +334,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         refreshRetryCounter: 0,
       });
     } catch (error) {
-      console.log('Sign out error:', error);
     }
   },
   loadUser: async () => {
@@ -383,16 +373,14 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           formatted &&
           hasAccessTokenCredentials(existingData.refreshToken)
         ) {
-          console.log('I am trying to refresh token!');
           await get().mutateRefreshToken();
         } else {
-          set({ loading: false });
+          set({loading: false});
         }
       } else {
-        set({ loading: false });
+        set({loading: false});
       }
     } catch (error) {
-      console.log('Load user error:', error);
     }
   },
 
@@ -418,8 +406,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         });
       }
     } catch (error: any) {
-      console.log(JSON.stringify(error, null, 2));
-      console.log('Delete account error:', error);
     }
   },
   handleTokenExpiry: async (originalRequest?: {
@@ -431,7 +417,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       const refreshResult = await get().mutateRefreshToken();
 
       if (refreshResult) {
-        console.log('Token refresh successful');
 
         // If we have an original request to retry, return it
         if (originalRequest) {
@@ -442,7 +427,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         return true; // Token refresh was successful
       } else {
         // If refresh failed, log out the user
-        console.log('Token refresh failed, logging out user');
         await get().signOut();
 
         // Show toast notification to the user
@@ -455,7 +439,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         return false; // Token refresh failed
       }
     } catch (error) {
-      console.error('Error during token refresh:', error);
       await get().signOut();
 
       // Show toast notification to the user

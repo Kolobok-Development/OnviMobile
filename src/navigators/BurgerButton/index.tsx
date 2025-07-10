@@ -1,25 +1,26 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 
 import {TouchableOpacity, StyleSheet, View, Platform} from 'react-native';
 
 // Navigation
 import {useNavigation} from '@react-navigation/native';
-import {dp} from '../../utils/dp';
+import {dp} from '@utils/dp';
 import {Menu} from 'react-native-feather';
 import {ArrowLeft} from 'react-native-feather';
 
 import {navigationRef} from '@navigators/BottomSheetStack';
 
-import useStore from '../../state/store';
-import {SNAP_POINTS, SCREEN_SNAP_POINTS} from '../../shared/constants';
+import useStore from '@state/store';
+import {SNAP_POINTS, SCREEN_SNAP_POINTS} from '@shared/constants';
 
 interface BurgerProps {
   isDrawerStack?: boolean;
   handleSheetChanges?: (index: number) => void;
 }
 
-import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
-import {DRAGGABLE_SCREENS} from '../../shared/constants';
+import {GeneralDrawerNavigationProp} from '@app-types/navigation/DrawerNavigation.ts';
+import {DRAGGABLE_SCREENS} from '@shared/constants';
+import {RootStackParamList} from '@app-types/navigation/BottomSheetNavigation';
 
 const BurgerButton = ({
   isDrawerStack = false,
@@ -27,12 +28,7 @@ const BurgerButton = ({
 }: BurgerProps) => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const {
-    isMainScreen,
-    showBurgerButton,
-    bottomSheetSnapPoints,
-    bottomSheetRef,
-  } = useStore();
+  const {isMainScreen, showBurgerButton, bottomSheetRef} = useStore();
 
   if (!showBurgerButton) {
     return <></>;
@@ -78,7 +74,8 @@ const BurgerButton = ({
       onPress={() => {
         navigationRef.current?.goBack();
         // Get the current route after navigation
-        const currentRouteName = navigationRef.current?.getCurrentRoute()?.name;
+        const currentRouteName = navigationRef.current?.getCurrentRoute()
+          ?.name as keyof RootStackParamList;
 
         if (!currentRouteName || !bottomSheetRef?.current) {
           return;
@@ -94,11 +91,13 @@ const BurgerButton = ({
         if (SCREEN_SNAP_POINTS[currentRouteName] !== undefined) {
           // Use screen-specific snap point from our constants
           bottomSheetRef.current.snapToIndex(
-            SCREEN_SNAP_POINTS[currentRouteName],
+            SCREEN_SNAP_POINTS[currentRouteName] ?? 1,
           );
         } else {
           // Fall back to previous DRAGGABLE_SCREENS logic for backward compatibility
-          const index = DRAGGABLE_SCREENS[currentRouteName]
+          const index = DRAGGABLE_SCREENS[
+            currentRouteName as keyof typeof DRAGGABLE_SCREENS
+          ]
             ? SNAP_POINTS.HALF_EXPANDED
             : SNAP_POINTS.EXPANDED;
           bottomSheetRef.current.snapToIndex(index);

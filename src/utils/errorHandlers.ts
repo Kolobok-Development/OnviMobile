@@ -69,7 +69,6 @@ export const handleApiError = (error: unknown): string => {
   return i18n.t('app.errors.genericError');
 };
 
-
 export const handlePromoCodeError = (error: unknown): string => {
   if (error && typeof error === 'object' && 'response' in error) {
     const errorResponse = (error as any).response?.data;

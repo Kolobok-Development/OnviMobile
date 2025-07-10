@@ -1,4 +1,4 @@
-import {useState, useCallback, useEffect} from 'react';
+import {useState, useCallback} from 'react';
 import {IUser} from '../types/models/User.ts';
 import {OrderDetailsType} from '../state/order/OrderSlice.ts';
 import {

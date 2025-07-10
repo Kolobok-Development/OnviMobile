@@ -27,7 +27,7 @@ const FilterList = ({
               width: width,
               height: height,
               backgroundColor: backgroundColor,
-              marginRight: isLastItem ? 0 : dp(7.7), 
+              marginRight: isLastItem ? 0 : dp(7.7),
             }}
             key={index}>
             <Text style={{...styles.filterText, fontSize: fontSize}}>

@@ -8,8 +8,9 @@ import {useNavigation} from '@react-navigation/native';
 
 import {useTheme} from '@context/ThemeProvider';
 
-import {dp} from '../../utils/dp';
-import useStore from '../../state/store';
+import {dp} from '@utils/dp';
+import useStore from '@state/store';
+import {GeneralAuthNavigationProp} from '@app-types/navigation/AuthNavigation.ts';
 
 const SignIn = () => {
   const {sendOtp} = useStore.getState();
@@ -18,7 +19,7 @@ const SignIn = () => {
 
   const {theme} = useTheme();
 
-  const navigation = useNavigation<any>();
+  const navigation = useNavigation<GeneralAuthNavigationProp<'SignIn'>>();
 
   const [phone, setPhone] = useState('');
 
@@ -38,7 +39,7 @@ const SignIn = () => {
           setIsLoading(false);
           navigation.navigate('Verify', {phone: phone, type: 'register'});
         })
-        .catch(err => {
+        .catch(() => {
           setIsLoading(false);
         });
     }

@@ -16,7 +16,6 @@ interface PointsToggleProps {
   user: IUser | null;
   order: OrderDetailsType;
   discount: DiscountValueType | null;
-  usedPoints: number;
   toggled: boolean;
   onToggle: () => void;
   applyPoints: () => void;
@@ -29,7 +28,6 @@ const PointsToggle: React.FC<PointsToggleProps> = ({
   user,
   order,
   discount,
-  usedPoints,
   toggled,
   onToggle,
   applyPoints,

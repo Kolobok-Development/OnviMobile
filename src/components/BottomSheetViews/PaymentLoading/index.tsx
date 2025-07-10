@@ -1,14 +1,14 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {Button} from '@styled/buttons';
 import {dp} from '@utils/dp.ts';
-import {OrderProcessingStatus} from '../../../types/api/order/processing/OrderProcessingStatus';
+import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProcessingStatus';
 import {
   GeneralBottomSheetRouteProp,
   GeneralBottomSheetNavigationProp,
-} from '../../../types/navigation/BottomSheetNavigation.ts';
+} from '@app-types/navigation/BottomSheetNavigation.ts';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
 
@@ -49,24 +49,15 @@ const PaymentLoading = () => {
   const {user, order, discount, usedPoints, promoCodeId, loadUser, freeOn} =
     route.params;
 
-  const {
-    loading,
-    error,
-    orderStatus,
-    setOrderStatus,
-    processPayment,
-    processFreePayment,
-    clearError,
-    setPaymentMethod,
-    paymentMethod,
-  } = usePaymentProcess(
-    user,
-    order,
-    discount,
-    usedPoints,
-    promoCodeId,
-    loadUser,
-  );
+  const {loading, error, orderStatus, processPayment, processFreePayment} =
+    usePaymentProcess(
+      user!, // TODO: FIX THIS
+      order!, // TODO: FIX THIS
+      discount,
+      usedPoints,
+      promoCodeId,
+      loadUser,
+    );
 
   useEffect(() => {
     if (freeOn) {

@@ -7,23 +7,22 @@ import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
 import {BoxesSlide} from '@components/Boxes/BoxesSlide';
 import {BusinessHeader} from '@components/Business/Header';
 
-import {dp} from '../../../utils/dp';
-import {CheckBox} from '@styled/buttons/CheckBox';
+import {dp} from '@utils/dp';
 
 import {
   GeneralBottomSheetNavigationProp,
   GeneralBottomSheetRouteProp,
-} from '../../../types/navigation/BottomSheetNavigation.ts';
+} from '@app-types/navigation/BottomSheetNavigation.ts';
 
-import useStore from '../../../state/store.ts';
 import {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
+import useStore from '@state/store.ts';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
   const route = useRoute<GeneralBottomSheetRouteProp<'Boxes'>>();
-  const type: string = route.params.bayType;
   const {t} = useTranslation();
+  const type = route.params.bayType;
 
   const {business, orderDetails} = useStore.getState();
 

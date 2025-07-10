@@ -20,7 +20,7 @@ import {GlobalPromosPlaceholder} from './PromosPlaceholder';
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
-import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getActiveClientPromotions} from '@services/api/user';
 import {getGlobalPromotions} from '@services/api/promotion';
@@ -32,7 +32,7 @@ const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
   const {t} = useTranslation();
 
-  const { location } = useStore.getState();
+  const {location} = useStore.getState();
 
   const locationParams = {
     latitude: Number(location?.latitude),

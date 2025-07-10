@@ -31,7 +31,7 @@ import {useTranslation} from 'react-i18next';
 type PromoInputRouteProp = RouteProp<DrawerParamList, 'Ввод Промокода'>;
 
 const PromosInput = () => {
-  const [code, setCode] = useState('');
+  const [_, setCode] = useState('');
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'Ввод Промокода'>>();
   const {t} = useTranslation();
@@ -67,7 +67,7 @@ const PromosInput = () => {
           text1: message,
         });
       },
-      onSuccess: (data) => {
+      onSuccess: data => {
         data.totalPoints && setUserBalance(data.totalPoints);
 
         Toast.show({

@@ -1,13 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  Image,
-  Vibration,
-} from 'react-native';
 import {useTranslation} from 'react-i18next';
+import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import {Button} from '@styled/buttons';
 
 // Bottom Sheet Component
@@ -15,22 +8,21 @@ import {Popup, PopupRefProps} from '@components/Popup';
 
 import {useTheme} from '@context/ThemeProvider';
 
-import useStore from '../../state/store';
+import useStore from '@state/store';
 
-import {dp} from '../../utils/dp';
+import {dp} from '@utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
-import OTPTextView from 'react-native-otp-textinput';
-import Clipboard from '@react-native-clipboard/clipboard';
 import {YELLOW} from '@utils/colors.ts';
 import CheckBox from '@react-native-community/checkbox';
 import {openWebURL} from '@utils/openWebUrl.ts';
 import {OtpInput} from 'react-native-otp-entry';
+import {useRoute} from '@react-navigation/native';
+import {GeneralAuthRouteProp} from '@app-types/navigation/AuthNavigation.ts';
 
-interface VerificationProps {
-  route: any;
-}
+interface VerificationProps {}
 
-const Verification = ({route}: VerificationProps) => {
+const Verification = ({}: VerificationProps) => {
+  const route = useRoute<GeneralAuthRouteProp<'Verify'>>();
   const popRef = useRef<PopupRefProps>(null);
 
   const {sendOtp, register, login} = useStore.getState();
@@ -40,20 +32,9 @@ const Verification = ({route}: VerificationProps) => {
 
   //OTP
   const [otpInput, setOtpInput] = useState<string>('');
-  const input = useRef<OTPTextView>(null);
   const inputRef = useRef<any>(null);
 
   const clear = () => inputRef.current?.clear();
-
-  const handleCellTextChange = async (text: string, i: number) => {
-    if (i === 0) {
-      const clippedText = await Clipboard.getString();
-      console.log(' CLIPBOARD ', clippedText);
-      if (clippedText.slice(0, 1) === text) {
-        input.current?.setValue(clippedText, true);
-      }
-    }
-  };
 
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);

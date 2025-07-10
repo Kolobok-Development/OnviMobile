@@ -43,7 +43,11 @@ export const SNAP_POINTS = {
  * Map of screen names to their preferred snap point index
  * Use this to control which snap point a screen should use by default
  */
-export const SCREEN_SNAP_POINTS = {
+import {RootStackParamList} from '@app-types/navigation/BottomSheetNavigation.ts';
+
+export const SCREEN_SNAP_POINTS: Partial<
+  Record<keyof RootStackParamList, number>
+> = {
   Main: SNAP_POINTS.COLLAPSED,
   Business: SNAP_POINTS.HALF_EXPANDED,
   BusinessInfo: SNAP_POINTS.HALF_EXPANDED,
