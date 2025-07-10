@@ -57,11 +57,11 @@ export default function PromotionsSlider({
       contentContainerStyle={styles.container}>
       {personalPromo
         ?.filter(pp => pp.isActive)
-        .map(promo => {
+        .map((promo, index) => {
           const isSelected = value === promo.code;
-
+          const uniqueKey = `${promo.code}-${index}`;
           return (
-            <View key={promo.code} style={styles.promoWrapper}>
+            <View key={uniqueKey} style={styles.promoWrapper}>
               <TouchableOpacity
                 style={[styles.pill, isSelected && styles.selectedPill]}
                 onPress={() => {
