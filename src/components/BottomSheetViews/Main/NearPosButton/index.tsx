@@ -10,9 +10,12 @@ import calculateDistance from '@utils/calculateDistance.ts';
 import Modal from '@styled/Modal';
 import {Button} from '@styled/buttons';
 
+import {useTranslation} from 'react-i18next';
+
 export default function NearPosButton() {
   const {bottomSheetRef, bottomSheetSnapPoints, setBusiness, setNearByPos} =
     useStore.getState();
+  const {t} = useTranslation();
 
   const posList = useStore(state => state.posList);
   const nearByPos = useStore(state => state.nearByPos);
@@ -76,7 +79,7 @@ export default function NearPosButton() {
     <>
       <Pressable style={styles.balanceCard} onPress={handleLaunchCarWash}>
         <View style={styles.label}>
-          <Text style={styles.labelText}>Моемся</Text>
+          <Text style={styles.labelText}>{t('app.business.letsWash')}</Text>
         </View>
         <View style={styles.info}>
           <Text style={styles.infoText}>
@@ -96,14 +99,14 @@ export default function NearPosButton() {
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
               {
-                'Предоставьте доступ к геолокации или выберите мойку на карте 🚗'
+                t('app.mainExtras.geolocationMessage')
               }
             </Text>
             <View style={styles.actionButtons}>
               <View>
                 <Button
                   onClick={() => setNearByModal(false)}
-                  label={'Закрыть'}
+                  label={t('common.buttons.close')}
                   color="blue"
                   width={129}
                   height={42}

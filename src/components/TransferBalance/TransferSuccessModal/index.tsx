@@ -7,6 +7,7 @@ import {dp} from '@utils/dp';
 import {YELLOW} from '@utils/colors';
 
 import {Button} from '@styled/buttons';
+import {useTranslation} from 'react-i18next';
 
 interface TransferSuccessModalProps {
   visible: boolean;
@@ -17,6 +18,8 @@ const TransferSuccessModal = ({
   visible,
   onClose,
 }: TransferSuccessModalProps) => {
+  const {t} = useTranslation();
+
   return (
     <Modal
       visible={visible}
@@ -30,7 +33,7 @@ const TransferSuccessModal = ({
           source={require('../../../assets/images/success_image.png')}
           style={styles.image}
         />
-        <Text style={styles.titleText}>Перенос прошел успешно</Text>
+        <Text style={styles.titleText}>{t('app.transferBalance.transferWasSuccessful')}</Text>
       </View>
       <View
         style={{

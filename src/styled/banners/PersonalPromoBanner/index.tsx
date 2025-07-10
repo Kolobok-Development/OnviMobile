@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
 import { FormattedDate } from "react-intl";
+import {useTranslation} from 'react-i18next';
 
 // Define the component props
 interface PersonalPromoBannerProps {
@@ -24,6 +25,8 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
   onPress,
   disable = false,
 }) => {
+  const {t} = useTranslation();
+  
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -50,7 +53,7 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
 
       {!disable && (
         <TouchableOpacity style={styles.button} onPress={onPress}>
-          <Text style={styles.buttonText}>Использовать</Text>
+          <Text style={styles.buttonText}>{t('app.promos.use')}</Text>
         </TouchableOpacity>
       )}
     </View>

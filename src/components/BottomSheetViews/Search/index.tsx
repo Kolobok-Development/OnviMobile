@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {
   View,
@@ -30,6 +31,7 @@ import {
 } from '../../../types/api/app/types.ts';
 
 const Search = () => {
+  const {t} = useTranslation();
   const [search, setSearch] = useState('');
   const route = useRoute<GeneralBottomSheetRouteProp<'Search'>>();
 
@@ -170,7 +172,7 @@ const Search = () => {
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Поиск"
+        placeholder={t('app.search.placeholder')}
         maxLength={19}
         value={search}
         onChangeText={val => {
@@ -204,7 +206,7 @@ const Search = () => {
                   alignItems: 'center',
                 }}>
                 <Text style={{marginTop: dp(20), fontSize: dp(15)}}>
-                  Мойки не найдены
+                  {t('app.search.washesNotFound')}
                 </Text>
               </View>
             ) : (

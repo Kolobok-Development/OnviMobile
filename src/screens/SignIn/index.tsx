@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
+import {useTranslation} from 'react-i18next';
 import {Button} from '@styled/buttons';
 import {PhoneInp} from '@styled/inputs';
 
@@ -13,6 +14,7 @@ import useStore from '../../state/store';
 const SignIn = () => {
   const {sendOtp} = useStore.getState();
   const [isLoading, setIsLoading] = useState(false);
+  const {t} = useTranslation();
 
   const {theme} = useTheme();
 
@@ -49,16 +51,16 @@ const SignIn = () => {
       </View>
       <View style={styles.middleContainer}>
         <Text style={{...styles.text, color: theme.textColor}}>
-          Введите номер телефона
+          {t('app.auth.enterPhone')}
         </Text>
         <Text style={styles.descriptionText}>
-          Мы отправим на него код активации
+          {t('app.auth.sendActivationCode')}
         </Text>
 
         <PhoneInp phoneNumber={phone} setPhoneNumber={setPhone} />
         <View style={{paddingTop: dp(100)}}>
           <Button
-            label="ДАЛЬШЕ"
+            label={t('common.buttons.next')}
             color={phone ? 'blue' : 'grey'}
             disabled={phone ? false : true}
             onClick={login}

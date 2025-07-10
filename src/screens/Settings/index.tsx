@@ -12,6 +12,7 @@ import {
 
 import {dp} from '../../utils/dp';
 import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import useStore from '../../state/store';
 import {formatPhoneNumber} from '../../utils/phoneFormat';
 import {Button} from '@styled/buttons';
@@ -44,6 +45,7 @@ export const avatarSwitch = (avatar: string) => {
 const Settings = () => {
   const {user, signOut, loadUser, deleteUser} = useStore.getState();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
+  const {t} = useTranslation();
 
   const initialUserName = user?.name || '';
   const initialEmail = user?.email || '';
@@ -72,7 +74,7 @@ const Settings = () => {
       onError: err => {
         Toast.show({
           type: 'customErrorToast',
-          text1: 'Не получилось обновить данные...',
+          text1: t('app.settings.updateDataError'),
         });
       },
     },
@@ -122,7 +124,7 @@ const Settings = () => {
     } catch (error: any) {
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось обновить данные...',
+        text1: t('app.settings.updateDataError'),
       });
       setEditing(false);
     }
@@ -157,7 +159,7 @@ const Settings = () => {
         handleIndicatorStyle={{display: 'none'}}>
         <View style={styles.contentContainer}>
           <Text style={{...styles.titleText, marginBottom: dp(20)}}>
-            Личные данные
+            {t('app.settings.personalData')}
           </Text>
           <View style={styles.avatars}>
             <TouchableOpacity
@@ -207,7 +209,7 @@ const Settings = () => {
             <Text style={{padding: dp(10)}}>👤</Text>
             <BottomSheetTextInput
               value={userName}
-              placeholder={'Имя'}
+              placeholder={t('app.settings.name')}
               onChangeText={(val: string) => {
                 setUserName(val);
               }}
@@ -218,7 +220,7 @@ const Settings = () => {
             <Text style={{padding: dp(10)}}>✉️</Text>
             <BottomSheetTextInput
               value={email}
-              placeholder={'Почта'}
+              placeholder={t('app.settings.email')}
               onChangeText={(val: string) => {
                 setEmail(val);
               }}
@@ -234,7 +236,7 @@ const Settings = () => {
             <BottomSheetTextInput
               editable={false}
               value={formatPhoneNumber(initialPhone)}
-              placeholder={'Почта'}
+              placeholder={t('app.settings.email')}
               style={{
                 ...styles.bottomSheetTextInput,
                 backgroundColor: 'rgba(0, 0, 0, 0.008)',
@@ -249,7 +251,7 @@ const Settings = () => {
             justifyContent: 'space-evenly',
           }}>
           <Button
-            label={'Закрыть'}
+            label={t('common.buttons.cancel')}
             color={'blue'}
             width={dp(140)}
             height={dp(40)}
@@ -258,7 +260,7 @@ const Settings = () => {
             onClick={handleClosePress}
           />
           <Button
-            label={'Сохранить'}
+            label={t('common.buttons.save')}
             color={'blue'}
             width={dp(140)}
             height={dp(40)}
@@ -277,7 +279,7 @@ const Settings = () => {
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.header}>
-          <ScreenHeader screenTitle="Настройки" />
+          <ScreenHeader screenTitle={t('app.settings.settings')} />
         </View>
 
         <View style={styles.container}>
@@ -305,18 +307,22 @@ const Settings = () => {
                   style={styles.balanceIcon}
                 />
               </View>
-              <Text style={styles.text}>Onvi бонусов</Text>
+              <Text style={styles.text}>{t('app.settings.onviBonuses')}</Text>
             </View>
           </View>
           <View style={styles.footer}>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Профиль</Text>
+              <Text style={styles.sectionTitle}>
+                {t('app.settings.profile')}
+              </Text>
               <View style={styles.sectionBody}>
                 <View style={styles.rowWrapper}>
                   <TouchableOpacity
                     style={[styles.row, styles.rowFirst]}
                     onPress={() => setEditing(true)}>
-                    <Text style={styles.rowLabel}>Изменить личные данные</Text>
+                    <Text style={styles.rowLabel}>
+                      {t('app.settings.editPersonalData')}
+                    </Text>
                     <Image
                       style={{
                         height: dp(24),
@@ -330,7 +336,7 @@ const Settings = () => {
                 <View style={styles.rowWrapper}>
                   <View style={[styles.row, styles.rowFirst]}>
                     <Text style={styles.rowLabel}>
-                      Разрешить отправку уведомлений
+                      {t('app.settings.allowNotifications')}
                     </Text>
                     <Switch
                       value={toggle}
@@ -352,13 +358,17 @@ const Settings = () => {
               </View>
             </View>
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Приложение</Text>
+              <Text style={styles.sectionTitle}>
+                {t('app.settings.application')}
+              </Text>
               <View style={styles.sectionBody}>
                 <View style={styles.rowWrapper}>
                   <TouchableOpacity
                     style={[styles.row, styles.rowFirst]}
                     onPress={onAboutButtonHandle}>
-                    <Text style={styles.rowLabel}>О приложении</Text>
+                    <Text style={styles.rowLabel}>
+                      {t('app.settings.aboutApp')}
+                    </Text>
                     <Image
                       style={{
                         height: dp(24),
@@ -373,7 +383,9 @@ const Settings = () => {
                   <TouchableOpacity
                     style={[styles.row, styles.rowFirst]}
                     onPress={() => navigation.navigate('Правовые документы')}>
-                    <Text style={styles.rowLabel}>Правовые документы</Text>
+                    <Text style={styles.rowLabel}>
+                      {t('app.settings.legalDocuments')}
+                    </Text>
                     <Image
                       style={{
                         height: dp(24),
@@ -390,7 +402,9 @@ const Settings = () => {
                     onPress={() =>
                       Linking.openURL('https://t.me/OnviSupportBot')
                     }>
-                    <Text style={styles.rowLabel}>Сообщить о проблеме</Text>
+                    <Text style={styles.rowLabel}>
+                      {t('app.settings.reportProblem')}
+                    </Text>
                     <Image
                       style={{
                         height: dp(24),
@@ -408,11 +422,11 @@ const Settings = () => {
             <TouchableOpacity style={styles.btnDelete} onPress={deleteUser}>
               <Text
                 style={{fontSize: dp(10), fontWeight: '400', color: '#AFAEAE'}}>
-                УДАЛИТЬ АККАУНТ
+                {t('app.settings.deleteAccount')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btnExit} onPress={signOut}>
-              <Text style={styles.text}>Выйти</Text>
+              <Text style={styles.text}>{t('app.settings.exit')}</Text>
               <LogOut height={dp(20)} width={dp(20)} stroke={'#000000'} />
             </TouchableOpacity>
           </View>

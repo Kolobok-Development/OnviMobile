@@ -3,6 +3,8 @@
  * @param {PaymentResponse} paymentResponse - Response from payment gateway
  * @returns {string|null} Error message or null if no error
  */
+import i18n from "../locales";
+
 export const getPaymentErrorMessage = (paymentResponse: any): string | null => {
   // If payment is canceled
   if (paymentResponse?.status === 'canceled') {
@@ -10,11 +12,11 @@ export const getPaymentErrorMessage = (paymentResponse: any): string | null => {
     if (
       paymentResponse?.cancellation_details?.reason === 'insufficient_funds'
     ) {
-      return 'Недостаточно средств на карте. Пожалуйста, используйте другую карту или способ оплаты.';
+      return i18n.t('app.errors.insufficientFunds');
     }
 
     // Generic cancellation message
-    return 'Оплата отменена. Пожалуйста, попробуйте снова или выберите другой способ оплаты.';
+    return i18n.t('app.errors.paymentCancelled');
   }
 
   // Check if we need to redirect to 3DS
@@ -57,14 +59,14 @@ export const handleApiError = (error: unknown): string => {
     if (errorResponse?.code) {
       switch (parseInt(errorResponse.code)) {
         case 8:
-          return 'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+          return i18n.t('app.errors.invalidPromocode');
         default:
-          return 'Произошла ошибка, повторите попытку чуть позже.';
+          return i18n.t('app.errors.genericError');
       }
     }
   }
 
-  return 'Произошла ошибка, повторите попытку чуть позже.';
+  return i18n.t('app.errors.genericError');
 };
 
 
@@ -75,12 +77,12 @@ export const handlePromoCodeError = (error: unknown): string => {
     if (errorResponse?.code) {
       switch (parseInt(errorResponse.code)) {
         case 8:
-          return 'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+          return i18n.t('app.errors.invalidPromocode');
         default:
-          return 'Произошла ошибка, повторите попытку чуть позже.';
+          return i18n.t('app.errors.genericError');
       }
     }
   }
 
-  return 'Произошла ошибка, повторите попытку чуть позже.';
+  return i18n.t('app.errors.genericError');
 };

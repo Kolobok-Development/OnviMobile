@@ -4,6 +4,7 @@ import {dp} from '../../../utils/dp';
 import {Button} from '@styled/buttons';
 
 import Modal from '@styled/Modal';
+import {useTranslation} from 'react-i18next';
 
 interface ILoadingModal {
   isVisible: boolean;
@@ -14,6 +15,7 @@ interface ILoadingModal {
 
 const CustomModal = (props: ILoadingModal) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const {t} = useTranslation();
 
   useEffect(() => {
     setModalVisible(props.isVisible);
@@ -33,7 +35,7 @@ const CustomModal = (props: ILoadingModal) => {
             <View>
               <Button
                 onClick={props.onClick}
-                label={props.btnText ? props.btnText : 'Повторить'}
+                label={props.btnText ? props.btnText : t('common.buttons.retry')}
                 color="blue"
                 width={129}
                 height={42}

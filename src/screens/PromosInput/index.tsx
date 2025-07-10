@@ -26,6 +26,7 @@ import {Copy} from 'react-native-feather';
 import Clipboard from '@react-native-clipboard/clipboard';
 import ScreenHeader from '@components/ScreenHeader/index.tsx';
 import useStore from '../../state/store';
+import {useTranslation} from 'react-i18next';
 
 type PromoInputRouteProp = RouteProp<DrawerParamList, 'Ввод Промокода'>;
 
@@ -33,6 +34,7 @@ const PromosInput = () => {
   const [code, setCode] = useState('');
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'Ввод Промокода'>>();
+  const {t} = useTranslation();
 
   const route = useRoute<PromoInputRouteProp>();
   const {promocode, type} = route.params;
@@ -43,21 +45,20 @@ const PromosInput = () => {
     (key, {arg}: {arg: IApplyPromotionRequest}) => apply(arg),
     {
       onError: err => {
-        let message = 'Произошла ошибка, повторите попытку чуть позже.';
+        let message = t('app.errors.genericError');
         setCode(''); // Clear the code input
 
         if (err.response && err.response.data) {
           const errorCode = parseInt(err.response.data.code);
           switch (errorCode) {
             case 84:
-              message =
-                'Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.';
+              message = t('app.errors.invalidPromocode');
               break;
             case 88:
-              message = 'К сожалению, данный промокод истек.';
+              message = t('app.errors.expiredPromocode');
               break;
             default:
-              message = 'Произошла ошибка, повторите попытку чуть позже.';
+              message = t('app.errors.genericError');
           }
         }
 
@@ -68,12 +69,12 @@ const PromosInput = () => {
       },
       onSuccess: (data) => {
         data.totalPoints && setUserBalance(data.totalPoints);
-      
+
         Toast.show({
           type: 'customSuccessToast',
-          text1: 'Промокод успешно применен',
-        })
-      }
+          text1: t('app.promos.successfullyApplied'),
+        });
+      },
     },
   );
 
@@ -92,7 +93,7 @@ const PromosInput = () => {
       <ScrollView contentContainerStyle={{flexGrow: 1}}>
         <View style={styles.container}>
           <ScreenHeader
-            screenTitle={'Промокод'}
+            screenTitle={t('app.promos.title')}
             btnType="back"
             btnCallback={() => navigation.navigate('Промокоды')}
           />
@@ -101,9 +102,13 @@ const PromosInput = () => {
             'discount' in promocode &&
             'discountType' in promocode ? (
               <PersonalPromoBanner
-                title={`Промокод на ${promocode.discount} ${
-                  promocode.discountType == 2 ? '%' : 'баллов'
-                }`}
+                title={t('app.promos.promocodeForVariables', {
+                  discount: promocode.discount,
+                  unit:
+                    promocode.discountType == 2
+                      ? '%'
+                      : t('common.labels.ballov'),
+                })}
                 date={new Date(promocode.expiryDate)}
                 disable={true}
               />
@@ -124,7 +129,7 @@ const PromosInput = () => {
             )}
             {type == 'personal' ? (
               <View style={styles.promoCodeSection}>
-                <Text style={styles.title}>Промокод</Text>
+                <Text style={styles.title}>{t('app.promos.promocode')}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
                   <Text style={styles.promoCode}>{promocode.code}</Text>
                   <Pressable
@@ -147,7 +152,7 @@ const PromosInput = () => {
             ) : (
               <></>
             )}
-            <Text style={styles.title}>Описание</Text>
+            <Text style={styles.title}>{t('common.labels.description')}</Text>
             <Text style={styles.text}>
               {type === 'personal'
                 ? promocode.image
@@ -159,7 +164,7 @@ const PromosInput = () => {
           {type == 'global' && (
             <View style={{alignSelf: 'center'}}>
               <Button
-                label={'Активировать'}
+                label={t('common.buttons.activate')}
                 color={'blue'}
                 showLoading={isMutating}
                 onClick={() => trigger({code: promoCode})}

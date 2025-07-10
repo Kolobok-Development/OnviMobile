@@ -12,6 +12,7 @@ import {avatarSwitch} from '@screens/Settings';
 import {formatPhoneNumber} from '../../../utils/phoneFormat';
 
 import {DrawerNavProp} from '../../../types/navigation/DrawerNavigation.ts';
+import {useTranslation} from 'react-i18next';
 
 interface CustomDrawerItemProps {
   label: string;
@@ -54,6 +55,7 @@ const CustomDrawerContent = ({
 
   const avatarValue = avatarSwitch(initialAvatar);
   const route = navigation.getState().routes[navigation.getState().index].name;
+  const {t} = useTranslation();
 
   return (
     <>
@@ -172,7 +174,7 @@ const CustomDrawerContent = ({
               )}
 
               <CustomDrawerItem
-                label={'Главная'}
+                label={t('navigation.home')}
                 color={route === 'Главная' ? theme.primary : theme.textColor}
                 onPress={() => {
                   navigation.reset({
@@ -182,7 +184,7 @@ const CustomDrawerContent = ({
                 }}
               />
               <CustomDrawerItem
-                label={'Акции'}
+                label={t('navigation.stock')}
                 color={route === 'Промокоды' ? theme.primary : theme.textColor}
                 onPress={() => {
                   navigation.reset({
@@ -192,7 +194,7 @@ const CustomDrawerContent = ({
                 }}
               />
               <CustomDrawerItem
-                label={'Настройки'}
+                label={t('navigation.settings')}
                 color={route === 'Настройки' ? theme.primary : theme.textColor}
                 onPress={() => {
                   navigation.reset({
@@ -236,7 +238,7 @@ const CustomDrawerContent = ({
                 fontWeight: '500',
                 color: 'black',
               }}>
-              Перенос Баланса
+              {t('app.main.transferBalance')}  
             </Text>
             <Image
               style={{
@@ -272,7 +274,7 @@ const CustomDrawerContent = ({
                   color: '#717586',
                   fontWeight: '600',
                 }}>
-                Служба поддержки
+                {t('app.main.support')}  
               </Text>
             </TouchableOpacity>
           </View>

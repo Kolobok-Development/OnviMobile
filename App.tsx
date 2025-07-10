@@ -21,6 +21,9 @@ import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
 import { DdSdkReactNative, DatadogProviderConfiguration, DatadogProvider } from '@datadog/mobile-react-native';
 
+import './src/locales';
+import {useTranslation} from 'react-i18next';
+
 if (__DEV__) {
   require('./ReactotronConfig');
 }
@@ -106,6 +109,7 @@ const DatadogWrapper = ({ children }: DatadogWrapperProps) => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const { loadUser, user, fcmToken } = useStore.getState();
+  const {t} = useTranslation();
 
   configureReanimatedLogger({
     level: ReanimatedLogLevel.error,
@@ -122,7 +126,7 @@ function App(): React.JSX.Element {
 
       if (!networkState) {
         showMessage({
-          message: 'Нет подключения к интернету',
+          message: t('errors.noInternet'),
           type: 'danger',
           autoHide: true,
           icon: 'danger',

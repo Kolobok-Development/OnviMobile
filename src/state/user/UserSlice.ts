@@ -15,6 +15,7 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import { deleteAccount, getMe, getTariff } from '@services/api/user';
 import { login, refresh, register, sendOtp } from '@services/api/auth';
 import { DdLogs } from '@datadog/mobile-react-native';
+import i18n from '../../locales';
 
 const MAX_REFRESH_RETRIES = 3;
 
@@ -94,8 +95,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         await get().signOut();
         Toast.show({
           type: 'customErrorToast',
-          text1: 'Сессия истекла',
-          text2: 'Пожалуйста, войдите снова',
+          text1: i18n.t('app.authErrors.sessionExpired'),
+          text2: i18n.t('app.authErrors.pleaseLoginAgain'),
           props: { errorCode: 401 },
         });
         return null;
@@ -163,8 +164,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         await get().signOut();
         Toast.show({
           type: 'customErrorToast',
-          text1: 'Сессия истекла',
-          text2: 'Пожалуйста, войдите снова',
+          text1: i18n.t('app.authErrors.sessionExpired'),
+          text2: i18n.t('app.authErrors.pleaseLoginAgain'),
           props: { errorCode: 401 },
         });
       }
@@ -216,7 +217,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
 
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось зайти в приложение!',
+        text1: i18n.t('app.authErrors.loginFailed'),
         props: { errorCode: 400 },
       });
       return response;
@@ -225,7 +226,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       DdLogs.error('Login error', { phone, error })
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось зайти в приложение!',
+        text1: i18n.t('app.authErrors.loginFailed'),
         props: { errorCode: 400 },
       });
       return null;
@@ -282,7 +283,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
 
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось зарегистрироваться!',
+        text1: i18n.t('app.authErrors.registrationFailed'),
         props: { errorCode: 400 },
       });
       return response;
@@ -291,7 +292,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       DdLogs.error('Registration error', { error })
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Не получилось зарегистрироваться!',
+        text1: i18n.t('app.authErrors.registrationFailed'),
         props: { errorCode: 400 },
       });
       return null;
@@ -305,7 +306,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         .then(data => {
           Toast.show({
             type: 'customSuccessToast',
-            text1: 'Cообщение было отправлено',
+            text1: i18n.t('app.authErrors.messageSent'),
           });
           DdLogs.info("Send OTP message", { phone });
           return data;
@@ -314,7 +315,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           console.log(JSON.stringify(err, null, 2));
           Toast.show({
             type: 'customErrorToast',
-            text1: 'Не получилось отправить СМС сообщение.',
+            text1: i18n.t('app.authErrors.smsFailure'),
           });
         });
     } catch (error) {
@@ -447,8 +448,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         // Show toast notification to the user
         Toast.show({
           type: 'customErrorToast',
-          text1: 'Сессия истекла',
-          text2: 'Пожалуйста, войдите снова',
+          text1: i18n.t('app.authErrors.sessionExpired'),
+          text2: i18n.t('app.authErrors.pleaseLoginAgain'),
           props: { errorCode: 401 },
         });
         return false; // Token refresh failed
@@ -460,8 +461,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       // Show toast notification to the user
       Toast.show({
         type: 'customErrorToast',
-        text1: 'Ошибка авторизации',
-        text2: 'Пожалуйста, войдите снова',
+        text1: i18n.t('app.authErrors.authorizationError'),
+        text2: i18n.t('app.authErrors.pleaseLoginAgain'),
         props: { errorCode: 401 },
       });
       return false; // Token refresh failed with error

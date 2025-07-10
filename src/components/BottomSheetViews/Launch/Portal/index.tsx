@@ -16,6 +16,7 @@ import {horizontalScale, moderateScale, verticalScale} from '@utils/metrics.ts';
 import {useTheme} from '@context/ThemeProvider';
 import {dp} from '@utils/dp.ts';
 import {Price} from '../../../../types/api/app/types.ts';
+import {useTranslation} from 'react-i18next';
 
 interface PortalLaunchProps {
   isOpened: boolean;
@@ -24,7 +25,8 @@ interface PortalLaunchProps {
 
 export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
   const {orderDetails} = useStore.getState();
-
+  const {t} = useTranslation();
+  
   const colors: Array<'yellow' | 'blue' | 'grey' | 'black'> = [
     'yellow',
     'blue',
@@ -61,8 +63,8 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
                       fontWeight: '600',
                       color: '#000',
                       marginBottom: dp(10),
-                    }}>
-                    ВРЕМЯ МОЙКИ?
+                    }}> 
+                    {t('app.business.washTime').toUpperCase()}?
                   </Text>
                   <ActionButton
                     style={{
@@ -81,7 +83,7 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
                       marginTop: dp(10),
                       marginBottom: dp(10),
                     }}>
-                    ЧТО ВХОДИТ?
+                    {t('app.business.whatIsIncluded').toUpperCase()}?
                   </Text>
                   {price.serviceInfo.map(
                     (service: string, indService: number) => (

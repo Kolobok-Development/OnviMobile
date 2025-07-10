@@ -6,6 +6,7 @@ import {StyleSheet, Text, View} from 'react-native';
 import SkeletonPlaceholder from 'react-native-skeleton-placeholder';
 import {Info} from 'react-native-feather';
 import {dp} from '@utils/dp.ts';
+import {useTranslation} from 'react-i18next';
 
 interface PaymentSummaryProps {
   order: OrderDetailsType;
@@ -16,6 +17,8 @@ interface PaymentSummaryProps {
 
 const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
   ({order, user, selectedPos, finalOrderCost}) => {
+    const {t} = useTranslation();
+
     return (
       <View style={styles.container}>
         <View style={styles.row}>
@@ -30,7 +33,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
         <View style={styles.row}>
           {selectedPos?.IsLoyaltyMember ? (
             <>
-              <Text style={styles.itemName}>Ваш Cashback</Text>
+              <Text style={styles.itemName}>{t('app.payment.yourCashback')}</Text>
               {!user || !user.tariff || user.tariff === 0 ? (
                 <View>
                   <SkeletonPlaceholder borderRadius={10}>
@@ -52,8 +55,7 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
             <View style={styles.infoRow}>
               <Info width={20} height={20} stroke={'#0B68E1'} />
               <Text style={styles.infoText}>
-                Кешбэк не начисляется. Автомойка не участвует в программе
-                лояльности.
+                {t('app.payment.noCashbackMessage')}
               </Text>
             </View>
           )}
