@@ -71,20 +71,15 @@ export const handleTokenExpiry = async (originalRequest?: {
   headers: Record<string, string>;
   [key: string]: any;
 }) => {
-  console.log('Access token expired, handling in store');
 
   // Call the handleTokenExpiry method from UserSlice which also shows a notification
   const state = useStore.getState();
 
   if (state.handleTokenExpiry) {
-    console.log(
-      'Delegating to UserSlice.handleTokenExpiry with original request',
-    );
     // Pass the original request to UserSlice.handleTokenExpiry for possible retry
     return await state.handleTokenExpiry(originalRequest);
   } else {
     // Fallback if handleTokenExpiry isn't available
-    console.log('No UserSlice.handleTokenExpiry available, using signOut');
     await state.signOut();
     return false;
   }

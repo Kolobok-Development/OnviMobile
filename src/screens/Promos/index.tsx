@@ -1,4 +1,5 @@
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {dp} from '../../utils/dp';
 
@@ -19,7 +20,7 @@ import {GlobalPromosPlaceholder} from './PromosPlaceholder';
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
-import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getActiveClientPromotions} from '@services/api/user';
 import {getGlobalPromotions} from '@services/api/promotion';
@@ -29,8 +30,9 @@ import useStore from '../../state/store.ts';
 
 const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
+  const {t} = useTranslation();
 
-  const { location } = useStore.getState();
+  const {location} = useStore.getState();
 
   const locationParams = {
     latitude: Number(location?.latitude),
@@ -47,15 +49,19 @@ const Promos = () => {
     isLoading: isPersonalPromoLoading,
     data: personalPromo,
     error: personalError,
-  } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions(locationParams));
+  } = useSWR(['getPersonalPromos'], () =>
+    getActiveClientPromotions(locationParams),
+  );
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>
       <ScrollView style={styles.container}>
-        <ScreenHeader screenTitle="Промокоды" />
+        <ScreenHeader screenTitle={t('app.promos.title')} />
         <View style={styles.content}>
           <View style={{flex: 1, marginBottom: dp(20), height: '30%'}}>
-            <Text style={styles.sectionTitle}>Персональные акции</Text>
+            <Text style={styles.sectionTitle}>
+              {t('app.promos.personalPromos')}
+            </Text>
             {isPersonalPromoLoading || personalError ? (
               // Show the placeholder when loading
               <PersonalPromoPlaceholder />
@@ -70,8 +76,10 @@ const Promos = () => {
                   pagingEnabled
                   renderItem={({item}: any) => (
                     <PersonalPromoBanner
-                      title={`Промокод на ${item.discount} ${
-                        item.discountType == 2 ? '%' : 'баллов'
+                      title={`${t('app.promos.promocodeFor')} ${
+                        item.discount
+                      } ${
+                        item.discountType == 2 ? '%' : t('common.labels.ballov')
                       }`}
                       date={item.expiryDate}
                       onPress={() =>
@@ -93,13 +101,15 @@ const Promos = () => {
                   flex: 1,
                   justifyContent: 'center',
                 }}>
-                <EmptyPlaceholder text="У вас пока нет промокодов" />
+                <EmptyPlaceholder text={t('app.promos.noPromocodes')} />
               </View>
             )}
           </View>
 
           <View style={styles.cuponContainer}>
-            <Text style={styles.sectionTitle}>Общие промокоды</Text>
+            <Text style={styles.sectionTitle}>
+              {t('app.promos.generalPromocodes')}
+            </Text>
             <View
               style={{
                 display: 'flex',
@@ -149,7 +159,7 @@ const Promos = () => {
                     flex: 1,
                     justifyContent: 'center',
                   }}>
-                  <EmptyPlaceholder text="У вас пока нет промокодов" />
+                  <EmptyPlaceholder text={t('app.promos.noPromocodes')} />
                 </View>
               )}
             </View>

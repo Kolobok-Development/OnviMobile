@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {StyleSheet, Text, Pressable, View, ScrollView} from 'react-native';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
-import {dp} from '../../../utils/dp';
+import {dp} from '@utils/dp';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {Button} from '@styled/buttons';
-import useStore from '../../../state/store';
+import useStore from '@state/store';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import PaymentMethods from '@components/PaymentMethods';
 import PaymentSummary from '@components/BottomSheetViews/Payment/PaymentSummary';
@@ -25,6 +26,7 @@ import {
 } from '@utils/paymentHelpers.ts';
 
 const Payment = () => {
+  const {t} = useTranslation();
   const {user, loadUser, orderDetails, selectedPos} = useStore.getState();
   const freeOn = orderDetails.free;
 
@@ -46,7 +48,6 @@ const Payment = () => {
     setPromocode,
     applyPromoCode,
     debouncedApplyPromoCode,
-    resetPromoCode,
   } = usePromoCode(order.posId || 0);
 
   const {usedPoints, toggled, applyPoints, togglePoints} = useBonusPoints(
@@ -55,18 +56,8 @@ const Payment = () => {
     discount,
   );
 
-  const {
-    loading,
-    error,
-    orderStatus,
-    setOrderStatus,
-    processPayment,
-    processFreePayment,
-    clearError,
-    setPaymentMethod,
-    paymentMethod,
-  } = usePaymentProcess(
-    user,
+  const {loading, setPaymentMethod, paymentMethod} = usePaymentProcess(
+    user!, // TODO: FIX THIS
     order,
     discount,
     usedPoints,
@@ -125,11 +116,11 @@ const Payment = () => {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <BusinessHeader type="box" box={order?.bayNumber ?? 0} />
         <Text style={styles.title}>
-          {freeOn ? 'Активация пылесоса' : 'Оплата'}
+          {freeOn ? t('app.payment.vacuumActivation') : t('app.payment.title')}
         </Text>
 
         <View style={styles.paymentCard}>
-          <Text style={styles.section}>Ваш выбор</Text>
+          <Text style={styles.section}>{t('app.payment.yourChoice')}</Text>
 
           <PaymentSummary
             order={order}
@@ -146,7 +137,6 @@ const Payment = () => {
                     user={user}
                     order={order}
                     discount={discount}
-                    usedPoints={usedPoints}
                     toggled={toggled}
                     onToggle={togglePoints}
                     applyPoints={applyPoints}
@@ -166,7 +156,7 @@ const Payment = () => {
               {discount ? (
                 <View style={styles.badgeWrapper}>
                   <Button
-                    label={`У ВАС ЕСТЬ ПРОМОКОД НА ${
+                    label={`${t('app.payment.havePromocodeFor').toUpperCase()} ${
                       discount.type === DiscountType.CASH
                         ? discount.discount + '₽'
                         : discount.discount + '%'
@@ -183,7 +173,7 @@ const Payment = () => {
               {usedPoints ? (
                 <View style={styles.badgeWrapper}>
                   <Button
-                    label={`ИСПОЛЬЗОВАНО ${usedPoints} БАЛОВ`}
+                    label={t('app.payment.usedPoints', {usedPoints})}
                     color="blue"
                     width={184}
                     height={31}
@@ -203,7 +193,7 @@ const Payment = () => {
           <View style={styles.paymentActions}>
             {freeOn ? (
               <Button
-                label="Активировать"
+                label={t('common.buttons.activate')}
                 onClick={() => {
                   navigateBottomSheet('PaymentLoading', {
                     user,
@@ -223,7 +213,7 @@ const Payment = () => {
               />
             ) : (
               <Button
-                label={`Оплатить ${finalOrderCost} ₽`}
+                label={t('app.payment.payAmount', {finalOrderCost})}
                 onClick={() => {
                   navigateBottomSheet('PaymentLoading', {
                     user,
@@ -245,7 +235,9 @@ const Payment = () => {
             <Pressable
               style={styles.cancelButton}
               onPress={() => navigateBottomSheet('Main', {})}>
-              <Text style={styles.cancelText}>Отменить заказ</Text>
+              <Text style={styles.cancelText}>
+                {t('app.payment.cancelOrder')}
+              </Text>
             </Pressable>
           </View>
         </View>

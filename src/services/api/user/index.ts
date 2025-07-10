@@ -10,8 +10,8 @@ import {userApiInstance} from '@services/api/axiosConfig.ts';
 import {ICreateUserMetaRequest} from '../../../types/api/user/req/ICreateUserMetaRequest.ts';
 import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMetaRequest.ts';
 import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
-import { IGetFreeVacuum } from 'src/types/api/user/res/IGetFreeVacuum.ts';
-import { IgetActiveClientPromotionsParams } from 'src/types/api/promotion/req/IApplyPromotionRequest.ts';
+import {IGetFreeVacuum} from 'src/types/api/user/res/IGetFreeVacuum.ts';
+import {IgetActiveClientPromotionsParams} from 'src/types/api/promotion/req/IApplyPromotionRequest.ts';
 
 enum ACCOUNT {
   GET_MET_URL = '/account/me',
@@ -75,10 +75,8 @@ export async function updateAllowNotificationSending(
 }
 
 export async function getActiveClientPromotions(
-  params: IgetActiveClientPromotionsParams
-): Promise<
-  IPersonalPromotion[]
-> {
+  params?: IgetActiveClientPromotionsParams,
+): Promise<IPersonalPromotion[]> {
   const response = await userApiInstance.get<
     IUserApiResponse<IPersonalPromotion[]>
   >(ACCOUNT.GET_ACTIVE_PROMOTIONS, {params});
@@ -112,18 +110,18 @@ export async function updateUserMeta(data: Meta): Promise<any> {
     ACCOUNT.UPDATE_ACCOUNT_META,
     body,
   );
-  //console.log(JSON.stringify(response, null, 2));
+
   return response;
 }
 
 export async function deleteAccount(): Promise<number> {
-  console.log('CALLED');
   const response = await userApiInstance.delete(ACCOUNT.UPDATE_ACCOUNT_URL);
-  console.log(JSON.stringify(response, null, 2));
   return response.status;
 }
 
 export async function getFreeVacuum(): Promise<IGetFreeVacuum> {
-  const response = await userApiInstance.get<IUserApiResponse<IGetFreeVacuum>>(ACCOUNT.GET_FREE_VACUUM);
+  const response = await userApiInstance.get<IUserApiResponse<IGetFreeVacuum>>(
+    ACCOUNT.GET_FREE_VACUUM,
+  );
   return response.data.data;
 }

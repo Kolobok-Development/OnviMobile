@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {
   View,
   FlatList,
-  Pressable,
   StyleSheet,
   Image,
   Dimensions,
@@ -24,7 +23,7 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
   const [isStoryViewVisible, setIsStoryViewVisible] = useState(false);
   const [pressedIndex, setPressedIndex] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [_, setLoadedImages] = useState<Record<string, boolean>>({});
 
   const openStories = (index: number) => {
     if (!loading) {
@@ -47,7 +46,6 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
               }));
               return true;
             } catch (error) {
-              console.error('Failed to preload image:', story.url, error);
               return false;
             }
           }

@@ -4,9 +4,11 @@ import {useTheme} from '@context/ThemeProvider';
 import {dp} from '../../../utils/dp';
 
 import {Button} from '@styled/buttons';
+import {useTranslation} from 'react-i18next';
 
 const AddCard = () => {
   const {theme} = useTheme();
+  const {t} = useTranslation();
 
   const [expiration, setExpiration] = useState('');
 
@@ -65,10 +67,10 @@ const AddCard = () => {
       <View
         style={{flex: 1, justifyContent: 'center', flexDirection: 'column'}}>
         <Text style={{fontWeight: '600', fontSize: dp(24)}}>
-          Добавление карты
+          {t('app.payment.addCard')}
         </Text>
         <TextInput
-          placeholder="Номер карты"
+          placeholder={t('app.payment.cardNumber')}
           keyboardType="numeric"
           maxLength={19}
           value={cardNumber}
@@ -137,7 +139,7 @@ const AddCard = () => {
           alignItems: 'center',
         }}>
         <Button
-          label="Привязать"
+          label={t('common.buttons.bind')}
           onClick={() => {}}
           color="blue"
           disabled={disabled()}

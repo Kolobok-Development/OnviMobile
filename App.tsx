@@ -25,6 +25,9 @@ import {
   DatadogProvider,
 } from '@datadog/mobile-react-native';
 
+import './src/locales';
+import {useTranslation} from 'react-i18next';
+
 if (__DEV__) {
   require('./ReactotronConfig');
 }
@@ -77,7 +80,6 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         );
 
         config.site = 'EU1';
-
         config.longTaskThresholdMs = 100;
 
         config.nativeCrashReportEnabled = true;
@@ -88,11 +90,9 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         await DdSdkReactNative.initialize(config);
         await DdSdkReactNative.setUserInfo({id: deviceId});
 
-        console.log('Datadog initialized successfully');
         setDatadogConfig(config);
         datadogInitializedRef.current = true;
       } catch (error) {
-        console.error('Datadog initialization failed:', error);
         setInitializationError(true);
       }
     };
@@ -119,6 +119,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken} = useStore.getState();
+  const {t} = useTranslation();
 
   configureReanimatedLogger({
     level: ReanimatedLogLevel.error,
@@ -128,14 +129,13 @@ function App(): React.JSX.Element {
   useAppState();
 
   useEffect(() => {
-    console.log(`ENV________${JSON.stringify(Config)}________`);
     const unsubscribe = NetInfo.addEventListener(state => {
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);
 
       if (!networkState) {
         showMessage({
-          message: 'Нет подключения к интернету',
+          message: t('errors.noInternet'),
           type: 'danger',
           autoHide: true,
           icon: 'danger',
@@ -179,12 +179,8 @@ function App(): React.JSX.Element {
               clientId: user.id,
               metaId: user.meta.metaId,
             });
-          } else {
-            console.log('Metadata is up-to-date. No action needed.');
           }
-        } catch (error: any) {
-          console.error('Error syncing metadata:', error);
-        }
+        } catch (error: any) {}
       }
     };
 

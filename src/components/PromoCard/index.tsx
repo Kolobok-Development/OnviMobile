@@ -4,6 +4,7 @@ import {dp} from '@utils/dp.ts';
 import {ArrowUpRight} from 'react-native-feather';
 import React from 'react';
 import {FormattedDate} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 type PromoCardProps = {
   title: string;
@@ -20,6 +21,8 @@ const PromoCard: React.FC<PromoCardProps> = ({
   date,
   color = 'blue',
 }) => {
+  const {t} = useTranslation();
+  
   const getColor = () => {
     if (new Date() > date) {
       return DARKGREY;
@@ -53,7 +56,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
         </Text>
         {new Date() > date ? (
           <View style={styles.expiredBadge}>
-            <Text style={styles.expiredBadgeText}>Закончился</Text>
+            <Text style={styles.expiredBadgeText}>{t('app.promos.over')}</Text>
           </View>
         ) : (
           <ArrowUpRight width={dp(20)} height={dp(20)} color={'black'} />

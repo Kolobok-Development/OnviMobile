@@ -1,40 +1,41 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import {dp} from '@utils/dp.ts';
-import React, {useEffect, useState} from 'react';
+import {useTranslation} from 'react-i18next';
+import React, {useState} from 'react';
 import {Button, Tile} from '@styled/buttons';
 import {Slide} from '@styled/silder';
-import useStore from '../../../state/store.ts';
+import useStore from '@state/store.ts';
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 
-const InputSums: {label: string; description?: string; active?: boolean}[] = [
-  {
-    label: '50',
-    description: 'рублей',
-  },
-  {
-    label: '100',
-    description: 'рублей',
-  },
-  {
-    label: '150',
-    description: 'рублей',
-  },
-  {
-    label: '200',
-    description: 'рублей',
-  },
-];
-
 const PostPayment = () => {
+  const {t} = useTranslation();
   const [activeIndex, setActiveIndex] = useState(0);
+
+  const InputSums: {label: string; description?: string; active?: boolean}[] = [
+    {
+      label: '50',
+      description: t('common.labels.rubles'),
+    },
+    {
+      label: '100',
+      description: t('common.labels.rubles'),
+    },
+    {
+      label: '150',
+      description: t('common.labels.rubles'),
+    },
+    {
+      label: '200',
+      description: t('common.labels.rubles'),
+    },
+  ];
 
   const {isBottomSheetOpen, orderDetails, setOrderDetails} = useStore();
 
   const handleTileClick = (tile: any, index: number) => {
     setActiveIndex(index); // Update the active index
-    console.log(tile.label); // Return the label of the clicked tile
   };
 
   const restart = async () => {
@@ -49,7 +50,7 @@ const PostPayment = () => {
   const finish = () => {
     setOrderDetails({
       posId: null,
-      sum: null,
+      sum: 0,
       bayNumber: null,
       promoCodeId: null,
       rewardPointsUsed: null,
@@ -81,13 +82,17 @@ const PostPayment = () => {
             source={require('../../../assets/images/success_image.png')}
             style={styles.image}
           />
-          <Text style={styles.titleText}>Оплата прошла успешно!</Text>
-          <Text style={styles.titleText}>Удачной мойки!</Text>
+          <Text style={styles.titleText}>
+            {t('app.payment.paymentSuccessful')}
+          </Text>
+          <Text style={styles.titleText}>{t('app.payment.goodWash')}</Text>
         </View>
 
         {orderDetails.type === 'SelfService' ? (
           <View style={styles.content}>
-            <Text style={styles.contentText}>Хотите продолжить мойку? 🚙</Text>
+            <Text style={styles.contentText}>
+              {t('app.payment.continueWashing')}
+            </Text>
             <Slide
               items={InputSums}
               initialActiveIndex={0}
@@ -108,7 +113,7 @@ const PostPayment = () => {
               )}
             />
             <Button
-              label={'Запустить повторно'}
+              label={t('app.payment.restartService')}
               color={'blue'}
               height={dp(40)}
               width={dp(300)}
@@ -126,14 +131,14 @@ const PostPayment = () => {
             alignItems: 'center',
           }}>
           <Button
-            label={'Завершить'}
+            label={t('common.buttons.finish')}
             color={'blue'}
             height={dp(40)}
             width={dp(300)}
             onClick={finish}
           />
-          <Text style={styles.text}>Если возникли проблемы, свяжитесь</Text>
-          <Text style={styles.text}>с нашей техподдержкой</Text>
+          <Text style={styles.text}>{t('app.payment.problemsContact')}</Text>
+          <Text style={styles.text}>{t('app.payment.techSupport')}</Text>
         </View>
       </BottomSheetScrollView>
     </View>

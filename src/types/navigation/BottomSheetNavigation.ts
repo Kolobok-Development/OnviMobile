@@ -1,19 +1,18 @@
 import {NavigationProp, RouteProp} from '@react-navigation/native';
+import {DrawerNavigationProp} from '@react-navigation/drawer';
 
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {Campaign, NewsPost, Price, Tag} from '../api/app/types.ts';
-import { IUser } from '../models/User.ts';
-import { DiscountType } from '../models/PersonalPromotion.ts';
-import { OrderDetailsType } from 'src/state/order/OrderSlice.ts';
+import {IUser} from '../models/User.ts';
+import {OrderDetailsType} from 'src/state/order/OrderSlice.ts';
+import {DiscountValueType} from '@hooks/usePromoCode.ts';
+import {DrawerParamList} from './DrawerNavigation.ts';
 
 export type RootStackParamList = {
   Main: {
-    drawerNavigation?: any;
+    drawerNavigation?: DrawerNavigationProp<DrawerParamList>;
     active?: boolean;
   };
-  Search: {
-    setCamera: (val?: {longitude: number; latitude: number}) => void;
-  };
+  Search: {};
   Filters: {};
   Business: {};
   BusinessInfo: {
@@ -25,7 +24,7 @@ export type RootStackParamList = {
       number: number;
     }[];
     price?: Price[];
-    bayType: string;
+    bayType?: string;
   };
   Launch: {
     bayType: string;
@@ -33,8 +32,8 @@ export type RootStackParamList = {
   };
   Notifications: {};
   History: {
-    drawerNavigation?: any;
-    type: string;
+    drawerNavigation?: DrawerNavigationProp<DrawerParamList>;
+    type?: string;
   };
   Payment: {};
   AddCard: {};
@@ -50,12 +49,13 @@ export type RootStackParamList = {
   PaymentLoading: {
     user: IUser | null;
     order: OrderDetailsType | null;
-    discount: DiscountType | null;
+    discount: DiscountValueType | null;
     usedPoints: number;
-    promoCodeId: number;
+    promoCodeId?: number;
     loadUser?: () => Promise<void>;
-    freeOn: boolean;
+    freeOn?: boolean;
   };
+  PostPayment: {};
 };
 
 export type GeneralBottomSheetNavigationProp<

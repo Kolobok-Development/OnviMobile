@@ -3,7 +3,8 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {BLACK, BLUE, GREY, WHITE, YELLOW} from '../../../utils/colors';
 import {dp} from '../../../utils/dp';
 import {ArrowUpRight} from 'react-native-feather';
-import { Price } from "../../../types/api/app/types.ts";
+import {useTranslation} from 'react-i18next';
+import {Price} from '../../../types/api/app/types.ts';
 
 type AccordionItemPros = PropsWithChildren<{
   data: Price;
@@ -18,6 +19,7 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
   onSelect,
 }) => {
   const [expanded, setExpanded] = useState(false);
+  const {t} = useTranslation();
 
   const getColor = () => {
     switch (color) {
@@ -68,7 +70,7 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             fontSize: dp(12),
             fontWeight: '600',
           }}>
-          {data.serviceDuration} мин.
+          {data.serviceDuration} {t('time.minutes')}.
         </Text>
       </View>
       <View style={styles.footer}>
@@ -78,14 +80,17 @@ const ExpandableView: React.FC<AccordionItemPros> = ({
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <TouchableOpacity style={styles.toggleBnt} onPress={toggleItem} hitSlop={{ top: 25, bottom: 25, left: 20, right: 20}}>
+          <TouchableOpacity
+            style={styles.toggleBnt}
+            onPress={toggleItem}
+            hitSlop={{top: 25, bottom: 25, left: 20, right: 20}}>
             {expanded ? (
               <Text style={{fontWeight: '500', fontSize: dp(11)}}>
-                ☝️cвернуть
+                ☝️{t('common.buttons.collapse').toLowerCase()}
               </Text>
             ) : (
               <Text style={{fontWeight: '500', fontSize: dp(11)}}>
-                👇подробнее
+                👇{t('common.buttons.moreDetails').toLowerCase()}
               </Text>
             )}
           </TouchableOpacity>

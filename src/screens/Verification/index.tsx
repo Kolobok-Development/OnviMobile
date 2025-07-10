@@ -1,12 +1,6 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  Dimensions,
-  Image,
-  Vibration,
-} from 'react-native';
+import {useTranslation} from 'react-i18next';
+import {View, StyleSheet, Text, Dimensions, Image} from 'react-native';
 import {Button} from '@styled/buttons';
 
 // Bottom Sheet Component
@@ -14,44 +8,33 @@ import {Popup, PopupRefProps} from '@components/Popup';
 
 import {useTheme} from '@context/ThemeProvider';
 
-import useStore from '../../state/store';
+import useStore from '@state/store';
 
-import {dp} from '../../utils/dp';
+import {dp} from '@utils/dp';
 import Spinner from 'react-native-loading-spinner-overlay/src';
-import OTPTextView from 'react-native-otp-textinput';
-import Clipboard from '@react-native-clipboard/clipboard';
 import {YELLOW} from '@utils/colors.ts';
 import CheckBox from '@react-native-community/checkbox';
 import {openWebURL} from '@utils/openWebUrl.ts';
 import {OtpInput} from 'react-native-otp-entry';
+import {useRoute} from '@react-navigation/native';
+import {GeneralAuthRouteProp} from '@app-types/navigation/AuthNavigation.ts';
 
-interface VerificationProps {
-  route: any;
-}
+interface VerificationProps {}
 
-const Verification = ({route}: VerificationProps) => {
+const Verification = ({}: VerificationProps) => {
+  const route = useRoute<GeneralAuthRouteProp<'Verify'>>();
   const popRef = useRef<PopupRefProps>(null);
 
   const {sendOtp, register, login} = useStore.getState();
+  const {t} = useTranslation();
 
   const {theme} = useTheme();
 
   //OTP
   const [otpInput, setOtpInput] = useState<string>('');
-  const input = useRef<OTPTextView>(null);
   const inputRef = useRef<any>(null);
 
   const clear = () => inputRef.current?.clear();
-
-  const handleCellTextChange = async (text: string, i: number) => {
-    if (i === 0) {
-      const clippedText = await Clipboard.getString();
-      console.log(' CLIPBOARD ', clippedText);
-      if (clippedText.slice(0, 1) === text) {
-        input.current?.setValue(clippedText, true);
-      }
-    }
-  };
 
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
@@ -144,10 +127,10 @@ const Verification = ({route}: VerificationProps) => {
       />
       <View style={styles.middleContainer}>
         <Text style={{...styles.text, color: theme.textColor}}>
-          Введите код из СМС
+          {t('app.auth.enterSmsCode')}
         </Text>
         <Text style={styles.descriptionText}>
-          Код отправлен на {route.params.phone}
+          {t('app.auth.codeSentTo')} {route.params.phone}
         </Text>
         <OtpInput
           numberOfDigits={4}
@@ -175,7 +158,7 @@ const Verification = ({route}: VerificationProps) => {
         />
         <View style={{paddingTop: dp(100)}}>
           <Button
-            label="Получить новый код"
+            label={t('app.auth.getNewCode')}
             color={!disabled ? 'blue' : 'grey'}
             disabled={!disabled ? false : true}
             onClick={() => {
@@ -186,8 +169,10 @@ const Verification = ({route}: VerificationProps) => {
           />
         </View>
         <View style={{paddingTop: dp(20)}}>
-          <Text style={{alignSelf: 'center'}}>Если код не придет,</Text>
-          <Text>можно получить новый через {timer} сек.</Text>
+          <Text style={{alignSelf: 'center'}}>
+            {t('app.auth.codeNotReceived')}
+          </Text>
+          <Text>{t('app.auth.canGetNewIn', {timer})}</Text>
         </View>
       </View>
       <View style={styles.bottomContainer} />
@@ -201,12 +186,12 @@ const Verification = ({route}: VerificationProps) => {
             style={styles.checkbox}
           />
           <Text style={styles.termsText}>
-            Даю согласие на обработку персональных данных
+            {t('app.auth.dataProcessingConsent')}
           </Text>
         </View>
         <View style={styles.popupHeader}>
           <Button
-            label="ЗАРЕГИСТРИРОВАТЬСЯ"
+            label={t('common.buttons.register')}
             color="blue"
             disabled={!isPersonalDataCollectionAccepted}
             onClick={() => {
@@ -218,10 +203,12 @@ const Verification = ({route}: VerificationProps) => {
         </View>
         <View style={styles.popupInfo}>
           <View style={styles.infoLine}>
-            <Text style={styles.termsText}>Нажимая "Зарегистрироваться",</Text>
+            <Text style={styles.termsText}>
+              {t('app.auth.byClickingRegister')}
+            </Text>
           </View>
           <View style={styles.infoLine}>
-            <Text style={styles.termsText}>Вы принимаете условия</Text>
+            <Text style={styles.termsText}>{t('app.auth.acceptTerms')}</Text>
           </View>
           <View style={styles.infoLine}>
             <Text
@@ -231,7 +218,7 @@ const Verification = ({route}: VerificationProps) => {
                   'https://docs.google.com/document/d/1zqgcqbfsn7_64tUcD5iN7t9DkYt8YdqC/edit?usp=sharing&ouid=111405890257322006921&rtpof=true&sd=true',
                 )
               }>
-              программы лояльности
+              {t('app.auth.loyaltyProgram')}
             </Text>
           </View>
         </View>

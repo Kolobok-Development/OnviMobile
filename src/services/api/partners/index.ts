@@ -1,4 +1,7 @@
-import { IGazpromResponseData, IGazpromSubscriptionResponseData } from 'src/types/api/partner/res/index.ts';
+import {
+  IGazpromResponseData,
+  IGazpromSubscriptionResponseData,
+} from 'src/types/api/partner/res/index.ts';
 import {
   Partner,
   PartnersSuccessRequestPayload,
@@ -8,7 +11,7 @@ import {
   contentApiInstance,
   userApiInstance,
 } from '@services/api/axiosConfig.ts';
-import { IGazpromReferencePayload } from 'src/types/api/partner/req/index.ts';
+import {IGazpromReferencePayload} from 'src/types/api/partner/req/index.ts';
 
 enum PARTNER {
   GET_PARTNER_LIST = 'api/partners',
@@ -66,14 +69,11 @@ export async function getPartner(
 }
 
 export async function getGazpromAuthToken(): Promise<any> {
-  console.log('MAKING API CALL');
   const response = await userApiInstance.post(PARTNER.GET_GAZPROM_AUTH_TOKEN);
   return response.data.data;
 }
 
-
 export async function getGazpromAuthTokenFromReference(body: IGazpromReferencePayload): Promise<IGazpromResponseData> {
-  console.log('MAKING API CALL');
   const response = await userApiInstance.post(
     PARTNER.GET_GAZPROM_AUTH_TOKEN_FROM_REFERENCE,
     body,
@@ -83,9 +83,7 @@ export async function getGazpromAuthTokenFromReference(body: IGazpromReferencePa
 }
 
 export async function getGazpromSubscriptionData(): Promise<IGazpromSubscriptionResponseData> {
-  const response = await userApiInstance.get(
-    PARTNER.GET_GAZPROM_SUBSCRIPTION,
-  );
+  const response = await userApiInstance.get(PARTNER.GET_GAZPROM_SUBSCRIPTION);
 
   return response.data.data;
 }

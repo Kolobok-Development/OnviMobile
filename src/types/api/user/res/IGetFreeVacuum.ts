@@ -1,5 +1,4 @@
 export interface IGetFreeVacuum {
-    limit: number;
-    remains: number;
-  }
-  
+  limit: number;
+  remains: number;
+}

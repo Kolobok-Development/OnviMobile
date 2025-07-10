@@ -1,8 +1,16 @@
 import React from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, TextInput, TouchableWithoutFeedback } from 'react-native';
-import { Button } from '@styled/buttons';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {Button} from '@styled/buttons';
 
-import { dp } from '../../../utils/dp';
+import {useTranslation} from 'react-i18next';
+import {dp} from '../../../utils/dp';
 
 interface IPromocodeModal {
   visible: boolean;
@@ -15,29 +23,30 @@ interface IPromocodeModal {
 }
 
 const PromocodeModal = (props: IPromocodeModal) => {
+  const {t} = useTranslation();
+  
   return (
     <Modal
       visible={props.visible}
       transparent={true}
       animationType="slide"
-      onRequestClose={props.onClose}
-    >
+      onRequestClose={props.onClose}>
       <TouchableWithoutFeedback onPress={props.onClose}>
         <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback onPress={() => { }}>
+          <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContainer}>
-              <Text style={styles.titleText}>Введите промокод</Text>
+              <Text style={styles.titleText}>{t('app.promos.enterPromocode')}</Text>
               <View style={styles.textInputGroup}>
                 <TextInput
                   value={props.promocode}
-                  placeholder={'ПРОМОКОД'}
+                  placeholder={t('app.promos.promocode').toLocaleUpperCase()}
                   onChangeText={props.handleSearchChange}
                   style={styles.textInput}
                 />
               </View>
               <View style={styles.buttonContainer}>
                 <Button
-                  label={'Закрыть'}
+                  label={t('common.buttons.close')}
                   color={'blue'}
                   width={dp(140)}
                   height={dp(40)}
@@ -45,9 +54,9 @@ const PromocodeModal = (props: IPromocodeModal) => {
                   fontWeight={'600'}
                   onClick={() => props.onClose()}
                 />
-                <View style={{ width: dp(14) }} />
+                <View style={{width: dp(14)}} />
                 <Button
-                  label={'Применить'}
+                  label={t('common.buttons.apply')}
                   color={'blue'}
                   width={dp(140)}
                   height={dp(40)}
@@ -123,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { PromocodeModal };
+export {PromocodeModal};

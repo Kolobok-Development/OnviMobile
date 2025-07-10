@@ -1,14 +1,7 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
 import {Button} from '@styled/buttons';
 import {dp} from '../../utils/dp';
-import {X} from 'react-native-feather';
 
 import Modal from '@styled/Modal';
 

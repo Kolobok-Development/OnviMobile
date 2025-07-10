@@ -1,4 +1,5 @@
 import React, {useState, useCallback, useEffect} from 'react';
+import {useTranslation} from 'react-i18next';
 
 import {
   View,
@@ -12,26 +13,24 @@ import {
 
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
-import {useRoute} from '@react-navigation/native';
-
 //@ts-ignore
 import {debounce} from 'lodash';
 
-import {dp} from '../../../utils/dp';
-import useStore from '../../../state/store';
+import {dp} from '@utils/dp';
+import useStore from '@state/store';
 import SearchPlaceholder from './SearchPlaceholder';
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+
 import useSWRMutation from 'swr/mutation';
 import {getPOSList} from '@services/api/pos';
 import calculateDistance from '@utils/calculateDistance.ts';
 import {
   CarWashLocation,
   SortedCarWashLocation,
-} from '../../../types/api/app/types.ts';
+} from '@app-types/api/app/types.ts';
 
 const Search = () => {
+  const {t} = useTranslation();
   const [search, setSearch] = useState('');
-  const route = useRoute<GeneralBottomSheetRouteProp<'Search'>>();
 
   const {setOrderDetails, setBusiness, location, bottomSheetRef} =
     useStore.getState();
@@ -161,16 +160,12 @@ const Search = () => {
       orderDate: null,
     });
     bottomSheetRef?.current?.snapToPosition('42%');
-    route.params.setCamera({
-      latitude: carwash.location.lat,
-      longitude: carwash.location.lon,
-    });
   };
 
   return (
     <View style={styles.container}>
       <TextInput
-        placeholder="Поиск"
+        placeholder={t('app.search.placeholder')}
         maxLength={19}
         value={search}
         onChangeText={val => {
@@ -204,7 +199,7 @@ const Search = () => {
                   alignItems: 'center',
                 }}>
                 <Text style={{marginTop: dp(20), fontSize: dp(15)}}>
-                  Мойки не найдены
+                  {t('app.search.washesNotFound')}
                 </Text>
               </View>
             ) : (

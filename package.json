@@ -41,7 +41,6 @@
     "@react-native-firebase/messaging": "^19.2.2",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-native/gradle-plugin": "^0.73.4",
-    "@react-navigation/devtools": "^7.0.18",
     "@react-navigation/drawer": "^6.6.6",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.17",
@@ -49,11 +48,12 @@
     "@setpartnerstv/react-native-gpbonus-sdk": "^2.0.0",
     "@shopify/flash-list": "^1.7.2",
     "@types/lodash": "^4.17.0",
-    "add": "^2.0.6",
     "axios": "^1.7.2",
+    "i18next": "^25.3.1",
     "lodash": "^4.17.21",
     "lottie-react-native": "^7.2.2",
     "react": "^18.2.0",
+    "react-i18next": "^15.6.0",
     "react-intl": "^6.6.5",
     "react-native": "^0.73.3",
     "react-native-branch": "^6.5.0",
@@ -80,10 +80,7 @@
     "react-native-toast-message": "^2.2.0",
     "react-native-video": "^6.8.2",
     "react-native-video-cache-control": "^1.2.3",
-    "react-native-webview": "^13.13.2",
-    "stacktrace-parser": "^0.1.10",
     "swr": "^2.2.5",
-    "yarn": "^1.22.21",
     "zustand": "^4.5.2"
   },
   "devDependencies": {
@@ -114,7 +111,7 @@
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
-      "bash -c 'tsc --noEmit --jsx react-native --skipLibCheck \"$@\"' --"
+      "bash -c 'tsc --noEmit --skipLibCheck'"
     ]
   },
   "engines": {

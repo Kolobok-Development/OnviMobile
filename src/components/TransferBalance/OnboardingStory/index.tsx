@@ -1,11 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
 import {MultiStoryContainer} from 'react-native-story-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {dp} from '@utils/dp';
@@ -92,7 +86,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       }
       setLoading(false);
     } catch (error) {
-      console.error('Error checking onboarding status:', error);
       // On error, proceed without showing onboarding
       onComplete();
       setLoading(false);
@@ -108,7 +101,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       setIsVisible(false);
       onComplete();
     } catch (error) {
-      console.error('Error saving onboarding status:', error);
       setIsVisible(false);
       onComplete();
     }
@@ -123,7 +115,6 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
       setIsVisible(false);
       onComplete();
     } catch (error) {
-      console.error('Error during skip:', error);
       setIsVisible(false);
       onComplete();
     }

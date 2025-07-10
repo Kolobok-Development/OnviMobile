@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
+import {useTranslation} from 'react-i18next';
 
 // styled components
 import {Card} from '@styled/cards';
@@ -17,13 +18,12 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
-// @ts-ignore
-import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 import {Campaign} from '@app-types/api/app/types.ts';
 
@@ -36,6 +36,7 @@ import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 
 const Main = () => {
+  const {t} = useTranslation();
   const {
     bottomSheetRef,
     setIsMainScreen,
@@ -114,9 +115,7 @@ const Main = () => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                navigateBottomSheet('Search', {
-                  type: 'search',
-                });
+                navigateBottomSheet('Search', {});
                 bottomSheetRef?.current?.snapToPosition(
                   bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
                 );
@@ -135,7 +134,7 @@ const Main = () => {
                   opacity: 0.15,
                   paddingLeft: dp(7),
                 }}>
-                Поиcк
+                {t('app.main.search')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -163,13 +162,13 @@ const Main = () => {
               style={styles.partnersCard}
               onPress={() => {
                 setTimeout(() => {
-                  route.params.drawerNavigation.navigate('Промокоды');
+                  route.params.drawerNavigation?.navigate('Промокоды');
                 }, 100);
               }}>
               <View style={styles.label}>
                 <Text
                   style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
-                  Промокоды
+                  {t('navigation.promos')}
                 </Text>
               </View>
             </TouchableOpacity>
@@ -194,7 +193,7 @@ const Main = () => {
                 fontSize: dp(24),
                 fontWeight: '600',
               }}>
-              Свежие новости
+              {t('app.main.freshNews')}
             </Text>
           </View>
           {newsLoading || newsError ? (

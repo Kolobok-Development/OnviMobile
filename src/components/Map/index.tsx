@@ -45,10 +45,6 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     }
   }, [data]);
 
-  if (error) {
-    console.error('Error fetching POS List:', error);
-  }
-
   const [hasLocationPermission, setHasLocationPermission] = useState(false);
 
   const memoizedBusinesses = useMemo(
@@ -75,14 +71,11 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             setHasLocationPermission(true);
-          } else {
-            console.error('Location permission denied');
           }
         } else {
           setHasLocationPermission(true);
         }
       } catch (err) {
-        console.error('Error checking or requesting location permission:', err);
       }
     };
 

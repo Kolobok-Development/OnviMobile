@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {dp} from '../../utils/dp';
 import React from 'react';
+import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/core';
 
 import ScreenHeader from '@components/ScreenHeader';
@@ -19,11 +20,12 @@ import Config from 'react-native-config';
 const About = () => {
   const navigation =
     useNavigation<GeneralDrawerNavigationProp<'О приложении'>>();
+  const {t} = useTranslation();
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#fff'}}>
       <View style={styles.container}>
         <ScreenHeader
-          screenTitle="О нас"
+          screenTitle={t('app.about.about')}
           btnType="back"
           btnCallback={() => navigation.navigate('Настройки')}
         />
@@ -34,12 +36,14 @@ const About = () => {
           />
           <Text style={{...styles.title}}>Onvi</Text>
           <View style={styles.section}>
-            <Text style={{...styles.sectionTitle}}>Версия приложения</Text>
+            <Text style={{...styles.sectionTitle}}>
+              {t('app.about.appVersion')}
+            </Text>
             <Text style={{...styles.text}}>{Config.APP_VERSION}</Text>
           </View>
           <View style={styles.section}>
             <Text style={{...styles.sectionTitle}}>
-              Версия операционной системы
+              {t('app.about.osVersion')}
             </Text>
             <Text
               style={{
@@ -47,8 +51,10 @@ const About = () => {
               }}>{`${Platform.OS} ${Platform.Version}`}</Text>
           </View>
           <View style={styles.section}>
-            <Text style={{...styles.sectionTitle}}>Регион</Text>
-            <Text style={{...styles.text}}>Россия</Text>
+            <Text style={{...styles.sectionTitle}}>
+              {t('common.labels.region')}
+            </Text>
+            <Text style={{...styles.text}}>{t('common.labels.russia')}</Text>
           </View>
         </View>
         <TouchableOpacity
@@ -74,7 +80,7 @@ const About = () => {
               fontWeight: '600',
               letterSpacing: 0.22,
             }}>
-            Написать в поддержку
+            {t('app.about.writeSupport')}
           </Text>
         </TouchableOpacity>
       </View>

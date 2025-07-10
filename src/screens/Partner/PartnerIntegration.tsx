@@ -47,7 +47,6 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
     data: partnerData,
   } = useSWRMutation('getPartnerAuthToken', () => getGazpromAuthToken(), {
     onError: err => {
-      console.log('err', err);
       showErrorToast('Не получилось открыть виджет...');
       setModalVisible(false);
     },
@@ -89,7 +88,6 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
         }
       })
       .catch(error => {
-        console.error("Ошибка при получении данных о подписке:", error);
         Toast.show({
           type: 'customErrorToast',
           text1: 'Произошла ошибка при получении данных о подписке.',
@@ -126,23 +124,22 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
             .map(
               key =>
                 `${encodeURIComponent(key)}=${encodeURIComponent(
-                  queryParams[key],
+                  queryParams[key as keyof typeof queryParams],
                 )}`,
             )
             .join('&');
 
           // const widgetUrlWithParams = `${partner.attributes.itegration_data?.url}?${queryString}`;
           const widgetUrlWithParams = `${partner.attributes.url}?${queryString}`;
-          console.log('URL ++++++ ', widgetUrlWithParams);
           setUrl(widgetUrlWithParams);
-        })
-        .catch(err => {
-          console.log('err: ', err);
-          showErrorToast('Не получилось открыть виджет...');
-          setModalVisible(false);
-        });
+        }
+      })
+      .catch(err => {
+        showErrorToast('Не получилось открыть виджет...');
+        setModalVisible(false);
+      });
     setModalVisible(true);
-  }, [authToken]);
+  };
 
   const handleClose = useCallback(() => {
     setModalVisible(false);
@@ -151,19 +148,9 @@ const PartnerIntegration: React.FC<PartnerIntegrationProps> = ({ partner }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log('URL TO GAZPROM');
-    console.log(url);
-    if (referenceToken) {
-      handleActivation();
-      setReferenceToken(null);
-    }
-    
-  }, [url]);
 
 
   const handleWebViewError = useCallback((error: any) => {
-    console.error('WebView Error:', error);
     setWebViewError(error);
     setModalVisible(false);
     showErrorToast(`Не удалось загрузить контент партнера: ${error}`);

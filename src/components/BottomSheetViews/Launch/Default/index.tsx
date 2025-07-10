@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 // components
@@ -16,7 +16,7 @@ import {
   verticalScale,
 } from '../../../../utils/metrics';
 import {dp} from '../../../../utils/dp';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {useTheme} from '@context/ThemeProvider';
 
 // state
@@ -25,19 +25,17 @@ import useStore from '../../../../state/store';
 // types
 import {Button} from '@styled/buttons';
 
-import {
-  GeneralBottomSheetNavigationProp,
-  GeneralBottomSheetRouteProp,
-} from '../../../../types/navigation/BottomSheetNavigation.ts';
+import {useTranslation} from 'react-i18next';
+import {GeneralBottomSheetNavigationProp} from '../../../../types/navigation/BottomSheetNavigation.ts';
 
 export default function DefaultLaunch() {
   const {theme} = useTheme();
   const [value, setValue] = useState(50);
-  const measureTypeData = ['рубли'];
+  const {t} = useTranslation();
+  const measureTypeData = [t('common.labels.rubles')];
 
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
-  const route = useRoute<GeneralBottomSheetRouteProp<'Launch'>>();
 
   const {isBottomSheetOpen, setOrderDetails, orderDetails, selectedPos} =
     useStore.getState();
@@ -73,7 +71,7 @@ export default function DefaultLaunch() {
               lineHeight: verticalScale(20),
               paddingBottom: verticalScale(4),
             }}>
-            Способ измерения
+            {t('common.labels.measurementMethod')}
           </Text>
           <FilterList
             data={measureTypeData}
@@ -234,7 +232,7 @@ export default function DefaultLaunch() {
           paddingBottom: dp(90),
         }}>
         <Button
-          label="Оплатить"
+          label={t('common.buttons.pay')}
           onClick={() => {
             let cost = value ? value : 150;
             setOrderDetails({
