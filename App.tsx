@@ -54,12 +54,47 @@ type DatadogWrapperProps = {
   children: React.ReactNode;
 };
 
+const getEnvironmentConfig = () => {
+  if (__DEV__) {
+    return {
+      initializeDatadog: false,
+      serviceName: '',
+      environment: 'development'
+    };
+  }
+  
+  const env = Config.ENV || 'production';
+  
+  switch (env) {
+    case 'staging':
+      return {
+        initializeDatadog: true,
+        serviceName: 'test-flight',
+        environment: 'staging'
+      };
+    case 'production':
+      return {
+        initializeDatadog: true,
+        serviceName: 'production',
+        environment: 'production'
+      };
+    default:
+      return {
+        initializeDatadog: true,
+        serviceName: 'production',
+        environment: 'production'
+      };
+  }
+};
+
 const DatadogWrapper = ({children}: DatadogWrapperProps) => {
   const [datadogConfig, setDatadogConfig] =
     useState<DdSdkReactNativeConfiguration | null>(null);
 
   useEffect(() => {
-    if (__DEV__) {
+    const envConfig = getEnvironmentConfig();
+    
+    if (!envConfig.initializeDatadog) {
       return;
     }
 
@@ -69,7 +104,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
         const config = new DdSdkReactNativeConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
-          'production',
+          envConfig.environment, 
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
           true,
           true,
@@ -80,12 +115,16 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.longTaskThresholdMs = 100;
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
-        config.serviceName = 'test-flight';
+        config.serviceName = envConfig.serviceName; 
 
         await DdSdkReactNative.initialize(config);
         
         await DdSdkReactNative.setAttributes({
-          environment: 'production',
+          environment: envConfig.environment,
+          app_version: DeviceInfo.getVersion(),
+          build_type: Config.ENV || 'unknown',
+          os_version: DeviceInfo.getSystemVersion(),
+          is_emulator: String(await DeviceInfo.isEmulator()),
         });
 
         await DdSdkReactNative.setUserInfo({id: deviceId});
