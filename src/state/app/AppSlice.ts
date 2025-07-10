@@ -68,7 +68,7 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
     set(state => ({...state, showBurgerButton: value})),
   // Default snap points (will be updated by Home screen)
   bottomSheetSnapPoints: ['35%', '50%'],
-  setBottomSheetSnapPoints: (snapPoints: string[]) => 
+  setBottomSheetSnapPoints: (snapPoints: string[]) =>
     set(state => ({...state, bottomSheetSnapPoints: snapPoints})),
   isDraggable: true,
   currentRouteName: 'Main',

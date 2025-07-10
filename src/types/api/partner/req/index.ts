@@ -1,3 +1,3 @@
 export interface IGazpromReferencePayload {
-    reference: string;
-};
+  reference: string;
+}

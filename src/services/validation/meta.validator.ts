@@ -1,5 +1,4 @@
-import { Meta } from "../../types/models/User.ts";
-
+import {Meta} from '../../types/models/User.ts';
 
 export const hasMetaDataChanged = (
   localMeta: Meta,

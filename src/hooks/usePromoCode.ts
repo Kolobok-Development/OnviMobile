@@ -1,15 +1,11 @@
-import {useCallback, useEffect, useRef, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import useSWRMutation from 'swr/mutation';
 import {IValidatePromoCodeResponse} from '../types/api/order/res/IValidatePromoCodeResponse.ts';
 import {IValidatePromoCodeRequest} from '../types/api/order/req/IValidatePromoCodeRequest.ts';
 import {validatePromoCode} from '@services/api/order';
 import {handlePromoCodeError} from '@utils/errorHandlers.ts';
-import {
-  DiscountType,
-  IPersonalPromotion,
-} from '../types/models/PersonalPromotion.ts';
-import {set} from 'lodash';
-import Toast from "react-native-toast-message";
+import {DiscountType} from '../types/models/PersonalPromotion.ts';
+import Toast from 'react-native-toast-message';
 
 export interface DiscountValueType {
   type: DiscountType;
@@ -27,7 +23,7 @@ export const usePromoCode = (carWashId: number) => {
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
   // SWR mutation hook for promo code validation
-  const {data, trigger, isMutating, error} = useSWRMutation<
+  const {data, trigger, isMutating} = useSWRMutation<
     IValidatePromoCodeResponse,
     Error,
     string,

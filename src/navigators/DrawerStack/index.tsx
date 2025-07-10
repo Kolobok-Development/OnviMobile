@@ -1,25 +1,41 @@
-import React from 'react';
+import React, {Suspense} from 'react';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
+// Lazy load screens
 import {Home} from '@screens/Home';
-import {Promos} from '@screens/Promos';
+const Promos = React.lazy(() =>
+  import('@screens/Promos').then(module => ({default: module.Promos})),
+);
+const Settings = React.lazy(() =>
+  import('@screens/Settings').then(module => ({default: module.Settings})),
+);
+const About = React.lazy(() =>
+  import('@screens/About').then(module => ({default: module.About})),
+);
+const PromosInput = React.lazy(() =>
+  import('@screens/PromosInput').then(module => ({
+    default: module.PromosInput,
+  })),
+);
+const TransferBalance = React.lazy(() =>
+  import('@screens/TransferBalance').then(module => ({
+    default: module.TransferBalance,
+  })),
+);
+const Legals = React.lazy(() =>
+  import('@screens/Legals').then(module => ({default: module.Legals})),
+);
 
 import {useTheme} from '@context/ThemeProvider';
-import {Settings} from '@screens/Settings';
-import {About} from '@screens/About';
 import useStore from '../../state/store';
-
-import {PromosInput} from '@screens/PromosInput';
 
 //CustomDrawerContent
 import {CustomDrawerContent} from './CustomDrawerContent';
-import {Legals} from '@screens/Legals';
 import {DrawerNavProp} from '../../types/navigation/DrawerNavigation.ts';
-import {TransferBalance} from '@screens/TransferBalance';
-import { config } from "@navigators/DrawerStack/LinkingConfig.ts";
 
+import LoadingScreen from '@navigators/NavigatorLoader';
 
 const DrawerStack = () => {
   const {theme} = useTheme();
@@ -33,6 +49,7 @@ const DrawerStack = () => {
         drawerStyle: {
           backgroundColor: theme.mainColor,
         },
+        lazy: true,
       }}
       initialRouteName={'Главная'}
       /* eslint-disable-next-line react/no-unstable-nested-components */
@@ -53,20 +70,50 @@ const DrawerStack = () => {
         {props => <Home navigation={props.navigation} />}
       </Drawer.Screen>
 
-      <Drawer.Screen name="Промокоды">{() => <Promos />}</Drawer.Screen>
-      <Drawer.Screen name="Настройки">{() => <Settings />}</Drawer.Screen>
-      <Drawer.Screen name="О приложении">{() => <About />}</Drawer.Screen>
+      <Drawer.Screen name="Промокоды">
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Promos />
+          </Suspense>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Настройки">
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Settings />
+          </Suspense>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="О приложении">
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <About />
+          </Suspense>
+        )}
+      </Drawer.Screen>
       <Drawer.Screen name="Ввод Промокода">
-        {() => <PromosInput />}
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <PromosInput />
+          </Suspense>
+        )}
       </Drawer.Screen>
       <Drawer.Screen name="Перенести баланс">
-        {() => <TransferBalance />}
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <TransferBalance />
+          </Suspense>
+        )}
       </Drawer.Screen>
       <Drawer.Screen name="Правовые документы">
-        {() => <Legals />}
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Legals />
+          </Suspense>
+        )}
       </Drawer.Screen>
     </Drawer.Navigator>
   );
 };
 
-export {DrawerStack};
+export default React.memo(DrawerStack);

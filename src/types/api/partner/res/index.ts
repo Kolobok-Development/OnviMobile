@@ -1,9 +1,9 @@
 export interface IGazpromResponseData {
-    token: string;
-};
+  token: string;
+}
 
 export interface IGazpromSubscriptionResponseData {
-    status: string;
-    start_at?: string;
-    expiration_at?: string;
-};
+  status: string;
+  start_at?: string;
+  expiration_at?: string;
+}

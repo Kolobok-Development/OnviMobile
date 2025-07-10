@@ -1,29 +1,33 @@
-import { IUser } from '../types/models/User.ts';
-import { OrderDetailsType } from '../state/order/OrderSlice.ts';
-import { useCallback, useEffect, useState } from 'react';
-import { getCredentials } from '@services/api/payment';
-import { confirmPayment, tokenize } from '../native';
+import {IUser} from '@app-types/models/User.ts';
+import {OrderDetailsType} from '../state/order/OrderSlice.ts';
+import {useCallback, useEffect, useState} from 'react';
+import {getCredentials} from '@services/api/payment';
+import {confirmPayment, tokenize} from '../native';
 import {
   calculateActualPointsUsed,
   calculateFinalAmount,
   createPaymentConfig,
   calculateActualDiscount,
 } from '@utils/paymentHelpers.ts';
-import { create, pingPos, register } from '@services/api/order';
-import { PaymentMethodTypesEnum } from '../types/PaymentType.ts';
-import { ICreateOrderRequest } from '../types/api/order/req/ICreateOrderRequest.ts';
-import { navigateBottomSheet } from '@navigators/BottomSheetStack';
+import {create, pingPos, register} from '@services/api/order';
+import {PaymentMethodTypesEnum} from '@app-types/PaymentType.ts';
+import {ICreateOrderRequest} from '@app-types/api/order/req/ICreateOrderRequest.ts';
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
-import { ICreateOrderResponse } from '../types/api/order/res/ICreateOrderResponse.ts';
-import { DiscountValueType } from '@hooks/usePromoCode.ts';
-import { PaymentMethodType } from '@styled/buttons/PaymentMethodButton';
-import { getOrderByOrderId } from '@services/api/order';
-import { ORDER_ERROR_CODES, PAYMENT_ERROR_CODES, OTHER_ERROR_CODES } from '../types/api/constants/index.ts';
-import { OrderProcessingStatus } from '../types/api/order/processing/OrderProcessingStatus.ts';
-import { DdLogs } from '@datadog/mobile-react-native';
+import {ICreateOrderResponse} from '@app-types/api/order/res/ICreateOrderResponse.ts';
+import {DiscountValueType} from '@hooks/usePromoCode.ts';
+import {PaymentMethodType} from '@styled/buttons/PaymentMethodButton';
+import {getOrderByOrderId} from '@services/api/order';
+import {
+  ORDER_ERROR_CODES,
+  PAYMENT_ERROR_CODES,
+  OTHER_ERROR_CODES,
+} from '@app-types/api/constants/index.ts';
+import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProcessingStatus.ts';
+import {DdLogs} from '@datadog/mobile-react-native';
 
 export const usePaymentProcess = (
-  user: IUser | null,
+  user: IUser,
   order: OrderDetailsType,
   discount: DiscountValueType | null,
   usedPoints: number,
@@ -49,11 +53,15 @@ export const usePaymentProcess = (
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
-      DdLogs.error("Payment process error: ", { error: error.code});
+      DdLogs.error('Payment process error: ', {error: error.code});
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
-      const errorMessage = error.response?.data?.message || 'No additional message';
-      DdLogs.error("Payment process error:", { error: errorCode, message: errorMessage });
+      const errorMessage =
+        error.response?.data?.message || 'No additional message';
+      DdLogs.error('Payment process error:', {
+        error: errorCode,
+        message: errorMessage,
+      });
       switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
           setError('Ошибки обработки');
@@ -126,7 +134,7 @@ export const usePaymentProcess = (
           break;
       }
     }
-  }
+  };
 
   const processPayment = useCallback(async () => {
     //Validation process
@@ -217,7 +225,7 @@ export const usePaymentProcess = (
         user,
         paymentMethodTypes,
       );
-      
+
       // Create order request
       const createOrderRequest: ICreateOrderRequest = {
         sum: realSum,
@@ -234,7 +242,7 @@ export const usePaymentProcess = (
         createOrderRequest.promoCodeId = promoCodeId;
       }
 
-      // Create order      
+      // Create order
       const orderResult: ICreateOrderResponse = await create(
         createOrderRequest,
       );
@@ -257,7 +265,7 @@ export const usePaymentProcess = (
         return;
       }
 
-      const { status, confirmation_url } = await register({
+      const {status, confirmation_url} = await register({
         orderId: orderResult.orderId,
         paymentToken: token,
         amount: realSum.toString(),
@@ -265,7 +273,6 @@ export const usePaymentProcess = (
         receiptReturnPhoneNumber: user.phone ?? '',
         transactionId: '', // откуда взять?
       });
-
 
 
       if (status !== 'waiting_payment') {
@@ -298,21 +305,21 @@ export const usePaymentProcess = (
           if (response.status === 'completed') {
             setOrderStatus(OrderProcessingStatus.END);
             setLoading(false);
-            DdLogs.info("Successful order creation", { order });
+            DdLogs.info('Successful order creation', {order});
             // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
             setTimeout(() => {
               navigateBottomSheet('PostPayment', {});
               setOrderStatus(null);
-            }, 3000)
+            }, 3000);
           } else if (response.status === 'failed') {
             setError('Ошибка оборудования');
-            DdLogs.error("Equipment error", { order });
+            DdLogs.error('Equipment error', {order});
             setLoading(false);
           } else {
             attempts++;
             if (attempts >= maxAttempts) {
               setError('⏳ Время ожидания оплаты истекло. Попробуйте снова.');
-              DdLogs.error("Payment time expired", { order });
+              DdLogs.error('Payment time expired', {order});
               setLoading(false);
               // setOrderStatus(null);
             } else {
@@ -380,7 +387,7 @@ export const usePaymentProcess = (
         carWashId: Number(order.posId),
         bayNumber: Number(order.bayNumber),
         bayType: order.bayType,
-      }
+      };
 
 
       const orderResult: ICreateOrderResponse = await create(
@@ -396,27 +403,27 @@ export const usePaymentProcess = (
         if (response.status === 'completed') {
           setOrderStatus(OrderProcessingStatus.END_FREE);
           setLoading(false);
-          DdLogs.info("Successful order creation (free vacuume)", { order });
+          DdLogs.info('Successful order creation (free vacuume)', {order});
           // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
           setTimeout(() => {
             navigateBottomSheet('PostPayment', {});
             setOrderStatus(null);
-          }, 3000)
+          }, 3000);
         } else if (response.status === 'failed') {
           setError('Ошибка оборудования');
-          DdLogs.error("Equipment error", { order });
+          DdLogs.error('Equipment error', {order});
           setLoading(false);
         } else {
           attempts++;
           if (attempts >= maxAttempts) {
             setError('⏳ Время ожидания истекло. Попробуйте снова.');
-            DdLogs.error("Payment time expired (free vacuume)", { order });
+            DdLogs.error('Payment time expired (free vacuume)', {order});
             setLoading(false);
           } else {
             setTimeout(pollOrderStatus, pollInterval);
           }
         }
-      }
+      };
       pollOrderStatus();
     } catch (error: any) {
       errorHandler(error);

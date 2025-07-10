@@ -22,4 +22,4 @@ function PersonalPromoPlaceholder() {
   );
 }
 
-export { PersonalPromoPlaceholder }
+export {PersonalPromoPlaceholder};

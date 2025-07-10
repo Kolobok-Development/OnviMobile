@@ -4,7 +4,6 @@ import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import calculateDistance from '../../../utils/calculateDistance';
 import Svg, {Path} from 'react-native-svg';
 import useStore from '../../../state/store.ts';
-import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 
 interface MarkerProps {
   coordinate: number[];

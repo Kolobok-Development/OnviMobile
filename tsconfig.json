@@ -2,6 +2,7 @@
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
     "jsx": "react-native",
+    "module": "esnext",
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
@@ -14,6 +15,11 @@
       "@mutations/*": ["src/services/api/mutations/*"],
       "@queries/*": ["src/services/api/queries/*"],
       "@utils/*": ["src/utils/*"],
+      "@assets/*": ["src/assets/*"],
+      "@app-types/*": ["src/types/*"],
+      "@state/*": ["src/state/*"],
+      "@shared/*": ["src/shared/*"],
+      "@native/*": ["src/native/*"],
       "react-native-reanimated-carousel/src/Carousel.tsx": [
         "./src/types/declarations.d.ts"
       ]

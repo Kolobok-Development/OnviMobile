@@ -69,7 +69,7 @@ const Settings = () => {
     'updateUserData',
     (key, {arg}: {arg: IUpdateAccountRequest}) => update(arg),
     {
-      onError: err => {
+      onError: () => {
         Toast.show({
           type: 'customErrorToast',
           text1: 'Не получилось обновить данные...',

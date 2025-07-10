@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   View,
   Dimensions,
@@ -9,12 +9,12 @@ import {
   FlatList,
 } from 'react-native';
 
-import {dp} from '../../../utils/dp';
+import {dp} from '@utils/dp';
 
-import {WHITE} from '../../../utils/colors';
+import {WHITE} from '@utils/colors';
 
 import {BalanceCard} from '@styled/cards/BalanceCard';
-import useStore from '../../../state/store';
+import useStore from '@state/store';
 
 import {useRoute} from '@react-navigation/native';
 import {Settings} from 'react-native-feather';
@@ -28,7 +28,7 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 const History = () => {
   const {user} = useStore.getState();
@@ -90,7 +90,7 @@ const History = () => {
           <TouchableOpacity
             onPress={() => {
               navigateBottomSheet('Main', {});
-              route.params.drawerNavigation.navigate('Настройки');
+              route.params.drawerNavigation?.navigate('Настройки');
             }}>
             <Settings stroke={'white'} width={dp(18)} height={dp(18)} />
           </TouchableOpacity>
@@ -105,28 +105,6 @@ const History = () => {
           }}>
           История заказов
         </Text>
-        {/*<Button
-          label="История"
-          onClick={() => switchTab(false)}
-          color={!tab ? 'blue' : 'lightGrey'}
-          width={149}
-          height={43}
-          fontSize={18}
-          fontWeight="600"
-        />*/}
-        {/*<View style={{width: dp(3)}} />
-        <View style={styles.notifications}>
-          <Button
-            label="Уведомления"
-            onClick={() => switchTab(true)}
-            color={tab ? 'blue' : 'lightGrey'}
-            width={189}
-            height={43}
-            fontSize={18}
-            fontWeight="600"
-          />
-          <NotificationCircle number={4} />
-        </View>*/}
       </View>
       {isLoading ? (
         <HistoryPlaceholder />
@@ -134,14 +112,9 @@ const History = () => {
         <>
           <FlatList
             data={orderData}
-            renderItem={order => (
-              <BalanceCard
-                key={`balance-card-${order.index}`}
-                option={order.item}
-              />
-            )}
+            renderItem={order => <BalanceCard option={order.item} />}
             refreshing={isLoading}
-            keyExtractor={(_order, index) => index.toString()}
+            keyExtractor={(_, index) => index.toString()}
             onRefresh={mutate}
             showsVerticalScrollIndicator={false}
             /* eslint-disable-next-line react/no-unstable-nested-components */

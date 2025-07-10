@@ -1,5 +1,5 @@
 import {AxiosInstance, AxiosError, AxiosResponse} from 'axios';
-import useStore, {handleTokenExpiry} from '../../../state/store';
+import useStore from '../../../state/store';
 import {isValidStorageData} from '@services/validation/index.validator';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
@@ -9,7 +9,8 @@ export const navigationRef = createNavigationContainerRef();
 // Helper function to navigate when not in a React component
 export function navigate(name: string, params?: any) {
   if (navigationRef.isReady()) {
-    navigationRef.navigate(name as never, params as never);
+    //@ts-ignore
+    navigationRef.navigate(name, params);
   } else {
     // Save the navigation for when the ref is ready
   }

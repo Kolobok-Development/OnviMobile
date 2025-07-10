@@ -7,7 +7,7 @@ import {IRegisterRequest} from '../../../types/api/auth/req/IRegisterRequest.ts'
 import {IRegisterResponse} from '../../../types/api/auth/res/IRegisterResponse.ts';
 import {IRefreshRequest} from '../../../types/api/auth/req/IRefreshRequest.ts';
 import {IRefreshResponse} from '../../../types/api/auth/res/IRefreshResponse.ts';
-import { userApiInstance } from "@services/api/axiosConfig.ts";
+import {userApiInstance} from '@services/api/axiosConfig.ts';
 
 enum AUTH {
   SEND_OTP_URL = 'auth/send/otp',

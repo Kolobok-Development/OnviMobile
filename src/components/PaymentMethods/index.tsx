@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   methodButton: {
     width: scale(85),
     marginRight: dp(12),
-    marginBottom: dp(10)
+    marginBottom: dp(10),
   },
 });
 

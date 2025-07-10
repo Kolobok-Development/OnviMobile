@@ -1,7 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
 
-import {useRoute} from '@react-navigation/native';
-
 import {dp} from '../../../utils/dp';
 
 import {Box} from '@components/Boxes/Box';
@@ -20,8 +18,6 @@ interface BusinessHeader {
 }
 
 const BusinessHeader = ({type, box}: BusinessHeader) => {
-  const route: any = useRoute();
-
   const {business, orderDetails} = useStore.getState();
 
   const rightItem = () => {
@@ -87,14 +83,11 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(20),
     fontWeight: '500',
     paddingBottom: verticalScale(5),
-    // @ts-ignore
-    overflowWrap: 'normal',
     color: '#000',
   },
   text: {
     fontSize: moderateScale(14),
     fontWeight: '300',
-    overflowWrap: 'break-word',
     color: '#000',
   },
   circleImage: {

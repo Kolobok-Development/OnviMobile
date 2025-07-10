@@ -6,5 +6,5 @@ export interface ICreateOrderRequest {
   carWashId: number;
   bayNumber: number;
   bayType?: string | null;
-  err?: number
+  err?: number;
 }

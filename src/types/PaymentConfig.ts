@@ -1,4 +1,3 @@
-import {PaymentMethodTypesEnum} from './PaymentType';
 import {GooglePaymentMethodTypesEnum} from './GooglePaymentMethodTypes';
 
 export interface PaymentConfig {

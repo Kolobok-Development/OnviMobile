@@ -43,7 +43,9 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
                 </View>
               ) : (
                 <Text style={styles.itemPrice}>
-                  {(finalOrderCost * user.tariff / 100) < 1 ? 0 : Math.ceil(finalOrderCost * user.tariff / 100)}{' '}
+                  {(finalOrderCost * user.tariff) / 100 < 1
+                    ? 0
+                    : Math.ceil((finalOrderCost * user.tariff) / 100)}{' '}
                   ₽
                 </Text>
               )}

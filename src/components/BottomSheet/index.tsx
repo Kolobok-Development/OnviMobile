@@ -4,7 +4,7 @@ import React, {
   useImperativeHandle,
   useRef,
 } from 'react';
-import {View, StyleSheet, Dimensions, SafeAreaView} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 
 import Animated, {
@@ -17,7 +17,6 @@ import {ScrollView as GHScrollView} from 'react-native-gesture-handler';
 
 import {WHITE} from '../../utils/colors';
 import {dp} from '../../utils/dp';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const height = dp(Dimensions.get('screen').height);
 
@@ -40,7 +39,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
   ({children, background}, ref) => {
     const translateY = useSharedValue(0);
     const active = useSharedValue(false);
-    const insets = useSafeAreaInsets();
 
     const activeRef = useRef(false);
 

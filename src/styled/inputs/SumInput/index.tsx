@@ -64,7 +64,7 @@ const SumInput: React.FC<ISumInput> = ({
     borderRadius,
   ]);
 
-  const { shadowColor, shadowOffset, shadowOpacity, shadowRadius } =
+  const {shadowColor, shadowOffset, shadowOpacity, shadowRadius} =
     shadowProps || {};
 
   const calculateShadowStyles = () => ({

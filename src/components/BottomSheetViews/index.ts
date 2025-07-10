@@ -8,3 +8,6 @@ export {Notifications} from './Notifications';
 export {History} from './History';
 export {PostPayment} from './PostPayment';
 export {PaymentLoading} from './PaymentLoading';
+export {BusinessInfo} from './BusinessInfo';
+export {Boxes} from './Boxes';
+export {AddCard} from './AddCard';

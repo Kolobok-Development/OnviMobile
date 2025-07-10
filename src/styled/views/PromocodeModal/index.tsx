@@ -1,8 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, Text, Modal, TouchableOpacity, TextInput, TouchableWithoutFeedback } from 'react-native';
-import { Button } from '@styled/buttons';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Modal,
+  TextInput,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import {Button} from '@styled/buttons';
 
-import { dp } from '../../../utils/dp';
+import {dp} from '../../../utils/dp';
 
 interface IPromocodeModal {
   visible: boolean;
@@ -20,11 +27,10 @@ const PromocodeModal = (props: IPromocodeModal) => {
       visible={props.visible}
       transparent={true}
       animationType="slide"
-      onRequestClose={props.onClose}
-    >
+      onRequestClose={props.onClose}>
       <TouchableWithoutFeedback onPress={props.onClose}>
         <View style={styles.modalOverlay}>
-          <TouchableWithoutFeedback onPress={() => { }}>
+          <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContainer}>
               <Text style={styles.titleText}>Введите промокод</Text>
               <View style={styles.textInputGroup}>
@@ -45,7 +51,7 @@ const PromocodeModal = (props: IPromocodeModal) => {
                   fontWeight={'600'}
                   onClick={() => props.onClose()}
                 />
-                <View style={{ width: dp(14) }} />
+                <View style={{width: dp(14)}} />
                 <Button
                   label={'Применить'}
                   color={'blue'}
@@ -123,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { PromocodeModal };
+export {PromocodeModal};
