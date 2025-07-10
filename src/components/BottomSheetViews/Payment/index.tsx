@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, Pressable, View, ScrollView} from 'react-native';
 import {BottomSheetView} from '@gorhom/bottom-sheet';
 import {BusinessHeader} from '@components/Business/Header';
-import {dp} from '../../../utils/dp';
+import {dp} from '@utils/dp';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {Button} from '@styled/buttons';
-import useStore from '../../../state/store';
+import useStore from '@state/store';
 import {PromocodeModal} from '@styled/views/PromocodeModal';
 import PaymentMethods from '@components/PaymentMethods';
 import PaymentSummary from '@components/BottomSheetViews/Payment/PaymentSummary';
@@ -46,7 +46,6 @@ const Payment = () => {
     setPromocode,
     applyPromoCode,
     debouncedApplyPromoCode,
-    resetPromoCode,
   } = usePromoCode(order.posId || 0);
 
   const {usedPoints, toggled, applyPoints, togglePoints} = useBonusPoints(
@@ -55,18 +54,8 @@ const Payment = () => {
     discount,
   );
 
-  const {
-    loading,
-    error,
-    orderStatus,
-    setOrderStatus,
-    processPayment,
-    processFreePayment,
-    clearError,
-    setPaymentMethod,
-    paymentMethod,
-  } = usePaymentProcess(
-    user,
+  const {loading, setPaymentMethod, paymentMethod} = usePaymentProcess(
+    user!, // TODO: FIX THIS
     order,
     discount,
     usedPoints,
@@ -146,7 +135,6 @@ const Payment = () => {
                     user={user}
                     order={order}
                     discount={discount}
-                    usedPoints={usedPoints}
                     toggled={toggled}
                     onToggle={togglePoints}
                     applyPoints={applyPoints}

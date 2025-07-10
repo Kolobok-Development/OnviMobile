@@ -2,7 +2,7 @@ import React, {Suspense} from 'react';
 import {DefaultTheme} from '@react-navigation/native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import useStore from '../../state/store';
+import useStore from '@state/store';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
 import {
@@ -50,7 +50,8 @@ const Campaign = React.lazy(() =>
   })),
 );
 
-import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
+import {GeneralDrawerNavigationProp} from '@app-types/navigation/DrawerNavigation.ts';
+import {RootStackParamList} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 import LoadingScreen from '@navigators/NavigatorLoader';
 
@@ -62,8 +63,8 @@ const navTheme = {
   },
 };
 
-const RootStack = createNativeStackNavigator();
-export const navigationRef = createNavigationContainerRef<any>();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
+export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
 // const navigateBottomSheet = function (name: string, params: any) {
 //   if (navigationRef.isReady()) {
@@ -87,10 +88,13 @@ export const navigationRef = createNavigationContainerRef<any>();
 //   }
 // };
 
-const navigateBottomSheet = (name: string, params: any) => {
+const navigateBottomSheet = <T extends keyof RootStackParamList>(
+  name: T,
+  params: RootStackParamList[T],
+) => {
   const currentRoute = navigationRef.current?.getCurrentRoute();
   if (currentRoute?.name !== name) {
-    navigationRef.current?.navigate(name, params);
+    navigationRef.current?.navigate(name as any, params);
   } else {
     console.log(`Already on ${name} screen, skipping navigation`);
   }
@@ -98,18 +102,14 @@ const navigateBottomSheet = (name: string, params: any) => {
 
 interface BottomSheetStackInterface {
   active: boolean;
-  drawerNavigation: GeneralDrawerNavigationProp<any>;
-  cameraRef: any;
+  drawerNavigation: GeneralDrawerNavigationProp<
+    keyof import('@app-types/navigation/DrawerNavigation.ts').DrawerParamList
+  >;
   setCamera: (val?: {longitude: number; latitude: number}) => void;
 }
 
 const BottomSheetStack = React.memo(
-  ({
-    active,
-    drawerNavigation,
-    cameraRef,
-    setCamera,
-  }: BottomSheetStackInterface) => {
+  ({active, drawerNavigation, setCamera}: BottomSheetStackInterface) => {
     const {setIsMainScreen, setShowBurgerButton, setCurrentRouteName} =
       useStore.getState();
 

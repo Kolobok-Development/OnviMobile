@@ -18,31 +18,44 @@ interface BoxesSlideProps {
 }
 
 const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
-  const {orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints} = 
+  const {orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints} =
     useStore.getState();
-  
-  const contentPadding = (width - (horizontalScale(92) * boxes.length)) / 2;
 
-  const handleBoxPress = useCallback((boxNumber: number) => {
-    setOrderDetails({
-      ...orderDetails,
-      bayNumber: boxNumber,
-    });
+  const contentPadding = (width - horizontalScale(92) * boxes.length) / 2;
 
-    bottomSheetRef?.current?.snapToPosition(
-      bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
-    );
-    
-    navigation.navigate('Launch', {bayType: params.bayType});
-  }, [orderDetails, setOrderDetails, bottomSheetRef, bottomSheetSnapPoints, navigation, params]);
+  const handleBoxPress = useCallback(
+    (boxNumber: number) => {
+      setOrderDetails({
+        ...orderDetails,
+        bayNumber: boxNumber,
+      });
 
-  const renderItem = useCallback(({item}: {item: BoxItem}) => (
-    <Box
-      label={item.number.toString()}
-      onClick={() => handleBoxPress(item.number)}
-      active={orderDetails.bayNumber === item.number}
-    />
-  ), [handleBoxPress, orderDetails.bayNumber]);
+      bottomSheetRef?.current?.snapToPosition(
+        bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+      );
+
+      navigation.navigate('Launch', {bayType: params.bayType});
+    },
+    [
+      orderDetails,
+      setOrderDetails,
+      bottomSheetRef,
+      bottomSheetSnapPoints,
+      navigation,
+      params,
+    ],
+  );
+
+  const renderItem = useCallback(
+    ({item}: {item: BoxItem}) => (
+      <Box
+        label={item.number.toString()}
+        onClick={() => handleBoxPress(item.number)}
+        active={orderDetails.bayNumber === item.number}
+      />
+    ),
+    [handleBoxPress, orderDetails.bayNumber],
+  );
 
   return (
     <FlatList
@@ -52,11 +65,11 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
       horizontal
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={[
-        styles.container, 
+        styles.container,
         {
           paddingLeft: contentPadding,
           paddingRight: contentPadding,
-        }
+        },
       ]}
       initialNumToRender={4}
       maxToRenderPerBatch={4}
@@ -75,7 +88,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingVertical: dp(10),
     justifyContent: 'center',
-    alignItems: 'center', 
+    alignItems: 'center',
   },
 });
 

@@ -6,4 +6,3 @@ export {Verification} from './Verification';
 export {Promos} from './Promos';
 export {Settings} from './Settings';
 export {About} from './About';
-export {Partner} from './Partner';

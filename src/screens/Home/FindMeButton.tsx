@@ -3,8 +3,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   Platform,
-  useWindowDimensions, PixelRatio
-} from "react-native";
+  useWindowDimensions,
+  PixelRatio,
+} from 'react-native';
 import Animated, {
   Extrapolation,
   interpolate,

@@ -19,7 +19,7 @@ import {GlobalPromosPlaceholder} from './PromosPlaceholder';
 
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {PersonalPromoBanner} from '@styled/banners/PersonalPromoBanner';
-import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getActiveClientPromotions} from '@services/api/user';
 import {getGlobalPromotions} from '@services/api/promotion';
@@ -30,7 +30,7 @@ import useStore from '../../state/store.ts';
 const Promos = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const { location } = useStore.getState();
+  const {location} = useStore.getState();
 
   const locationParams = {
     latitude: Number(location?.latitude),
@@ -47,7 +47,9 @@ const Promos = () => {
     isLoading: isPersonalPromoLoading,
     data: personalPromo,
     error: personalError,
-  } = useSWR(['getPersonalPromos'], () => getActiveClientPromotions(locationParams));
+  } = useSWR(['getPersonalPromos'], () =>
+    getActiveClientPromotions(locationParams),
+  );
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: '#FFF'}}>

@@ -59,7 +59,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
     orderDate: null,
     status: OrderStatus.Created,
     free: false,
-    bayType: "",
+    bayType: '',
   },
   setOrderDetails: (orderDetails: OrderDetailsType) =>
     set(state => ({
@@ -85,7 +85,7 @@ const createOrderSlice: StoreSlice<OrderSlice> = set => ({
         orderDate: null,
         status: OrderStatus.Created,
         free: false,
-        bayType: "",
+        bayType: '',
       },
     })),
 });

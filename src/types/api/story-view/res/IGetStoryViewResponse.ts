@@ -29,7 +29,7 @@ export type IContentAttributes = {
   updatedAt: string; // Timestamp when the content was last updated
   publishedAt: string; // Timestamp when the content was published
   stories: IStories; // Stories associated with the content
-  icon: string
+  icon: string;
 };
 
 // Type for individual story attributes

@@ -1,4 +1,4 @@
-import axios, {InternalAxiosRequestConfig} from 'axios';
+import axios from 'axios';
 const PREFIX = '/api/v2/';
 
 import Config from 'react-native-config';

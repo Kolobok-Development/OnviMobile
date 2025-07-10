@@ -10,7 +10,7 @@ import {
   Pressable,
   Platform,
   Modal,
-  Linking
+  Linking,
 } from 'react-native';
 import {dp} from '../../utils/dp';
 import {useNavigation} from '@react-navigation/core';
@@ -41,10 +41,11 @@ const TransferBalance = () => {
 
   const {loadUser} = useStore.getState();
 
-  const url = 'https://docs.google.com/document/d/1z4eILEuMX58WQRyf17mhU50NbH1A_QyosilFs18vqA4/edit?usp=sharing';
+  const url =
+    'https://docs.google.com/document/d/1z4eILEuMX58WQRyf17mhU50NbH1A_QyosilFs18vqA4/edit?usp=sharing';
 
   const handlePress = () => {
-    Linking.openURL(url).catch(err => console.error("An error occurred", err));
+    Linking.openURL(url).catch(err => console.error('An error occurred', err));
   };
 
   const navigation =
@@ -129,10 +130,7 @@ const TransferBalance = () => {
             <Text style={styles.instructionsLink}>
               Как это работает? Посмотреть инструкцию
             </Text>
-            <Text 
-              style={styles.instructionsLink}
-              onPress={handlePress}
-            >
+            <Text style={styles.instructionsLink} onPress={handlePress}>
               Правила переноса
             </Text>
           </TouchableOpacity>
@@ -211,13 +209,13 @@ const TransferBalance = () => {
         )}
 
         {!balance ? (
-          <TouchableOpacity
-            style={buttonStyles}
-            onPress={findBalance}>
+          <TouchableOpacity style={buttonStyles} onPress={findBalance}>
             <Text style={styles.buttonText}>Найти</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={buttonStyles} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            style={buttonStyles}
+            onPress={() => setModalVisible(true)}>
             <Text style={styles.buttonText}>Перенести</Text>
           </TouchableOpacity>
         )}
@@ -233,16 +231,13 @@ const TransferBalance = () => {
         <View style={styles.centeredView}>
           <View style={styles.modalOverlay} />
           <View style={styles.modalView}>
-          <Text style={styles.modalText}>
-            Нажимая «Да», вы соглашаетесь с{' '}
-            <Text
-              style={styles.instructionsLink}
-              onPress={handlePress}
-            >
-              правилами переноса баланса
-            </Text>{' '}
-            и подтверждаете, что ознакомились с условиями.
-          </Text>
+            <Text style={styles.modalText}>
+              Нажимая «Да», вы соглашаетесь с{' '}
+              <Text style={styles.instructionsLink} onPress={handlePress}>
+                правилами переноса баланса
+              </Text>{' '}
+              и подтверждаете, что ознакомились с условиями.
+            </Text>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={[styles.modalButton, styles.buttonClose]}

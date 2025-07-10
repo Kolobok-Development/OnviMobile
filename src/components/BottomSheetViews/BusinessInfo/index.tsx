@@ -5,7 +5,6 @@ import Modal from '@styled/Modal';
 
 import {Button} from '@styled/buttons';
 
-import {useRoute} from '@react-navigation/native';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 import {dp} from '@utils/dp.ts';
@@ -14,7 +13,6 @@ import {WHITE} from '@utils/colors.ts';
 import {BusinessHeader} from '@components/Business/Header';
 import {CheckBox} from '@styled/buttons/CheckBox';
 
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
 import {getFreeVacuum} from '@services/api/user/index.ts';
@@ -30,8 +28,6 @@ const BusinessInfo = () => {
     bottomSheetSnapPoints,
     setFreeVacuum,
   } = useStore.getState();
-
-  const route = useRoute<GeneralBottomSheetRouteProp<'BusinessInfo'>>();
 
   const modalCallback = async (bayType: string) => {
     setOrderDetails({...orderDetails, bayType: bayType});

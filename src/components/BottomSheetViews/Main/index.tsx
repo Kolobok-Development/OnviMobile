@@ -17,13 +17,12 @@ import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {useFocusEffect, useRoute} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
-// @ts-ignore
-import Carousel from 'react-native-reanimated-carousel/src/Carousel.tsx';
+import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
-import {GeneralBottomSheetRouteProp} from '../../../types/navigation/BottomSheetNavigation.ts';
+import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 import {Campaign} from '@app-types/api/app/types.ts';
 
@@ -114,9 +113,7 @@ const Main = () => {
                 alignItems: 'center',
               }}
               onPress={() => {
-                navigateBottomSheet('Search', {
-                  type: 'search',
-                });
+                navigateBottomSheet('Search', {});
                 bottomSheetRef?.current?.snapToPosition(
                   bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
                 );
@@ -163,7 +160,7 @@ const Main = () => {
               style={styles.partnersCard}
               onPress={() => {
                 setTimeout(() => {
-                  route.params.drawerNavigation.navigate('Промокоды');
+                  route.params.drawerNavigation?.navigate('Промокоды');
                 }, 100);
               }}>
               <View style={styles.label}>
