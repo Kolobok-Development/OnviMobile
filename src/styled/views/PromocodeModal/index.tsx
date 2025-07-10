@@ -24,7 +24,7 @@ interface IPromocodeModal {
 
 const PromocodeModal = (props: IPromocodeModal) => {
   const {t} = useTranslation();
-  
+
   return (
     <Modal
       visible={props.visible}
@@ -35,7 +35,9 @@ const PromocodeModal = (props: IPromocodeModal) => {
         <View style={styles.modalOverlay}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContainer}>
-              <Text style={styles.titleText}>{t('app.promos.enterPromocode')}</Text>
+              <Text style={styles.titleText}>
+                {t('app.promos.enterPromocode')}
+              </Text>
               <View style={styles.textInputGroup}>
                 <TextInput
                   value={props.promocode}

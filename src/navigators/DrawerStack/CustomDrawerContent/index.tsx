@@ -238,7 +238,7 @@ const CustomDrawerContent = ({
                 fontWeight: '500',
                 color: 'black',
               }}>
-              {t('app.main.transferBalance')}  
+              {t('app.main.transferBalance')}
             </Text>
             <Image
               style={{
@@ -274,7 +274,7 @@ const CustomDrawerContent = ({
                   color: '#717586',
                   fontWeight: '600',
                 }}>
-                {t('app.main.support')}  
+                {t('app.main.support')}
               </Text>
             </TouchableOpacity>
           </View>

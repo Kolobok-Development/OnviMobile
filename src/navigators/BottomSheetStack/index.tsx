@@ -94,7 +94,7 @@ const navigateBottomSheet = <T extends keyof RootStackParamList>(
 ) => {
   const currentRoute = navigationRef.current?.getCurrentRoute();
   if (currentRoute?.name !== name) {
-    navigationRef.current?.navigate(name, params);
+    navigationRef.current?.navigate(name as any, params);
   }
 };
 

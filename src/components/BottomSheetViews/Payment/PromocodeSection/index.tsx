@@ -40,7 +40,9 @@ const PromocodeSection: React.FC<PromocodeSectionProps> = ({
             borderRadius: dp(30),
           }}
           onPress={onPress}>
-          <Text style={{fontSize: dp(10), fontWeight: '500'}}>{t('app.promos.promocode').toUpperCase()}</Text>
+          <Text style={{fontSize: dp(10), fontWeight: '500'}}>
+            {t('app.promos.promocode').toUpperCase()}
+          </Text>
         </TouchableOpacity>
       </View>
 

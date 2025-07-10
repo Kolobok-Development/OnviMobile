@@ -22,7 +22,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
   color = 'blue',
 }) => {
   const {t} = useTranslation();
-  
+
   const getColor = () => {
     if (new Date() > date) {
       return DARKGREY;

@@ -31,8 +31,7 @@ const TokenExpiryTester: React.FC = () => {
   const handleTestTokenExpiry = async () => {
     try {
       await mockTokenExpiry();
-    } catch (error) {
-    }
+    } catch (error) {}
   };
 
   return (

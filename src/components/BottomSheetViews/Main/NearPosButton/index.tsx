@@ -100,9 +100,7 @@ export default function NearPosButton() {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>
-              {
-                t('app.mainExtras.geolocationMessage')
-              }
+              {t('app.mainExtras.geolocationMessage')}
             </Text>
             <View style={styles.actionButtons}>
               <View>

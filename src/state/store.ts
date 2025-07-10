@@ -71,7 +71,6 @@ export const handleTokenExpiry = async (originalRequest?: {
   headers: Record<string, string>;
   [key: string]: any;
 }) => {
-
   // Call the handleTokenExpiry method from UserSlice which also shows a notification
   const state = useStore.getState();
 

@@ -73,7 +73,9 @@ export async function getGazpromAuthToken(): Promise<any> {
   return response.data.data;
 }
 
-export async function getGazpromAuthTokenFromReference(body: IGazpromReferencePayload): Promise<IGazpromResponseData> {
+export async function getGazpromAuthTokenFromReference(
+  body: IGazpromReferencePayload,
+): Promise<IGazpromResponseData> {
   const response = await userApiInstance.post(
     PARTNER.GET_GAZPROM_AUTH_TOKEN_FROM_REFERENCE,
     body,

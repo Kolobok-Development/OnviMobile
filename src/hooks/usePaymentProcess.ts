@@ -1,6 +1,6 @@
 import {IUser} from '@app-types/models/User.ts';
 import {OrderDetailsType} from '../state/order/OrderSlice.ts';
-import {useCallback, useEffect, useState} from 'react';
+import {useCallback, useState} from 'react';
 import {getCredentials} from '@services/api/payment';
 import {confirmPayment, tokenize} from '../native';
 import {
@@ -165,7 +165,6 @@ export const usePaymentProcess = (
       // Get payment credentials
       const paymentConfig = await getCredentials();
 
-
       const apiKey: string = paymentConfig.apiKey.toString();
       const storeId: string = paymentConfig.storeId.toString();
 
@@ -256,7 +255,7 @@ export const usePaymentProcess = (
       }
 
       // Start tokenization
-      const { token, paymentMethodType } = await tokenize(paymentConfigParams);
+      const {token, paymentMethodType} = await tokenize(paymentConfigParams);
 
       if (!token) {
         setError('🔐 Ошибка оплаты. Попробуйте ещё раз');
@@ -274,7 +273,6 @@ export const usePaymentProcess = (
         transactionId: '', // откуда взять?
       });
 
-
       if (status !== 'waiting_payment') {
         setError('🙅‍К сожалению, оплата не прошла');
         setLoading(false);
@@ -290,7 +288,6 @@ export const usePaymentProcess = (
         shopId: storeId,
         clientApplicationKey: apiKey,
       });
-
 
       setOrderStatus(OrderProcessingStatus.POLLING);
 
@@ -389,10 +386,7 @@ export const usePaymentProcess = (
         bayType: order.bayType,
       };
 
-
-      const orderResult: ICreateOrderResponse = await create(
-        orderRequest,
-      );
+      const orderResult: ICreateOrderResponse = await create(orderRequest);
 
       const pollInterval = 10000;
       let attempts = 0;

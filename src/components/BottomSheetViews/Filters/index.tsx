@@ -122,8 +122,7 @@ const Filters = () => {
           routes: [{name: 'Main'}],
         });
       }
-    } catch (err) {
-    }
+    } catch (err) {}
   };
 
   const reset = async () => {

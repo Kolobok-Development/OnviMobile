@@ -18,7 +18,7 @@ import {
   ReanimatedLogLevel,
 } from 'react-native-reanimated';
 import useAppState from './src/hooks/useAppState';
-import Config from 'react-native-config';
+
 import {
   DdSdkReactNative,
   DatadogProviderConfiguration,
@@ -109,7 +109,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const { loadUser, user, fcmToken } = useStore.getState();
+  const {loadUser, user, fcmToken} = useStore.getState();
   const {t} = useTranslation();
 
   configureReanimatedLogger({
@@ -171,8 +171,7 @@ function App(): React.JSX.Element {
               metaId: user.meta.metaId,
             });
           }
-        } catch (error: any) {
-        }
+        } catch (error: any) {}
       }
     };
 

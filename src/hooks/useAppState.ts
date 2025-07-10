@@ -10,7 +10,6 @@ const useAppState = () => {
 
   useEffect(() => {
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
-
       if (
         previousAppState.current === 'active' &&
         nextAppState === 'background'

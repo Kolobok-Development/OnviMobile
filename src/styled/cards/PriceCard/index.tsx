@@ -35,7 +35,7 @@ const PriceCard = ({
   };
 
   const {t} = useTranslation();
-  
+
   return (
     <TouchableOpacity
       onPress={() => onSelect(name, cost)}

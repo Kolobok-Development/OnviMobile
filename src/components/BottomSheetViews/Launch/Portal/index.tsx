@@ -26,7 +26,7 @@ interface PortalLaunchProps {
 export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
   const {orderDetails} = useStore.getState();
   const {t} = useTranslation();
-  
+
   const colors: Array<'yellow' | 'blue' | 'grey' | 'black'> = [
     'yellow',
     'blue',
@@ -63,7 +63,7 @@ export default function PortalLaunch({isOpened, onSelect}: PortalLaunchProps) {
                       fontWeight: '600',
                       color: '#000',
                       marginBottom: dp(10),
-                    }}> 
+                    }}>
                     {t('app.business.washTime').toUpperCase()}?
                   </Text>
                   <ActionButton

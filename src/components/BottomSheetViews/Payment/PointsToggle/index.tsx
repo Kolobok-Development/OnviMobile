@@ -34,8 +34,7 @@ const PointsToggle: React.FC<PointsToggleProps> = ({
 }) => {
   // If user data is not available, show skeleton loader
   const [maxPoints, setMaxPoints] = useState<number>(0);
-      const {t} = useTranslation();
-  
+  const {t} = useTranslation();
 
   useEffect(() => {
     if (order && order.sum) {

@@ -27,14 +27,12 @@ export function resetNavigation(routeName: string) {
 }
 
 export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
-
   // Response interceptor for handling expired tokens
   axiosInstance.interceptors.response.use(
     (response: AxiosResponse) => {
       return response;
     },
     async (error: AxiosError) => {
-
       const originalRequest = error.config;
       // Cast to any to add/check the _retry property
       const requestWithRetry = originalRequest as any;
@@ -45,7 +43,6 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
         (error.response.status === 401 || error.response.status === 403) &&
         originalRequest
       ) {
-
         // Get error message from response
         const errorData = error.response.data as any;
         const errorMsg = errorData?.message || errorData?.error || '';
@@ -57,7 +54,6 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
           errorMsg.includes('jwt') ||
           error.response.status === 401 ||
           error.response.status === 403;
-
 
         // Get the store's handleTokenExpiry function to try refreshing the token
         const userStore = useStore.getState();
@@ -78,7 +74,6 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
           !requestWithRetry._retry &&
           userStore.handleTokenExpiry
         ) {
-
           // Mark that we're retrying this request
           requestWithRetry._retry = true;
 
@@ -118,7 +113,6 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
         const state = useStore.getState();
         const {accessToken, expiredDate} = state;
 
-
         // Mark refresh token requests to identify them in the response interceptor
         if (
           config.url?.includes('/refresh-token') ||
@@ -135,8 +129,7 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
           config.headers.Authorization = `Bearer ${accessToken}`;
         } else {
         }
-      } catch (e) {
-      }
+      } catch (e) {}
 
       return config;
     },

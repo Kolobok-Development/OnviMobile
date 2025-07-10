@@ -90,13 +90,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       const refreshRetriesLeft = get().refreshRetryCounter;
 
       if (refreshRetriesLeft <= 0) {
-        DdLogs.error('Maximum refresh token attempts reached', { refreshRetriesLeft });
+        DdLogs.error('Maximum refresh token attempts reached', {
+          refreshRetriesLeft,
+        });
         await get().signOut();
         Toast.show({
           type: 'customErrorToast',
           text1: i18n.t('app.authErrors.sessionExpired'),
           text2: i18n.t('app.authErrors.pleaseLoginAgain'),
-          props: { errorCode: 401 },
+          props: {errorCode: 401},
         });
         return null;
       }
@@ -108,13 +110,17 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       }
 
       if (!existingData.refreshToken) {
-        DdLogs.error('No refresh token found', { existingData });
+        DdLogs.error('No refresh token found', {existingData});
         await get().signOut();
         return null;
       }
-  
-      DdLogs.info(`Refresh token attempt ${MAX_REFRESH_RETRIES - refreshRetriesLeft + 1} of ${MAX_REFRESH_RETRIES}`);
-  
+
+      DdLogs.info(
+        `Refresh token attempt ${
+          MAX_REFRESH_RETRIES - refreshRetriesLeft + 1
+        } of ${MAX_REFRESH_RETRIES}`,
+      );
+
       const response = await refresh({
         refreshToken: existingData.refreshToken,
       });
@@ -142,8 +148,8 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         throw new Error('Failed to refresh token: Empty response');
       }
     } catch (error: any) {
-      DdLogs.error('Error refreshing token', { error: error.message });
-  
+      DdLogs.error('Error refreshing token', {error: error.message});
+
       const isRefreshTokenError =
         error?.response?.status === 401 ||
         error?.response?.status === 403 ||
@@ -155,13 +161,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
 
       if (isRefreshTokenError || refreshRetriesLeft <= 1) {
-        DdLogs.error('Refresh token expired or invalid, signing out user', { error });
+        DdLogs.error('Refresh token expired or invalid, signing out user', {
+          error,
+        });
         await get().signOut();
         Toast.show({
           type: 'customErrorToast',
           text1: i18n.t('app.authErrors.sessionExpired'),
           text2: i18n.t('app.authErrors.pleaseLoginAgain'),
-          props: { errorCode: 401 },
+          props: {errorCode: 401},
         });
       }
 
@@ -213,15 +221,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.loginFailed'),
-        props: { errorCode: 400 },
+        props: {errorCode: 400},
       });
       return response;
     } catch (error) {
-      DdLogs.error('Login error', { phone, error })
+      DdLogs.error('Login error', {phone, error});
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.loginFailed'),
-        props: { errorCode: 400 },
+        props: {errorCode: 400},
       });
       return null;
     }
@@ -278,15 +286,15 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.registrationFailed'),
-        props: { errorCode: 400 },
+        props: {errorCode: 400},
       });
       return response;
     } catch (error) {
-      DdLogs.error('Registration error', { error })
+      DdLogs.error('Registration error', {error});
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.registrationFailed'),
-        props: { errorCode: 400 },
+        props: {errorCode: 400},
       });
       return null;
     }
@@ -304,14 +312,14 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           DdLogs.info('Send OTP message', {phone});
           return data;
         })
-        .catch((err: unknown) => {
+        .catch(() => {
           Toast.show({
             type: 'customErrorToast',
             text1: i18n.t('app.authErrors.smsFailure'),
           });
         });
     } catch (error) {
-      DdLogs.error('Send OTP error:', { phone, error })
+      DdLogs.error('Send OTP error:', {phone, error});
     }
   },
 
@@ -333,8 +341,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         expiredDate: null,
         refreshRetryCounter: 0,
       });
-    } catch (error) {
-    }
+    } catch (error) {}
   },
   loadUser: async () => {
     try {
@@ -380,8 +387,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       } else {
         set({loading: false});
       }
-    } catch (error) {
-    }
+    } catch (error) {}
   },
 
   deleteUser: async () => {
@@ -405,8 +411,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           refreshRetryCounter: 0,
         });
       }
-    } catch (error: any) {
-    }
+    } catch (error: any) {}
   },
   handleTokenExpiry: async (originalRequest?: {
     headers: Record<string, string>;
@@ -417,7 +422,6 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       const refreshResult = await get().mutateRefreshToken();
 
       if (refreshResult) {
-
         // If we have an original request to retry, return it
         if (originalRequest) {
           // Update the Authorization header with the new token
@@ -434,7 +438,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           type: 'customErrorToast',
           text1: i18n.t('app.authErrors.sessionExpired'),
           text2: i18n.t('app.authErrors.pleaseLoginAgain'),
-          props: { errorCode: 401 },
+          props: {errorCode: 401},
         });
         return false; // Token refresh failed
       }
@@ -446,7 +450,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.authorizationError'),
         text2: i18n.t('app.authErrors.pleaseLoginAgain'),
-        props: { errorCode: 401 },
+        props: {errorCode: 401},
       });
       return false; // Token refresh failed with error
     }

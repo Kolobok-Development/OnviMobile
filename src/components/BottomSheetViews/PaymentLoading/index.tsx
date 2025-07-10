@@ -34,13 +34,6 @@ const getOrderStatusText = (status: OrderProcessingStatus, t: any): string => {
   }
 };
 
-interface IPaymentLoading {
-  orderStatus: OrderProcessingStatus | null;
-  error: string | null;
-  loading: boolean;
-  onClick: () => void;
-}
-
 const PaymentLoading = () => {
   const {t} = useTranslation();
   const route = useRoute<GeneralBottomSheetRouteProp<'PaymentLoading'>>();

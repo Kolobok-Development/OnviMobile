@@ -21,14 +21,11 @@ export const mockTokenExpiry = async () => {
  * This function should be called during development to set up the mock
  */
 export const setupMockTokenExpiryInterceptor = () => {
-
   // Add a response interceptor specifically for the mock endpoint
   const interceptorId = userApiInstance.interceptors.request.use(
     async config => {
-
       // Check if this is our mock expired token endpoint
       if (config.url?.includes('/mock-expired-token')) {
-
         // Create an error that mimics an axios error with 401 response
         const error: any = new Error('Token has expired');
         error.response = {

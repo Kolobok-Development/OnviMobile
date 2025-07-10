@@ -64,7 +64,7 @@ const Application = () => {
 
     restoreState();
 
-    const unsubscribeFromBranch = branch.subscribe(({error, params}) => {
+    const unsubscribeFromBranch = branch.subscribe(({error}) => {
       if (error) {
         return;
       }

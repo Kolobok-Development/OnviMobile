@@ -156,7 +156,9 @@ const Payment = () => {
               {discount ? (
                 <View style={styles.badgeWrapper}>
                   <Button
-                    label={`${t('app.payment.havePromocodeFor').toUpperCase()} ${
+                    label={`${t(
+                      'app.payment.havePromocodeFor',
+                    ).toUpperCase()} ${
                       discount.type === DiscountType.CASH
                         ? discount.discount + '₽'
                         : discount.discount + '%'

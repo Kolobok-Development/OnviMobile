@@ -30,7 +30,7 @@ const DEFAULT_LOCATION = {
 
 const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   const {posList, setPosList, location, setLocation} = useStore.getState();
-  const {error, data} = useSWR(['getPOSList'], () => getPOSList({}), {
+  const {data} = useSWR(['getPOSList'], () => getPOSList({}), {
     revalidateOnFocus: false,
   });
 
@@ -75,8 +75,7 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         } else {
           setHasLocationPermission(true);
         }
-      } catch (err) {
-      }
+      } catch (err) {}
     };
 
     requestLocationPermission();

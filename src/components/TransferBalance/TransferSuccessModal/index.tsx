@@ -33,7 +33,9 @@ const TransferSuccessModal = ({
           source={require('../../../assets/images/success_image.png')}
           style={styles.image}
         />
-        <Text style={styles.titleText}>{t('app.transferBalance.transferWasSuccessful')}</Text>
+        <Text style={styles.titleText}>
+          {t('app.transferBalance.transferWasSuccessful')}
+        </Text>
       </View>
       <View
         style={{

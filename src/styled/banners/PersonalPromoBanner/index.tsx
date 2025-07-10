@@ -26,7 +26,7 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
   disable = false,
 }) => {
   const {t} = useTranslation();
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>

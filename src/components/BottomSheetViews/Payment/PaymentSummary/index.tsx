@@ -33,7 +33,9 @@ const PaymentSummary: React.FC<PaymentSummaryProps> = memo(
         <View style={styles.row}>
           {selectedPos?.IsLoyaltyMember ? (
             <>
-              <Text style={styles.itemName}>{t('app.payment.yourCashback')}</Text>
+              <Text style={styles.itemName}>
+                {t('app.payment.yourCashback')}
+              </Text>
               {!user || !user.tariff || user.tariff === 0 ? (
                 <View>
                   <SkeletonPlaceholder borderRadius={10}>

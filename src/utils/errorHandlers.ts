@@ -3,7 +3,7 @@
  * @param {PaymentResponse} paymentResponse - Response from payment gateway
  * @returns {string|null} Error message or null if no error
  */
-import i18n from "../locales";
+import i18n from '../locales';
 
 export const getPaymentErrorMessage = (paymentResponse: any): string | null => {
   // If payment is canceled

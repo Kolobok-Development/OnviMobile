@@ -35,7 +35,9 @@ const CustomModal = (props: ILoadingModal) => {
             <View>
               <Button
                 onClick={props.onClick}
-                label={props.btnText ? props.btnText : t('common.buttons.retry')}
+                label={
+                  props.btnText ? props.btnText : t('common.buttons.retry')
+                }
                 color="blue"
                 width={129}
                 height={42}
