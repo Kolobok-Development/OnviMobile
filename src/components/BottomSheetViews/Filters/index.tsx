@@ -119,7 +119,6 @@ const Filters = () => {
         });
       }
     } catch (err) {
-      console.log('Error fetching data:', err);
     }
   };
 

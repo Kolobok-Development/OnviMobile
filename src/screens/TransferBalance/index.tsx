@@ -45,7 +45,7 @@ const TransferBalance = () => {
     'https://docs.google.com/document/d/1z4eILEuMX58WQRyf17mhU50NbH1A_QyosilFs18vqA4/edit?usp=sharing';
 
   const handlePress = () => {
-    Linking.openURL(url).catch(err => console.error('An error occurred', err));
+    Linking.openURL(url).catch(err => {});
   };
 
   const navigation =
@@ -92,7 +92,6 @@ const TransferBalance = () => {
         setTransferSuccessModal(true);
       })
       .catch(err => {
-        console.log('err: ', err);
         setTransferFailModal(true);
       });
   };

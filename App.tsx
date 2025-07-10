@@ -79,7 +79,6 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         await DdSdkReactNative.initialize(config);
         await DdSdkReactNative.setUserInfo({id: deviceId});
 
-        console.log('Datadog initialized successfully');
         setDatadogConfig(config);
       } catch (error) {
         console.error('Datadog initialization failed:', error);
@@ -118,7 +117,6 @@ function App(): React.JSX.Element {
   useAppState();
 
   useEffect(() => {
-    console.log(`ENV________${JSON.stringify(Config)}________`);
     const unsubscribe = NetInfo.addEventListener(state => {
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);
@@ -169,8 +167,6 @@ function App(): React.JSX.Element {
               clientId: user.id,
               metaId: user.meta.metaId,
             });
-          } else {
-            console.log('Metadata is up-to-date. No action needed.');
           }
         } catch (error: any) {
           console.error('Error syncing metadata:', error);

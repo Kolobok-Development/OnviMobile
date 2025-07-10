@@ -94,9 +94,7 @@ const navigateBottomSheet = <T extends keyof RootStackParamList>(
 ) => {
   const currentRoute = navigationRef.current?.getCurrentRoute();
   if (currentRoute?.name !== name) {
-    navigationRef.current?.navigate(name as any, params);
-  } else {
-    console.log(`Already on ${name} screen, skipping navigation`);
+    navigationRef.current?.navigate(name, params);
   }
 };
 

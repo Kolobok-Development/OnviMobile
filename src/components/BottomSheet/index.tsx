@@ -76,7 +76,6 @@ const BottomSheet = React.forwardRef<BottomSheetRefProps, BottomSheetProps>(
         translateY.value = Math.max(translateY.value, MAX_TRANSLATE_Y);
       })
       .onEnd(() => {
-        console.log('ok');
         if (translateY.value > -height / 3) {
           scrollTo(MIN_TRANSLATE_Y);
           activeRef.current = false;
