@@ -21,7 +21,7 @@ import useAppState from './src/hooks/useAppState';
 import Config from 'react-native-config';
 import {
   DdSdkReactNative,
-  DatadogProviderConfiguration,
+  DdSdkReactNativeConfiguration,
   DatadogProvider,
 } from '@datadog/mobile-react-native';
 
@@ -56,15 +56,18 @@ type DatadogWrapperProps = {
 
 const DatadogWrapper = ({children}: DatadogWrapperProps) => {
   const [datadogConfig, setDatadogConfig] =
-    useState<DatadogProviderConfiguration | null>(null);
-  const [initializationError, setInitializationError] = useState(false);
+    useState<DdSdkReactNativeConfiguration | null>(null);
 
   useEffect(() => {
+    if (__DEV__) {
+      return;
+    }
+
     const initializeDatadog = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
 
-        const config = new DatadogProviderConfiguration(
+        const config = new DdSdkReactNativeConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
           'production',
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
@@ -77,33 +80,32 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.longTaskThresholdMs = 100;
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
-        config.serviceName = 'onvi-mobile';
+        config.serviceName = 'onvi-mobile-prod';
 
         await DdSdkReactNative.initialize(config);
+        
+        await DdSdkReactNative.setAttributes({
+          environment: 'production',
+        });
+
         await DdSdkReactNative.setUserInfo({id: deviceId});
 
         setDatadogConfig(config);
       } catch (error) {
-        setInitializationError(true);
       }
     };
 
     initializeDatadog();
   }, []);
 
-  // Если инициализация еще не завершена
-  if (!datadogConfig && !initializationError) {
-    return null;
-  }
-
-  // Если произошла ошибка - рендерим без провайдера
-  if (initializationError) {
+  if (__DEV__) {
     return <>{children}</>;
   }
 
-  // Успешная инициализация
-  return (
-    <DatadogProvider configuration={datadogConfig!}>{children}</DatadogProvider>
+  return datadogConfig ? (
+    <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
+  ) : (
+    <>{children}</>
   );
 };
 
