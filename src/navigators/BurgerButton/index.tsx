@@ -21,6 +21,7 @@ interface BurgerProps {
 import {GeneralDrawerNavigationProp} from '@app-types/navigation/DrawerNavigation.ts';
 import {DRAGGABLE_SCREENS} from '@shared/constants';
 import {RootStackParamList} from '@app-types/navigation/BottomSheetNavigation';
+import {useNavStore} from '@state/useNavStore';
 
 const BurgerButton = ({
   isDrawerStack = false,
@@ -28,7 +29,9 @@ const BurgerButton = ({
 }: BurgerProps) => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Промокоды'>>();
 
-  const {isMainScreen, showBurgerButton, bottomSheetRef} = useStore();
+  const {showBurgerButton, bottomSheetRef} = useStore();
+
+  const {isMainScreen} = useNavStore();
 
   if (!showBurgerButton) {
     return <></>;

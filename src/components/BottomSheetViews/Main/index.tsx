@@ -38,12 +38,10 @@ import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
-  const {
-    bottomSheetRef,
-    setIsMainScreen,
-    bottomSheetSnapPoints,
-    setSelectedPos,
-  } = useStore.getState();
+  const {bottomSheetRef, bottomSheetSnapPoints, setSelectedPos} =
+    useStore.getState();
+
+  const {setIsMainScreen} = useNavStore.getState();
 
   const {drawerNavigation} = useNavStore();
 

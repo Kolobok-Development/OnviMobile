@@ -3,8 +3,6 @@ import {StoreSlice} from '../store.ts';
 import {SelectedFilters} from '@components/BottomSheetViews/Filters/index.tsx';
 
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import {DRAGGABLE_SCREENS} from '../../shared/constants';
-import {ScreenName} from '../../types/navigation/BottomSheetScreenName.ts';
 
 import {CameraReference} from '@components/Map';
 import {RefObject} from 'react';
@@ -21,8 +19,6 @@ export interface AppSlice {
   setNews: (values: any[]) => void;
   partners: any[];
   setPartners: (values: any[]) => void;
-  isMainScreen: boolean;
-  setIsMainScreen: (value: boolean) => void;
   showBurgerButton: boolean;
   setShowBurgerButton: (value: boolean) => void;
   bottomSheetPosition: any;
@@ -39,9 +35,7 @@ export interface AppSlice {
   bottomSheetSnapPoints: string[];
   setBottomSheetSnapPoints: (snapPoints: string[]) => void;
   isDraggable: boolean;
-  currentRouteName: ScreenName;
   setDraggable: (value: boolean) => void;
-  setCurrentRouteName: (value: ScreenName) => void;
 
   cameraRef: RefObject<CameraReference> | null;
   setCameraRef: (value: RefObject<CameraReference>) => void;
@@ -57,9 +51,7 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   setNews: (values: any[]) => set(state => ({...state, news: values})),
   partners: [],
   setPartners: (values: any[]) => set(state => ({...state, partners: values})),
-  isMainScreen: true,
-  setIsMainScreen: (value: boolean) =>
-    set(state => ({...state, isMainScreen: value})),
+
   bottomSheetPosition: null,
   setBottomSheetPosition: (value: any) =>
     set(state => ({...state, bottomSheetPosition: value})),
@@ -77,13 +69,7 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
   setBottomSheetSnapPoints: (snapPoints: string[]) =>
     set(state => ({...state, bottomSheetSnapPoints: snapPoints})),
   isDraggable: true,
-  currentRouteName: 'Main',
   setDraggable: isDraggable => set({isDraggable}),
-  setCurrentRouteName: routeName =>
-    set({
-      currentRouteName: routeName,
-      isDraggable: DRAGGABLE_SCREENS[routeName] ?? false,
-    }),
 
   cameraRef: null,
   setCameraRef: value =>
