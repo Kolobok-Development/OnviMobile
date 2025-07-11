@@ -3,7 +3,6 @@ import {BLACK, BLUE, GREY, WHITE, YELLOW, DARKGREY} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {ArrowUpRight} from 'react-native-feather';
 import React from 'react';
-import {FormattedDate} from 'react-intl';
 import {useTranslation} from 'react-i18next';
 
 type PromoCardProps = {
@@ -21,7 +20,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
   date,
   color = 'blue',
 }) => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
 
   const getColor = () => {
     if (new Date() > date) {
@@ -82,12 +81,11 @@ const PromoCard: React.FC<PromoCardProps> = ({
           <View style={styles.date}>
             <Text style={{fontWeight: '500', fontSize: dp(11)}}>
               👉до{' '}
-              <FormattedDate
-                value={date}
-                year="numeric"
-                month="long"
-                day="numeric"
-              />
+              {date.toLocaleDateString(i18n.language, {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
             </Text>
           </View>
           <Text

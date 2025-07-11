@@ -5,23 +5,25 @@ import {View, StyleSheet, Text} from 'react-native';
 import {dp} from '../../../utils/dp';
 import CustomSwitch from '@styled/buttons/CustomSwitch';
 import {IGetHistoryResponse} from '../../../types/api/user/res/IGetHistoryResponse.ts';
-import {FormattedDate} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 export interface IBalanceCardProps {
   option: IGetHistoryResponse;
 }
 
 const BalanceCard = (option: IBalanceCardProps) => {
+  const {i18n} = useTranslation();
+  const date = new Date(option.option.operDate);
+
   return (
     <View style={styles.box}>
       <View style={styles.leftSide}>
         <Text style={styles.date}>
-          <FormattedDate
-            value={option.option.operDate}
-            year="numeric"
-            month="long"
-            day="numeric"
-          />
+          {date.toLocaleDateString(i18n.language, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          })}
         </Text>
         <Text style={styles.title}>{option.option.carWash}</Text>
         <Text style={styles.text}>{option.option.address}</Text>
