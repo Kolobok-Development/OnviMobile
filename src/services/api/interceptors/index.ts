@@ -3,6 +3,8 @@ import useStore from '../../../state/store';
 import {isValidStorageData} from '@services/validation/index.validator';
 import {createNavigationContainerRef} from '@react-navigation/native';
 
+import {DdLogs} from '@datadog/mobile-react-native';
+
 // Create a navigation reference that can be used outside of components
 export const navigationRef = createNavigationContainerRef();
 
@@ -36,6 +38,16 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
       const originalRequest = error.config;
       // Cast to any to add/check the _retry property
       const requestWithRetry = originalRequest as any;
+
+      const logData = {
+        message: error?.message || 'Axios error',
+        url: error?.config?.url,
+        method: error?.config?.method,
+        status: error?.response?.status,
+        instance: 'userApiInstance',
+      };
+
+      DdLogs.error('Axios Request Failed', logData);
 
       // Check if error is due to an expired token
       if (
