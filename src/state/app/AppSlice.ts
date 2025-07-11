@@ -6,6 +6,9 @@ import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
 import {DRAGGABLE_SCREENS} from '../../shared/constants';
 import {ScreenName} from '../../types/navigation/BottomSheetScreenName.ts';
 
+import {CameraReference} from '@components/Map';
+import {RefObject} from 'react';
+
 export interface IUserLocation {
   latitude: number;
   longitude: number;
@@ -39,6 +42,9 @@ export interface AppSlice {
   currentRouteName: ScreenName;
   setDraggable: (value: boolean) => void;
   setCurrentRouteName: (value: ScreenName) => void;
+
+  cameraRef: RefObject<CameraReference> | null;
+  setCameraRef: (value: RefObject<CameraReference>) => void;
 }
 
 const createAppSlice: StoreSlice<AppSlice> = set => ({
@@ -77,6 +83,12 @@ const createAppSlice: StoreSlice<AppSlice> = set => ({
     set({
       currentRouteName: routeName,
       isDraggable: DRAGGABLE_SCREENS[routeName] ?? false,
+    }),
+
+  cameraRef: null,
+  setCameraRef: value =>
+    set({
+      cameraRef: value,
     }),
 });
 

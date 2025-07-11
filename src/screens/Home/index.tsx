@@ -18,6 +18,8 @@ const Home = React.memo(({navigation}: any) => {
   const [visible, setVisible] = useState(false);
   const [bottomSheetIndex, _] = useState(1);
 
+  const {setCameraRef} = useStore.getState();
+
   // Calculate dynamic snap points based on screen size
   // Use the global snap points hook to ensure consistency across screens
   const snapPoints = useSnapPoints();
@@ -30,28 +32,29 @@ const Home = React.memo(({navigation}: any) => {
     setBottomSheetSnapPoints(snapPoints);
   }, [snapPoints]);
 
-  const cameraRef = useRef<CameraReference>(null);
   const userLocationRef = useRef<any>(null);
   const {setIsBottomSheetOpen, setBottomSheetRef} = useStore.getState();
 
   const {isDraggable} = useStore();
 
   const bsRef = useRef(null);
+  const camRef = useRef<CameraReference>(null);
 
   const currentPosition = useSharedValue(0);
 
+  // set up bottom sheet reference to the store
   useEffect(() => {
     if (bsRef.current) {
       setBottomSheetRef(bsRef);
     }
   }, [setBottomSheetRef]);
 
-  const setCamera = useCallback(
-    (val?: {longitude: number; latitude: number}) => {
-      cameraRef.current?.setCameraPosition(val);
-    },
-    [],
-  );
+  // set up camerate reference to the store
+  useEffect(() => {
+    if (camRef.current) {
+      setCameraRef(camRef);
+    }
+  }, [setCameraRef]);
 
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
@@ -59,26 +62,19 @@ const Home = React.memo(({navigation}: any) => {
   }, []);
 
   const memoizedBottomSheetStack = useMemo(
-    () => (
-      <BottomSheetStack
-        active={true}
-        drawerNavigation={navigation}
-        setCamera={setCamera}
-      />
-    ),
-    [visible, navigation, cameraRef, setCamera],
+    () => <BottomSheetStack active={true} />,
+    [visible, navigation, camRef],
   );
 
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={styles.container}>
-        <Map ref={cameraRef} userLocationRef={userLocationRef} />
+        <Map ref={camRef} userLocationRef={userLocationRef} />
 
         {/* FindMe button with built-in position tracking and opacity fade */}
         <FindMeButton
           animatedPosition={currentPosition}
           animatedIndex={currentPosition}
-          onPress={() => setCamera()}
         />
 
         <BottomSheet

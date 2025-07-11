@@ -14,19 +14,21 @@ import Animated, {
 import {Navigation} from 'react-native-feather';
 import {dp} from '../../utils/dp';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import useStore from '@state/store';
 
 interface FindMeButtonProps {
   animatedPosition: Animated.SharedValue<number>;
   animatedIndex: Animated.SharedValue<number>;
-  onPress: () => void;
 }
 
 const BUTTON_SIZE = dp(40);
 const BUTTON_MARGIN = dp(30);
 
-const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
+const FindMeButton = ({animatedPosition}: FindMeButtonProps) => {
   const {height: SCREEN_HEIGHT} = useWindowDimensions();
   const insets = useSafeAreaInsets();
+
+  const {cameraRef} = useStore.getState();
 
   // Get the device's pixel ratio
   const pixelRatio = PixelRatio.get();
@@ -76,7 +78,11 @@ const FindMeButton = ({animatedPosition, onPress}: FindMeButtonProps) => {
         containerAnimatedStyle,
         opacityAnimatedStyle,
       ]}>
-      <TouchableOpacity style={styles.findMe} onPress={onPress}>
+      <TouchableOpacity
+        style={styles.findMe}
+        onPress={() => {
+          cameraRef?.current?.setCameraPosition();
+        }}>
         <Navigation fill="white" color="white" />
       </TouchableOpacity>
     </Animated.View>

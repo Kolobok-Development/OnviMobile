@@ -32,7 +32,7 @@ const Search = () => {
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
 
-  const {setOrderDetails, setBusiness, location, bottomSheetRef} =
+  const {setOrderDetails, setBusiness, location, bottomSheetRef, cameraRef} =
     useStore.getState();
 
   const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
@@ -160,6 +160,11 @@ const Search = () => {
       orderDate: null,
     });
     bottomSheetRef?.current?.snapToPosition('42%');
+
+    cameraRef?.current?.setCameraPosition({
+      longitude: carwash.location.lon,
+      latitude: carwash.location.lat,
+    });
   };
 
   return (

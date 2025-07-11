@@ -16,14 +16,15 @@ import {BLACKTWO, WHITE, GREY, BLACK} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
 import Carousel from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
-import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
+
+import {useNavStore} from '@state/useNavStore/index.ts';
 
 import {Campaign} from '@app-types/api/app/types.ts';
 
@@ -44,7 +45,7 @@ const Main = () => {
     setSelectedPos,
   } = useStore.getState();
 
-  const route = useRoute<GeneralBottomSheetRouteProp<'Main'>>();
+  const {drawerNavigation} = useNavStore();
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -162,7 +163,7 @@ const Main = () => {
               style={styles.partnersCard}
               onPress={() => {
                 setTimeout(() => {
-                  route.params.drawerNavigation?.navigate('Промокоды');
+                  drawerNavigation?.navigate('Промокоды');
                 }, 100);
               }}>
               <View style={styles.label}>
