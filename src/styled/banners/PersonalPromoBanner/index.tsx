@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import {dp} from '@utils/dp.ts';
 import {useTranslation} from 'react-i18next';
-import {FormattedDate} from 'react-intl';
 
 // Define the component props
 interface PersonalPromoBannerProps {
@@ -25,7 +24,7 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
   onPress,
   disable = false,
 }) => {
-  const {t} = useTranslation();
+  const {t, i18n} = useTranslation();
 
   return (
     <View style={styles.container}>
@@ -36,11 +35,10 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
           </Text>
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>
-              <FormattedDate
-                value={date.toString()}
-                month="long"
-                day="numeric"
-              />
+              {date.toLocaleDateString(i18n.language, {
+                month: 'long',
+                day: 'numeric',
+              })}
             </Text>
           </View>
         </View>

@@ -81,7 +81,7 @@ const Promos = () => {
                       } ${
                         item.discountType == 2 ? '%' : t('common.labels.ballov')
                       }`}
-                      date={item.expiryDate}
+                      date={new Date(item.expiryDate)}
                       onPress={() =>
                         navigation.navigate('Ввод Промокода', {
                           promocode: item,

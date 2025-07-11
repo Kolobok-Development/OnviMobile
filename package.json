@@ -54,7 +54,6 @@
     "lottie-react-native": "^7.2.2",
     "react": "^18.2.0",
     "react-i18next": "^15.6.0",
-    "react-intl": "^6.6.5",
     "react-native": "^0.73.3",
     "react-native-branch": "^6.5.0",
     "react-native-config": "^1.5.5",

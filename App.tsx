@@ -4,7 +4,6 @@ import {ThemeProvider} from './src/context/ThemeProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from './src/components/Application';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {IntlProvider} from 'react-intl';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import NetInfo from '@react-native-community/netinfo';
 import useStore from './src/state/store';
@@ -25,8 +24,8 @@ import {
   DatadogProvider,
 } from '@datadog/mobile-react-native';
 
-import './src/locales';
-import {useTranslation} from 'react-i18next';
+import {I18nextProvider, useTranslation} from 'react-i18next';
+import i18n from './src/locales';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -228,7 +227,7 @@ function App(): React.JSX.Element {
     <DatadogWrapper>
       <ThemeProvider>
         <RemoteNotifications />
-        <IntlProvider locale={'ru'}>
+        <I18nextProvider i18n={i18n}>
           <GestureHandlerRootView style={{flex: 1}}>
             <SafeAreaView style={styles.container}>
               <View style={{height: Dimensions.get('window').height}}>
@@ -237,7 +236,7 @@ function App(): React.JSX.Element {
               </View>
             </SafeAreaView>
           </GestureHandlerRootView>
-        </IntlProvider>
+        </I18nextProvider>
       </ThemeProvider>
     </DatadogWrapper>
   );
