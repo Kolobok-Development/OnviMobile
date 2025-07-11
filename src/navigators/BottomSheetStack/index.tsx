@@ -53,6 +53,7 @@ const Campaign = React.lazy(() =>
 import {RootStackParamList} from '@app-types/navigation/BottomSheetNavigation.ts';
 
 import LoadingScreen from '@navigators/NavigatorLoader';
+import {useNavStore} from '@state/useNavStore';
 
 const navTheme = {
   ...DefaultTheme,
@@ -102,8 +103,9 @@ interface BottomSheetStackInterface {
 }
 
 const BottomSheetStack = React.memo(({active}: BottomSheetStackInterface) => {
-  const {setIsMainScreen, setShowBurgerButton, setCurrentRouteName} =
-    useStore.getState();
+  const {setShowBurgerButton} = useStore.getState();
+
+  const {setIsMainScreen, setCurrentRouteName} = useNavStore.getState();
 
   return (
     <NavigationContainer
