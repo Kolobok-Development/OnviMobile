@@ -1,6 +1,6 @@
 import {create} from 'zustand';
 
-import {ScreenName} from '../../types/navigation/BottomSheetScreenName.ts';
+import {ScreenName} from '@app-types/navigation/BottomSheetScreenName.ts';
 
 import useStore from '@state/store.ts';
 
