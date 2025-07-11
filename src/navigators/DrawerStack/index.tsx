@@ -113,4 +113,4 @@ const DrawerStack = () => {
   );
 };
 
-export default React.memo(DrawerStack);
+export default DrawerStack;
