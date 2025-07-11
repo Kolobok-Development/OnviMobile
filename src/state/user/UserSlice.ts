@@ -161,9 +161,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       set({loading: false, refreshRetryCounter: refreshRetriesLeft - 1});
 
       if (isRefreshTokenError || refreshRetriesLeft <= 1) {
-        DdLogs.error('Refresh token expired or invalid, signing out user', {
-          error,
-        });
+        DdLogs.error('Refresh token expired or invalid, signing out user');
         await get().signOut();
         Toast.show({
           type: 'customErrorToast',
@@ -225,7 +223,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       });
       return response;
     } catch (error) {
-      DdLogs.error('Login error', {phone, error});
+      DdLogs.error('Login error', {phone});
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.loginFailed'),
@@ -290,7 +288,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
       });
       return response;
     } catch (error) {
-      DdLogs.error('Registration error', {error});
+      DdLogs.error('Registration error');
       Toast.show({
         type: 'customErrorToast',
         text1: i18n.t('app.authErrors.registrationFailed'),
@@ -319,7 +317,7 @@ const createUserSlice: StoreSlice<UserSlice> = (set, get) => ({
           });
         });
     } catch (error) {
-      DdLogs.error('Send OTP error:', {phone, error});
+      DdLogs.error('Send OTP error:', {phone});
     }
   },
 

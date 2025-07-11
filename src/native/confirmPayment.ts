@@ -19,10 +19,12 @@ const confirmPayment = (
           resolve(result);
         } else {
           if (error) {
-            reject({code: error.code, message: error.message});
+            reject({code: error.code, message: `[NATIVE] ${error.message}`});
           } else {
             reject(
-              new Error('Unknown error occurred during payment confirmation.'),
+              new Error(
+                '[NATIVE] Unknown error occurred during payment confirmation.',
+              ),
             );
           }
         }
