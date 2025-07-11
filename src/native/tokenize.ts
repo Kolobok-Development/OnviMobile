@@ -17,9 +17,11 @@ const tokenize = (params: PaymentConfig): Promise<TokenizationResult> => {
           resolve(result);
         } else {
           if (error) {
-            reject({code: error.code, message: error.message});
+            reject({code: error.code, message: `[NATIVE] ${error.message}`});
           } else {
-            reject(new Error('Unknown error occurred during tokenization.'));
+            reject(
+              new Error('[NATIVE] Unknown error occurred during tokenization.'),
+            );
           }
         }
       },
