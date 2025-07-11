@@ -12,7 +12,6 @@ function logAxiosErrorToDatadog(error: AxiosError, instanceName: string) {
     url: error?.config?.url,
     method: error?.config?.method,
     status: error?.response?.status,
-    response: error?.response?.data,
     instance: instanceName,
   };
 
