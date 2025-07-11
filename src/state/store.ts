@@ -1,4 +1,4 @@
-import create, {createStore, StoreApi} from 'zustand';
+import {create, StoreApi} from 'zustand';
 import createAppSlice, {AppSlice} from './app/AppSlice.ts';
 import createOrderSlice, {OrderSlice} from './order/OrderSlice.ts';
 import createPoSSlice, {PosSlice} from './pos/PosSlice.ts';
@@ -30,7 +30,7 @@ export const ZustandMMKVStorage: StateStorage = {
   },
 };
 
-const store = createStore<StoreState>()(
+const useStore = create<StoreState>()(
   devtools(
     persist(
       (set, get) => ({
@@ -54,8 +54,6 @@ const store = createStore<StoreState>()(
     ),
   ),
 );
-
-const useStore = create(store);
 
 export default useStore;
 

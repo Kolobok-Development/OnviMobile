@@ -19,10 +19,6 @@ export type CameraReference = {
   setCameraPosition: (val?: {longitude: number; latitude: number}) => void;
 };
 
-MapboxGL.setAccessToken(
-  'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
-);
-
 const DEFAULT_LOCATION = {
   longitude: 37.618423,
   latitude: 55.751244,

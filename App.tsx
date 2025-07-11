@@ -32,6 +32,12 @@ if (__DEV__) {
   require('./ReactotronConfig');
 }
 
+import MapboxGL from '@rnmapbox/maps';
+
+MapboxGL.setAccessToken(
+  'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
+);
+
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
   const model = DeviceInfo.getModel();
@@ -59,30 +65,30 @@ const getEnvironmentConfig = () => {
     return {
       initializeDatadog: false,
       serviceName: '',
-      environment: 'development'
+      environment: 'development',
     };
   }
-  
+
   const env = Config.ENV || 'production';
-  
+
   switch (env) {
     case 'staging':
       return {
         initializeDatadog: true,
         serviceName: 'test-flight',
-        environment: 'staging'
+        environment: 'staging',
       };
     case 'production':
       return {
         initializeDatadog: true,
         serviceName: 'production',
-        environment: 'production'
+        environment: 'production',
       };
     default:
       return {
         initializeDatadog: true,
         serviceName: 'production',
-        environment: 'production'
+        environment: 'production',
       };
   }
 };
@@ -93,7 +99,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
   useEffect(() => {
     const envConfig = getEnvironmentConfig();
-    
+
     if (!envConfig.initializeDatadog) {
       return;
     }
@@ -104,7 +110,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
         const config = new DdSdkReactNativeConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
-          envConfig.environment, 
+          envConfig.environment,
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
           true,
           true,
@@ -115,10 +121,10 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.longTaskThresholdMs = 100;
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
-        config.serviceName = envConfig.serviceName; 
+        config.serviceName = envConfig.serviceName;
 
         await DdSdkReactNative.initialize(config);
-        
+
         await DdSdkReactNative.setAttributes({
           environment: envConfig.environment,
           app_version: DeviceInfo.getVersion(),
@@ -130,8 +136,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         await DdSdkReactNative.setUserInfo({id: deviceId});
 
         setDatadogConfig(config);
-      } catch (error) {
-      }
+      } catch (error) {}
     };
 
     initializeDatadog();
