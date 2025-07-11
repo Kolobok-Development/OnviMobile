@@ -3,8 +3,9 @@ import {createDrawerNavigator} from '@react-navigation/drawer';
 
 const Drawer = createDrawerNavigator();
 
+import HomeScreen from './HomeScreen';
+
 // Lazy load screens
-import {Home} from '@screens/Home';
 const Promos = React.lazy(() =>
   import('@screens/Promos').then(module => ({default: module.Promos})),
 );
@@ -52,7 +53,6 @@ const DrawerStack = () => {
         lazy: true,
       }}
       initialRouteName={'Главная'}
-      /* eslint-disable-next-line react/no-unstable-nested-components */
       drawerContent={props => {
         return (
           <>
@@ -66,10 +66,7 @@ const DrawerStack = () => {
           </>
         );
       }}>
-      <Drawer.Screen name="Главная">
-        {props => <Home navigation={props.navigation} />}
-      </Drawer.Screen>
-
+      <Drawer.Screen name="Главная" component={HomeScreen} />
       <Drawer.Screen name="Промокоды">
         {() => (
           <Suspense fallback={<LoadingScreen />}>

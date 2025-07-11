@@ -17,7 +17,6 @@ import {WHITE} from '@utils/colors';
 import {BalanceCard} from '@styled/cards/BalanceCard';
 import useStore from '@state/store';
 
-import {useRoute} from '@react-navigation/native';
 import {Settings} from 'react-native-feather';
 
 import {avatarSwitch} from '@screens/Settings';
@@ -29,7 +28,7 @@ import HistoryPlaceholder from './HistoryPlaceholder.tsx';
 import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
-import {GeneralBottomSheetRouteProp} from '@app-types/navigation/BottomSheetNavigation.ts';
+import {useNavStore} from '@state/useNavStore/index.ts';
 
 const History = () => {
   const {t} = useTranslation();
@@ -42,11 +41,11 @@ const History = () => {
   // Check if data is defined and is an array
   const orderData = Array.isArray(data) ? data : [];
 
-  const route = useRoute<GeneralBottomSheetRouteProp<'History'>>();
-
   const initialAvatar = user?.avatar || 'both.jpg';
 
   const avatarValue = avatarSwitch(initialAvatar);
+
+  const {drawerNavigation} = useNavStore.getState();
 
   return (
     <View style={styles.container}>
@@ -92,7 +91,7 @@ const History = () => {
           <TouchableOpacity
             onPress={() => {
               navigateBottomSheet('Main', {});
-              route.params.drawerNavigation?.navigate('Настройки');
+              drawerNavigation?.navigate('Настройки');
             }}>
             <Settings stroke={'white'} width={dp(18)} height={dp(18)} />
           </TouchableOpacity>
