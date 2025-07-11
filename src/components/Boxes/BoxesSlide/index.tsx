@@ -49,7 +49,7 @@ const BoxesSlide = ({boxes = [], navigation, params}: BoxesSlideProps) => {
   const renderItem = useCallback(
     ({item}: {item: BoxItem}) => (
       <Box
-        label={item.number.toString()}
+        label={item?.number?.toString()}
         onClick={() => handleBoxPress(item.number)}
         active={orderDetails.bayNumber === item.number}
       />
