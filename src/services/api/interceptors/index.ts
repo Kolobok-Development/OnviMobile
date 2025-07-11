@@ -44,7 +44,6 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
         url: error?.config?.url,
         method: error?.config?.method,
         status: error?.response?.status,
-        response: error?.response?.data,
         instance: 'userApiInstance',
       };
 
