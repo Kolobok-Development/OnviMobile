@@ -25,6 +25,8 @@ import {
   calculateFinalAmount,
 } from '@utils/paymentHelpers.ts';
 
+import AppMetrica from '@appmetrica/react-native-analytics';
+
 const Payment = () => {
   const {t} = useTranslation();
   const {user, loadUser, orderDetails, selectedPos} = useStore.getState();
@@ -64,6 +66,10 @@ const Payment = () => {
     promoCodeId,
     loadUser,
   );
+
+  useEffect(() => {
+    AppMetrica.reportEvent('Open Payment Screen');
+  }, []);
 
   // Handle promo code selection from promotions slider
   const handlePromoPress = (promo: IPersonalPromotion) => {

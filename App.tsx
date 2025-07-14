@@ -32,6 +32,8 @@ if (__DEV__) {
   require('./ReactotronConfig');
 }
 
+import {AppMetricaInit} from './src/components/AppMetricaInit';
+
 import MapboxGL from '@rnmapbox/maps';
 
 MapboxGL.setAccessToken(
@@ -156,6 +158,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken} = useStore.getState();
+
   const {t} = useTranslation();
 
   configureReanimatedLogger({
@@ -239,6 +242,7 @@ function App(): React.JSX.Element {
           </GestureHandlerRootView>
         </I18nextProvider>
       </ThemeProvider>
+      <AppMetricaInit />
     </DatadogWrapper>
   );
 }

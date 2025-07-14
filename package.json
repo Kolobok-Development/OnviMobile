@@ -31,6 +31,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@appmetrica/react-native-analytics": "^3.4.0",
     "@datadog/mobile-react-native": "^2.8.2",
     "@gorhom/bottom-sheet": "^4.6.0",
     "@react-native-async-storage/async-storage": "^1.21.0",
