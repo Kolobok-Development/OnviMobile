@@ -298,6 +298,11 @@ export const usePaymentProcess = (
         paymentMethodType,
       });
 
+      AppMetrica.reportAdRevenue({
+        price: realSum ?? 0,
+        currency: 'RUB',
+      });
+
       setOrderStatus(OrderProcessingStatus.POLLING);
 
       // poll order status until COMPLETED
