@@ -26,6 +26,8 @@ import {
 import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProcessingStatus.ts';
 import {DdLogs} from '@datadog/mobile-react-native';
 
+import AppMetrica from '@appmetrica/react-native-analytics';
+
 export const usePaymentProcess = (
   user: IUser,
   order: OrderDetailsType,
@@ -246,6 +248,8 @@ export const usePaymentProcess = (
         createOrderRequest,
       );
 
+      AppMetrica.reportEvent('Create Order Success', createOrderRequest);
+
       // обработать ошибку создания заказа
       if (orderResult.status !== 'created') {
         setError('🙅‍К сожалению, не удалось создать заказ');
@@ -287,6 +291,11 @@ export const usePaymentProcess = (
         paymentMethodType,
         shopId: storeId,
         clientApplicationKey: apiKey,
+      });
+
+      AppMetrica.reportEvent('Payment Success', {
+        confirmationUrl: confirmation_url,
+        paymentMethodType,
       });
 
       setOrderStatus(OrderProcessingStatus.POLLING);
@@ -387,6 +396,15 @@ export const usePaymentProcess = (
       };
 
       const orderResult: ICreateOrderResponse = await create(orderRequest);
+
+      AppMetrica.reportEvent('Create Order Success', {
+        sum: order.sum,
+        originalSum: order.sum,
+        rewardPointsUsed: 0,
+        carWashId: Number(order.posId),
+        bayNumber: Number(order.bayNumber),
+        bayType: order.bayType,
+      });
 
       const pollInterval = 10000;
       let attempts = 0;

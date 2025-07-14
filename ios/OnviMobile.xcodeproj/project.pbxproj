@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A7C5AF33695E395345EB6B4 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		0A7C5AF33695E395345EB6B4 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5A710A740CED6AD7D62104FD /* Pods_OnviMobile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53BF6B610607AE27014E382F /* Pods_OnviMobile.framework */; };
@@ -80,7 +80,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A7C5AF33695E395345EB6B4 /* (null) in Frameworks */,
+				0A7C5AF33695E395345EB6B4 /* BuildFile in Frameworks */,
 				5A710A740CED6AD7D62104FD /* Pods_OnviMobile.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -298,7 +298,7 @@
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
 			packageReferences = (
-				8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "../../../Downloads/ios-branch-sdk-spm-main" */,
+				8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "ios-branch-sdk-spm-main" */,
 			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
@@ -580,11 +580,11 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"",
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"",
+				"${PODS_ROOT}/Target Support Files/Pods-OnviMobile/Pods-OnviMobile-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -790,7 +790,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -869,7 +872,10 @@
 					"-DFOLLY_USE_LIBCPP=1",
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -1085,7 +1091,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "../../../Downloads/ios-branch-sdk-spm-main" */ = {
+		8BAA15942DD4CDD300F06DB1 /* XCLocalSwiftPackageReference "ios-branch-sdk-spm-main" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../../Downloads/ios-branch-sdk-spm-main";
 		};

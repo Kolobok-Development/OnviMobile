@@ -28,6 +28,16 @@ import {I18nextProvider, useTranslation} from 'react-i18next';
 import i18n from './src/locales';
 import Config from 'react-native-config';
 
+import AppMetrica from '@appmetrica/react-native-analytics';
+
+// Starts the statistics collection process.
+AppMetrica.activate({
+  apiKey: Config.APP_METRICA_API_KEY ?? '',
+  sessionTimeout: 120,
+  firstActivationAsUpdate: true,
+  logs: true,
+});
+
 if (__DEV__) {
   require('./ReactotronConfig');
 }
@@ -156,6 +166,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken} = useStore.getState();
+
   const {t} = useTranslation();
 
   configureReanimatedLogger({
@@ -164,6 +175,12 @@ function App(): React.JSX.Element {
   });
 
   useAppState();
+
+  useEffect(() => {
+    if (user?.id) {
+      AppMetrica.setUserProfileID(user.id.toString());
+    }
+  }, [user?.id]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
