@@ -132,7 +132,7 @@ const BusinessInfo = () => {
       <View
         style={{
           alignSelf: 'center',
-          paddingTop: dp(56),
+          paddingTop: dp(26),
           justifyContent:
             orderDetails &&
             Number(orderDetails.carwashIndex) >= 0 &&

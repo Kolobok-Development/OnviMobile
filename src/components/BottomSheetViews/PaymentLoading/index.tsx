@@ -62,43 +62,42 @@ const PaymentLoading = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.bottomContainer}>
-        <View style={styles.content}>
-          {loading && (
-            <LottieView
-              source={require('./9gN0nDjDkx.json')}
-              autoPlay={true}
-              loop={true}
-              style={styles.animation}
-            />
-          )}
-          {orderStatus === OrderProcessingStatus.END && (
-            <Image
-              source={require('./icons8-check-mark-240.png')}
-              style={styles.image}
-            />
-          )}
-          {error && (
-            <Image
-              source={require('./icons8-cancel-240.png')}
-              style={styles.image}
-            />
-          )}
-          <Text style={styles.text}>
-            {!error && orderStatus ? getOrderStatusText(orderStatus, t) : error}
-          </Text>
-          {error && (
-            <Button
-              onClick={navigation.goBack}
-              label={t('common.buttons.retry')}
-              color="blue"
-              width={129}
-              height={42}
-              fontSize={18}
-              fontWeight="600"
-            />
-          )}
-        </View>
+      <View style={styles.content}>
+        {loading && (
+          <LottieView
+            source={require('./9gN0nDjDkx.json')}
+            autoPlay={true}
+            loop={true}
+            style={styles.animation}
+          />
+        )}
+        {(orderStatus === OrderProcessingStatus.END ||
+          orderStatus === OrderProcessingStatus.END_FREE) && (
+          <Image
+            source={require('./icons8-check-mark-240.png')}
+            style={styles.image}
+          />
+        )}
+        {error && (
+          <Image
+            source={require('./icons8-cancel-240.png')}
+            style={styles.image}
+          />
+        )}
+        <Text style={styles.text}>
+          {!error && orderStatus ? getOrderStatusText(orderStatus, t) : error}
+        </Text>
+        {error && (
+          <Button
+            onClick={navigation.goBack}
+            label={t('common.buttons.retry')}
+            color="blue"
+            width={129}
+            height={42}
+            fontSize={18}
+            fontWeight="600"
+          />
+        )}
       </View>
     </View>
   );
@@ -107,14 +106,10 @@ const PaymentLoading = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
-  },
-  bottomContainer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: '40%',
     backgroundColor: 'rgba(255, 255, 255, 1)',
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
@@ -124,15 +119,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: dp(20),
+    marginBottom: dp(50),
   },
   animation: {
-    width: dp(200),
-    height: dp(200),
+    width: dp(150),
+    height: dp(150),
   },
   image: {
     width: dp(120),
     height: dp(120),
     resizeMode: 'cover',
+    margin: dp(15),
   },
   text: {
     marginBottom: dp(20),
