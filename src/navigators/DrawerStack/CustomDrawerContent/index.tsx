@@ -1,6 +1,13 @@
 import React /*, {useState} */ from 'react';
 
-import {Image, Linking, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Image,
+  Linking,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import {DrawerContentScrollView} from '@react-navigation/drawer';
 
@@ -77,26 +84,8 @@ const CustomDrawerContent = ({
               }}
               onPress={() => navigation.navigate('Настройки')}>
               {/*Profile*/}
-              <View
-                style={{
-                  shadowColor: '#494949',
-                  shadowOffset: {
-                    width: 0,
-                    height: 2,
-                  },
-                  shadowOpacity: 0.11,
-                  shadowRadius: 2.11,
-                  elevation: 5,
-                }}>
-                <Image
-                  source={avatarValue}
-                  style={{
-                    width: dp(58),
-                    marginTop: dp(32),
-                    height: dp(58),
-                    borderRadius: dp(68),
-                  }}
-                />
+              <View style={styles.profileContainer}>
+                <Image source={avatarValue} style={styles.avatar} />
               </View>
             </TouchableOpacity>
             {/*items*/}
@@ -283,5 +272,22 @@ const CustomDrawerContent = ({
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  profileContainer: {
+    width: dp(68),
+    height: dp(68),
+    borderRadius: dp(68) / 2,
+    borderWidth: dp(1),
+    borderColor: '#eeeeee',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  avatar: {
+    width: dp(58),
+    height: dp(58),
+    borderRadius: dp(58) / 2,
+  },
+});
 
 export {CustomDrawerContent};

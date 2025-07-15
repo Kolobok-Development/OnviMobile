@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: dp(20),
     zIndex: 999, // Ensure it's above the bottom sheet
+    borderRadius: 50,
     // Add shadow for iOS
     ...Platform.select({
       ios: {
@@ -101,6 +102,7 @@ const styles = StyleSheet.create({
         shadowOffset: {width: 0, height: 2},
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+        backgroundColor: '#fff',
       },
       android: {
         elevation: 5,
