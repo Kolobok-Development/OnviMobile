@@ -125,6 +125,7 @@ export default function DefaultLaunch() {
           }}
           inputBackgroundColor={'#F5F5F5'}
           shadowProps={{
+            backgroundColor: '#FFF',
             shadowColor: '#E7E7E7',
             shadowRadius: 50,
             shadowOffset: {

@@ -12,6 +12,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
+
 import LinearGradient from 'react-native-linear-gradient';
 
 interface ISumInput {
@@ -33,6 +34,7 @@ interface ISumInput {
     };
     shadowOpacity: number;
     shadowRadius: number;
+    backgroundColor: string;
   };
   disabled?: boolean;
 }
