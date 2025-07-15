@@ -204,7 +204,7 @@ const SumInput: React.FC<ISumInput> = ({
   });
 
   return (
-    <View style={[circleBaseStyles, shadowStyles]}>
+    <View style={[circleBaseStyles, shadowStyles, {backgroundColor: '#FFF'}]}>
       <View
         style={[
           styles.container,
