@@ -48,6 +48,8 @@
     "@rnmapbox/maps": "10.1.35",
     "@setpartnerstv/react-native-gpbonus-sdk": "^2.0.0",
     "@shopify/flash-list": "^1.7.2",
+    "@tamagui/config": "^1.132.6",
+    "@tamagui/core": "^1.132.6",
     "@types/lodash": "^4.17.0",
     "axios": "^1.7.2",
     "i18next": "^25.3.1",
@@ -81,6 +83,7 @@
     "react-native-video": "^6.8.2",
     "react-native-video-cache-control": "^1.2.3",
     "swr": "^2.2.5",
+    "tamagui": "^1.132.6",
     "zustand": "^4.5.2"
   },
   "devDependencies": {

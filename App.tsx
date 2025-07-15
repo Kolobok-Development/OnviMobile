@@ -40,6 +40,8 @@ MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
 );
 
+import TamaguiProvider from './src/components/TamaguiProvider';
+
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
   const model = DeviceInfo.getModel();
@@ -228,22 +230,24 @@ function App(): React.JSX.Element {
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <DatadogWrapper>
-      <ThemeProvider>
-        <RemoteNotifications />
-        <I18nextProvider i18n={i18n}>
-          <GestureHandlerRootView style={{flex: 1}}>
-            <SafeAreaView style={styles.container}>
-              <View style={{height: Dimensions.get('window').height}}>
-                {!isConnected && <FlashMessage position="top" />}
-                <Application />
-              </View>
-            </SafeAreaView>
-          </GestureHandlerRootView>
-        </I18nextProvider>
-      </ThemeProvider>
-      <AppMetricaInit />
-    </DatadogWrapper>
+    <TamaguiProvider>
+      <DatadogWrapper>
+        <ThemeProvider>
+          <RemoteNotifications />
+          <I18nextProvider i18n={i18n}>
+            <GestureHandlerRootView style={{flex: 1}}>
+              <SafeAreaView style={styles.container}>
+                <View style={{height: Dimensions.get('window').height}}>
+                  {!isConnected && <FlashMessage position="top" />}
+                  <Application />
+                </View>
+              </SafeAreaView>
+            </GestureHandlerRootView>
+          </I18nextProvider>
+        </ThemeProvider>
+        <AppMetricaInit />
+      </DatadogWrapper>
+    </TamaguiProvider>
   );
 }
 
