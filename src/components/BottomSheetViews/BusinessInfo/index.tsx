@@ -72,7 +72,7 @@ const BusinessInfo = () => {
             </Text>
 
             <View style={styles.actionButtons}>
-              <View style={{paddingRight: dp(14)}}>
+              <View style={styles.buttonPadding}>
                 <Button
                   onClick={() => setModalVisible(false)}
                   label={t('navigation.back')}
@@ -96,15 +96,9 @@ const BusinessInfo = () => {
           </View>
         </View>
       </Modal>
-      <View style={{paddingTop: dp(15)}} />
+      <View style={styles.paddingTop} />
       <BusinessHeader type="navigate" />
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          paddingTop: dp(10),
-        }}>
+      <View style={styles.tagsContainer}>
         {business &&
           business.carwashes.length &&
           orderDetails &&
@@ -113,7 +107,7 @@ const BusinessInfo = () => {
           business.carwashes[orderDetails.carwashIndex].tags.length > 0 &&
           business.carwashes[orderDetails.carwashIndex].tags.map(
             (tag: Tag, index: number) => (
-              <View style={{padding: dp(2)}} key={`tag-${index}`}>
+              <View style={styles.tagPadding} key={`tag-${index}`}>
                 <CheckBox
                   disable={true}
                   borderRadius={dp(69)}
@@ -130,19 +124,18 @@ const BusinessInfo = () => {
           )}
       </View>
       <View
-        style={{
-          alignSelf: 'center',
-          paddingTop: dp(26),
-          justifyContent:
-            orderDetails &&
-            Number(orderDetails.carwashIndex) >= 0 &&
-            business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
-              ?.length
-              ? 'space-between'
-              : 'center',
-          flexDirection: 'row',
-          width: '100%',
-        }}>
+        style={[
+          styles.buttonContainer,
+          {
+            justifyContent:
+              orderDetails &&
+              Number(orderDetails.carwashIndex) >= 0 &&
+              business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
+                ?.length
+                ? 'space-between'
+                : 'center',
+          },
+        ]}>
         {orderDetails &&
         Number(orderDetails.carwashIndex) >= 0 &&
         business?.carwashes[Number(orderDetails.carwashIndex)].vacuums
@@ -201,7 +194,6 @@ const styles = StyleSheet.create({
     width: dp(45),
     height: dp(45),
   },
-  /**/
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -232,6 +224,32 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingTop: dp(27),
+  },
+  thinkingImage: {
+    width: dp(40),
+    height: dp(40),
+    resizeMode: 'contain',
+  },
+  buttonPadding: {
+    paddingRight: dp(14),
+  },
+  paddingTop: {
+    paddingTop: dp(15),
+  },
+  tagsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingTop: dp(10),
+  },
+  tagPadding: {
+    padding: dp(2),
+  },
+  buttonContainer: {
+    alignSelf: 'center',
+    paddingTop: dp(26),
+    flexDirection: 'row',
+    width: '100%',
   },
 });
 
