@@ -4,6 +4,7 @@
     "jsx": "react-native",
     "module": "esnext",
     "baseUrl": ".",
+    "types": ["tamagui"],
     "paths": {
       "@components/*": ["src/components/*"],
       "@styled/*": ["src/styled/*"],
@@ -22,7 +23,8 @@
       "@native/*": ["src/native/*"],
       "react-native-reanimated-carousel/src/Carousel.tsx": [
         "./src/types/declarations.d.ts"
-      ]
+      ],
+      "tamagui.config": ["./tamagui.config"]
     },
     "skipLibCheck": true,
     "noEmit": true
