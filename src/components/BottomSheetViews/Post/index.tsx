@@ -20,8 +20,11 @@ import {
   GeneralBottomSheetRouteProp,
 } from '../../../types/navigation/BottomSheetNavigation.ts';
 import {NewsPost} from '../../../types/api/app/types.ts';
+import {useTranslation} from 'react-i18next';
 
 const Post = () => {
+  const {t} = useTranslation();
+
   const route = useRoute<GeneralBottomSheetRouteProp<'Post'>>();
 
   const [post, setPost] = useState<NewsPost | null>(null);
@@ -108,7 +111,7 @@ const Post = () => {
                       fontSize={dp(12)}
                     />
                     <Button
-                      label={'Закрыть'}
+                      label={t('common.buttons.close')}
                       color={'lightGrey'}
                       width={125}
                       height={35}
@@ -120,7 +123,7 @@ const Post = () => {
                   </View>
                 ) : (
                   <Button
-                    label={'Закрыть'}
+                    label={t('common.buttons.close')}
                     color={'lightGrey'}
                     width={150}
                     height={50}

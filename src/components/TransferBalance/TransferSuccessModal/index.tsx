@@ -43,7 +43,12 @@ const TransferSuccessModal = ({
           display: 'flex',
           alignItems: 'center',
         }}>
-        <Button width={110} label="Ок" onClick={onClose} color="blue" />
+        <Button
+          width={110}
+          label={t('common.buttons.ok')}
+          onClick={onClose}
+          color="blue"
+        />
       </View>
     </Modal>
   );

@@ -4,6 +4,7 @@ import {Button} from '@styled/buttons';
 import {dp} from '../../utils/dp';
 
 import Modal from '@styled/Modal';
+import {useTranslation} from 'react-i18next';
 
 export interface IInputData {
   placeholder: string;
@@ -37,6 +38,8 @@ const PromoModal: React.FC<IPromoModalProps> = ({
   onClose = () => {},
   onConfirm = () => {},
 }) => {
+  const {t} = useTranslation();
+
   const [inputText, setInputText] = useState('');
 
   const handleConfirm = () => {
@@ -89,7 +92,7 @@ const PromoModal: React.FC<IPromoModalProps> = ({
           width: '100%',
         }}>
         <Button
-          label={'Закрыть'}
+          label={t('common.buttons.close')}
           width={dp(150)}
           height={dp(40)}
           onClick={onClose}

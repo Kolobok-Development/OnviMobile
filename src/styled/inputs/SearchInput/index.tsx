@@ -5,6 +5,7 @@ import {TextInput, Image, View, StyleSheet} from 'react-native';
 import {GREY, BLACK} from '../../../utils/colors';
 
 import {dp} from '../../../utils/dp';
+import {useTranslation} from 'react-i18next';
 
 interface IInput {
   value: string;
@@ -12,6 +13,8 @@ interface IInput {
 }
 
 const SearchInput: React.FC<IInput> = ({value, setValue}) => {
+  const {t} = useTranslation();
+
   return (
     <View style={styles.SectionStyle}>
       <Image
@@ -23,7 +26,7 @@ const SearchInput: React.FC<IInput> = ({value, setValue}) => {
         onChangeText={(text: any) => {
           setValue(text);
         }}
-        placeholder="Поиск"
+        placeholder={t('app.search.placeholder')}
         placeholderTextColor="#B8B9BC"
         style={{
           flex: 1,
