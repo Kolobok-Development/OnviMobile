@@ -27,6 +27,7 @@ import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProces
 import {DdLogs} from '@datadog/mobile-react-native';
 
 import AppMetrica from '@appmetrica/react-native-analytics';
+import i18n from '../locales';
 
 export const usePaymentProcess = (
   user: IUser,
@@ -54,7 +55,7 @@ export const usePaymentProcess = (
       error.code === 'ERROR_PAYMENT_CANCELLED' ||
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
-      setError('Заказ отменён. Платёж не был завершён');
+      setError(i18n.t('app.paymentErrors.orderCancelled'));
       DdLogs.error('Payment process error: ', {error: error.code});
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
@@ -66,73 +67,73 @@ export const usePaymentProcess = (
       });
       switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
-          setError('Ошибки обработки');
+          setError(i18n.t('app.errors.errorCode'));
           break;
         case ORDER_ERROR_CODES.ORDER_NOT_FOUND:
-          setError('Заказ не найден');
+          setError(i18n.t('app.paymentErrors.orderNotFound'));
           break;
         case ORDER_ERROR_CODES.INVALID_ORDER_STATE:
-          setError('Недействительное состояние заказа');
+          setError(i18n.t('app.paymentErrors.invalidOrderState'));
           break;
         case ORDER_ERROR_CODES.PAYMENT_CANCELED:
-          setError('Платеж отменен');
+          setError(i18n.t('app.paymentErrors.paymentCanceled'));
           break;
         case ORDER_ERROR_CODES.PAYMENT_TIMEOUT:
           setError('');
           break;
         case ORDER_ERROR_CODES.ORDER_CREATION_FAILED:
-          setError('Не удалось создать заказ');
+          setError(i18n.t('app.paymentErrors.orderCreationFailed'));
           break;
         case ORDER_ERROR_CODES.INSUFFICIENT_REWARD_POINTS:
-          setError('Недостаточно бонусных баллов');
+          setError(i18n.t('app.paymentErrors.insufficientRewardPoints'));
           break;
         case ORDER_ERROR_CODES.REWARD_POINTS_WITHDRAWAL_FAILED:
-          setError('Не удалось списать бонусные баллы');
+          setError(i18n.t('app.paymentErrors.rewardPointsWithdrawalFailed'));
           break;
         case ORDER_ERROR_CODES.CARD_FOR_ORDER_NOT_FOUND:
-          setError('Карта для заказа не найдена');
+          setError(i18n.t('app.paymentErrors.cardForOrderNotFound'));
           break;
         case ORDER_ERROR_CODES.INSUFFICIENT_FREE_VACUUM:
-          setError('Недостаточно свободных пылесосов');
+          setError(i18n.t('app.paymentErrors.insufficientFreeVacuum'));
           break;
         case PAYMENT_ERROR_CODES.PROCESSING_ERROR:
-          setError('Ошибка обработки платежа');
+          setError(i18n.t('app.paymentErrors.paymentProcessingError'));
           break;
         case PAYMENT_ERROR_CODES.PAYMENT_REGISTRATION_FAILED:
-          setError('Не удалось зарегистрировать платеж');
+          setError(i18n.t('app.paymentErrors.paymentRegistrationFailed'));
           break;
         case PAYMENT_ERROR_CODES.INVALID_WEBHOOK_SIGNATURE:
-          setError('Недействительная подпись вебхука');
+          setError(i18n.t('app.paymentErrors.invalidWebhookSignature'));
           break;
         case PAYMENT_ERROR_CODES.MISSING_ORDER_ID:
-          setError('Отсутствует идентификатор заказа');
+          setError(i18n.t('app.paymentErrors.missingOrderId'));
           break;
         case PAYMENT_ERROR_CODES.MISSING_PAYMENT_ID:
-          setError('Отсутствует идентификатор платежа');
+          setError(i18n.t('app.paymentErrors.missingPaymentId'));
           break;
         case PAYMENT_ERROR_CODES.REFUND_FAILED:
-          setError('Не удалось вернуть средства');
+          setError(i18n.t('app.paymentErrors.refundFailed'));
           break;
         case OTHER_ERROR_CODES.BAY_IS_BUSY_ERROR_CODE:
-          setError('Пост занят');
+          setError(i18n.t('app.paymentErrors.bayIsBusy'));
           break;
         case OTHER_ERROR_CODES.CARWASH_UNAVALIBLE_ERROR_CODE:
-          setError('Автомойка недоступна');
+          setError(i18n.t('app.paymentErrors.carwashUnavailable'));
           break;
         case OTHER_ERROR_CODES.CARWASH_START_FAILED:
-          setError('Ошибка запуска автомойки');
+          setError(i18n.t('app.paymentErrors.carwashStartFailed'));
           break;
         case OTHER_ERROR_CODES.PROMO_CODE_NOT_FOUND_ERROR_CODE:
-          setError('Промокод не найден');
+          setError(i18n.t('app.paymentErrors.promoCodeNotFound'));
           break;
         case OTHER_ERROR_CODES.INVALID_PROMO_CODE_ERROR_CODE:
-          setError('Недействительный промокод');
+          setError(i18n.t('app.paymentErrors.invalidPromoCode'));
           break;
         case OTHER_ERROR_CODES.SERVER_ERROR:
-          setError('Ошибка сервера');
+          setError(i18n.t('app.paymentErrors.serverError'));
           break;
         default:
-          setError('Неизвестная ошибка');
+          setError(i18n.t('app.paymentErrors.unknownError'));
           break;
       }
     }
@@ -141,21 +142,17 @@ export const usePaymentProcess = (
   const processPayment = useCallback(async () => {
     //Validation process
     if (!user) {
-      setError(
-        '⚠️ Что-то пошло не так... Пожалуйста, попробуйте ещё раз через пару минут',
-      );
+      setError(i18n.t('app.paymentErrors.somethingWentWrong'));
       return;
     }
 
     if (!order.posId || !order.bayNumber || order.sum === undefined) {
-      setError(
-        '⚠️ Что-то пошло не так... Пожалуйста, попробуйте ещё раз через пару минут',
-      );
+      setError(i18n.t('app.paymentErrors.somethingWentWrong'));
       return;
     }
 
     if (paymentMethod === undefined || paymentMethod === null) {
-      setError('💳 Выберите способ оплаты, чтобы продолжить');
+      setError(i18n.t('app.paymentErrors.choosePaymentMethod'));
       return;
     }
 
@@ -192,9 +189,7 @@ export const usePaymentProcess = (
       });
 
       if (bayStatus.status !== 'Free') {
-        setError(
-          '🙅‍К сожалению, автомойка занята или не может принять заказ сейчас',
-        );
+        setError(i18n.t('app.paymentErrors.carwashBusyOrUnavailable'));
         setLoading(false);
         return;
       }
@@ -252,7 +247,7 @@ export const usePaymentProcess = (
 
       // обработать ошибку создания заказа
       if (orderResult.status !== 'created') {
-        setError('🙅‍К сожалению, не удалось создать заказ');
+        setError(i18n.t('app.paymentErrors.orderCreationUnsuccessful'));
         setLoading(false);
         // setOrderStatus(null);
         return;
@@ -262,7 +257,7 @@ export const usePaymentProcess = (
       const {token, paymentMethodType} = await tokenize(paymentConfigParams);
 
       if (!token) {
-        setError('🔐 Ошибка оплаты. Попробуйте ещё раз');
+        setError(i18n.t('app.paymentErrors.paymentError'));
         setLoading(false);
         // setOrderStatus(null);
         return;
@@ -278,7 +273,7 @@ export const usePaymentProcess = (
       });
 
       if (status !== 'waiting_payment') {
-        setError('🙅‍К сожалению, оплата не прошла');
+        setError(i18n.t('app.paymentErrors.paymentUnsuccessful'));
         setLoading(false);
         // setOrderStatus(null);
         return;
@@ -323,13 +318,13 @@ export const usePaymentProcess = (
               setOrderStatus(null);
             }, 3000);
           } else if (response.status === 'failed') {
-            setError('Ошибка оборудования');
+            setError(i18n.t('app.paymentErrors.equipmentError'));
             DdLogs.error('Equipment error', {order});
             setLoading(false);
           } else {
             attempts++;
             if (attempts >= maxAttempts) {
-              setError('⏳ Время ожидания оплаты истекло. Попробуйте снова.');
+              setError(i18n.t('app.paymentErrors.paymentTimeout'));
               DdLogs.error('Payment time expired', {order});
               setLoading(false);
               // setOrderStatus(null);
@@ -339,9 +334,9 @@ export const usePaymentProcess = (
           }
         } catch (err: any) {
           if (err?.code === 'OrderNotFoundException') {
-            setError('Заказ не найден');
+            setError(i18n.t('app.paymentErrors.orderNotFound'));
           } else {
-            setError('⚠️ Ошибка при проверке статуса заказа');
+            setError(i18n.t('app.paymentErrors.orderStatusCheckError'));
           }
           setLoading(false);
           // setOrderStatus(null);
@@ -367,9 +362,7 @@ export const usePaymentProcess = (
 
   const processFreePayment = async () => {
     if (!order.posId || !order.bayNumber || order.sum === undefined || !user) {
-      setError(
-        '⚠️ Что-то пошло не так... Пожалуйста, попробуйте ещё раз через пару минут',
-      );
+      setError(i18n.t('app.paymentErrors.somethingWentWrong'));
       return;
     }
 
@@ -384,9 +377,7 @@ export const usePaymentProcess = (
       });
 
       if (bayStatus.status !== 'Free') {
-        setError(
-          '🙅‍К сожалению, автомойка занята или не может принять заказ сейчас',
-        );
+        setError(i18n.t('app.paymentErrors.carwashBusyOrUnavailable'));
         setLoading(false);
         return;
       }
@@ -427,13 +418,13 @@ export const usePaymentProcess = (
             setOrderStatus(null);
           }, 3000);
         } else if (response.status === 'failed') {
-          setError('Ошибка оборудования');
+          setError(i18n.t('app.paymentErrors.equipmentError'));
           DdLogs.error('Equipment error', {order});
           setLoading(false);
         } else {
           attempts++;
           if (attempts >= maxAttempts) {
-            setError('⏳ Время ожидания истекло. Попробуйте снова.');
+            setError(i18n.t('app.paymentErrors.paymentTimeoutFreeVacuum'));
             DdLogs.error('Payment time expired (free vacuume)', {order});
             setLoading(false);
           } else {
