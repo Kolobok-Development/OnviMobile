@@ -157,7 +157,7 @@
       "modalTextPart2": "правилами переноса баланса",
       "modalTextPart3": " и подтверждаете, что ознакомились с условиями.",
       "howToTransferBalance": "Как перенести баланс",
-      "transferWasSuccessful.": "Перенос прошел успешно"
+      "transferWasSuccessful": "Перенос прошел успешно"
     },
     "bonus": {
       "withdrawOnviBonuses": "Списать бонусы Onvi"
