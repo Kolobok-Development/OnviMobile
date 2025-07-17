@@ -23,10 +23,11 @@ import {
   PAYMENT_ERROR_CODES,
   OTHER_ERROR_CODES,
 } from '@app-types/api/constants/index.ts';
-import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProcessingStatus.ts';
+import {OrderProcessingStatus} from '@app-types/api/order/status/OrderProcessingStatus.ts';
 import {DdLogs} from '@datadog/mobile-react-native';
 
 import AppMetrica from '@appmetrica/react-native-analytics';
+import {OrderStatusCode} from '@app-types/api/order/status/OrderStatusCode.ts';
 
 export const usePaymentProcess = (
   user: IUser,
@@ -313,7 +314,7 @@ export const usePaymentProcess = (
       const pollOrderStatus = async () => {
         try {
           const response = await getOrderByOrderId(orderResult.orderId);
-          if (response.status === 'completed') {
+          if (response.status === OrderStatusCode.COMPLETED) {
             setOrderStatus(OrderProcessingStatus.END);
             setLoading(false);
             DdLogs.info('Successful order creation', {order});
@@ -322,11 +323,11 @@ export const usePaymentProcess = (
               navigateBottomSheet('PostPayment', {});
               setOrderStatus(null);
             }, 3000);
-          } else if (response.status === 'failed') {
+          } else if (response.status === OrderStatusCode.FAILED) {
             setError('Ошибка оборудования');
             DdLogs.error('Equipment error', {order});
             setLoading(false);
-          } else if (response.status === 'canceled') {
+          } else if (response.status === OrderStatusCode.CANCELED) {
             setError('Отмена платежа или ошибка оплаты');
             DdLogs.error('Payment canceled', {order});
             setLoading(false);
@@ -421,7 +422,7 @@ export const usePaymentProcess = (
 
       const pollOrderStatus = async () => {
         const response = await getOrderByOrderId(orderResult.orderId);
-        if (response.status === 'completed') {
+        if (response.status === OrderStatusCode.COMPLETED) {
           setOrderStatus(OrderProcessingStatus.END_FREE);
           setLoading(false);
           DdLogs.info('Successful order creation (free vacuume)', {order});
@@ -430,7 +431,7 @@ export const usePaymentProcess = (
             navigateBottomSheet('PostPayment', {});
             setOrderStatus(null);
           }, 3000);
-        } else if (response.status === 'failed') {
+        } else if (response.status === OrderStatusCode.FAILED) {
           setError('Ошибка оборудования');
           DdLogs.error('Equipment error', {order});
           setLoading(false);
