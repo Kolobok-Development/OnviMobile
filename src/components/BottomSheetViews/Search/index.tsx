@@ -9,8 +9,9 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  Platform,
 } from 'react-native';
-
+import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 //@ts-ignore
@@ -53,10 +54,8 @@ const Search = () => {
 
   useEffect(() => {
     if (location?.latitude && location?.longitude) {
-      // Fetch carwashes
       trigger({}).then(res => {
         if (res?.businessesLocations?.length > 0) {
-          // Calculate distance for each carwash
           const sortedCarwashes = res.businessesLocations.map(
             (carwash: CarWashLocation) => {
               const carwashLat = carwash.location.lat;
@@ -177,18 +176,9 @@ const Search = () => {
           setSearch(val);
           doSearch(val);
         }}
-        style={{
-          backgroundColor: 'rgba(245, 245, 245, 1)',
-          borderRadius: dp(30),
-          width: '100%',
-          height: dp(40),
-          paddingLeft: dp(18),
-          textAlign: 'left',
-          fontSize: dp(16),
-          color: '#000000',
-        }}
+        style={styles.input}
       />
-      <View>
+      <View style={styles.flexContainer}>
         {isMutating ? (
           <SearchPlaceholder />
         ) : (
@@ -196,17 +186,24 @@ const Search = () => {
             {!data ||
             !data.businessesLocations ||
             data.businessesLocations.length === 0 ? (
-              <View
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  flex: 1,
-                  alignItems: 'center',
-                }}>
-                <Text style={{marginTop: dp(20), fontSize: dp(15)}}>
+              <View style={styles.notFoundContainer}>
+                <Text style={styles.notFoundText}>
                   {t('app.search.washesNotFound')}
                 </Text>
               </View>
+            ) : Platform.OS === 'android' ? (
+              <BottomSheetFlatList
+                data={sortedData}
+                renderItem={renderBusiness}
+                keyExtractor={(item: CarWashLocation, index: number) =>
+                  index.toString()
+                }
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+                overScrollMode="never"
+                bounces={false}
+                contentContainerStyle={styles.listContentContainer}
+              />
             ) : (
               <FlatList
                 data={sortedData}
@@ -234,34 +231,28 @@ const styles = StyleSheet.create({
     paddingRight: dp(15),
     borderRadius: dp(38),
   },
-  header: {
+  input: {
+    backgroundColor: 'rgba(245, 245, 245, 1)',
+    borderRadius: dp(30),
+    width: '100%',
+    height: dp(40),
+    paddingLeft: dp(18),
+    textAlign: 'left',
+    fontSize: dp(16),
+    color: '#000000',
+  },
+  flexContainer: {
+    flex: 1,
+  },
+  notFoundContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    flex: 1,
     alignItems: 'center',
   },
-  list: {
-    paddingLeft: dp(22),
-  },
-  headerTxt: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  sectionHeader: {
-    color: '#000',
-    fontSize: dp(24),
-    fontWeight: '600',
-  },
-  //
-  title: {
+  notFoundText: {
+    marginTop: dp(20),
     fontSize: dp(15),
-    fontWeight: '600',
-    lineHeight: dp(20),
-    color: '#000',
-    flexWrap: 'wrap',
-  },
-  text: {
-    fontSize: dp(12),
-    fontWeight: '400',
-    lineHeight: dp(20),
-    color: '#000',
   },
   itemContainer: {
     flexDirection: 'row',
@@ -286,20 +277,26 @@ const styles = StyleSheet.create({
     height: '100%',
     resizeMode: 'contain',
   },
-  button: {
-    backgroundColor: '#F5F5F5',
-    height: dp(70),
-    display: 'flex',
-    borderRadius: 22,
-    padding: dp(14),
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: dp(5),
+  title: {
+    fontSize: dp(15),
+    fontWeight: '600',
+    lineHeight: dp(20),
+    color: '#000',
+    flexWrap: 'wrap',
+  },
+  text: {
+    fontSize: dp(12),
+    fontWeight: '400',
+    lineHeight: dp(20),
+    color: '#000',
   },
   distanceText: {
     fontSize: dp(14),
     color: '#555',
     marginTop: 4,
+  },
+  listContentContainer: {
+    paddingBottom: dp(40), // Add padding at the bottom of the list
   },
 });
 
