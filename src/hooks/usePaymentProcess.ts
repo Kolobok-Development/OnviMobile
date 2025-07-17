@@ -326,6 +326,10 @@ export const usePaymentProcess = (
             setError('Ошибка оборудования');
             DdLogs.error('Equipment error', {order});
             setLoading(false);
+          } else if (response.status === 'canceled') {
+            setError('Отмена платежа или ошибка оплаты');
+            DdLogs.error('Payment canceled', {order});
+            setLoading(false);
           } else {
             attempts++;
             if (attempts >= maxAttempts) {
