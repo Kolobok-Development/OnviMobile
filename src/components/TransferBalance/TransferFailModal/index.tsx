@@ -34,7 +34,7 @@ const TransferFailModal = ({visible, onClose}: TransferFailModalProps) => {
           }}>
           <Button
             width={180}
-            label="Повторить"
+            label={t('common.buttons.retry')}
             onClick={onClose}
             color="blue"
           />

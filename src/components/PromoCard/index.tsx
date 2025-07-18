@@ -80,7 +80,7 @@ const PromoCard: React.FC<PromoCardProps> = ({
           }}>
           <View style={styles.date}>
             <Text style={{fontWeight: '500', fontSize: dp(11)}}>
-              👉до{' '}
+              👉{t('app.promos.to')}{' '}
               {date.toLocaleDateString(i18n.language, {
                 year: 'numeric',
                 month: 'long',

@@ -31,7 +31,8 @@
       "moreDetails": "Подробнее",
       "collapse":  "Свернуть",
       "close": "Закрыть",
-      "bind": "Привязать"
+      "bind": "Привязать",
+      "ok": "Ок"
     },
     "labels": {
       "region": "Регион",
@@ -97,6 +98,42 @@
       "noCashbackMessage": "Кешбэк не начисляется. Автомойка не участвует в программе лояльности.",
       "cardNumber": "Номер карты"
     },
+    "paymentErrors": {
+      "processingErrors": "Ошибки обработки.",
+      "orderCancelled": "Заказ отменён. Платёж не был завершён.",
+      "orderNotFound": "Заказ не найден.",
+      "invalidOrderState": "Недействительное состояние заказа.",
+      "paymentCanceled": "Платеж отменен.",
+      "orderCreationFailed": "Не удалось создать заказ.",
+      "insufficientRewardPoints": "Недостаточно бонусных баллов.",
+      "rewardPointsWithdrawalFailed": "Не удалось списать бонусные баллы.",
+      "cardForOrderNotFound": "Карта для заказа не найдена.",
+      "insufficientFreeVacuum": "Недостаточно свободных пылесосов.",
+      "paymentProcessingError": "Ошибка обработки платежа.",
+      "paymentRegistrationFailed": "Не удалось зарегистрировать платеж.",
+      "invalidWebhookSignature": "Недействительная подпись вебхука.",
+      "missingOrderId": "Отсутствует идентификатор заказа.",
+      "missingPaymentId": "Отсутствует идентификатор платежа.",
+      "refundFailed": "Не удалось вернуть средства.",
+      "bayIsBusy": "Пост занят.",
+      "carwashUnavailable": "Автомойка недоступна.",
+      "carwashStartFailed": "Ошибка запуска автомойки.",
+      "promoCodeNotFound": "Промокод не найден.",
+      "invalidPromoCode": "Недействительный промокод.",
+      "serverError": "Ошибка сервера.",
+      "unknownError": "Неизвестная ошибка.",
+      "somethingWentWrong": "Что-то пошло не так... Пожалуйста, попробуйте ещё раз через пару минут.",
+      "choosePaymentMethod": "Выберите способ оплаты, чтобы продолжить.",
+      "carwashBusyOrUnavailable": "‍К сожалению, автомойка занята или не может принять заказ сейчас.",
+      "orderCreationUnsuccessful": "К сожалению, не удалось создать заказ.",
+      "paymentError": "Ошибка оплаты. Попробуйте ещё раз.",
+      "paymentUnsuccessful": "К сожалению, оплата не прошла.",
+      "equipmentError": "Ошибка оборудования.",
+      "paymentTimeout": "Время ожидания оплаты истекло. Попробуйте снова..",
+      "paymentTimeoutFreeVacuum": "Время ожидания истекло. Попробуйте снова.",
+      "orderStatusCheckError": "Ошибка при проверке статуса заказа.",
+      "PaymentCancellationOrPaymentError": "Отмена платежа или ошибка оплаты."
+    },
     "paymentLoading": {
       "preparingEquipment": "Подготавливаем оборудование...",
       "creditingMoney": "Зачисляем деньги...",
@@ -143,7 +180,8 @@
       "successfullyApplied": "Промокод успешно применен",
       "promocode": "Промокод",
       "over": "Закончился",
-      "use": "Использовать"
+      "use": "Использовать",
+      "to": "До"
     },
     "transferBalance": {
       "transferBalance": "Перенос баланса",
@@ -205,7 +243,7 @@
       "invalidPromocode": "Промокод недействителен. Пожалуйста, проверьте и попробуйте снова.",
       "genericError": "Произошла ошибка, повторите попытку чуть позже.",
       "expiredPromocode": "К сожалению, данный промокод истек.",
-      "errorCode": "Код ошибки:",
+      "errorCode": "Код ошибки",
       "failedToOpenFile": "Не получилось открыть файл",
       "error": "Ошибка",
       "contactSupport": "Повторите попытку или обратитесь в поддержку"

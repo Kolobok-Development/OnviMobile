@@ -2,6 +2,7 @@ import React from 'react';
 
 import {ToastConfig, ToastConfigParams} from 'react-native-toast-message';
 import {Text, View} from 'react-native';
+import i18n from '../../../locales';
 
 export const toastConfig: ToastConfig = {
   customBaseToast: ({text1}: ToastConfigParams<any>) => (
@@ -86,7 +87,7 @@ export const toastConfig: ToastConfig = {
             fontWeight: '500',
             color: '#666666',
           }}>
-          Код ошибки: {props.errorCode}
+          {i18n.t('app.errors.errorCode')}: {props.errorCode}
         </Text>
       )}
     </View>

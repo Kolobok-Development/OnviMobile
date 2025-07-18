@@ -2,11 +2,18 @@ import React from 'react';
 import {View, Dimensions, StyleSheet} from 'react-native';
 
 import {Button} from '@styled/buttons';
+import {useTranslation} from 'react-i18next';
 
 const Notifications = () => {
+  const {t} = useTranslation();
+
   return (
     <View style={styles.container}>
-      <Button label="История" onClick={() => {}} color="blue" />
+      <Button
+        label={t('app.history.notifications')}
+        onClick={() => {}}
+        color="blue"
+      />
     </View>
   );
 };
