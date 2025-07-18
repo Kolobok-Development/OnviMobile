@@ -1,13 +1,6 @@
 import {useTranslation} from 'react-i18next';
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  FlatList,
-} from 'react-native';
+import {View, StyleSheet, Image, Text, TouchableOpacity} from 'react-native';
 import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {dp} from '@utils/dp';
 
@@ -28,7 +21,6 @@ import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
 import {useNavStore} from '@state/useNavStore/index.ts';
-import {Platform} from 'react-native';
 
 const History = () => {
   const {t} = useTranslation();
@@ -77,35 +69,20 @@ const History = () => {
         <HistoryPlaceholder />
       ) : (
         <View style={styles.listContainer}>
-          {Platform.OS === 'android' ? (
-            <BottomSheetFlatList
-              data={orderData}
-              renderItem={order => <BalanceCard option={order.item} />}
-              keyExtractor={(_, index) => index.toString()}
-              showsVerticalScrollIndicator={false}
-              overScrollMode="never"
-              bounces={false}
-              contentContainerStyle={styles.flatListContent}
-              ListEmptyComponent={() => (
-                <EmptyPlaceholder text={t('app.history.noOrders')} />
-              )}
-            />
-          ) : (
-            <FlatList
-              data={orderData}
-              renderItem={order => <BalanceCard option={order.item} />}
-              refreshing={isLoading}
-              keyExtractor={(_, index) => index.toString()}
-              onRefresh={mutate}
-              showsVerticalScrollIndicator={false}
-              scrollEnabled={true}
-              nestedScrollEnabled={true}
-              contentContainerStyle={styles.flatListContent}
-              ListEmptyComponent={() => (
-                <EmptyPlaceholder text={t('app.history.noOrders')} />
-              )}
-            />
-          )}
+          <BottomSheetFlatList
+            data={orderData}
+            renderItem={order => <BalanceCard option={order.item} />}
+            keyExtractor={(_, index) => index.toString()}
+            onRefresh={mutate}
+            showsVerticalScrollIndicator={false}
+            scrollEnabled={true}
+            nestedScrollEnabled={true}
+            bounces={true}
+            contentContainerStyle={styles.flatListContent}
+            ListEmptyComponent={() => (
+              <EmptyPlaceholder text={t('app.history.noOrders')} />
+            )}
+          />
         </View>
       )}
     </View>
