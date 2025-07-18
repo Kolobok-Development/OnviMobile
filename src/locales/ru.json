@@ -189,7 +189,8 @@
       "updateDataError": "Не получилось обновить данные...",
       "name": "Имя",
       "email": "Почта",
-      "phone": "Почта"
+      "phone": "Телефон",
+      "updateDataSuccess": "Данные успешно обновлены"
     },
     "about": {
       "about": "О нас",
