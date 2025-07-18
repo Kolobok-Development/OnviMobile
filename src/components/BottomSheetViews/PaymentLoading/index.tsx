@@ -4,7 +4,7 @@ import {View, Text, StyleSheet, Image} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {Button} from '@styled/buttons';
 import {dp} from '@utils/dp.ts';
-import {OrderProcessingStatus} from '@app-types/api/order/processing/OrderProcessingStatus';
+import {OrderProcessingStatus} from '@app-types/api/order/status/OrderProcessingStatus';
 import {
   GeneralBottomSheetRouteProp,
   GeneralBottomSheetNavigationProp,
