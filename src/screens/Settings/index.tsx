@@ -42,6 +42,12 @@ export const avatarSwitch = (avatar: string) => {
   }
 };
 
+const validateEmail = (email: string) => {
+  const re =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  return re.test(String(email).toLowerCase());
+};
+
 const Settings = () => {
   const {user, signOut, loadUser, deleteUser} = useStore.getState();
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Настройки'>>();
@@ -59,7 +65,7 @@ const Settings = () => {
   const [userName, setUserName] = useState(initialUserName);
   const [email, setEmail] = useState(initialEmail);
   const [toggle, setToggle] = useState((user?.isNotifications ?? 0) === 1);
-
+  const [emailValid, setEmailValid] = useState<boolean | null>(null);
   const [selectedAvatar, setSelectedAvatar] = useState<
     'both.jpg' | 'female.jpg' | 'male.jpg'
   >(initialAvatar);
@@ -77,6 +83,13 @@ const Settings = () => {
           text1: t('app.settings.updateDataError'),
         });
       },
+      onSuccess: () => {
+        Toast.show({
+          type: 'customSuccessToast',
+          text1: t('app.settings.updateDataSuccess'),
+        });
+        setEmailValid(null);
+      },
     },
   );
 
@@ -91,6 +104,9 @@ const Settings = () => {
 
   const handleClosePress = () => {
     setEditing(false);
+    setUserName(initialUserName);
+    setEmail(initialEmail);
+    setEmailValid(null);
     bottomSheetRef?.current?.close();
   };
 
@@ -140,6 +156,24 @@ const Settings = () => {
   };
 
   const avatarValue = avatarSwitch(selectedAvatar);
+
+  const handleEmailChange = (val: string) => {
+    setEmail(val);
+    if (val === '') {
+      setEmailValid(null);
+    } else {
+      setEmailValid(validateEmail(val));
+    }
+  };
+
+  const getEmailInputStyle = () => {
+    if (emailValid === null) {
+      return styles.textInputGroup;
+    }
+    return emailValid
+      ? [styles.textInputGroup, styles.validInput]
+      : [styles.textInputGroup, styles.invalidInput];
+  };
 
   const editingMode = () => {
     return (
@@ -214,14 +248,12 @@ const Settings = () => {
               style={styles.bottomSheetTextInput}
             />
           </View>
-          <View style={styles.textInputGroup}>
+          <View style={getEmailInputStyle()}>
             <Text style={{padding: dp(10)}}>✉️</Text>
             <BottomSheetTextInput
               value={email}
               placeholder={t('app.settings.email')}
-              onChangeText={(val: string) => {
-                setEmail(val);
-              }}
+              onChangeText={handleEmailChange}
               style={styles.bottomSheetTextInput}
             />
           </View>
@@ -264,7 +296,7 @@ const Settings = () => {
             height={dp(40)}
             fontSize={dp(16)}
             fontWeight={'600'}
-            disabled={isMutating}
+            disabled={isMutating || emailValid === false}
             onClick={saveUserDate}
             showLoading={isMutating}
           />
@@ -652,6 +684,14 @@ const styles = StyleSheet.create({
   rowFirst: {
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
+  },
+  validInput: {
+    borderColor: '#BFFA00',
+    borderWidth: 1,
+  },
+  invalidInput: {
+    borderColor: 'red',
+    borderWidth: 1,
   },
 });
 
