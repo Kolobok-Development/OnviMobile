@@ -8,8 +8,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  FlatList,
-  Platform,
 } from 'react-native';
 import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -191,7 +189,7 @@ const Search = () => {
                   {t('app.search.washesNotFound')}
                 </Text>
               </View>
-            ) : Platform.OS === 'android' ? (
+            ) : (
               <BottomSheetFlatList
                 data={sortedData}
                 renderItem={renderBusiness}
@@ -200,18 +198,8 @@ const Search = () => {
                 }
                 scrollEnabled={true}
                 showsVerticalScrollIndicator={false}
-                overScrollMode="never"
-                bounces={false}
+                bounces={true}
                 contentContainerStyle={styles.listContentContainer}
-              />
-            ) : (
-              <FlatList
-                data={sortedData}
-                renderItem={renderBusiness}
-                keyExtractor={(item: CarWashLocation, index: number) =>
-                  index.toString()
-                }
-                scrollEnabled={true}
               />
             )}
           </>
