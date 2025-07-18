@@ -74,6 +74,7 @@ const History = () => {
             renderItem={order => <BalanceCard option={order.item} />}
             keyExtractor={(_, index) => index.toString()}
             onRefresh={mutate}
+            refreshing={isLoading}
             showsVerticalScrollIndicator={false}
             scrollEnabled={true}
             nestedScrollEnabled={true}
