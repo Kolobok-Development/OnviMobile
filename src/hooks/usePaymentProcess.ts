@@ -56,7 +56,7 @@ export const usePaymentProcess = (
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
-      DdLogs.error('Payment process error: ', {error: error.code});
+      AppMetrica.reportEvent('Payment Canceled', error);
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
       const errorMessage =
