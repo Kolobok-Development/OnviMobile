@@ -2,14 +2,13 @@ import {useTranslation} from 'react-i18next';
 import React from 'react';
 import {
   View,
-  Dimensions,
   StyleSheet,
   Image,
   Text,
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-
+import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {dp} from '@utils/dp';
 
 import {WHITE} from '@utils/colors';
@@ -29,6 +28,7 @@ import useSWR from 'swr';
 import {getOrderHistory} from '@services/api/user';
 
 import {useNavStore} from '@state/useNavStore/index.ts';
+import {Platform} from 'react-native';
 
 const History = () => {
   const {t} = useTranslation();
@@ -38,7 +38,6 @@ const History = () => {
     getOrderHistory({size: 20, page: 1}),
   );
 
-  // Check if data is defined and is an array
   const orderData = Array.isArray(data) ? data : [];
 
   const initialAvatar = user?.avatar || 'both.jpg';
@@ -49,45 +48,19 @@ const History = () => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          paddingBottom: dp(30),
-          flexDirection: 'row',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-        }}>
-        <View style={{flexDirection: 'row', flex: 1, alignItems: 'center'}}>
-          <Image
-            source={avatarValue}
-            style={{
-              width: dp(60),
-              height: dp(60),
-            }}
-          />
+      <View style={styles.headerContainer}>
+        <View style={styles.userInfoContainer}>
+          <Image source={avatarValue} style={styles.avatar} />
           {user && user.name && (
             <Text
-              style={{
-                fontWeight: '600',
-                fontSize: dp(24),
-                paddingLeft: dp(5),
-                flexShrink: 1,
-              }}
+              style={styles.userName}
               numberOfLines={3}
               ellipsizeMode="tail">
               {user.name}
             </Text>
           )}
         </View>
-        <View
-          style={{
-            width: dp(34),
-            height: dp(34),
-            borderRadius: dp(50),
-            backgroundColor: '#000000',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
+        <View style={styles.settingsIconContainer}>
           <TouchableOpacity
             onPress={() => {
               navigateBottomSheet('Main', {});
@@ -98,78 +71,98 @@ const History = () => {
         </View>
       </View>
       <View style={styles.actions}>
-        <Text
-          style={{
-            fontSize: dp(19),
-            fontWeight: '600',
-            letterSpacing: 0.5,
-          }}>
-          {t('app.history.title')}
-        </Text>
+        <Text style={styles.title}>{t('app.history.title')}</Text>
       </View>
       {isLoading ? (
         <HistoryPlaceholder />
       ) : (
-        <>
-          <FlatList
-            data={orderData}
-            renderItem={order => <BalanceCard option={order.item} />}
-            refreshing={isLoading}
-            keyExtractor={(_, index) => index.toString()}
-            onRefresh={mutate}
-            showsVerticalScrollIndicator={false}
-            /* eslint-disable-next-line react/no-unstable-nested-components */
-            ListEmptyComponent={() => (
-              <>
+        <View style={styles.listContainer}>
+          {Platform.OS === 'android' ? (
+            <BottomSheetFlatList
+              data={orderData}
+              renderItem={order => <BalanceCard option={order.item} />}
+              keyExtractor={(_, index) => index.toString()}
+              showsVerticalScrollIndicator={false}
+              overScrollMode="never"
+              bounces={false}
+              contentContainerStyle={styles.flatListContent}
+              ListEmptyComponent={() => (
                 <EmptyPlaceholder text={t('app.history.noOrders')} />
-              </>
-            )}
-          />
-        </>
+              )}
+            />
+          ) : (
+            <FlatList
+              data={orderData}
+              renderItem={order => <BalanceCard option={order.item} />}
+              refreshing={isLoading}
+              keyExtractor={(_, index) => index.toString()}
+              onRefresh={mutate}
+              showsVerticalScrollIndicator={false}
+              scrollEnabled={true}
+              nestedScrollEnabled={true}
+              contentContainerStyle={styles.flatListContent}
+              ListEmptyComponent={() => (
+                <EmptyPlaceholder text={t('app.history.noOrders')} />
+              )}
+            />
+          )}
+        </View>
       )}
     </View>
   );
 };
 
-/*
-<ScrollView
-              contentContainerStyle={{paddingBottom: dp(200)}}
-              showsVerticalScrollIndicator={false}>
-              {orders.length ? (
-                orders.map((order, index) => (
-                  <BalanceCard key={index} option={order} />
-                ))
-              ) : (
-                <EmptyPlaceholder text="История операций пока пуста" />
-              )}
-            </ScrollView>
- */
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: Dimensions.get('screen').height,
     backgroundColor: WHITE,
     borderRadius: 22,
     padding: dp(16),
+  },
+  headerContainer: {
+    paddingBottom: dp(30),
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  userInfoContainer: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center',
+  },
+  avatar: {
+    width: dp(60),
+    height: dp(60),
+  },
+  userName: {
+    fontWeight: '600',
+    fontSize: dp(24),
+    paddingLeft: dp(5),
+    flexShrink: 1,
+  },
+  settingsIconContainer: {
+    width: dp(34),
+    height: dp(34),
+    borderRadius: dp(50),
+    backgroundColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   actions: {
     display: 'flex',
     flexDirection: 'row',
   },
-  box: {
-    marginVertical: 10,
-    width: dp(342),
-    height: dp(78),
-    backgroundColor: '#F5F5F5',
-    borderRadius: dp(25),
+  title: {
+    fontSize: dp(19),
+    fontWeight: '600',
+    letterSpacing: 0.5,
   },
-  scrollView: {
+  listContainer: {
     flex: 1,
   },
-  notifications: {
-    position: 'relative',
-    flexDirection: 'row',
+  flatListContent: {
+    flexGrow: 1,
+    paddingBottom: dp(20),
   },
 });
 

@@ -131,7 +131,8 @@
       "equipmentError": "Ошибка оборудования.",
       "paymentTimeout": "Время ожидания оплаты истекло. Попробуйте снова..",
       "paymentTimeoutFreeVacuum": "Время ожидания истекло. Попробуйте снова.",
-      "orderStatusCheckError": "Ошибка при проверке статуса заказа"
+      "orderStatusCheckError": "Ошибка при проверке статуса заказа.",
+      "PaymentCancellationOrPaymentError": "Отмена платежа или ошибка оплаты."
     },
     "paymentLoading": {
       "preparingEquipment": "Подготавливаем оборудование...",
@@ -194,7 +195,7 @@
       "modalTextPart2": "правилами переноса баланса",
       "modalTextPart3": " и подтверждаете, что ознакомились с условиями.",
       "howToTransferBalance": "Как перенести баланс",
-      "transferWasSuccessful.": "Перенос прошел успешно"
+      "transferWasSuccessful": "Перенос прошел успешно"
     },
     "bonus": {
       "withdrawOnviBonuses": "Списать бонусы Onvi"
