@@ -87,7 +87,13 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   }, []);
 
   useEffect(() => {
-    if (!cameraSet && hasLocationPermission && locationFound && location) {
+    if (
+      !cameraSet &&
+      hasLocationPermission &&
+      locationFound &&
+      location &&
+      showMap
+    ) {
       cameraRef.current?.setCamera({
         centerCoordinate: [
           location?.longitude ?? DEFAULT_LOCATION.longitude,
@@ -100,7 +106,7 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
       });
       setCameraSet(true);
     }
-  }, [hasLocationPermission, locationFound, location, cameraSet]);
+  }, [hasLocationPermission, locationFound, location, cameraSet, showMap]);
 
   const onUserLocationUpdateThrottled = useMemo(
     () =>
