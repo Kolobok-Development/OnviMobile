@@ -16,6 +16,7 @@ import {throttle} from 'lodash';
 import {CameraRef} from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 
 import {AppState} from 'react-native';
+import {DdLogs} from '@datadog/mobile-react-native';
 
 MapboxGL.setAccessToken(
   'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
@@ -42,17 +43,6 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   const [cameraSet, setCameraSet] = useState(false);
 
   const [showMap, setShowMap] = useState(true);
-
-  useEffect(() => {
-    const sub = AppState.addEventListener('change', nextAppState => {
-      if (nextAppState === 'background' || nextAppState === 'inactive') {
-        setShowMap(false); // force unmount
-      } else if (nextAppState === 'active') {
-        setShowMap(true); // remount fresh
-      }
-    });
-    return () => sub.remove();
-  }, []);
 
   useEffect(() => {
     if (data && data.businessesLocations) {
@@ -149,6 +139,19 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     }
   }, [locationFound]);
 
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        setShowMap(false);
+      } else if (nextAppState === 'active') {
+        setTimeout(() => {
+          setShowMap(true);
+        }, 500);
+      }
+    });
+    return () => sub.remove();
+  }, []);
+
   return (
     <View
       style={{
@@ -156,13 +159,33 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         width: Dimensions.get('screen').width,
         position: 'absolute',
       }}>
-      {showMap ? (
+      {showMap && hasLocationPermission ? (
         <MapboxGL.MapView
           style={{flex: 1}}
           zoomEnabled={true}
           scaleBarEnabled={false}
           styleURL={'mapbox://styles/mapbox/light-v11'}
-          preferredFramesPerSecond={120}>
+          preferredFramesPerSecond={120}
+          onMapLoadingError={() => {
+            DdLogs.error('Map loading error occurred');
+          }}
+          //@ts-ignore
+          onDidFailLoadingMap={e => {
+            try {
+              const error = e?.nativeEvent?.error;
+              const errorMessage =
+                typeof error === 'string'
+                  ? error
+                  : JSON.stringify(error ?? 'Unknown map error');
+
+              DdLogs.error('Map style failed:', errorMessage);
+            } catch (err) {
+              DdLogs.error(
+                'Map style failed: could not stringify error',
+                String(err),
+              );
+            }
+          }}>
           {memoizedBusinesses}
           <MapboxGL.Camera
             ref={cameraRef}
