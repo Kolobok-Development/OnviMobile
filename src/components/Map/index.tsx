@@ -168,6 +168,7 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
           preferredFramesPerSecond={120}
           onMapLoadingError={() => {
             DdLogs.error('Map loading error occurred');
+            setShowMap(false);
           }}
           //@ts-ignore
           onDidFailLoadingMap={e => {
