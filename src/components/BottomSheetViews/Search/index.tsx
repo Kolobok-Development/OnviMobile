@@ -158,10 +158,10 @@ const Search = () => {
     });
     bottomSheetRef?.current?.snapToPosition('42%');
 
-    cameraRef?.current?.setCameraPosition({
-      longitude: carwash.location.lon,
-      latitude: carwash.location.lat,
-    });
+    // cameraRef?.current?.setCameraPosition({
+    //   longitude: carwash.location.lon,
+    //   latitude: carwash.location.lat,
+    // });
   };
 
   return (

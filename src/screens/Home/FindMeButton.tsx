@@ -81,7 +81,7 @@ const FindMeButton = ({animatedPosition}: FindMeButtonProps) => {
       <TouchableOpacity
         style={styles.findMe}
         onPress={() => {
-          cameraRef?.current?.setCameraPosition();
+          // cameraRef?.current?.setCameraPosition();
         }}>
         <Navigation fill="white" color="white" />
       </TouchableOpacity>

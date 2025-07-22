@@ -50,11 +50,11 @@ const Home = React.memo(({navigation}: any) => {
   }, [setBottomSheetRef]);
 
   // set up camerate reference to the store
-  useEffect(() => {
-    if (camRef.current) {
-      setCameraRef(camRef);
-    }
-  }, [setCameraRef]);
+  // useEffect(() => {
+  //   if (camRef.current) {
+  //     setCameraRef(camRef);
+  //   }
+  // }, [setCameraRef]);
 
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);

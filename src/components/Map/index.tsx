@@ -77,21 +77,21 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     requestLocationPermission();
   }, []);
 
-  useEffect(() => {
-    if (!cameraSet && hasLocationPermission && locationFound && location) {
-      cameraRef.current?.setCamera({
-        centerCoordinate: [
-          location?.longitude ?? DEFAULT_LOCATION.longitude,
-          location?.latitude ?? DEFAULT_LOCATION.latitude,
-        ],
-        zoomLevel: 14,
-        pitch: 1,
-        animationMode: 'flyTo',
-        animationDuration: 1,
-      });
-      setCameraSet(true);
-    }
-  }, [hasLocationPermission, locationFound, location, cameraSet]);
+  // useEffect(() => {
+  //   if (!cameraSet && hasLocationPermission && locationFound && location) {
+  //     cameraRef.current?.setCamera({
+  //       centerCoordinate: [
+  //         location?.longitude ?? DEFAULT_LOCATION.longitude,
+  //         location?.latitude ?? DEFAULT_LOCATION.latitude,
+  //       ],
+  //       zoomLevel: 14,
+  //       pitch: 1,
+  //       animationMode: 'flyTo',
+  //       animationDuration: 1,
+  //     });
+  //     setCameraSet(true);
+  //   }
+  // }, [hasLocationPermission, locationFound, location, cameraSet]);
 
   const onUserLocationUpdateThrottled = useMemo(
     () =>
@@ -106,29 +106,29 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   );
 
   const setCameraPosition = (val?: {longitude: number; latitude: number}) => {
-    cameraRef.current?.setCamera({
-      centerCoordinate: val
-        ? [val.longitude, val.latitude]
-        : [
-            location?.longitude ?? DEFAULT_LOCATION.longitude,
-            location?.latitude ?? DEFAULT_LOCATION.latitude,
-          ],
-      zoomLevel: 14,
-      pitch: 1,
-      animationMode: 'flyTo',
-      animationDuration: 1,
-    });
+    // cameraRef.current?.setCamera({
+    //   centerCoordinate: val
+    //     ? [val.longitude, val.latitude]
+    //     : [
+    //         location?.longitude ?? DEFAULT_LOCATION.longitude,
+    //         location?.latitude ?? DEFAULT_LOCATION.latitude,
+    //       ],
+    //   zoomLevel: 14,
+    //   pitch: 1,
+    //   animationMode: 'flyTo',
+    //   animationDuration: 1,
+    // });
   };
 
   useImperativeHandle(ref, () => ({
     setCameraPosition: setCameraPosition,
   }));
 
-  useEffect(() => {
-    if (locationFound) {
-      setCameraPosition();
-    }
-  }, [locationFound]);
+  // useEffect(() => {
+  //   if (locationFound) {
+  //     setCameraPosition();
+  //   }
+  // }, [locationFound]);
 
   return (
     <View
