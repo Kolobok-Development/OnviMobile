@@ -15,6 +15,12 @@ import {throttle} from 'lodash';
 
 import {CameraRef} from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 
+import {AppState} from 'react-native';
+
+MapboxGL.setAccessToken(
+  'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
+);
+
 export type CameraReference = {
   setCameraPosition: (val?: {longitude: number; latitude: number}) => void;
 };
@@ -34,6 +40,19 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
 
   const cameraRef = React.useRef<CameraRef>(null);
   const [cameraSet, setCameraSet] = useState(false);
+
+  const [showMap, setShowMap] = useState(true);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', nextAppState => {
+      if (nextAppState === 'background' || nextAppState === 'inactive') {
+        setShowMap(false); // force unmount
+      } else if (nextAppState === 'active') {
+        setShowMap(true); // remount fresh
+      }
+    });
+    return () => sub.remove();
+  }, []);
 
   useEffect(() => {
     if (data && data.businessesLocations) {
@@ -137,42 +156,46 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         width: Dimensions.get('screen').width,
         position: 'absolute',
       }}>
-      <MapboxGL.MapView
-        style={{flex: 1}}
-        zoomEnabled={true}
-        scaleBarEnabled={false}
-        styleURL={'mapbox://styles/mapbox/light-v11'}
-        preferredFramesPerSecond={120}>
-        {memoizedBusinesses}
-        <MapboxGL.Camera
-          ref={cameraRef}
-          zoomLevel={12}
-          pitch={1}
-          animationMode="flyTo"
-          animationDuration={4000}
-          followUserLocation={false}
-          centerCoordinate={[
-            DEFAULT_LOCATION.longitude,
-            DEFAULT_LOCATION.latitude,
-          ]}
-        />
-        <UserLocation
-          visible={hasLocationPermission}
-          showsUserHeadingIndicator={true}
-          requestsAlwaysUse={true}
-          onUpdate={onUserLocationUpdateThrottled}
-          animated={true}
-        />
-        <LocationPuck
-          puckBearing="heading"
-          pulsing={{
-            isEnabled: true,
-            color: '#BFFA00',
-            radius: 25.0,
-          }}
-          visible={true}
-        />
-      </MapboxGL.MapView>
+      {showMap ? (
+        <MapboxGL.MapView
+          style={{flex: 1}}
+          zoomEnabled={true}
+          scaleBarEnabled={false}
+          styleURL={'mapbox://styles/mapbox/light-v11'}
+          preferredFramesPerSecond={120}>
+          {memoizedBusinesses}
+          <MapboxGL.Camera
+            ref={cameraRef}
+            zoomLevel={12}
+            pitch={1}
+            animationMode="flyTo"
+            animationDuration={4000}
+            followUserLocation={false}
+            centerCoordinate={[
+              DEFAULT_LOCATION.longitude,
+              DEFAULT_LOCATION.latitude,
+            ]}
+          />
+          <UserLocation
+            visible={hasLocationPermission}
+            showsUserHeadingIndicator={true}
+            requestsAlwaysUse={true}
+            onUpdate={onUserLocationUpdateThrottled}
+            animated={true}
+          />
+          <LocationPuck
+            puckBearing="heading"
+            pulsing={{
+              isEnabled: true,
+              color: '#BFFA00',
+              radius: 25.0,
+            }}
+            visible={true}
+          />
+        </MapboxGL.MapView>
+      ) : (
+        <></>
+      )}
     </View>
   );
 });

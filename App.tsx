@@ -34,12 +34,6 @@ if (__DEV__) {
 
 import {AppMetricaInit} from './src/components/AppMetricaInit';
 
-import MapboxGL from '@rnmapbox/maps';
-
-MapboxGL.setAccessToken(
-  'sk.eyJ1Ijoib25pdm9uZSIsImEiOiJjbTBsN2Q2MzIwMnZ0MmtzN2U5d3lycTJ0In0.J57w_rOEzH4Mijty_YXoRA',
-);
-
 import TamaguiProvider from './src/components/TamaguiProvider';
 
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
