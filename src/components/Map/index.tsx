@@ -143,8 +143,8 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         scaleBarEnabled={false}
         styleURL={'mapbox://styles/mapbox/light-v11'}
         preferredFramesPerSecond={120}>
-        {memoizedBusinesses}
-        <MapboxGL.Camera
+        {/* {memoizedBusinesses} */}
+        {/* <MapboxGL.Camera
           ref={cameraRef}
           zoomLevel={12}
           pitch={1}
@@ -155,12 +155,12 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
             DEFAULT_LOCATION.longitude,
             DEFAULT_LOCATION.latitude,
           ]}
-        />
-        <UserLocation
+        /> */}
+        {/* <UserLocation
           visible={hasLocationPermission}
           showsUserHeadingIndicator={true}
           requestsAlwaysUse={true}
-          onUpdate={onUserLocationUpdateThrottled}
+          // onUpdate={onUserLocationUpdateThrottled}
           animated={true}
         />
         <LocationPuck
@@ -171,7 +171,7 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
             radius: 25.0,
           }}
           visible={true}
-        />
+        /> */}
       </MapboxGL.MapView>
     </View>
   );
