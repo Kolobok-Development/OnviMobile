@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {ThemeProvider} from './src/context/ThemeProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -27,6 +27,9 @@ import {
 import {I18nextProvider, useTranslation} from 'react-i18next';
 import i18n from './src/locales';
 import Config from 'react-native-config';
+
+// import {Application} from './src/components/Application';
+import {CameraReference, Map} from './src/components/Map';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -229,6 +232,9 @@ function App(): React.JSX.Element {
     syncMetaData();
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
+  const camRef = useRef<CameraReference>(null);
+  const userLocationRef = useRef<any>(null);
+
   return (
     <TamaguiProvider>
       <DatadogWrapper>
@@ -240,12 +246,8 @@ function App(): React.JSX.Element {
                 <View style={{height: Dimensions.get('window').height}}>
                   {!isConnected && <FlashMessage position="top" />}
                   {/* <Application /> */}
-                  <MapboxGL.MapView
-                    style={{flex: 1}}
-                    zoomEnabled={true}
-                    scaleBarEnabled={false}
-                    styleURL={'mapbox://styles/mapbox/light-v11'}
-                    preferredFramesPerSecond={120}></MapboxGL.MapView>
+
+                  <Map ref={camRef} userLocationRef={userLocationRef} />
                 </View>
               </SafeAreaView>
             </GestureHandlerRootView>
