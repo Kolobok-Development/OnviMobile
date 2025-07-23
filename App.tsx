@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {ThemeProvider} from './src/context/ThemeProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {Application} from './src/components/Application';
+// import {Application} from './src/components/Application';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import FlashMessage, {showMessage} from 'react-native-flash-message';
 import NetInfo from '@react-native-community/netinfo';
@@ -239,7 +239,13 @@ function App(): React.JSX.Element {
               <SafeAreaView style={styles.container}>
                 <View style={{height: Dimensions.get('window').height}}>
                   {!isConnected && <FlashMessage position="top" />}
-                  <Application />
+                  {/* <Application /> */}
+                  <MapboxGL.MapView
+                    style={{flex: 1}}
+                    zoomEnabled={true}
+                    scaleBarEnabled={false}
+                    styleURL={'mapbox://styles/mapbox/light-v11'}
+                    preferredFramesPerSecond={120}></MapboxGL.MapView>
                 </View>
               </SafeAreaView>
             </GestureHandlerRootView>
