@@ -20,13 +20,11 @@ import useAppState from './src/hooks/useAppState';
 
 import {
   DdSdkReactNative,
-  DdSdkReactNativeConfiguration,
+  DatadogProviderConfiguration,
   DatadogProvider,
 } from '@datadog/mobile-react-native';
-
 import {I18nextProvider, useTranslation} from 'react-i18next';
 import i18n from './src/locales';
-import Config from 'react-native-config';
 
 if (__DEV__) {
   require('./ReactotronConfig');
@@ -64,57 +62,19 @@ type DatadogWrapperProps = {
   children: React.ReactNode;
 };
 
-const getEnvironmentConfig = () => {
-  if (__DEV__) {
-    return {
-      initializeDatadog: false,
-      serviceName: '',
-      environment: 'development',
-    };
-  }
-
-  const env = Config.ENV || 'production';
-
-  switch (env) {
-    case 'staging':
-      return {
-        initializeDatadog: true,
-        serviceName: 'test-flight',
-        environment: 'staging',
-      };
-    case 'production':
-      return {
-        initializeDatadog: true,
-        serviceName: 'production',
-        environment: 'production',
-      };
-    default:
-      return {
-        initializeDatadog: true,
-        serviceName: 'production',
-        environment: 'production',
-      };
-  }
-};
-
 const DatadogWrapper = ({children}: DatadogWrapperProps) => {
   const [datadogConfig, setDatadogConfig] =
-    useState<DdSdkReactNativeConfiguration | null>(null);
+    useState<DatadogProviderConfiguration | null>(null);
+  const [initializationError, setInitializationError] = useState(false);
 
   useEffect(() => {
-    const envConfig = getEnvironmentConfig();
-
-    if (!envConfig.initializeDatadog) {
-      return;
-    }
-
     const initializeDatadog = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
 
-        const config = new DdSdkReactNativeConfiguration(
+        const config = new DatadogProviderConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
-          envConfig.environment,
+          'production',
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
           true,
           true,
@@ -125,35 +85,35 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.longTaskThresholdMs = 100;
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
-        config.serviceName = envConfig.serviceName;
+        config.serviceName = 'onvi-mobile';
 
         await DdSdkReactNative.initialize(config);
-
-        await DdSdkReactNative.setAttributes({
-          environment: envConfig.environment,
-          app_version: DeviceInfo.getVersion(),
-          build_type: Config.ENV || 'unknown',
-          os_version: DeviceInfo.getSystemVersion(),
-          is_emulator: String(await DeviceInfo.isEmulator()),
-        });
-
         await DdSdkReactNative.setUserInfo({id: deviceId});
 
+        console.log('Datadog initialized successfully');
         setDatadogConfig(config);
-      } catch (error) {}
+      } catch (error) {
+        console.error('Datadog initialization failed:', error);
+        setInitializationError(true);
+      }
     };
 
     initializeDatadog();
   }, []);
 
-  if (__DEV__) {
+  // Если инициализация еще не завершена
+  if (!datadogConfig && !initializationError) {
+    return null;
+  }
+
+  // Если произошла ошибка - рендерим без провайдера
+  if (initializationError || __DEV__) {
     return <>{children}</>;
   }
 
-  return datadogConfig ? (
-    <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
-  ) : (
-    <>{children}</>
+  // Успешная инициализация
+  return (
+    <DatadogProvider configuration={datadogConfig!}>{children}</DatadogProvider>
   );
 };
 
