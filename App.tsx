@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View, InteractionManager, Platform} from 'react-native';
 import {ThemeProvider} from './src/context/ThemeProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {Application} from './src/components/Application';
@@ -73,7 +73,7 @@ const getEnvironmentConfig = () => {
     };
   }
 
-  const env = Config.ENV || 'production';
+  const env = typeof Config.ENV === 'string' ? Config.ENV : 'production';
 
   switch (env) {
     case 'staging':
@@ -98,27 +98,29 @@ const getEnvironmentConfig = () => {
 };
 
 const DatadogWrapper = ({children}: DatadogWrapperProps) => {
-  const [datadogConfig, setDatadogConfig] =
-    useState<DdSdkReactNativeConfiguration | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [datadogConfig, setDatadogConfig] = useState<DdSdkReactNativeConfiguration | null>(null);
 
   useEffect(() => {
     const envConfig = getEnvironmentConfig();
-
+    
+    // Если не нужно инициализировать - сразу помечаем как готово
     if (!envConfig.initializeDatadog) {
+      setIsInitialized(true);
       return;
     }
 
     const initializeDatadog = async () => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
-
+        
         const config = new DdSdkReactNativeConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
           envConfig.environment,
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
           true,
           true,
-          true,
+          true
         );
 
         config.site = 'EU1';
@@ -126,8 +128,6 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         config.nativeCrashReportEnabled = true;
         config.sessionSamplingRate = 100;
         config.serviceName = envConfig.serviceName;
-
-        await DdSdkReactNative.initialize(config);
 
         await DdSdkReactNative.setAttributes({
           environment: envConfig.environment,
@@ -138,18 +138,35 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
         });
 
         await DdSdkReactNative.setUserInfo({id: deviceId});
-
+        
+        await DdSdkReactNative.initialize(config);
+        
         setDatadogConfig(config);
-      } catch (error) {}
+      } catch (error) {
+      } finally {
+        setIsInitialized(true);
+      }
     };
 
-    initializeDatadog();
+    // Главное исправление: гарантированно выполняем в главном потоке для iOS
+    if (Platform.OS === 'ios') {
+      InteractionManager.runAfterInteractions().then(initializeDatadog);
+    } else {
+      initializeDatadog();
+    }
   }, []);
 
+  // Если Datadog требует инициализации и она еще не завершена
+  if (!isInitialized) {
+    return null; // Или компонент-загрузчик
+  }
+
+  // В DEV режиме не используем провайдер
   if (__DEV__) {
     return <>{children}</>;
   }
 
+  // В production оборачиваем в провайдер если конфиг есть
   return datadogConfig ? (
     <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
   ) : (
