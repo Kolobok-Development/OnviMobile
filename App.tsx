@@ -158,96 +158,86 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 };
 
 function App(): React.JSX.Element {
-  const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore.getState();
+  // const [isConnected, setConnected] = useState(true);
+  // const {loadUser, user, fcmToken} = useStore.getState();
 
-  const {t} = useTranslation();
+  // const {t} = useTranslation();
 
-  configureReanimatedLogger({
-    level: ReanimatedLogLevel.error,
-    strict: true,
-  });
+  // configureReanimatedLogger({
+  //   level: ReanimatedLogLevel.error,
+  //   strict: true,
+  // });
 
-  useAppState();
+  // useAppState();
 
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      const networkState = state.isConnected ? state.isConnected : false;
-      setConnected(networkState);
+  // useEffect(() => {
+  //   const unsubscribe = NetInfo.addEventListener(state => {
+  //     const networkState = state.isConnected ? state.isConnected : false;
+  //     setConnected(networkState);
 
-      if (!networkState) {
-        showMessage({
-          message: t('errors.noInternet'),
-          type: 'danger',
-          autoHide: true,
-          icon: 'danger',
-          duration: 3000,
-        });
-      }
-    });
+  //     if (!networkState) {
+  //       showMessage({
+  //         message: t('errors.noInternet'),
+  //         type: 'danger',
+  //         autoHide: true,
+  //         icon: 'danger',
+  //         duration: 3000,
+  //       });
+  //     }
+  //   });
 
-    return () => {
-      unsubscribe();
-    };
-  }, []);
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
-  useEffect(() => {
-    loadUser();
-    const syncMetaData = async () => {
-      if (isConnected && user?.id) {
-        try {
-          const localMetaDataPartial: DeviceMeta = await getLocalMetaData();
+  // useEffect(() => {
+  //   loadUser();
+  //   const syncMetaData = async () => {
+  //     if (isConnected && user?.id) {
+  //       try {
+  //         const localMetaDataPartial: DeviceMeta = await getLocalMetaData();
 
-          if (!user?.meta) {
-            await createUserMeta({
-              ...localMetaDataPartial,
-              appToken: fcmToken ?? '',
-              clientId: user.id,
-            });
-          } else if (
-            hasMetaDataChanged(
-              {
-                ...localMetaDataPartial,
-                appToken: fcmToken ?? '',
-                clientId: user.id,
-                metaId: user.meta.metaId,
-              },
-              user.meta,
-            )
-          ) {
-            await updateUserMeta({
-              ...localMetaDataPartial,
-              appToken: fcmToken ?? '',
-              clientId: user.id,
-              metaId: user.meta.metaId,
-            });
-          }
-        } catch (error: any) {}
-      }
-    };
+  //         if (!user?.meta) {
+  //           await createUserMeta({
+  //             ...localMetaDataPartial,
+  //             appToken: fcmToken ?? '',
+  //             clientId: user.id,
+  //           });
+  //         } else if (
+  //           hasMetaDataChanged(
+  //             {
+  //               ...localMetaDataPartial,
+  //               appToken: fcmToken ?? '',
+  //               clientId: user.id,
+  //               metaId: user.meta.metaId,
+  //             },
+  //             user.meta,
+  //           )
+  //         ) {
+  //           await updateUserMeta({
+  //             ...localMetaDataPartial,
+  //             appToken: fcmToken ?? '',
+  //             clientId: user.id,
+  //             metaId: user.meta.metaId,
+  //           });
+  //         }
+  //       } catch (error: any) {}
+  //     }
+  //   };
 
-    syncMetaData();
-  }, [fcmToken, isConnected, loadUser, user?.id]);
+  //   syncMetaData();
+  // }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
-    <TamaguiProvider>
-      <DatadogWrapper>
-        <ThemeProvider>
-          <RemoteNotifications />
-          <I18nextProvider i18n={i18n}>
-            <GestureHandlerRootView style={{flex: 1}}>
-              <SafeAreaView style={styles.container}>
-                <View style={{height: Dimensions.get('window').height}}>
-                  {!isConnected && <FlashMessage position="top" />}
-                  <Application />
-                </View>
-              </SafeAreaView>
-            </GestureHandlerRootView>
-          </I18nextProvider>
-        </ThemeProvider>
-        <AppMetricaInit />
-      </DatadogWrapper>
-    </TamaguiProvider>
+    <>
+      <MapboxGL.MapView
+        style={{flex: 1}}
+        zoomEnabled={true}
+        scaleBarEnabled={false}
+        styleURL={'mapbox://styles/mapbox/light-v11'}
+        preferredFramesPerSecond={120}></MapboxGL.MapView>
+    </>
   );
 }
 
