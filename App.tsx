@@ -20,8 +20,8 @@ import useAppState from './src/hooks/useAppState';
 
 import {
   DdSdkReactNative,
-  DdSdkReactNativeConfiguration,
   DatadogProvider,
+  DatadogProviderConfiguration,
 } from '@datadog/mobile-react-native';
 
 import {I18nextProvider, useTranslation} from 'react-i18next';
@@ -99,7 +99,7 @@ const getEnvironmentConfig = () => {
 
 const DatadogWrapper = ({children}: DatadogWrapperProps) => {
   const [datadogConfig, setDatadogConfig] =
-    useState<DdSdkReactNativeConfiguration | null>(null);
+    useState<DatadogProviderConfiguration | null>(null);
 
   useEffect(() => {
     const envConfig = getEnvironmentConfig();
@@ -112,7 +112,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
       try {
         const deviceId = await DeviceInfo.getUniqueId();
 
-        const config = new DdSdkReactNativeConfiguration(
+        const config = new DatadogProviderConfiguration(
           'puba21093aa63718370f3d12b6069ca901c',
           envConfig.environment,
           '1224164e-aeb1-46b7-a6ef-ec198d1946f7',
