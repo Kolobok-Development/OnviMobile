@@ -6,6 +6,7 @@ import {IUser} from '../models/User.ts';
 import {OrderDetailsType} from 'src/state/order/OrderSlice.ts';
 import {DiscountValueType} from '@hooks/usePromoCode.ts';
 import {DrawerParamList} from './DrawerNavigation.ts';
+import {PaymentMethodType} from '@styled/buttons/PaymentMethodButton/index.js';
 
 export type RootStackParamList = {
   Main: {
@@ -54,6 +55,7 @@ export type RootStackParamList = {
     promoCodeId?: number;
     loadUser?: () => Promise<void>;
     freeOn?: boolean;
+    paymentMethod: PaymentMethodType;
   };
   PostPayment: {};
 };
