@@ -11,6 +11,10 @@ import {
 } from '@app-types/navigation/BottomSheetNavigation.ts';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {usePaymentProcess} from '@hooks/usePaymentProcess.ts';
+import {IUser} from '@app-types/models/User';
+import {OrderDetailsType} from '@state/order/OrderSlice';
+import {DiscountValueType} from '@hooks/usePromoCode';
+import {PaymentMethodType} from '@styled/buttons/PaymentMethodButton/index';
 
 // Helper function to get translated order status text
 const getOrderStatusText = (status: OrderProcessingStatus, t: any): string => {
@@ -34,13 +38,32 @@ const getOrderStatusText = (status: OrderProcessingStatus, t: any): string => {
   }
 };
 
+type PaymentLoadingParams = {
+  user: IUser;
+  order: OrderDetailsType;
+  discount: DiscountValueType | null;
+  usedPoints: number;
+  promoCodeId?: number;
+  loadUser?: () => Promise<void>;
+  freeOn: boolean;
+  paymentMethod: PaymentMethodType;
+};
+
 const PaymentLoading = () => {
   const {t} = useTranslation();
   const route = useRoute<GeneralBottomSheetRouteProp<'PaymentLoading'>>();
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Post'>>();
 
-  const {user, order, discount, usedPoints, promoCodeId, loadUser, freeOn} =
-    route.params;
+  const {
+    user,
+    order,
+    discount,
+    usedPoints,
+    promoCodeId,
+    loadUser,
+    freeOn,
+    paymentMethod,
+  } = route.params as PaymentLoadingParams;
 
   const {loading, error, orderStatus, processPayment, processFreePayment} =
     usePaymentProcess(
@@ -50,6 +73,7 @@ const PaymentLoading = () => {
       usedPoints,
       promoCodeId,
       loadUser,
+      paymentMethod,
     );
 
   useEffect(() => {

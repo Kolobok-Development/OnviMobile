@@ -37,6 +37,7 @@ export const usePaymentProcess = (
   usedPoints: number,
   promoCodeId?: number,
   loadUser?: () => Promise<void>,
+  initialPaymentMethod: PaymentMethodType = 'BANK_CARD',
 ) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -45,7 +46,7 @@ export const usePaymentProcess = (
   );
 
   const [paymentMethod, setPaymentMethod] =
-    useState<PaymentMethodType>('BANK_CARD');
+    useState<PaymentMethodType>(initialPaymentMethod);
 
   /**
    * Process payment and create order

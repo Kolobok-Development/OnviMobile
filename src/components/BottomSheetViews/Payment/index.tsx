@@ -211,6 +211,7 @@ const Payment = () => {
                     promoCodeId,
                     loadUser,
                     freeOn,
+                    paymentMethod,
                   });
                 }}
                 color="blue"
@@ -231,6 +232,7 @@ const Payment = () => {
                     promoCodeId,
                     loadUser,
                     freeOn,
+                    paymentMethod,
                   });
                 }}
                 color="blue"
