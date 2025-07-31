@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, {useCallback, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -14,7 +14,10 @@ import {Card} from '@styled/cards';
 import useStore from '@state/store.ts';
 import {BLACKTWO, WHITE, GREY, BLACK} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
-import {BottomSheetScrollView} from '@gorhom/bottom-sheet';
+import {
+  BottomSheetScrollView,
+  BottomSheetScrollViewMethods,
+} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {useFocusEffect} from '@react-navigation/native';
 import {Search} from 'react-native-feather';
@@ -44,6 +47,7 @@ const Main = () => {
   const {setIsMainScreen} = useNavStore.getState();
 
   const {drawerNavigation} = useNavStore();
+  const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
 
   // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
@@ -67,6 +71,10 @@ const Main = () => {
     useCallback(() => {
       setIsMainScreen(true);
       setSelectedPos(null);
+
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({y: 0, animated: false});
+      }
 
       return () => {
         setIsMainScreen(false);
@@ -100,6 +108,7 @@ const Main = () => {
   return (
     <BottomSheetScrollView
       contentContainerStyle={{flexGrow: 1}}
+      ref={scrollViewRef}
       nestedScrollEnabled={true}
       scrollEnabled={true}>
       <View style={{flexGrow: 1}}>
