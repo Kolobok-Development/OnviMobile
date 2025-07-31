@@ -27,7 +27,7 @@ const History = () => {
   const {user} = useStore.getState();
 
   const {data, isLoading, mutate} = useSWR(['getOrderHistory'], () =>
-    getOrderHistory({size: 20, page: 0}),
+    getOrderHistory({size: 20, page: 1}),
   );
 
   const orderData = Array.isArray(data) ? data : [];
