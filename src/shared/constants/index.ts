@@ -24,7 +24,7 @@ export const DRAGGABLE_SCREENS: DraggableScreensMap = {
   History: true,
   Payment: false,
   AddCard: false,
-  Post: false,
+  Post: true,
   Campaign: true,
   PostPayment: false,
 };
