@@ -1,6 +1,6 @@
 import {IUser} from '@app-types/models/User.ts';
 import {OrderDetailsType} from '../state/order/OrderSlice.ts';
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 import {getCredentials} from '@services/api/payment';
 import {confirmPayment, tokenize} from '../native';
 import {
@@ -9,7 +9,12 @@ import {
   createPaymentConfig,
   calculateActualDiscount,
 } from '@utils/paymentHelpers.ts';
-import {create, pingPos, register} from '@services/api/order';
+import {
+  create,
+  pingPos,
+  register,
+  updateOrderStatus,
+} from '@services/api/order';
 import {PaymentMethodTypesEnum} from '@app-types/PaymentType.ts';
 import {ICreateOrderRequest} from '@app-types/api/order/req/ICreateOrderRequest.ts';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
@@ -48,16 +53,21 @@ export const usePaymentProcess = (
   const [paymentMethod, setPaymentMethod] =
     useState<PaymentMethodType>(initialPaymentMethod);
 
+  const currentOrderRef = useRef<number | null>(null);
   /**
    * Process payment and create order
    */
-  const errorHandler = (error: any) => {
+  const errorHandler = async (error: any) => {
     setLoading(false);
     if (
       error.code === 'ERROR_PAYMENT_CANCELLED' ||
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
+      const orderIdToUpdate = currentOrderRef.current;
+      if (orderIdToUpdate) {
+        await updateOrderStatus(orderIdToUpdate, OrderStatusCode.CANCELED);
+      }
       AppMetrica.reportEvent('Payment Canceled', error);
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
@@ -244,7 +254,7 @@ export const usePaymentProcess = (
       const orderResult: ICreateOrderResponse = await create(
         createOrderRequest,
       );
-
+      currentOrderRef.current = orderResult.orderId;
       AppMetrica.reportEvent('Create Order Success', createOrderRequest);
 
       // обработать ошибку создания заказа
