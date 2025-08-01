@@ -9,6 +9,7 @@ import {userApiInstance} from '@services/api/axiosConfig.ts';
 import {IRegisterOrderRequest} from 'src/types/api/order/req/IRegisterOrderRequest.ts';
 import {IRegisterOrderResponse} from 'src/types/api/order/res/IRegisterOrderResponse.ts';
 import {IGetOrderResponse} from 'src/types/api/order/res/IGetOrderByResponse.ts';
+import {OrderStatusCode} from '@app-types/api/order/status/OrderStatusCode.ts';
 
 enum ORDER {
   CREATE_ORDER_URL = '/order/create',
@@ -16,6 +17,7 @@ enum ORDER {
   PING_POS_URL = '/order/ping',
   REGISTER_ORDER = '/order/register',
   GET_ORDER_BY_ORDER_ID = '/order',
+  UPDATE_ORDER_STATUS = '/order/status',
 }
 
 export async function create(
@@ -59,6 +61,17 @@ export async function getOrderByOrderId(
 ): Promise<IGetOrderResponse> {
   const response = await userApiInstance.get(
     ORDER.GET_ORDER_BY_ORDER_ID + `/${id}`,
+  );
+  return response.data.data;
+}
+
+export async function updateOrderStatus(
+  id: number,
+  status: OrderStatusCode,
+): Promise<void> {
+  const response = await userApiInstance.post<IUserApiResponse<void>>(
+    `${ORDER.UPDATE_ORDER_STATUS}/${id}`,
+    {status},
   );
   return response.data.data;
 }
