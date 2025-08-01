@@ -64,10 +64,13 @@ export const usePaymentProcess = (
       error.code === 'E_PAYMENT_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
-      const orderIdToUpdate = currentOrderRef.current;
-      if (orderIdToUpdate) {
-        await updateOrderStatus(orderIdToUpdate, OrderStatusCode.CANCELED);
-      }
+
+      try {
+        const orderIdToUpdate = currentOrderRef.current;
+        if (orderIdToUpdate) {
+          await updateOrderStatus(orderIdToUpdate, OrderStatusCode.CANCELED);
+        }
+      } catch (err) {}
       AppMetrica.reportEvent('Payment Canceled', error);
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
