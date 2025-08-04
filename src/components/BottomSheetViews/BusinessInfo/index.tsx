@@ -17,6 +17,7 @@ import {CheckBox} from '@styled/buttons/CheckBox';
 import {Tag} from '../../../types/api/app/types.ts';
 import useStore from '../../../state/store.ts';
 import {getFreeVacuum} from '@services/api/user/index.ts';
+import {BayTypeEnum} from '@app-types/BayTypeEnum.ts';
 
 const BusinessInfo = () => {
   const {t} = useTranslation();
@@ -33,7 +34,7 @@ const BusinessInfo = () => {
 
   const modalCallback = async (bayType: string) => {
     setOrderDetails({...orderDetails, bayType: bayType});
-    if (bayType === 'VACUUME') {
+    if (bayType === BayTypeEnum.VACUUME) {
       const data = await getFreeVacuum();
       setFreeVacuum(data);
     }
@@ -147,7 +148,7 @@ const BusinessInfo = () => {
             height={47}
             fontSize={16}
             fontWeight={'600'}
-            onClick={() => modalCallback('VACUUME')}
+            onClick={() => modalCallback(BayTypeEnum.VACUUME)}
           />
         ) : (
           <></>
@@ -160,7 +161,13 @@ const BusinessInfo = () => {
           height={47}
           fontSize={16}
           fontWeight={'600'}
-          onClick={() => modalCallback('BAY')}
+          onClick={() => {
+            if (orderDetails.type === 'Portal') {
+              modalCallback(BayTypeEnum.PORTAL);
+            } else {
+              modalCallback(BayTypeEnum.BAY);
+            }
+          }}
         />
       </View>
     </View>

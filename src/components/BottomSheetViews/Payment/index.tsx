@@ -199,49 +199,30 @@ const Payment = () => {
             />
           )}
           <View style={styles.paymentActions}>
-            {freeOn ? (
-              <Button
-                label={t('common.buttons.activate')}
-                onClick={() => {
-                  navigateBottomSheet('PaymentLoading', {
-                    user,
-                    order,
-                    discount,
-                    usedPoints,
-                    promoCodeId,
-                    loadUser,
-                    freeOn,
-                    paymentMethod,
-                  });
-                }}
-                color="blue"
-                height={43}
-                fontSize={18}
-                fontWeight={'600'}
-                showLoading={loading}
-              />
-            ) : (
-              <Button
-                label={t('app.payment.payAmount', {finalOrderCost})}
-                onClick={() => {
-                  navigateBottomSheet('PaymentLoading', {
-                    user,
-                    order,
-                    discount,
-                    usedPoints,
-                    promoCodeId,
-                    loadUser,
-                    freeOn,
-                    paymentMethod,
-                  });
-                }}
-                color="blue"
-                height={43}
-                fontSize={18}
-                fontWeight={'600'}
-                showLoading={loading}
-              />
-            )}
+            <Button
+              label={
+                freeOn
+                  ? t('common.buttons.activate')
+                  : t('app.payment.payAmount', {finalOrderCost})
+              }
+              onClick={() => {
+                navigateBottomSheet('PaymentLoading', {
+                  user,
+                  order,
+                  discount,
+                  usedPoints,
+                  promoCodeId,
+                  loadUser,
+                  freeOn,
+                  paymentMethod,
+                });
+              }}
+              color="blue"
+              height={43}
+              fontSize={18}
+              fontWeight={'600'}
+              showLoading={loading}
+            />
             <Pressable
               style={styles.cancelButton}
               onPress={() => navigateBottomSheet('Main', {})}>
