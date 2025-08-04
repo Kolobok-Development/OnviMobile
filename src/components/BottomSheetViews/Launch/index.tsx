@@ -10,6 +10,7 @@ import {
   GeneralBottomSheetRouteProp,
 } from '../../../types/navigation/BottomSheetNavigation.ts';
 import VacuumLaunch from '@components/BottomSheetViews/Launch/Vacuum';
+import {BayTypeEnum} from '@app-types/BayTypeEnum.ts';
 
 const Launch = () => {
   const navigation =
@@ -34,14 +35,20 @@ const Launch = () => {
     navigation.navigate('Payment', {});
   };
 
-  if (orderDetails?.type === 'Portal') {
-    return <PortalLaunch isOpened={isOpened} onSelect={onSelect} />;
+  switch (type) {
+    case BayTypeEnum.BAY: {
+      return <DefaultLaunch />;
+    }
+    case BayTypeEnum.VACUUME: {
+      return <VacuumLaunch />;
+    }
+    case BayTypeEnum.PORTAL: {
+      return <PortalLaunch isOpened={isOpened} onSelect={onSelect} />;
+    }
+    default: {
+      return <DefaultLaunch />;
+    }
   }
-
-  if (type === 'VACUUME') {
-    return <VacuumLaunch />;
-  }
-  return <DefaultLaunch />;
 };
 
 export {Launch};
