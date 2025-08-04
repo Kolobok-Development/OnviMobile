@@ -39,12 +39,12 @@ const Boxes = () => {
 
             {type === BayTypeEnum.BAY || type === BayTypeEnum.PORTAL ? (
               <Text style={styles.middleText}>
-                {t('app.business.bay').toLowerCase()}
+                {t('app.business.bay').toLowerCase()}{' '}
                 <Text style={[styles.emoji]}>🚙</Text>
               </Text>
             ) : (
               <Text style={styles.middleText}>
-                {t('app.business.vacuume').toLowerCase()}
+                {t('app.business.vacuume').toLowerCase()}{' '}
                 <Text style={[styles.emoji]}>💨</Text>
               </Text>
             )}
