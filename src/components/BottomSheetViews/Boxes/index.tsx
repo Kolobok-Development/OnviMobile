@@ -16,6 +16,7 @@ import {
 
 import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
+import {BayTypeEnum} from '@app-types/BayTypeEnum';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
@@ -30,65 +31,46 @@ const Boxes = () => {
       contentContainerStyle={{flexGrow: 1}}
       nestedScrollEnabled={true}>
       <View style={styles.container}>
-        <View
-          style={{
-            paddingTop: dp(15),
-            paddingLeft: dp(22),
-            paddingRight: dp(22),
-          }}>
+        <View style={styles.containerView}>
           <BusinessHeader type="empty" />
 
           <View style={styles.middle}>
             <Text style={styles.middleText}>{t('app.business.select')}</Text>
-            {type === 'BAY' ? (
+
+            {type === BayTypeEnum.BAY || type === BayTypeEnum.PORTAL ? (
               <Text style={styles.middleText}>
-                {t('app.business.bay').toLowerCase()}{' '}
-                <Text style={[styles.emoji, {lineHeight: 50}]}>🚙</Text>
+                {t('app.business.bay').toLowerCase()}
+                <Text style={[styles.emoji]}>🚙</Text>
               </Text>
             ) : (
               <Text style={styles.middleText}>
-                {t('app.business.vacuume').toLowerCase()}{' '}
-                <Text style={[styles.emoji, {lineHeight: 50}]}>💨</Text>
+                {t('app.business.vacuume').toLowerCase()}
+                <Text style={[styles.emoji]}>💨</Text>
               </Text>
             )}
 
             <View style={styles.boxes}>
-              {type === 'BAY' ? (
-                <BoxesSlide
-                  boxes={
-                    business &&
-                    orderDetails &&
-                    typeof orderDetails.carwashIndex !== 'undefined' &&
-                    business.carwashes &&
-                    business.carwashes.length
+              <BoxesSlide
+                boxes={
+                  business &&
+                  orderDetails &&
+                  typeof orderDetails.carwashIndex !== 'undefined' &&
+                  business.carwashes &&
+                  business.carwashes.length
+                    ? type === BayTypeEnum.BAY || type === BayTypeEnum.PORTAL
                       ? business.carwashes[orderDetails.carwashIndex].boxes
-                      : []
-                  }
-                  navigation={navigation}
-                  params={route.params}
-                />
-              ) : (
-                <BoxesSlide
-                  boxes={
-                    business &&
-                    orderDetails &&
-                    typeof orderDetails.carwashIndex !== 'undefined' &&
-                    business.carwashes &&
-                    business.carwashes.length
-                      ? business.carwashes[orderDetails.carwashIndex].vacuums
-                      : []
-                  }
-                  navigation={navigation}
-                  params={route.params}
-                />
-              )}
+                      : business.carwashes[orderDetails.carwashIndex].vacuums
+                    : []
+                }
+                navigation={navigation}
+                params={route.params}
+              />
             </View>
           </View>
-
           <View style={styles.button}>
             <Image
               source={require('../../../assets/icons/small-icon.png')}
-              style={{width: dp(50), height: dp(50)}}
+              style={styles.buttonImage}
             />
           </View>
         </View>
@@ -144,6 +126,16 @@ const styles = StyleSheet.create({
   },
   emoji: {
     fontSize: 36, // Adjust the font size of the emoji to match the text// Align on the baseline
+    lineHeight: 50,
+  },
+  containerView: {
+    paddingTop: dp(15),
+    paddingLeft: dp(22),
+    paddingRight: dp(22),
+  },
+  buttonImage: {
+    width: dp(50),
+    height: dp(50),
   },
 });
 
