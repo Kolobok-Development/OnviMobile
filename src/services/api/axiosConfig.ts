@@ -15,7 +15,7 @@ function logAxiosErrorToDatadog(error: AxiosError, instanceName: string) {
     instance: instanceName,
   };
 
-  DdLogs.error('Axios Request Failed', logData);
+  DdLogs.error(`Axios Request Failed: ${error?.message}`, {logData});
   return Promise.reject(error);
 }
 
