@@ -71,17 +71,14 @@ export const usePaymentProcess = (
           await updateOrderStatus(orderIdToUpdate, OrderStatusCode.CANCELED);
         }
       } catch (err: any) {
-        DdLogs.error('Update order status error:', err.message);
+        DdLogs.error('Update order status error:', {err});
       }
       AppMetrica.reportEvent('Payment Canceled', error);
     } else {
       const errorCode = error.response?.data?.code || 'Unknown error code';
       const errorMessage =
         error.response?.data?.message || 'No additional message';
-      DdLogs.error('Payment process error:', {
-        error: errorCode,
-        message: errorMessage,
-      });
+      DdLogs.error(`Payment process error: ${errorMessage}`, {errorCode});
       switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
           setError(i18n.t('app.errors.errorCode'));

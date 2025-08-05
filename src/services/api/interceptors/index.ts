@@ -47,7 +47,7 @@ export function setupAuthInterceptors(axiosInstance: AxiosInstance) {
         instance: 'userApiInstance',
       };
 
-      DdLogs.error('Axios Request Failed', logData);
+      DdLogs.error(`Axios Request Failed: ${error?.message}`, {logData});
 
       // Check if error is due to an expired token
       if (
