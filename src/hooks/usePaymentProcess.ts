@@ -70,8 +70,8 @@ export const usePaymentProcess = (
         if (orderIdToUpdate) {
           await updateOrderStatus(orderIdToUpdate, OrderStatusCode.CANCELED);
         }
-      } catch (err: any) {
-        DdLogs.error('Update order status error:', {err});
+      } catch (error: any) {
+        DdLogs.error(`Update order status error: ${error.message}`, {error});
       }
       AppMetrica.reportEvent('Payment Canceled', error);
     } else {
