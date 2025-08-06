@@ -195,7 +195,13 @@
       "modalTextPart2": "правилами переноса баланса",
       "modalTextPart3": " и подтверждаете, что ознакомились с условиями.",
       "howToTransferBalance": "Как перенести баланс",
-      "transferWasSuccessful": "Перенос прошел успешно"
+      "transferWasSuccessful": "Перенос прошел успешно",
+      "minSymbolsError": "Введите более 4 символов",
+      "cardNotFound": "Карта не найдена.",
+      "zeroBalanceMessage": "Ваш баланс - 0 баллов. Перенос невозможен.",
+      "bonusPointsNotTransferred": "бонусных баллов не будут перенесены, так как их количество меньше 50",
+      "transferNotPossible": "Перенос баланса невозможен",
+      "onlyRealBalance": "Будет перенесен только реальный баланс"
     },
     "bonus": {
       "withdrawOnviBonuses": "Списать бонусы Onvi"

@@ -63,6 +63,12 @@ const TransferBalance = () => {
   const findBalance = async () => {
     setError('');
 
+    if (cardNumber.replaceAll('-', '').length < 4) {
+      setError(t('app.transferBalance.minSymbolsError'));
+      setBalance(undefined);
+      return;
+    }
+
     getBalance({
       devNomer: cardNumber.replaceAll('-', ''),
     })
@@ -73,8 +79,8 @@ const TransferBalance = () => {
           bonusAsPromo: data.airBalance ?? 0,
         });
       })
-      .catch(err => {
-        setError(err.message);
+      .catch(() => {
+        setError(t('app.transferBalance.cardNotFound'));
         setBalance(undefined);
       });
   };
@@ -98,7 +104,12 @@ const TransferBalance = () => {
       });
   };
 
-  const buttonStyles = [styles.button, {backgroundColor: '#3461FF'}];
+  const getButtonStyle = () => {
+    if (balance?.balanceAfterTransfer === 0 && balance?.bonusAsPromo < 50) {
+      return [styles.button, styles.disabledButton];
+    }
+    return styles.button;
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -123,107 +134,139 @@ const TransferBalance = () => {
         <Text style={styles.modalTitle}>
           {t('app.transferBalance.transferBalance')}
         </Text>
-        <View>
-          <Text style={styles.modalDescription}>
-            {!balance
-              ? t('app.transferBalance.description')
-              : t('app.transferBalance.cardFound')}
-          </Text>
-          <TouchableOpacity onPress={() => setShowInstructions(true)}>
-            <Text style={styles.instructionsLink}>
-              {t('app.transferBalance.howItWorks')}
-            </Text>
-            <Text style={styles.instructionsLink} onPress={handlePress}>
-              {t('app.transferBalance.transferRules')}
-            </Text>
-          </TouchableOpacity>
-        </View>
 
-        <View style={styles.cardInputContainer}>
-          <ImageBackground
-            source={require('../../assets/images/balance-transfer-input.png')}
-            style={styles.imageBackground}
-            resizeMode="cover">
-            <View style={styles.overlay}>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={[styles.input, error ? {color: 'red'} : undefined]}
-                  value={cardNumber}
-                  onChangeText={formatCardNumber}
-                  placeholder="xxxx-xxxx-xxxx"
-                  keyboardType="numeric"
-                  maxLength={19}
-                  placeholderTextColor="#999"
-                  editable={balance ? false : true}
-                />
-                {balance ? (
-                  <Text style={{...styles.balanceText, marginTop: 0}}>
-                    {balance?.balance} {t('common.labels.points')}
-                  </Text>
-                ) : (
-                  <></>
-                )}
-                {error ? <Text style={styles.errorText}>{error}</Text> : <></>}
-              </View>
-            </View>
-          </ImageBackground>
-        </View>
-
-        {balance ? (
+        {balance?.balance === 0 ? (
           <>
+            <Text style={styles.modalDescription}>
+              {t('app.transferBalance.zeroBalanceMessage')}
+            </Text>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => navigation.navigate('Главная')}>
+              <Text style={styles.buttonText}>{t('common.buttons.ok')}</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <Text style={styles.modalDescription}>
+              {!balance
+                ? t('app.transferBalance.description')
+                : t('app.transferBalance.cardFound')}
+            </Text>
+            <TouchableOpacity onPress={() => setShowInstructions(true)}>
+              <Text style={styles.instructionsLink}>
+                {t('app.transferBalance.howItWorks')}
+              </Text>
+              <Text style={styles.instructionsLink} onPress={handlePress}>
+                {t('app.transferBalance.transferRules')}
+              </Text>
+            </TouchableOpacity>
+
             <View style={styles.cardInputContainer}>
               <ImageBackground
-                source={require('../../assets/images/transfer-balance-success.png')}
+                source={require('../../assets/images/balance-transfer-input.png')}
                 style={styles.imageBackground}
                 resizeMode="cover">
                 <View style={styles.overlay}>
                   <View style={styles.inputContainer}>
-                    <Text style={styles.balanceText}>
-                      {t('app.transferBalance.balanceAfterTransfer')} {'\n'}
-                      {balance?.balanceAfterTransfer}{' '}
-                      {t('common.labels.points')}
-                    </Text>
+                    <TextInput
+                      style={[styles.input, error ? {color: 'red'} : undefined]}
+                      value={cardNumber}
+                      onChangeText={formatCardNumber}
+                      placeholder="xxxx-xxxx-xxxx"
+                      keyboardType="numeric"
+                      maxLength={19}
+                      placeholderTextColor="#999"
+                      editable={balance ? false : true}
+                    />
+                    {balance ? (
+                      <Text style={{...styles.balanceText, marginTop: 0}}>
+                        {balance?.balance} {t('common.labels.points')}
+                      </Text>
+                    ) : (
+                      <></>
+                    )}
+                    {error ? (
+                      <Text style={styles.errorText}>{error}</Text>
+                    ) : (
+                      <></>
+                    )}
                   </View>
                 </View>
               </ImageBackground>
             </View>
-            <Text
-              style={{
-                marginTop: dp(10),
-              }}>
-              💡 {balance?.bonusAsPromo}{' '}
-              {t('app.transferBalance.bonusesReturn')}{' '}
-              <Pressable
-                style={{
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                }}>
-                <Text
-                  style={{
-                    color: 'blue',
-                    textDecorationLine: 'underline',
-                  }}>
-                  {t('navigation.promos')}
-                </Text>
-              </Pressable>
-            </Text>
-          </>
-        ) : (
-          <></>
-        )}
 
-        {!balance ? (
-          <TouchableOpacity style={buttonStyles} onPress={findBalance}>
-            <Text style={styles.buttonText}>{t('common.buttons.find')}</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            style={buttonStyles}
-            onPress={() => setModalVisible(true)}>
-            <Text style={styles.buttonText}>
-              {t('common.buttons.transfer')}
-            </Text>
-          </TouchableOpacity>
+            {balance ? (
+              <>
+                <View style={styles.cardInputContainer}>
+                  <ImageBackground
+                    source={require('../../assets/images/transfer-balance-success.png')}
+                    style={styles.imageBackground}
+                    resizeMode="cover">
+                    <View style={styles.overlay}>
+                      <View style={styles.inputContainer}>
+                        <Text style={styles.balanceText}>
+                          {t('app.transferBalance.balanceAfterTransfer')} {'\n'}
+                          {balance?.balanceAfterTransfer}{' '}
+                          {t('common.labels.points')}
+                        </Text>
+                      </View>
+                    </View>
+                  </ImageBackground>
+                </View>
+
+                {balance?.bonusAsPromo > 0 &&
+                  (balance?.bonusAsPromo < 50 ? (
+                    <Text style={{marginTop: dp(10)}}>
+                      💡 {balance?.bonusAsPromo}{' '}
+                      {t('app.transferBalance.bonusPointsNotTransferred')}.{' '}
+                      {balance.balanceAfterTransfer === 0 &&
+                        t('app.transferBalance.transferNotPossible')}
+                      {balance.balanceAfterTransfer !== 0 &&
+                        t('app.transferBalance.onlyRealBalance')}
+                      .
+                    </Text>
+                  ) : (
+                    <Text style={{marginTop: dp(10)}}>
+                      💡 {balance?.bonusAsPromo}{' '}
+                      {t('app.transferBalance.bonusesReturn')}
+                      <Pressable
+                        style={{display: 'flex', alignItems: 'flex-end'}}>
+                        <Text
+                          style={{
+                            color: 'blue',
+                            textDecorationLine: 'underline',
+                          }}>
+                          {t('navigation.promos')}
+                        </Text>
+                      </Pressable>
+                    </Text>
+                  ))}
+              </>
+            ) : (
+              <></>
+            )}
+
+            {!balance ? (
+              <TouchableOpacity style={styles.button} onPress={findBalance}>
+                <Text style={styles.buttonText}>
+                  {t('common.buttons.find')}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={getButtonStyle()}
+                onPress={() => setModalVisible(true)}
+                disabled={
+                  balance.balanceAfterTransfer === 0 &&
+                  balance.bonusAsPromo < 50
+                }>
+                <Text style={styles.buttonText}>
+                  {t('common.buttons.transfer')}
+                </Text>
+              </TouchableOpacity>
+            )}
+          </>
         )}
       </View>
 
@@ -387,6 +430,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: dp(10),
     marginBottom: dp(30),
+    backgroundColor: '#3461FF',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
   buttonText: {
     fontSize: dp(18),
