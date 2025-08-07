@@ -352,8 +352,9 @@ export const usePaymentProcess = (
               setTimeout(pollOrderStatus, pollInterval);
             }
           }
-        } catch (err: any) {
-          if (err?.code === 'OrderNotFoundException') {
+        } catch (error: any) {
+          DdLogs.error(`Poll order status error: ${error.message}`, {error});
+          if (error?.code === 'OrderNotFoundException') {
             setError(i18n.t('app.paymentErrors.orderNotFound'));
           } else {
             setError(i18n.t('app.paymentErrors.orderStatusCheckError'));
