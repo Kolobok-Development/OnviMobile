@@ -24,7 +24,7 @@ import {OtpInput} from 'react-native-otp-entry';
 import {useRoute} from '@react-navigation/native';
 import {GeneralAuthRouteProp} from '@app-types/navigation/AuthNavigation.ts';
 
-const waitingTime = 60;
+const WAITING_TIME = 60;
 
 interface VerificationProps {}
 const Verification = ({}: VerificationProps) => {
@@ -38,8 +38,8 @@ const Verification = ({}: VerificationProps) => {
   const inputRef = useRef<any>(null);
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
-  const [timer, setTimer] = useState(waitingTime);
-  const timerRef: any = useRef(null);
+  const [timer, setTimer] = useState<number>(WAITING_TIME);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [isPersonalDataCollectionAccepted, setPersonalDataCollectionAccepted] =
     useState(true);
 
@@ -87,7 +87,7 @@ const Verification = ({}: VerificationProps) => {
     if (timerRef.current && timer === 0) {
       stopTimer();
       activateButton();
-    } else if (timer === waitingTime) {
+    } else if (timer === WAITING_TIME) {
       startTimer();
     }
   }, [timer]);

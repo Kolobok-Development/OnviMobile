@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -23,7 +23,6 @@ const SignIn = () => {
   const {sendOtp} = useStore.getState();
   const [isLoading, setIsLoading] = useState(false);
   const {t} = useTranslation();
-  const scrollViewRef = useRef<ScrollView>(null);
   const {theme} = useTheme();
   const navigation = useNavigation<GeneralAuthNavigationProp<'SignIn'>>();
   const [phone, setPhone] = useState('');
@@ -59,7 +58,6 @@ const SignIn = () => {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={Platform.OS === 'ios' ? dp(40) : 0}>
         <ScrollView
-          ref={scrollViewRef}
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="handled">
           <View style={styles.container}>
