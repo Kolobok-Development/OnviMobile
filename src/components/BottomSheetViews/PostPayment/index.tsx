@@ -116,7 +116,7 @@ const PostPayment = () => {
               label={t('app.payment.restartService')}
               color={'blue'}
               height={dp(40)}
-              width={dp(300)}
+              width={dp(280)}
               outlined={true}
               onClick={restart}
             />
@@ -134,7 +134,7 @@ const PostPayment = () => {
             label={t('common.buttons.finish')}
             color={'blue'}
             height={dp(40)}
-            width={dp(300)}
+            width={dp(280)}
             onClick={finish}
           />
           <Text style={styles.text}>{t('app.payment.problemsContact')}</Text>
