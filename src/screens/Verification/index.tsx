@@ -39,7 +39,7 @@ const Verification = ({}: VerificationProps) => {
   const [disabled, setDisabled] = useState(true);
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState<number>(WAITING_TIME);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [isPersonalDataCollectionAccepted, setPersonalDataCollectionAccepted] =
     useState(true);
 
@@ -72,19 +72,19 @@ const Verification = ({}: VerificationProps) => {
   };
 
   const startTimer = () => {
-    timerRef.current = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setTimer(prevTimer => prevTimer - 1);
     }, 1000);
   };
 
   const stopTimer = () => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
     }
   };
 
   useEffect(() => {
-    if (timerRef.current && timer === 0) {
+    if (intervalRef.current && timer === 0) {
       stopTimer();
       activateButton();
     } else if (timer === WAITING_TIME) {
