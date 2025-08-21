@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingTop: dp(40),
   },
   container: {
     flex: 1,
@@ -112,7 +113,6 @@ const styles = StyleSheet.create({
     flex: 4,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: dp(10),
   },
   bottomContainer: {
     flex: 4,
@@ -127,9 +127,10 @@ const styles = StyleSheet.create({
   descriptionText: {
     color: 'rgba(0, 0, 0, 1)',
     fontSize: dp(16),
+    marginBottom: dp(20),
   },
   buttonContainer: {
-    paddingTop: dp(100),
+    paddingTop: dp(70),
   },
 });
 

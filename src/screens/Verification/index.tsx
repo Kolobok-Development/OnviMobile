@@ -226,6 +226,7 @@ const styles = StyleSheet.create({
   },
   scrollContainer: {
     flexGrow: 1,
+    paddingTop: dp(40),
   },
   topContainer: {
     flex: 3,
@@ -236,6 +237,7 @@ const styles = StyleSheet.create({
     flex: 7,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: dp(20),
   },
   bottomContainer: {
     flex: 4,
