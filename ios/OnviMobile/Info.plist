@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>APP_VERSION</key>
-	<string>1.0.0</string>
+	<string>1.1.6</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -38,9 +38,15 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>IOS_VERSION_CODE</key>
-	<string>8</string>
+	<string>1</string>
 	<key>IOS_VERSION_NAME</key>
-	<string>1.1.4</string>
+	<string>1.1.6</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>yoomoneyauth</string>
+		<string>sberbankidexternallogin</string>
+		<string>sbolidexternallogin</string>
+	</array>
 	<key>LSMinimumSystemVersion</key>
 	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -53,11 +59,37 @@
 		<true/>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>cms-res.online.sberbank.ru</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>gate1.spaymentsplus.ru</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>ift.gate2.spaymentsplus.ru</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+		</dict>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Так вы подтвердите, что именно вы выполняете вход</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location allows you to view carwashes naer by</string>
+	<string>Your location allows you to view carwashes near by and for secure payment processing</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location allows you to view carwashes naer by</string>
+	<string>Your location allows you to view carwashes near by and for secure payment processing</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

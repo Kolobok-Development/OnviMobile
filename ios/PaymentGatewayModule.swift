@@ -19,6 +19,7 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
   
   
   func didFinish(on module: YooKassaPayments.TokenizationModuleInput, with error: YooKassaPayments.YooKassaPaymentsError?) {
+    print("E_PAYMENT_CANCELLED 1234")
     let error: NSDictionary = [
                 "code" : "E_PAYMENT_CANCELLED",
                 "message" : "Payment cancelled."
@@ -36,6 +37,7 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
   
   
   func didFailConfirmation(error: YooKassaPayments.YooKassaPaymentsError?) {
+    print("ERROR_PAYMENT_CONFIRMATION 1234")
     let error: NSDictionary = [
       "code" : "ERROR_PAYMENT_CONFIRMATION",
       "message" : "Payment failed."
