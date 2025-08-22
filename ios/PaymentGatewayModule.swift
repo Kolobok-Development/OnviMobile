@@ -21,70 +21,91 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
   private var confirmationAttempts = 0
 
   func didFinish(on module: YooKassaPayments.TokenizationModuleInput, with error: YooKassaPayments.YooKassaPaymentsError?) {
-    if isConfirming {
-      // Пользователь закрыл окно подтверждения, но мы не прерываем оплату — считаем, что это отмена подтверждения, но не ошибки оплаты
-      let result: NSDictionary = [
-        "message": "confirmation_cancelled_by_user",
-        "status": "cancelled"
-      ]
-      DispatchQueue.main.async {
-        self.viewController?.dismiss(animated: true) {
-          if let callback = self.confirmCallback {
-            callback([NSNull(), result])
-            self.confirmCallback = nil
+      if isConfirming {
+          // Мы в процессе подтверждения платежа, но окно закрыто: считаем отменой подтверждения
+          let errorDict: NSDictionary = [
+              "code": "ERROR_PAYMENT_CONFIRMATION_CANCELLED",
+              "message": "Payment confirmation cancelled by user.",
+              "status": "cancelled"
+          ]
+          DispatchQueue.main.async {
+              self.viewController?.dismiss(animated: true) {
+                  if let callback = self.confirmCallback {
+                      callback([NSNull(), errorDict])
+                      self.confirmCallback = nil
+                  }
+                  self.resetConfirmationState()
+              }
           }
-          self.resetConfirmationState()
-        }
-      }
-    } else {
-      // Отмена токенизации оплаты
-      let error: NSDictionary = [
-        "code": "E_PAYMENT_CANCELLED",
-        "message": "Payment cancelled.",
-        "status": "cancelled"
-      ]
-      DispatchQueue.main.async {
-        self.viewController?.dismiss(animated: true) {
-          if let callback = self.paymentCallback {
-            callback([NSNull(), error])
-            self.paymentCallback = nil
+      } else {
+          // Закрыто окно токенизации (первое окно)
+          let errorDict: NSDictionary = [
+              "code": "E_PAYMENT_CANCELLED",
+              "message": "Payment cancelled.",
+              "status": "cancelled"
+          ]
+          DispatchQueue.main.async {
+              self.viewController?.dismiss(animated: true) {
+                  if let callback = self.paymentCallback {
+                      callback([NSNull(), errorDict])
+                      self.paymentCallback = nil
+                  }
+              }
           }
-        }
       }
-    }
   }
-
+  
   func didFailConfirmation(error: YooKassaPayments.YooKassaPaymentsError?) {
-    let error: NSDictionary = [
-      "code": "ERROR_PAYMENT_CONFIRMATION",
-      "message": "Payment failed.",
-      "status": "error"
-    ]
-    DispatchQueue.main.async {
-      self.viewController?.dismiss(animated: true)
-    }
-    if let callback = self.confirmCallback {
-      callback([NSNull(), error])
-      self.confirmCallback = nil
-    }
-  }
-
-  func didFinishConfirmation(paymentMethodType: YooKassaPayments.PaymentMethodType) {
-    confirmationAttempts += 1
-    // Считаем успешным подтверждение — даже если пользователь закрыл окно подтверждения, оплата успешно прошла
-    let result: NSDictionary = [
-      "message": "verified",
-      "status": "success"
-    ]
-    DispatchQueue.main.async {
-      self.viewController?.dismiss(animated: true) {
-        if let callback = self.confirmCallback {
-          callback([result])
-          self.confirmCallback = nil
-        }
-        self.resetConfirmationState()
+      let error: NSDictionary = [
+        "code": "ERROR_PAYMENT_CONFIRMATION",
+        "message": "Payment failed.",
+        "status": "error"
+      ]
+      DispatchQueue.main.async {
+        self.viewController?.dismiss(animated: true)
+      }
+      if let callback = self.confirmCallback {
+        callback([NSNull(), error])
+        self.confirmCallback = nil
       }
     }
+  
+  func didFinishConfirmation(paymentMethodType: YooKassaPayments.PaymentMethodType) {
+      confirmationAttempts += 1
+
+      // Пример логики:
+      // Если первый вызов - считаем успешным подтверждением
+      if confirmationAttempts == 1 {
+          let result: NSDictionary = [
+              "message": "verified",
+              "status": "success"
+          ]
+          DispatchQueue.main.async {
+              self.viewController?.dismiss(animated: true) {
+                  if let callback = self.confirmCallback {
+                      callback([result])
+                      self.confirmCallback = nil
+                  }
+                  self.resetConfirmationState()
+              }
+          }
+      } else {
+          // Если несколько вызовов didFinishConfirmation без успешной оплаты — считаем отменой
+          let errorDict: NSDictionary = [
+              "code": "ERROR_PAYMENT_CONFIRMATION_CANCELLED",
+              "message": "Payment confirmation cancelled or failed.",
+              "status": "cancelled"
+          ]
+          DispatchQueue.main.async {
+              self.viewController?.dismiss(animated: true) {
+                  if let callback = self.confirmCallback {
+                      callback([NSNull(), errorDict])
+                      self.confirmCallback = nil
+                  }
+                  self.resetConfirmationState()
+              }
+          }
+      }
   }
 
   private func resetConfirmationState() {
@@ -192,23 +213,20 @@ class PaymentGatewayModule: RCTViewManager, TokenizationModuleOutput {
 
   @objc
   func confirmPayment(_ params: NSDictionary, callbacker callback: @escaping RCTResponseSenderBlock) -> Void {
-    guard let confirmationUrl = params["confirmationUrl"] as? String,
-               let _paymentMethodType = params["paymentMethodType"] as? String
-           else {
-      return
-    }
+    print("new version")
+      guard let confirmationUrl = params["confirmationUrl"] as? String,
+            let _paymentMethodType = params["paymentMethodType"] as? String else {
+          return
+      }
 
-    print("PAYMENT GATEWAY -> BEGIN CONFIRMATIONS...");
+      guard let paymentMethodType = PaymentMethodType(rawValue: _paymentMethodType.lowercased()) else { return }
+      guard let viewController = viewController as? TokenizationModuleInput else { return }
 
-    guard let paymentMethodType = PaymentMethodType(rawValue: _paymentMethodType.lowercased()) else { return }
-    guard let viewController = viewController as? TokenizationModuleInput else { return }
+      self.confirmCallback = callback
+      self.isConfirming = true
+      self.confirmationAttempts = 0 // скидка до 0 при старте каждого подтверждения
 
-    self.confirmCallback = callback
-    self.isConfirming = true
-    self.confirmationAttempts = 0
-
-    viewController.startConfirmationProcess(confirmationUrl: confirmationUrl,
-                                            paymentMethodType: paymentMethodType)
+      viewController.startConfirmationProcess(confirmationUrl: confirmationUrl, paymentMethodType: paymentMethodType)
   }
 
   @objc

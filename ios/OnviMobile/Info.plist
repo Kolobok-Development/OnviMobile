@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>APP_VERSION</key>
-	<string>1.0.0</string>
+	<string>1.1.7</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -38,9 +38,9 @@
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>IOS_VERSION_CODE</key>
-	<string>8</string>
+	<string>1</string>
 	<key>IOS_VERSION_NAME</key>
-	<string>1.1.4</string>
+	<string>1.1.7</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>12.0</string>
 	<key>LSRequiresIPhoneOS</key>
