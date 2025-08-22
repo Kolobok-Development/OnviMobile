@@ -41,8 +41,13 @@ import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
-  const {bottomSheetRef, bottomSheetSnapPoints, setSelectedPos} =
-    useStore.getState();
+  const {
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setSelectedPos,
+    setBusiness,
+    cameraRef,
+  } = useStore.getState();
 
   const {setIsMainScreen} = useNavStore.getState();
 
@@ -71,6 +76,9 @@ const Main = () => {
     useCallback(() => {
       setIsMainScreen(true);
       setSelectedPos(null);
+      setBusiness(null);
+
+      cameraRef?.current?.setCameraPosition();
 
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({y: 0, animated: false});

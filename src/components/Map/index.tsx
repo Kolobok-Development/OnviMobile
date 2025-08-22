@@ -16,7 +16,11 @@ import {throttle} from 'lodash';
 import {CameraRef} from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 
 export type CameraReference = {
-  setCameraPosition: (val?: {longitude: number; latitude: number}) => void;
+  setCameraPosition: (val?: {
+    longitude: number;
+    latitude: number;
+    zoomLevel?: number;
+  }) => void;
 };
 
 const DEFAULT_LOCATION = {
@@ -25,7 +29,8 @@ const DEFAULT_LOCATION = {
 };
 
 const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
-  const {posList, setPosList, location, setLocation} = useStore.getState();
+  const {posList, setPosList, location, setLocation, business} =
+    useStore.getState();
   const {data} = useSWR(['getPOSList'], () => getPOSList({}), {
     revalidateOnFocus: false,
   });
@@ -46,16 +51,22 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   const memoizedBusinesses = useMemo(
     () =>
       posList && posList.length
-        ? posList.map(business => (
+        ? posList.map(businessItem => (
             <Marker
-              key={`${business.carwashes[0].id}-${business.location.lat}-${business.location.lon}`}
-              coordinate={[business.location.lon, business.location.lat]}
+              key={`${businessItem.carwashes[0].id}-${businessItem.location.lat}-${businessItem.location.lon}`}
+              coordinate={[
+                businessItem.location.lon,
+                businessItem.location.lat,
+              ]}
               locationRef={userLocationRef}
-              business={business}
+              business={businessItem}
+              isSelected={
+                businessItem.carwashes[0].id === business?.carwashes[0].id
+              }
             />
           ))
         : [],
-    [posList],
+    [posList, business],
   );
 
   useEffect(() => {
@@ -88,6 +99,12 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
         pitch: 1,
         animationMode: 'flyTo',
         animationDuration: 1,
+        padding: {
+          paddingLeft: 0,
+          paddingRight: 0,
+          paddingTop: 0,
+          paddingBottom: 300,
+        },
       });
       setCameraSet(true);
     }
@@ -105,7 +122,11 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
     [setLocation],
   );
 
-  const setCameraPosition = (val?: {longitude: number; latitude: number}) => {
+  const setCameraPosition = (val?: {
+    longitude: number;
+    latitude: number;
+    zoomLevel?: number;
+  }) => {
     cameraRef.current?.setCamera({
       centerCoordinate: val
         ? [val.longitude, val.latitude]
@@ -113,10 +134,16 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
             location?.longitude ?? DEFAULT_LOCATION.longitude,
             location?.latitude ?? DEFAULT_LOCATION.latitude,
           ],
-      zoomLevel: 14,
+      zoomLevel: val?.zoomLevel ?? 14,
       pitch: 1,
       animationMode: 'flyTo',
       animationDuration: 1,
+      padding: {
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 300,
+      },
     });
   };
 
@@ -173,6 +200,20 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
           visible={true}
         />
       </MapboxGL.MapView>
+      {business && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'transparent',
+          }}
+          onStartShouldSetResponder={() => true}
+          onMoveShouldSetResponder={() => true}
+        />
+      )}
     </View>
   );
 });
