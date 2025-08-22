@@ -13,8 +13,13 @@ import {Button} from '@styled/buttons';
 import {useTranslation} from 'react-i18next';
 
 export default function NearPosButton() {
-  const {bottomSheetRef, bottomSheetSnapPoints, setBusiness, setNearByPos} =
-    useStore.getState();
+  const {
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setBusiness,
+    setNearByPos,
+    cameraRef,
+  } = useStore.getState();
   const {t} = useTranslation();
 
   const posList = useStore(state => state.posList);
@@ -32,6 +37,12 @@ export default function NearPosButton() {
       bottomSheetRef?.current?.snapToPosition(
         bottomSheetSnapPoints[bottomSheetSnapPoints.length - 2],
       );
+
+      cameraRef?.current?.setCameraPosition({
+        longitude: nearByPos.location.lon,
+        latitude: nearByPos.location.lat,
+        zoomLevel: 18,
+      });
     } else {
       setNearByModal(true);
     }
