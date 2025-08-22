@@ -59,9 +59,12 @@ export const usePaymentProcess = (
    */
   const errorHandler = async (error: any) => {
     setLoading(false);
+    console.log(error);
+
     if (
       error.code === 'ERROR_PAYMENT_CANCELLED' ||
-      error.code === 'E_PAYMENT_CANCELLED'
+      error.code === 'E_PAYMENT_CANCELLED' ||
+      error.code === 'ERROR_PAYMENT_CONFIRMATION_CANCELLED'
     ) {
       setError('Заказ отменён. Платёж не был завершён');
 
