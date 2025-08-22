@@ -210,8 +210,6 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
             bottom: 0,
             backgroundColor: 'transparent',
           }}
-          onStartShouldSetResponder={() => true}
-          onMoveShouldSetResponder={() => true}
         />
       )}
     </View>
