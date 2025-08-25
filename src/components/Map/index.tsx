@@ -6,7 +6,7 @@ import React, {
   forwardRef,
 } from 'react';
 import {View, Dimensions, Platform, PermissionsAndroid} from 'react-native';
-import MapboxGL, {UserLocation, LocationPuck} from '@rnmapbox/maps';
+import MapboxGL, {UserLocation} from '@rnmapbox/maps';
 import Marker from './Marker';
 import useStore from '../../state/store.ts';
 import useSWR from 'swr';
@@ -189,15 +189,6 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
           requestsAlwaysUse={true}
           onUpdate={onUserLocationUpdateThrottled}
           animated={true}
-        />
-        <LocationPuck
-          puckBearing="heading"
-          pulsing={{
-            isEnabled: true,
-            color: '#BFFA00',
-            radius: 25.0,
-          }}
-          visible={true}
         />
       </MapboxGL.MapView>
       {business && (
