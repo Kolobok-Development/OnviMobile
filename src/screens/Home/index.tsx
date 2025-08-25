@@ -33,7 +33,8 @@ const Home = React.memo(({navigation}: any) => {
   }, [snapPoints]);
 
   const userLocationRef = useRef<any>(null);
-  const {setIsBottomSheetOpen, setBottomSheetRef} = useStore.getState();
+  const {setIsBottomSheetOpen, setBottomSheetRef, business} =
+    useStore.getState();
 
   const {isDraggable} = useStore();
 
@@ -72,10 +73,12 @@ const Home = React.memo(({navigation}: any) => {
         <Map ref={camRef} userLocationRef={userLocationRef} />
 
         {/* FindMe button with built-in position tracking and opacity fade */}
-        <FindMeButton
-          animatedPosition={currentPosition}
-          animatedIndex={currentPosition}
-        />
+        {!business && (
+          <FindMeButton
+            animatedPosition={currentPosition}
+            animatedIndex={currentPosition}
+          />
+        )}
 
         <BottomSheet
           enableContentPanningGesture={isDraggable}
