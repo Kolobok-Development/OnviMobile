@@ -144,7 +144,11 @@ const BottomSheetStack = React.memo(({active}: BottomSheetStackInterface) => {
         }
       }}>
       <RootStack.Navigator
-        screenOptions={{headerShown: false}}
+        screenOptions={{
+          headerShown: false,
+          animation: 'fade_from_bottom',
+          animationDuration: 300,
+        }}
         initialRouteName="Main">
         <RootStack.Screen
           name="Main"

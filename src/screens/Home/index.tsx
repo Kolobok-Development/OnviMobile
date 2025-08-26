@@ -4,11 +4,11 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {BurgerButton} from '@navigators/BurgerButton';
 import {Balance} from '@components/Balance';
 import {Map} from '@components/Map';
-import BottomSheet from '@gorhom/bottom-sheet';
+import BottomSheet, {useBottomSheetTimingConfigs} from '@gorhom/bottom-sheet';
 import {dp} from '../../utils/dp';
 import {BottomSheetStack} from '@navigators/BottomSheetStack';
 import useStore from '../../state/store';
-import {useSharedValue} from 'react-native-reanimated';
+import {useSharedValue, Easing} from 'react-native-reanimated';
 
 import {CameraReference} from '@components/Map';
 import FindMeButton from '@screens/Home/FindMeButton.tsx';
@@ -67,6 +67,11 @@ const Home = React.memo(({navigation}: any) => {
     [visible, navigation, camRef],
   );
 
+  const animationConfigs = useBottomSheetTimingConfigs({
+    duration: 250,
+    easing: Easing.linear,
+  });
+
   return (
     <GestureHandlerRootView style={styles.master}>
       <View style={styles.container}>
@@ -81,6 +86,7 @@ const Home = React.memo(({navigation}: any) => {
         )}
 
         <BottomSheet
+          animationConfigs={animationConfigs}
           enableContentPanningGesture={isDraggable}
           enableHandlePanningGesture={isDraggable}
           ref={bsRef}
