@@ -17,9 +17,10 @@ import {CameraRef} from '@rnmapbox/maps/lib/typescript/src/components/Camera';
 
 export type CameraReference = {
   setCameraPosition: (val?: {
-    longitude: number;
-    latitude: number;
+    longitude?: number;
+    latitude?: number;
     zoomLevel?: number;
+    animationDuration?: number;
   }) => void;
 };
 
@@ -123,21 +124,23 @@ const Map = forwardRef<CameraReference, any>(({userLocationRef}: any, ref) => {
   );
 
   const setCameraPosition = (val?: {
-    longitude: number;
-    latitude: number;
+    longitude?: number;
+    latitude?: number;
     zoomLevel?: number;
+    animationDuration?: number;
   }) => {
     cameraRef.current?.setCamera({
-      centerCoordinate: val
-        ? [val.longitude, val.latitude]
-        : [
-            location?.longitude ?? DEFAULT_LOCATION.longitude,
-            location?.latitude ?? DEFAULT_LOCATION.latitude,
-          ],
+      centerCoordinate:
+        val?.longitude && val?.latitude
+          ? [val.longitude, val.latitude]
+          : [
+              location?.longitude ?? DEFAULT_LOCATION.longitude,
+              location?.latitude ?? DEFAULT_LOCATION.latitude,
+            ],
       zoomLevel: val?.zoomLevel ?? 14,
       pitch: 1,
       animationMode: 'flyTo',
-      animationDuration: 1,
+      animationDuration: val?.animationDuration ?? 1,
       padding: {
         paddingLeft: 0,
         paddingRight: 0,

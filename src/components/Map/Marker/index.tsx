@@ -92,7 +92,8 @@ const Marker = React.memo(
       cameraRef?.current?.setCameraPosition({
         longitude: business.location.lon,
         latitude: business.location.lat,
-        zoomLevel: 18,
+        zoomLevel: 16,
+        animationDuration: 1000,
       });
     }, [
       business,
