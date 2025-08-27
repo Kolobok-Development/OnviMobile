@@ -161,7 +161,8 @@ const Search = () => {
     cameraRef?.current?.setCameraPosition({
       longitude: carwash.location.lon,
       latitude: carwash.location.lat,
-      zoomLevel: 18,
+      zoomLevel: 16,
+      animationDuration: 1000,
     });
   };
 

@@ -41,7 +41,8 @@ export default function NearPosButton() {
       cameraRef?.current?.setCameraPosition({
         longitude: nearByPos.location.lon,
         latitude: nearByPos.location.lat,
-        zoomLevel: 18,
+        zoomLevel: 16,
+        animationDuration: 1000,
       });
     } else {
       setNearByModal(true);
