@@ -315,9 +315,8 @@ export const usePaymentProcess = (
       setOrderStatus(OrderProcessingStatus.POLLING);
 
       // poll order status until COMPLETED
-      const pollInterval = 10000;
       let attempts = 0;
-      const maxAttempts = 30; // e.g. 30 attempts = ~5 minute
+      const maxAttempts = 12;
 
       const pollOrderStatus = async () => {
         try {
@@ -349,7 +348,8 @@ export const usePaymentProcess = (
               setLoading(false);
               // setOrderStatus(null);
             } else {
-              setTimeout(pollOrderStatus, pollInterval);
+              const delay = 2000 + attempts * 1000;
+              setTimeout(pollOrderStatus, delay);
             }
           }
         } catch (error: any) {
@@ -364,7 +364,7 @@ export const usePaymentProcess = (
         }
       };
 
-      pollOrderStatus();
+      setTimeout(pollOrderStatus, 1000);
     } catch (error: any) {
       errorHandler(error);
     }
@@ -423,9 +423,8 @@ export const usePaymentProcess = (
         bayType: order.bayType,
       });
 
-      const pollInterval = 10000;
       let attempts = 0;
-      const maxAttempts = 30;
+      const maxAttempts = 12;
 
       const pollOrderStatus = async () => {
         const response = await getOrderByOrderId(orderResult.orderId);
@@ -449,11 +448,12 @@ export const usePaymentProcess = (
             DdLogs.error('Payment time expired (free vacuume)', {order});
             setLoading(false);
           } else {
-            setTimeout(pollOrderStatus, pollInterval);
+            const delay = 2000 + attempts * 1000;
+            setTimeout(pollOrderStatus, delay);
           }
         }
       };
-      pollOrderStatus();
+      setTimeout(pollOrderStatus, 1000);
     } catch (error: any) {
       errorHandler(error);
     }
