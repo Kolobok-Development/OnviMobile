@@ -42,6 +42,7 @@ const Home = React.memo(({navigation}: any) => {
   const camRef = useRef<CameraReference>(null);
 
   const currentPosition = useSharedValue(0);
+  const [isButtonVisible, setIsButtonVisible] = useState<boolean>(false);
 
   // set up bottom sheet reference to the store
   useEffect(() => {
@@ -57,6 +58,17 @@ const Home = React.memo(({navigation}: any) => {
     }
   }, [setCameraRef]);
 
+  useEffect(() => {
+    if (!business) {
+      const timer = setTimeout(() => {
+        setIsButtonVisible(true);
+      }, 300);
+      return () => clearTimeout(timer);
+    } else {
+      setIsButtonVisible(false);
+    }
+  }, [business]);
+
   const handleSheetChanges = useCallback((index: number) => {
     setVisible(index ? true : false);
     setIsBottomSheetOpen(index >= 2);
@@ -68,7 +80,7 @@ const Home = React.memo(({navigation}: any) => {
   );
 
   const animationConfigs = useBottomSheetTimingConfigs({
-    duration: 250,
+    duration: 300,
     easing: Easing.linear,
   });
 
@@ -78,7 +90,7 @@ const Home = React.memo(({navigation}: any) => {
         <Map ref={camRef} userLocationRef={userLocationRef} />
 
         {/* FindMe button with built-in position tracking and opacity fade */}
-        {!business && (
+        {isButtonVisible && !business && (
           <FindMeButton
             animatedPosition={currentPosition}
             animatedIndex={currentPosition}
