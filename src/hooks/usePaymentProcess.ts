@@ -316,7 +316,7 @@ export const usePaymentProcess = (
 
       // poll order status until COMPLETED
       let attempts = 0;
-      const maxAttempts = 12;
+      const maxAttempts = 15;
 
       const pollOrderStatus = async () => {
         try {
@@ -424,7 +424,7 @@ export const usePaymentProcess = (
       });
 
       let attempts = 0;
-      const maxAttempts = 12;
+      const maxAttempts = 15;
 
       const pollOrderStatus = async () => {
         const response = await getOrderByOrderId(orderResult.orderId);
