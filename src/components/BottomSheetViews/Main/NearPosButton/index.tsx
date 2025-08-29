@@ -1,16 +1,16 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Pressable, View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {BLUE, WHITE} from '../../../../utils/colors';
 import {dp} from '../../../../utils/dp';
 import useStore from '../../../../state/store';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {CarWashLocation} from 'src/types/api/app/types';
 import calculateDistance from '@utils/calculateDistance.ts';
-
 import Modal from '@styled/Modal';
 import {Button} from '@styled/buttons';
-
 import {useTranslation} from 'react-i18next';
+import {XStack, YStack, Text as TamaguiText} from 'tamagui';
+import PressableCard from '@components/PressableCard/PressableCard';
 
 export default function NearPosButton() {
   const {
@@ -91,20 +91,39 @@ export default function NearPosButton() {
 
   return (
     <>
-      <Pressable style={styles.balanceCard} onPress={handleLaunchCarWash}>
-        <View style={styles.label}>
-          <Text style={styles.labelText}>{t('app.business.letsWash')}</Text>
-        </View>
-        <View style={styles.info}>
-          <Text style={styles.infoText}>
-            {nearByPos?.carwashes?.length ? nearByPos.carwashes[0].name : ''}
-          </Text>
-          <Image
-            source={require('../../../../assets/icons/small-icon.png')}
-            style={styles.infoImage}
-          />
-        </View>
-      </Pressable>
+      <PressableCard
+        backgroundColor={BLUE}
+        borderRadius={dp(22)}
+        height={dp(90)}
+        width={'48%'}
+        flex={1}
+        padding={dp(16)}
+        onPress={handleLaunchCarWash}>
+        <YStack>
+          <YStack paddingBottom={dp(8)}>
+            <TamaguiText color={WHITE} fontSize={dp(16)} fontWeight="700">
+              {t('app.business.letsWash')}
+            </TamaguiText>
+          </YStack>
+          <XStack justifyContent="space-between" alignItems="center">
+            <TamaguiText
+              fontSize={dp(10)}
+              fontWeight="700"
+              color={WHITE}
+              flex={1}
+              ellipsizeMode="tail"
+              marginRight={dp(8)}
+              numberOfLines={3}>
+              {nearByPos?.carwashes?.length ? nearByPos.carwashes[0].name : ''}
+            </TamaguiText>
+            <Image
+              source={require('../../../../assets/icons/small-icon.png')}
+              style={{width: 30, height: 30}}
+            />
+          </XStack>
+        </YStack>
+      </PressableCard>
+
       <Modal
         visible={nearByModal}
         onClose={() => setNearByModal(false)}
@@ -135,39 +154,6 @@ export default function NearPosButton() {
 }
 
 const styles = StyleSheet.create({
-  balanceCard: {
-    backgroundColor: BLUE,
-    borderRadius: 22,
-    height: dp(90),
-    flex: 1,
-    marginRight: dp(8),
-    flexDirection: 'column',
-    padding: dp(16),
-  },
-  label: {
-    paddingBottom: dp(8),
-  },
-  labelText: {
-    color: WHITE,
-    fontSize: dp(16),
-    fontWeight: '700',
-  },
-  info: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  infoText: {
-    fontSize: dp(10),
-    fontWeight: '700',
-    color: 'white',
-    letterSpacing: 0.5,
-    flexShrink: 1,
-  },
-  infoImage: {
-    width: 30,
-    height: 30,
-  },
   modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',

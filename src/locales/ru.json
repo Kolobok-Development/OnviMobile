@@ -67,7 +67,8 @@
       "freshNews": "Свежие новости",
       "supportService": "Служба поддержки",
       "transferBalance": "Перенос Баланса",
-      "support": "Служба поддержки"
+      "support": "Служба поддержки",
+      "PromotionsForYou": "Акции для тебя"
     },
     "payment": {
       "title": "Оплата",
@@ -209,7 +210,7 @@
     "business": {
       "farFromWash": "Вы далеко от мойки",
       "somethingWrong": "Возможно мы что-то напутали",
-      "letsVacuum": "Пылесосемся",
+      "letsVacuum": "Пылесосимся",
       "letsWash": "Моемся",
       "select": "Выберите",
       "bay": "Бокс",
