@@ -1,12 +1,12 @@
 import React, {createContext, useContext, useState, useEffect} from 'react';
-import {darkTheme, defaultTheme} from './../../utils/theme';
-
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {defaultTheme, darkTheme} from '../../utils/theme';
 
 interface ThemeContextType {
-  theme: typeof defaultTheme | typeof darkTheme;
+  themeMode: 'light' | 'dark';
   isLoadingTheme: boolean;
-  updateTheme: (currentThemeMode: string) => void;
+  toggleTheme: () => void;
+  theme: typeof defaultTheme | typeof darkTheme;
 }
 
 const ThemeContext = createContext<ThemeContextType>(null!);
@@ -16,23 +16,29 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider = ({children}: ThemeProviderProps) => {
-  const [theme, setTheme] = useState(defaultTheme);
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>('light');
   const [isLoadingTheme, setIsLoadingTheme] = useState(true);
+  const [currentTheme, setCurrentTheme] = useState(defaultTheme);
 
   const findOldTheme = async () => {
-    const themeMode = await AsyncStorage.getItem('themeMode');
-
-    if (themeMode !== null) {
-      themeMode === 'default' ? setTheme(defaultTheme) : setTheme(darkTheme);
+    const savedThemeMode = await AsyncStorage.getItem('themeMode');
+    if (savedThemeMode === 'dark') {
+      setThemeMode('light');
+      setCurrentTheme(defaultTheme);
+    } else {
+      setThemeMode('light');
+      setCurrentTheme(defaultTheme);
     }
-
     setIsLoadingTheme(false);
   };
 
-  const updateTheme = (currentThemeMode: string) => {
-    const newTheme = currentThemeMode === 'default' ? darkTheme : defaultTheme;
-    setTheme(newTheme);
-    AsyncStorage.setItem('themeMode', newTheme.themeMode);
+  const toggleTheme = () => {
+    const newThemeMode = themeMode === 'light' ? 'dark' : 'light';
+    const newTheme = newThemeMode === 'light' ? defaultTheme : darkTheme;
+
+    setThemeMode(newThemeMode);
+    setCurrentTheme(newTheme);
+    AsyncStorage.setItem('themeMode', newThemeMode);
   };
 
   useEffect(() => {
@@ -42,9 +48,10 @@ export const ThemeProvider = ({children}: ThemeProviderProps) => {
   return (
     <ThemeContext.Provider
       value={{
-        theme: theme,
-        isLoadingTheme: isLoadingTheme,
-        updateTheme: updateTheme,
+        themeMode,
+        isLoadingTheme,
+        toggleTheme,
+        theme: currentTheme,
       }}>
       {children}
     </ThemeContext.Provider>
@@ -52,5 +59,3 @@ export const ThemeProvider = ({children}: ThemeProviderProps) => {
 };
 
 export const useTheme = () => useContext(ThemeContext);
-
-export default {ThemeProvider};

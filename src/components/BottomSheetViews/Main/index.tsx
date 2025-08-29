@@ -1,18 +1,9 @@
 import React, {useCallback, useRef} from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  Dimensions,
-  TouchableOpacity,
-} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import {StyleSheet, Dimensions, Platform} from 'react-native';
 
-// styled components
-import {Card} from '@styled/cards';
+import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
-import {BLACKTWO, WHITE, GREY, BLACK} from '@utils/colors.ts';
+import {BLACKTWO, WHITE, BLACK} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {
   BottomSheetScrollView,
@@ -26,18 +17,17 @@ import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
-
 import {useNavStore} from '@state/useNavStore/index.ts';
-
 import {Campaign} from '@app-types/api/app/types.ts';
-
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
-
 import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
 import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
+import {useCombinedTheme} from '@hooks/useCombinedTheme';
+import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
+import PressableCard from '@components/PressableCard/PressableCard.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
@@ -48,8 +38,8 @@ const Main = () => {
 
   const {drawerNavigation} = useNavStore();
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
+  const {backgroundColor, currentThemeName} = useCombinedTheme();
 
-  // API Calls
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
     () => getCampaignList('*'),
@@ -91,7 +81,8 @@ const Main = () => {
 
   const renderCampaignItem = useCallback(
     ({item}: {item: Campaign}) => (
-      <TouchableOpacity
+      <PressableCard
+        unstyled
         onPress={() => handleCampaignItemPress(item)}
         style={styles.campaigns}>
         <Image
@@ -99,30 +90,36 @@ const Main = () => {
           style={{
             width: dp(340),
             height: dp(190),
-            resizeMode: 'contain',
+            objectFit: 'contain',
           }}
         />
-      </TouchableOpacity>
+      </PressableCard>
     ),
     [],
   );
+
   return (
     <BottomSheetScrollView
-      contentContainerStyle={{flexGrow: 1}}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingBottom: Platform.OS === 'ios' ? dp(0) : dp(40),
+      }}
       ref={scrollViewRef}
       nestedScrollEnabled={true}
       scrollEnabled={true}>
-      <View style={{flexGrow: 1}}>
-        <Card>
-          <View style={{...styles.row, marginBottom: dp(16)}}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: '#D8D9DD',
-                flex: 1,
-                borderRadius: dp(25),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
+      <YStack style={{minHeight: '100%'}}>
+        <Card
+          theme={currentThemeName}
+          backgroundColor={backgroundColor}
+          padding={dp(16)}
+          borderRadius={dp(22)}>
+          <XStack verticalAlign="center" gap={dp(16)}>
+            <XStack
+              flex={1}
+              backgroundColor="#D8D9DD"
+              borderRadius={dp(25)}
+              height={dp(45)}
+              alignItems="center"
               onPress={() => {
                 navigateBottomSheet('Search', {});
                 bottomSheetRef?.current?.snapToPosition(
@@ -136,18 +133,17 @@ const Main = () => {
                 style={{marginLeft: dp(15)}}
               />
               <Text
-                style={{
-                  color: '#000',
-                  fontSize: dp(13),
-                  fontWeight: '600',
-                  opacity: 0.15,
-                  paddingLeft: dp(7),
-                }}>
+                color="#000"
+                fontSize={dp(13)}
+                fontWeight="600"
+                opacity={0.15}
+                marginLeft={dp(7)}
+                flex={1}>
                 {t('app.main.search')}
               </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{}}
+            </XStack>
+            <Button
+              unstyled
               onPress={() => {
                 navigateBottomSheet('Filters', {});
                 bottomSheetRef?.current?.snapToPosition(
@@ -156,34 +152,41 @@ const Main = () => {
               }}>
               <Image
                 source={require('../../../assets/icons/filterIcon.png')}
-                style={{
-                  width: dp(45),
-                  height: dp(45),
-                  resizeMode: 'contain',
-                }}
+                width={dp(45)}
+                height={dp(45)}
               />
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.row}>
+            </Button>
+          </XStack>
+          <XStack gap={dp(16)} marginTop={dp(16)}>
             <NearPosButton />
-            <TouchableOpacity
-              style={styles.partnersCard}
+
+            <PressableCard
+              backgroundColor={BLACKTWO}
+              borderRadius={dp(22)}
+              height={dp(90)}
+              width={'48%'}
+              flex={1}
               onPress={() => {
-                setTimeout(() => {
-                  drawerNavigation?.navigate('Промокоды');
-                }, 100);
+                drawerNavigation?.navigate('Промокоды');
               }}>
-              <View style={styles.label}>
+              <YStack alignItems="flex-start" padding={dp(16)} height="100%">
                 <Text
-                  style={{color: WHITE, fontSize: dp(16), fontWeight: '700'}}>
+                  color={WHITE}
+                  fontSize={dp(16)}
+                  fontWeight="700"
+                  textAlign="center">
                   {t('navigation.promos')}
                 </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+              </YStack>
+            </PressableCard>
+          </XStack>
         </Card>
-        <Card>
+        <Card
+          backgroundColor={backgroundColor}
+          padding={dp(16)}
+          borderRadius={38}
+          flex={1}
+          marginTop={dp(8)}>
           {storyLoading || storyError ? (
             <StoryViewPlaceholder />
           ) : (
@@ -195,93 +198,27 @@ const Main = () => {
               )}
             </>
           )}
-          <View style={{...styles.newsRow}}>
+          <XStack justifyContent={'space-between'}>
             <Text
-              style={{
-                color: BLACK,
-                fontSize: dp(24),
-                fontWeight: '600',
-              }}>
-              {t('app.main.freshNews')}
+              color={BLACK}
+              fontSize={dp(24)}
+              fontWeight="600"
+              marginTop={dp(16)}>
+              {t('app.main.PromotionsForYou')}
             </Text>
-          </View>
-          {newsLoading || newsError ? (
-            <PostsPlaceholder />
-          ) : (
-            <>
-              {newsData && (
-                <View style={styles.news}>
-                  {newsData[0] && (
-                    <View style={styles.leftNewsColumn}>
-                      <TouchableOpacity
-                        style={{flex: 1}}
-                        onPress={() =>
-                          navigateBottomSheet('Post', {
-                            data: newsData[0],
-                          })
-                        }>
-                        <Image
-                          source={{
-                            uri: newsData[0].attributes.vertical_image.data
-                              .attributes.url,
-                          }}
-                          style={styles.vertical}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-
-                  <View style={styles.rightNewsColumn}>
-                    {newsData[1] && (
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigateBottomSheet('Post', {
-                            data: newsData[1],
-                          })
-                        }>
-                        <Image
-                          source={{
-                            uri: newsData[1].attributes.horizontal_image.data
-                              .attributes.url,
-                          }}
-                          style={styles.vertical}
-                        />
-                      </TouchableOpacity>
-                    )}
-                    {newsData[2] && (
-                      <TouchableOpacity
-                        onPress={() =>
-                          navigateBottomSheet('Post', {
-                            data: newsData[2],
-                          })
-                        }>
-                        <Image
-                          source={{
-                            uri: newsData[2].attributes.horizontal_image.data
-                              .attributes.url,
-                          }}
-                          style={styles.vertical}
-                        />
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                </View>
-              )}
-            </>
-          )}
-          <View style={{flex: 1, paddingBottom: dp(50), marginTop: dp(10)}}>
+          </XStack>
+          <YStack flex={1} marginTop={dp(12)}>
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
-              <View style={{flex: 1}}>
+              <XStack flex={1}>
                 {campaignData && (
                   <Carousel
                     loop
                     vertical={false}
                     width={dp(350)}
                     height={dp(200)}
-                    enabled // Default is true, just for demo
-                    //defaultScrollOffsetValue={scrollOffsetValue}
+                    enabled
                     autoPlay={true}
                     autoPlayInterval={3000}
                     data={campaignData}
@@ -289,80 +226,65 @@ const Main = () => {
                     renderItem={renderCampaignItem}
                   />
                 )}
-              </View>
+              </XStack>
             )}
-          </View>
+          </YStack>
+          <XStack justifyContent={'space-between'}>
+            <Text
+              color={BLACK}
+              fontSize={dp(24)}
+              fontWeight="600"
+              marginTop={dp(12)}>
+              {t('app.main.freshNews')}
+            </Text>
+          </XStack>
+          <XStack marginTop={dp(12)}>
+            {newsLoading || newsError ? (
+              <PostsPlaceholder />
+            ) : (
+              <>
+                {newsData && (
+                  <XStack
+                    flexWrap="wrap"
+                    justifyContent="space-between"
+                    gap={dp(11)}>
+                    {newsData.map((newsItem, index) => (
+                      <PressableCard
+                        key={newsItem.id || index}
+                        width="48%"
+                        aspectRatio={1}
+                        borderRadius={dp(23)}
+                        overflow="hidden"
+                        onPress={() =>
+                          navigateBottomSheet('Post', {data: newsItem})
+                        }>
+                        <Image
+                          source={{
+                            uri:
+                              newsItem.attributes.vertical_image?.data
+                                ?.attributes?.url ||
+                              newsItem.attributes.horizontal_image?.data
+                                ?.attributes?.url,
+                          }}
+                          width="100%"
+                          height="100%"
+                        />
+                      </PressableCard>
+                    ))}
+                  </XStack>
+                )}
+              </>
+            )}
+          </XStack>
         </Card>
-      </View>
+      </YStack>
     </BottomSheetScrollView>
   );
 };
 
 const {width} = Dimensions.get('window');
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    height: Dimensions.get('screen').height,
-    backgroundColor: WHITE,
-    borderRadius: 22,
-    padding: dp(16),
-  },
-  row: {
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  partnersCard: {
-    backgroundColor: BLACKTWO,
-    borderRadius: 22,
-    height: dp(90),
-    flex: 1,
-    marginLeft: dp(8),
-    flexDirection: 'column',
-    padding: dp(16),
-  },
-  label: {
-    paddingBottom: dp(8),
-  },
-  location: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  newsRow: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  news: {
-    display: 'flex',
-    flexDirection: 'row',
-    minHeight: dp(280),
-  },
-  leftNewsColumn: {
-    flex: 1,
-  },
-  rightNewsColumn: {
-    flex: 2,
-    marginLeft: dp(8),
-  },
-  searchInput: {
-    backgroundColor: GREY,
-    borderRadius: dp(25),
-    height: dp(45),
-    alignSelf: 'stretch',
-    textAlign: 'left',
-    padding: dp(5),
-    color: '#000000',
-  },
-  vertical: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    borderRadius: 25,
-    marginTop: dp(16),
-    padding: dp(8),
-    minHeight: dp(120),
-  },
   campaigns: {
     width: width,
     justifyContent: 'center',

@@ -1,20 +1,18 @@
-import {ReactNode} from 'react';
-
-import {TamaguiProvider as Provider, createTamagui} from '@tamagui/core';
-import {defaultConfig} from '@tamagui/config/v4';
-
-const config = createTamagui(defaultConfig);
-
-type Conf = typeof config;
-
-declare module '@tamagui/core' {
-  interface TamaguiCustomConfig extends Conf {}
-}
+import {TamaguiProvider as BaseTamaguiProvider} from '@tamagui/core';
+import config from '../../../tamagui.config';
 
 interface TamaguiProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
+  defaultTheme?: 'light' | 'dark';
 }
 
-export default function TamaguiProvider({children}: TamaguiProviderProps) {
-  return <Provider config={config}>{children}</Provider>;
+export default function TamaguiProvider({
+  children,
+  defaultTheme = 'light',
+}: TamaguiProviderProps) {
+  return (
+    <BaseTamaguiProvider config={config} defaultTheme={defaultTheme}>
+      {children}
+    </BaseTamaguiProvider>
+  );
 }
