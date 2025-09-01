@@ -11,8 +11,10 @@ import {
 } from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 import {useFocusEffect} from '@react-navigation/native';
-import {Search} from 'react-native-feather';
-import Carousel from 'react-native-reanimated-carousel';
+import Carousel, {
+  ICarouselInstance,
+  Pagination,
+} from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
@@ -28,11 +30,22 @@ import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 import {useCombinedTheme} from '@hooks/useCombinedTheme';
 import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
+import {useSharedValue} from 'react-native-reanimated';
 
 const Main = () => {
   const {t} = useTranslation();
   const {bottomSheetRef, bottomSheetSnapPoints, setSelectedPos, setBusiness} =
     useStore.getState();
+
+  const ref = React.useRef<ICarouselInstance>(null);
+  const progress = useSharedValue<number>(0);
+
+  const onPressPagination = (index: number) => {
+    ref.current?.scrollTo({
+      count: index - progress.value,
+      animated: true,
+    });
+  };
 
   const {setIsMainScreen} = useNavStore.getState();
 
@@ -56,6 +69,8 @@ const Main = () => {
     data: storyData,
     error: storyError,
   } = useSWR(['getStoryViw'], () => getStoryView('*'));
+
+  const paginationData = [...new Array(campaignData?.length).keys()];
 
   useFocusEffect(
     useCallback(() => {
@@ -105,7 +120,7 @@ const Main = () => {
         paddingBottom: Platform.OS === 'ios' ? dp(0) : dp(40),
       }}
       ref={scrollViewRef}
-      nestedScrollEnabled={true}
+      nestedScrollEnabled={false}
       scrollEnabled={true}>
       <YStack style={{minHeight: '100%'}}>
         <Card
@@ -117,7 +132,8 @@ const Main = () => {
             <XStack
               flex={1}
               backgroundColor="#D8D9DD"
-              borderRadius={dp(25)}
+              borderRadius={dp(12)}
+              paddingHorizontal={dp(16)}
               height={dp(45)}
               alignItems="center"
               onPress={() => {
@@ -126,36 +142,35 @@ const Main = () => {
                   bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
                 );
               }}>
-              <Search
-                stroke={'#000000'}
-                width={dp(20)}
-                height={dp(20)}
-                style={{marginLeft: dp(15)}}
+              <Image
+                source={require('../../../assets/icons/Search.png')}
+                width={dp(26)}
+                height={dp(26)}
               />
               <Text
                 color="#000"
-                fontSize={dp(13)}
+                fontSize={dp(16)}
                 fontWeight="600"
                 opacity={0.15}
                 marginLeft={dp(7)}
                 flex={1}>
                 {t('app.main.search')}
               </Text>
+              <Button
+                unstyled
+                onPress={() => {
+                  navigateBottomSheet('Filters', {});
+                  bottomSheetRef?.current?.snapToPosition(
+                    bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
+                  );
+                }}>
+                <Image
+                  source={require('../../../assets/icons/Settings-adjust.png')}
+                  width={dp(26)}
+                  height={dp(26)}
+                />
+              </Button>
             </XStack>
-            <Button
-              unstyled
-              onPress={() => {
-                navigateBottomSheet('Filters', {});
-                bottomSheetRef?.current?.snapToPosition(
-                  bottomSheetSnapPoints[bottomSheetSnapPoints.length - 1],
-                );
-              }}>
-              <Image
-                source={require('../../../assets/icons/filterIcon.png')}
-                width={dp(45)}
-                height={dp(45)}
-              />
-            </Button>
           </XStack>
           <XStack gap={dp(16)} marginTop={dp(16)}>
             <NearPosButton />
@@ -211,22 +226,39 @@ const Main = () => {
             {campaignLoading ? (
               <CampaignPlaceholder />
             ) : (
-              <XStack flex={1}>
+              <YStack flex={1}>
                 {campaignData && (
-                  <Carousel
-                    loop
-                    vertical={false}
-                    width={dp(350)}
-                    height={dp(200)}
-                    enabled
-                    autoPlay={true}
-                    autoPlayInterval={3000}
-                    data={campaignData}
-                    pagingEnabled={true}
-                    renderItem={renderCampaignItem}
-                  />
+                  <>
+                    <Carousel
+                      ref={ref}
+                      loop
+                      vertical={false}
+                      width={dp(350)}
+                      height={dp(200)}
+                      enabled
+                      autoPlay={true}
+                      autoPlayInterval={3000}
+                      data={campaignData}
+                      pagingEnabled={true}
+                      renderItem={renderCampaignItem}
+                      onProgressChange={progress}
+                    />
+                    <Pagination.Basic
+                      progress={progress}
+                      data={paginationData}
+                      dotStyle={{
+                        backgroundColor: 'rgba(0,0,0,0.2)',
+                        borderRadius: 50,
+                      }}
+                      activeDotStyle={{
+                        backgroundColor: 'rgba(11, 104, 225, 1)',
+                      }}
+                      containerStyle={{gap: 5}}
+                      onPress={onPressPagination}
+                    />
+                  </>
                 )}
-              </XStack>
+              </YStack>
             )}
           </YStack>
           <XStack justifyContent={'space-between'}>
