@@ -1,14 +1,41 @@
 import React, {useRef} from 'react';
-import {Pressable, Animated, DimensionValue} from 'react-native';
-import {Card, CardProps} from 'tamagui';
+import {Animated, DimensionValue, PanResponder} from 'react-native';
+import {Card, CardProps, XStack} from 'tamagui';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+const HapticOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 interface PressableCardProps extends CardProps {
   onPress?: () => void;
   children: React.ReactNode;
+  hapticType?:
+    | 'selection'
+    | 'impactLight'
+    | 'impactMedium'
+    | 'impactHeavy'
+    | 'notificationSuccess'
+    | 'notificationWarning'
+    | 'notificationError';
+  enableHaptic?: boolean;
 }
 
-const PressableCard = ({onPress, children, ...props}: PressableCardProps) => {
+const PressableCard = ({
+  onPress,
+  children,
+  hapticType = 'impactMedium',
+  enableHaptic = true,
+  ...props
+}: PressableCardProps) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
+
+  const triggerHaptic = () => {
+    if (enableHaptic) {
+      ReactNativeHapticFeedback.trigger(hapticType, HapticOptions);
+    }
+  };
 
   const pressIn = () => {
     Animated.spring(scaleValue, {
@@ -28,33 +55,45 @@ const PressableCard = ({onPress, children, ...props}: PressableCardProps) => {
     }).start();
   };
 
-  const handlePress = () => {
-    onPress && onPress();
-  };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return Math.abs(gestureState.dy) <= 8;
+      },
+      onPanResponderGrant: pressIn,
+      onPanResponderRelease: (_, gestureState) => {
+        if (Math.abs(gestureState.dy) < 5) {
+          onPress?.();
+          triggerHaptic();
+        }
+        pressOut();
+      },
+
+      onPanResponderTerminate: pressOut,
+    }),
+  ).current;
 
   return (
-    <Pressable
-      onPressIn={pressIn}
-      onPressOut={pressOut}
-      onPress={handlePress}
-      delayLongPress={500}
+    <XStack
       style={{
         width: props.width as DimensionValue,
-      }}>
+      }}
+      {...panResponder.panHandlers}>
       <Animated.View
         style={{
-          transform: [{scale: scaleValue}],
           width: '100%',
+          transform: [{scale: scaleValue}],
         }}>
         <Card
-          {...props}
           style={{
             width: '100%',
-          }}>
+          }}
+          {...props}>
           {children}
         </Card>
       </Animated.View>
-    </Pressable>
+    </XStack>
   );
 };
 

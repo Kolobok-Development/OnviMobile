@@ -120,7 +120,7 @@ const Main = () => {
         paddingBottom: Platform.OS === 'ios' ? dp(0) : dp(40),
       }}
       ref={scrollViewRef}
-      nestedScrollEnabled={false}
+      nestedScrollEnabled={true}
       scrollEnabled={true}>
       <YStack style={{minHeight: '100%'}}>
         <Card
