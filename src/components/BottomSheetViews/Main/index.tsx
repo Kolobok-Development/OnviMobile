@@ -235,7 +235,7 @@ const Main = () => {
                       vertical={false}
                       width={dp(350)}
                       height={dp(200)}
-                      enabled={false}
+                      enabled
                       autoPlay={true}
                       autoPlayInterval={3000}
                       data={campaignData}
