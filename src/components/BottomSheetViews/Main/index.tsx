@@ -31,6 +31,7 @@ import {useCombinedTheme} from '@hooks/useCombinedTheme';
 import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
+import CarouselWrapper from '@components/CarouselWrapper/CarouselWrapper.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
@@ -229,20 +230,22 @@ const Main = () => {
               <YStack flex={1}>
                 {campaignData && (
                   <>
-                    <Carousel
-                      ref={ref}
-                      loop
-                      vertical={false}
-                      width={dp(350)}
-                      height={dp(200)}
-                      enabled
-                      autoPlay={true}
-                      autoPlayInterval={3000}
-                      data={campaignData}
-                      pagingEnabled={true}
-                      renderItem={renderCampaignItem}
-                      onProgressChange={progress}
-                    />
+                    <CarouselWrapper>
+                      <Carousel
+                        ref={ref}
+                        loop
+                        vertical={false}
+                        width={dp(350)}
+                        height={dp(200)}
+                        enabled
+                        autoPlay={true}
+                        autoPlayInterval={3000}
+                        data={campaignData}
+                        pagingEnabled={true}
+                        renderItem={renderCampaignItem}
+                        onProgressChange={progress}
+                      />
+                    </CarouselWrapper>
                     <Pagination.Basic
                       progress={progress}
                       data={paginationData}
