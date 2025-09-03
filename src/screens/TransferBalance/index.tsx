@@ -11,6 +11,10 @@ import {
   Platform,
   Modal,
   Linking,
+  KeyboardAvoidingView,
+  ScrollView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import {useTranslation} from 'react-i18next';
 import {dp} from '../../utils/dp';
@@ -112,225 +116,253 @@ const TransferBalance = () => {
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      {(!showContent || showInstructions) && (
-        <TransferBalanceOnboardingStory
-          onComplete={() => {
-            setShowContent(true);
-            setShowInstructions(false);
-          }}
-          isManualTrigger={showInstructions}
-        />
-      )}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <KeyboardAvoidingView
+        style={styles.keyboardAvoidingView}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? dp(40) : 0}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContainer}
+          keyboardShouldPersistTaps="handled">
+          <SafeAreaView style={styles.safeArea}>
+            {(!showContent || showInstructions) && (
+              <TransferBalanceOnboardingStory
+                onComplete={() => {
+                  setShowContent(true);
+                  setShowInstructions(false);
+                }}
+                isManualTrigger={showInstructions}
+              />
+            )}
 
-      <View style={styles.header}>
-        <ScreenHeader
-          screenTitle={t('app.transferBalance.transferBalance')}
-          btnType="back"
-          btnCallback={() => navigation.navigate('Главная')}
-        />
-      </View>
-      <View style={styles.contentContainer}>
-        <Text style={styles.modalTitle}>
-          {t('app.transferBalance.transferBalance')}
-        </Text>
-
-        {balance?.balance === 0 ? (
-          <>
-            <Text style={styles.modalDescription}>
-              {t('app.transferBalance.zeroBalanceMessage')}
-            </Text>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => navigation.navigate('Главная')}>
-              <Text style={styles.buttonText}>{t('common.buttons.ok')}</Text>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
-            <Text style={styles.modalDescription}>
-              {!balance
-                ? t('app.transferBalance.description')
-                : t('app.transferBalance.cardFound')}
-            </Text>
-            <TouchableOpacity onPress={() => setShowInstructions(true)}>
-              <Text style={styles.instructionsLink}>
-                {t('app.transferBalance.howItWorks')}
+            <View style={styles.header}>
+              <ScreenHeader
+                screenTitle={t('app.transferBalance.transferBalance')}
+                btnType="back"
+                btnCallback={() => navigation.navigate('Главная')}
+              />
+            </View>
+            <View style={styles.contentContainer}>
+              <Text style={styles.modalTitle}>
+                {t('app.transferBalance.transferBalance')}
               </Text>
-              <Text style={styles.instructionsLink} onPress={handlePress}>
-                {t('app.transferBalance.transferRules')}
-              </Text>
-            </TouchableOpacity>
 
-            <View style={styles.cardInputContainer}>
-              <ImageBackground
-                source={require('../../assets/images/balance-transfer-input.png')}
-                style={styles.imageBackground}
-                resizeMode="cover">
-                <View style={styles.overlay}>
-                  <View style={styles.inputContainer}>
-                    <TextInput
-                      style={[styles.input, error ? {color: 'red'} : undefined]}
-                      value={cardNumber}
-                      onChangeText={formatCardNumber}
-                      placeholder="xxxx-xxxx-xxxx"
-                      keyboardType="numeric"
-                      maxLength={19}
-                      placeholderTextColor="#999"
-                      editable={balance ? false : true}
-                    />
-                    {balance ? (
-                      <Text style={{...styles.balanceText, marginTop: 0}}>
-                        {balance?.balance} {t('common.labels.points')}
+              {balance?.balance === 0 ? (
+                <>
+                  <Text style={styles.modalDescription}>
+                    {t('app.transferBalance.zeroBalanceMessage')}
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => navigation.navigate('Главная')}>
+                    <Text style={styles.buttonText}>
+                      {t('common.buttons.ok')}
+                    </Text>
+                  </TouchableOpacity>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.modalDescription}>
+                    {!balance
+                      ? t('app.transferBalance.description')
+                      : t('app.transferBalance.cardFound')}
+                  </Text>
+                  <TouchableOpacity onPress={() => setShowInstructions(true)}>
+                    <Text style={styles.instructionsLink}>
+                      {t('app.transferBalance.howItWorks')}
+                    </Text>
+                    <Text style={styles.instructionsLink} onPress={handlePress}>
+                      {t('app.transferBalance.transferRules')}
+                    </Text>
+                  </TouchableOpacity>
+
+                  <View style={styles.cardInputContainer}>
+                    <ImageBackground
+                      source={require('../../assets/images/balance-transfer-input.png')}
+                      style={styles.imageBackground}
+                      resizeMode="cover">
+                      <View style={styles.overlay}>
+                        <View style={styles.inputContainer}>
+                          <TextInput
+                            style={[
+                              styles.input,
+                              error ? {color: 'red'} : undefined,
+                            ]}
+                            value={cardNumber}
+                            onChangeText={formatCardNumber}
+                            placeholder="xxxx-xxxx-xxxx"
+                            keyboardType="numeric"
+                            maxLength={19}
+                            placeholderTextColor="#999"
+                            editable={balance ? false : true}
+                          />
+                          {balance ? (
+                            <Text style={{...styles.balanceText, marginTop: 0}}>
+                              {balance?.balance} {t('common.labels.points')}
+                            </Text>
+                          ) : (
+                            <></>
+                          )}
+                          {error ? (
+                            <Text style={styles.errorText}>{error}</Text>
+                          ) : (
+                            <></>
+                          )}
+                        </View>
+                      </View>
+                    </ImageBackground>
+                  </View>
+
+                  {balance ? (
+                    <>
+                      <View style={styles.cardInputContainer}>
+                        <ImageBackground
+                          source={require('../../assets/images/transfer-balance-success.png')}
+                          style={styles.imageBackground}
+                          resizeMode="cover">
+                          <View style={styles.overlay}>
+                            <View style={styles.inputContainer}>
+                              <Text style={styles.balanceText}>
+                                {t('app.transferBalance.balanceAfterTransfer')}{' '}
+                                {'\n'}
+                                {balance?.balanceAfterTransfer}{' '}
+                                {t('common.labels.points')}
+                              </Text>
+                            </View>
+                          </View>
+                        </ImageBackground>
+                      </View>
+
+                      {balance?.bonusAsPromo > 0 &&
+                        (balance?.bonusAsPromo < 50 ? (
+                          <Text style={{marginTop: dp(10)}}>
+                            💡 {balance?.bonusAsPromo}{' '}
+                            {t('app.transferBalance.bonusPointsNotTransferred')}
+                            .{' '}
+                            {balance.balanceAfterTransfer === 0 &&
+                              t('app.transferBalance.transferNotPossible')}
+                            {balance.balanceAfterTransfer !== 0 &&
+                              t('app.transferBalance.onlyRealBalance')}
+                            .
+                          </Text>
+                        ) : (
+                          <Text style={{marginTop: dp(10)}}>
+                            💡 {balance?.bonusAsPromo}{' '}
+                            {t('app.transferBalance.bonusesReturn')}
+                            <Pressable
+                              style={{display: 'flex', alignItems: 'flex-end'}}>
+                              <Text
+                                style={{
+                                  color: 'blue',
+                                  textDecorationLine: 'underline',
+                                }}>
+                                {t('navigation.promos')}
+                              </Text>
+                            </Pressable>
+                          </Text>
+                        ))}
+                    </>
+                  ) : (
+                    <></>
+                  )}
+
+                  {!balance ? (
+                    <TouchableOpacity
+                      style={styles.button}
+                      onPress={findBalance}>
+                      <Text style={styles.buttonText}>
+                        {t('common.buttons.find')}
                       </Text>
-                    ) : (
-                      <></>
-                    )}
-                    {error ? (
-                      <Text style={styles.errorText}>{error}</Text>
-                    ) : (
-                      <></>
-                    )}
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={getButtonStyle()}
+                      onPress={() => setModalVisible(true)}
+                      disabled={
+                        balance.balanceAfterTransfer === 0 &&
+                        balance.bonusAsPromo < 50
+                      }>
+                      <Text style={styles.buttonText}>
+                        {t('common.buttons.transfer')}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </View>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                setModalVisible(!modalVisible);
+              }}>
+              <View style={styles.centeredView}>
+                <View style={styles.modalOverlay} />
+                <View style={styles.modalView}>
+                  <Text style={styles.modalText}>
+                    {t('app.transferBalance.modalTextPart1')}
+                    <Text style={styles.instructionsLink} onPress={handlePress}>
+                      {t('app.transferBalance.modalTextPart2')}
+                    </Text>
+                    {t('app.transferBalance.modalTextPart3')}
+                  </Text>
+                  <View style={styles.modalButtons}>
+                    <TouchableOpacity
+                      style={[styles.modalButton, styles.buttonClose]}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text style={styles.buttonText}>
+                        {t('common.buttons.cancel')}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.modalButton, styles.buttonConfirm]}
+                      onPress={confirmTransfer}>
+                      <Text style={styles.buttonText}>
+                        {t('common.buttons.yes')}
+                      </Text>
+                    </TouchableOpacity>
                   </View>
                 </View>
-              </ImageBackground>
-            </View>
+              </View>
+            </Modal>
 
-            {balance ? (
-              <>
-                <View style={styles.cardInputContainer}>
-                  <ImageBackground
-                    source={require('../../assets/images/transfer-balance-success.png')}
-                    style={styles.imageBackground}
-                    resizeMode="cover">
-                    <View style={styles.overlay}>
-                      <View style={styles.inputContainer}>
-                        <Text style={styles.balanceText}>
-                          {t('app.transferBalance.balanceAfterTransfer')} {'\n'}
-                          {balance?.balanceAfterTransfer}{' '}
-                          {t('common.labels.points')}
-                        </Text>
-                      </View>
-                    </View>
-                  </ImageBackground>
-                </View>
-
-                {balance?.bonusAsPromo > 0 &&
-                  (balance?.bonusAsPromo < 50 ? (
-                    <Text style={{marginTop: dp(10)}}>
-                      💡 {balance?.bonusAsPromo}{' '}
-                      {t('app.transferBalance.bonusPointsNotTransferred')}.{' '}
-                      {balance.balanceAfterTransfer === 0 &&
-                        t('app.transferBalance.transferNotPossible')}
-                      {balance.balanceAfterTransfer !== 0 &&
-                        t('app.transferBalance.onlyRealBalance')}
-                      .
-                    </Text>
-                  ) : (
-                    <Text style={{marginTop: dp(10)}}>
-                      💡 {balance?.bonusAsPromo}{' '}
-                      {t('app.transferBalance.bonusesReturn')}
-                      <Pressable
-                        style={{display: 'flex', alignItems: 'flex-end'}}>
-                        <Text
-                          style={{
-                            color: 'blue',
-                            textDecorationLine: 'underline',
-                          }}>
-                          {t('navigation.promos')}
-                        </Text>
-                      </Pressable>
-                    </Text>
-                  ))}
-              </>
-            ) : (
-              <></>
-            )}
-
-            {!balance ? (
-              <TouchableOpacity style={styles.button} onPress={findBalance}>
-                <Text style={styles.buttonText}>
-                  {t('common.buttons.find')}
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                style={getButtonStyle()}
-                onPress={() => setModalVisible(true)}
-                disabled={
-                  balance.balanceAfterTransfer === 0 &&
-                  balance.bonusAsPromo < 50
-                }>
-                <Text style={styles.buttonText}>
-                  {t('common.buttons.transfer')}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </>
-        )}
-      </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <View style={styles.centeredView}>
-          <View style={styles.modalOverlay} />
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>
-              {t('app.transferBalance.modalTextPart1')}
-              <Text style={styles.instructionsLink} onPress={handlePress}>
-                {t('app.transferBalance.modalTextPart2')}
-              </Text>
-              {t('app.transferBalance.modalTextPart3')}
-            </Text>
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.buttonClose]}
-                onPress={() => setModalVisible(!modalVisible)}>
-                <Text style={styles.buttonText}>
-                  {t('common.buttons.cancel')}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modalButton, styles.buttonConfirm]}
-                onPress={confirmTransfer}>
-                <Text style={styles.buttonText}>{t('common.buttons.yes')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
-
-      <TransferFailModal
-        visible={transferFailModal}
-        onClose={() => {
-          setTransferFailModal(false);
-          setError('');
-          setCardNumber('');
-          setBalance(undefined);
-        }}
-      />
-      <TransferSuccessModal
-        visible={transferSuccessModal}
-        onClose={() => {
-          setTransferSuccessModal(false);
-          setError('');
-          setCardNumber('');
-          setBalance(undefined);
-          loadUser().then(() => {
-            navigation.navigate('Главная');
-          });
-        }}
-      />
-    </SafeAreaView>
+            <TransferFailModal
+              visible={transferFailModal}
+              onClose={() => {
+                setTransferFailModal(false);
+                setError('');
+                setCardNumber('');
+                setBalance(undefined);
+              }}
+            />
+            <TransferSuccessModal
+              visible={transferSuccessModal}
+              onClose={() => {
+                setTransferSuccessModal(false);
+                setError('');
+                setCardNumber('');
+                setBalance(undefined);
+                loadUser().then(() => {
+                  navigation.navigate('Главная');
+                });
+              }}
+            />
+          </SafeAreaView>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboardAvoidingView: {
+    flex: 1,
+  },
+  scrollContainer: {
+    flexGrow: 1,
+  },
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
