@@ -1,16 +1,38 @@
 import React, {useRef} from 'react';
-import {Pressable, Animated, DimensionValue} from 'react-native';
+import {Animated, DimensionValue, TouchableWithoutFeedback} from 'react-native';
 import {Card, CardProps} from 'tamagui';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+const HapticOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 interface PressableCardProps extends CardProps {
   onPress?: () => void;
   children: React.ReactNode;
+  hapticType?: 'selection' | 'impactLight' | 'impactMedium' | 'impactHeavy';
+  enableHaptic?: boolean;
+  enableAnimation?: boolean;
 }
 
-const PressableCard = ({onPress, children, ...props}: PressableCardProps) => {
+const PressableCard = ({
+  onPress,
+  children,
+  hapticType = 'impactLight',
+  enableHaptic = true,
+  enableAnimation = true,
+  ...props
+}: PressableCardProps) => {
   const scaleValue = useRef(new Animated.Value(1)).current;
 
-  const pressIn = () => {
+  const triggerHaptic = () => {
+    if (enableHaptic) {
+      ReactNativeHapticFeedback.trigger(hapticType, HapticOptions);
+    }
+  };
+
+  const pressInAnimation = () => {
     Animated.spring(scaleValue, {
       toValue: 0.95,
       useNativeDriver: true,
@@ -19,7 +41,7 @@ const PressableCard = ({onPress, children, ...props}: PressableCardProps) => {
     }).start();
   };
 
-  const pressOut = () => {
+  const pressOutAnimation = () => {
     Animated.spring(scaleValue, {
       toValue: 1,
       useNativeDriver: true,
@@ -29,32 +51,31 @@ const PressableCard = ({onPress, children, ...props}: PressableCardProps) => {
   };
 
   const handlePress = () => {
-    onPress && onPress();
+    onPress?.();
+    triggerHaptic();
   };
 
   return (
-    <Pressable
-      onPressIn={pressIn}
-      onPressOut={pressOut}
+    <TouchableWithoutFeedback
+      onPressIn={enableAnimation ? pressInAnimation : undefined}
+      onPressOut={enableAnimation ? pressOutAnimation : undefined}
       onPress={handlePress}
-      delayLongPress={500}
-      style={{
-        width: props.width as DimensionValue,
-      }}>
+      delayPressIn={0}
+      delayPressOut={0}>
       <Animated.View
         style={{
+          width: props.width as DimensionValue,
           transform: [{scale: scaleValue}],
-          width: '100%',
         }}>
         <Card
-          {...props}
           style={{
             width: '100%',
-          }}>
+          }}
+          {...props}>
           {children}
         </Card>
       </Animated.View>
-    </Pressable>
+    </TouchableWithoutFeedback>
   );
 };
 
