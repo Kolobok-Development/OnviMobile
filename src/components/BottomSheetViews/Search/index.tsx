@@ -1,14 +1,7 @@
 import React, {useState, useCallback, useEffect} from 'react';
 import {useTranslation} from 'react-i18next';
 
-import {
-  View,
-  StyleSheet,
-  TextInput,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {View, StyleSheet, TextInput, Text} from 'react-native';
 import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
@@ -26,6 +19,7 @@ import {
   CarWashLocation,
   SortedCarWashLocation,
 } from '@app-types/api/app/types.ts';
+import {CarWashCard} from '@components/CarWashCard/CarWashCard';
 
 const Search = () => {
   const {t} = useTranslation();
@@ -85,25 +79,7 @@ const Search = () => {
   }, [location, trigger]);
 
   const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return (
-      <TouchableOpacity
-        style={styles.itemContainer}
-        onPress={() => onClick(item)}>
-        <View style={styles.circleImageContainer}>
-          <Image
-            source={require('../../../assets/icons/small-icon.png')}
-            style={styles.circleImage}
-          />
-        </View>
-        <View style={styles.detailsContainer}>
-          <Text style={styles.title}>{item.carwashes[0].name}</Text>
-          <Text style={styles.text}>{item.carwashes[0].address}</Text>
-          <Text style={styles.distanceText}>{`${item.distance.toFixed(
-            2,
-          )} km away`}</Text>
-        </View>
-      </TouchableOpacity>
-    );
+    return <CarWashCard carWash={item} onClick={onClick} />;
   };
 
   const doSearch = useCallback(
@@ -202,6 +178,7 @@ const Search = () => {
                 showsVerticalScrollIndicator={false}
                 bounces={true}
                 contentContainerStyle={styles.listContentContainer}
+                ItemSeparatorComponent={() => <View style={{height: 8}} />}
               />
             )}
           </>
@@ -244,48 +221,13 @@ const styles = StyleSheet.create({
     marginTop: dp(20),
     fontSize: dp(15),
   },
-  itemContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: dp(12),
-    paddingHorizontal: dp(8),
-  },
-  circleImageContainer: {
-    height: dp(25),
-    width: dp(25),
-    borderRadius: dp(28),
-    overflow: 'hidden',
-  },
-  detailsContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'column',
-    paddingHorizontal: dp(18),
-  },
   circleImage: {
     width: '100%',
     height: '100%',
     resizeMode: 'contain',
   },
-  title: {
-    fontSize: dp(15),
-    fontWeight: '600',
-    lineHeight: dp(20),
-    color: '#000',
-    flexWrap: 'wrap',
-  },
-  text: {
-    fontSize: dp(12),
-    fontWeight: '400',
-    lineHeight: dp(20),
-    color: '#000',
-  },
-  distanceText: {
-    fontSize: dp(14),
-    color: '#555',
-    marginTop: 4,
-  },
   listContentContainer: {
+    paddingTop: dp(8),
     paddingBottom: dp(40), // Add padding at the bottom of the list
   },
 });
