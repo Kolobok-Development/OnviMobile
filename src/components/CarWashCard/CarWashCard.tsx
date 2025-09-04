@@ -5,7 +5,7 @@ import {SortedCarWashLocation} from '@app-types/api/app/types';
 
 interface CarWashCardProps {
   carWash: SortedCarWashLocation;
-  onClick: (carWash: SortedCarWashLocation) => void;
+  onClick?: (carWash: SortedCarWashLocation) => void;
   showDistance?: boolean;
   showClip?: boolean;
   showHeart?: boolean;
@@ -30,7 +30,9 @@ const CarWashCard = ({
       borderWidth={showBorder ? 1 : 0}
       borderColor="#E2E2E2"
       justifyContent="flex-start"
-      onPress={() => onClick(carWash)}>
+      onPress={() => {
+        onClick?.(carWash);
+      }}>
       <XStack flex={1} alignItems="center" gap={dp(8)}>
         <Image
           source={require('../../assets/icons/small-icon.png')}

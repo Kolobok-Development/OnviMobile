@@ -12,6 +12,9 @@ const Promos = React.lazy(() =>
 const Settings = React.lazy(() =>
   import('@screens/Settings').then(module => ({default: module.Settings})),
 );
+const Favorites = React.lazy(() =>
+  import('@screens/Favorites').then(module => ({default: module.Favorites})),
+);
 const About = React.lazy(() =>
   import('@screens/About').then(module => ({default: module.About})),
 );
@@ -78,6 +81,13 @@ const DrawerStack = () => {
         {() => (
           <Suspense fallback={<LoadingScreen />}>
             <Settings />
+          </Suspense>
+        )}
+      </Drawer.Screen>
+      <Drawer.Screen name="Избранное">
+        {() => (
+          <Suspense fallback={<LoadingScreen />}>
+            <Favorites />
           </Suspense>
         )}
       </Drawer.Screen>

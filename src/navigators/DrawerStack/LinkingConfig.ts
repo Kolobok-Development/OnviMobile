@@ -15,6 +15,7 @@ export const config = {
     },
     Промокоды: 'promos',
     Настройки: 'settings',
+    Избранное: 'favorites',
     'О приложении': 'about',
     Партнер: {
       path: 'partner/:id',
