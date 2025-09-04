@@ -1,5 +1,5 @@
 import {FlatList, SafeAreaView} from 'react-native';
-import {dp} from '../../utils/dp';
+import {dp} from '@utils/dp';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/core';
@@ -73,17 +73,8 @@ const Favorites = () => {
     }
   }, [location, trigger]);
 
-  const onClick = () => {};
-
   const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return (
-      <CarWashCard
-        carWash={item}
-        onClick={onClick}
-        showHeart={true}
-        isHeartActive={true}
-      />
-    );
+    return <CarWashCard carWash={item} showHeart={true} isHeartActive={true} />;
   };
 
   return (
