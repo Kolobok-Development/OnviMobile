@@ -18,18 +18,22 @@ const createFavoritesSlice: StoreSlice<FavoritesSlice> = (set, get) => ({
     const newFavorites = [...get().favorites, id];
     set({favorites: newFavorites});
     AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+    //добавить обновленние через api
   },
 
   removeFromFavorites: (id: number) => {
     const newFavorites = get().favorites.filter(favId => favId !== id);
     set({favorites: newFavorites});
     AsyncStorage.setItem('favorites', JSON.stringify(newFavorites));
+    //добавить обновленние через api
   },
 
   loadFavorites: async () => {
     set({isLoading: true});
     try {
       const stored = await AsyncStorage.getItem('favorites');
+      //добавить загрузку с api
+
       if (stored) {
         set({favorites: JSON.parse(stored)});
       }
