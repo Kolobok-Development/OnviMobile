@@ -3,6 +3,9 @@ import createAppSlice, {AppSlice} from './app/AppSlice.ts';
 import createOrderSlice, {OrderSlice} from './order/OrderSlice.ts';
 import createPoSSlice, {PosSlice} from './pos/PosSlice.ts';
 import createUserSlice, {UserSlice} from './user/UserSlice.ts';
+import createFavoritesSlice, {
+  FavoritesSlice,
+} from './favorites/favoritesSlice.ts';
 import {
   createJSONStorage,
   devtools,
@@ -11,7 +14,11 @@ import {
 } from 'zustand/middleware';
 import LocalStorage from '@services/local-storage';
 
-export type StoreState = AppSlice & OrderSlice & PosSlice & UserSlice;
+export type StoreState = AppSlice &
+  OrderSlice &
+  PosSlice &
+  UserSlice &
+  FavoritesSlice;
 export type StoreSlice<T> = (
   set: StoreApi<StoreState>['setState'],
   get: StoreApi<StoreState>['getState'],
@@ -38,6 +45,7 @@ const useStore = create<StoreState>()(
         ...createUserSlice(set, get),
         ...createPoSSlice(set, get),
         ...createOrderSlice(set, get),
+        ...createFavoritesSlice(set, get),
       }),
       {
         name: 'store',

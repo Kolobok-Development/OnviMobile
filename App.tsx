@@ -119,7 +119,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore.getState();
+  const {loadUser, user, fcmToken, loadFavorites} = useStore.getState();
 
   const {t} = useTranslation();
 
@@ -129,6 +129,10 @@ function App(): React.JSX.Element {
   });
 
   useAppState();
+
+  useEffect(() => {
+    loadFavorites();
+  }, [loadFavorites]);
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {

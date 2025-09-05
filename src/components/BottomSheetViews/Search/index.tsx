@@ -79,7 +79,7 @@ const Search = () => {
   }, [location, trigger]);
 
   const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return <CarWashCard carWash={item} onClick={onClick} />;
+    return <CarWashCard carWash={item} onClick={onClick} showHeart={true} />;
   };
 
   const doSearch = useCallback(

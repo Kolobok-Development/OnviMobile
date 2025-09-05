@@ -74,7 +74,7 @@ const Favorites = () => {
   }, [location, trigger]);
 
   const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return <CarWashCard carWash={item} showHeart={true} isHeartActive={true} />;
+    return <CarWashCard carWash={item} showHeart={true} />;
   };
 
   return (

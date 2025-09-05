@@ -2,6 +2,7 @@ import React from 'react';
 import {dp} from '@utils/dp';
 import {Button, Image, Text, XStack, YStack} from 'tamagui';
 import {SortedCarWashLocation} from '@app-types/api/app/types';
+import useStore from '@state/store';
 
 interface CarWashCardProps {
   carWash: SortedCarWashLocation;
@@ -9,7 +10,6 @@ interface CarWashCardProps {
   showDistance?: boolean;
   showClip?: boolean;
   showHeart?: boolean;
-  isHeartActive?: boolean;
   showBorder?: boolean;
 }
 
@@ -19,9 +19,20 @@ const CarWashCard = ({
   showDistance = true,
   showClip = false,
   showHeart = false,
-  isHeartActive = false,
   showBorder = true,
 }: CarWashCardProps) => {
+  const {addToFavorites, removeFromFavorites, isFavorite} = useStore();
+
+  const isHeartActive = isFavorite(Number(carWash.carwashes[0].id));
+
+  const handleHeartPress = () => {
+    if (isHeartActive) {
+      removeFromFavorites(Number(carWash.carwashes[0].id));
+    } else {
+      addToFavorites(Number(carWash.carwashes[0].id));
+    }
+  };
+
   return (
     <Button
       height={showDistance ? dp(63) : dp(46)}
@@ -30,9 +41,7 @@ const CarWashCard = ({
       borderWidth={showBorder ? 1 : 0}
       borderColor="#E2E2E2"
       justifyContent="flex-start"
-      onPress={() => {
-        onClick?.(carWash);
-      }}>
+      onPress={() => onClick?.(carWash)}>
       <XStack flex={1} alignItems="center" gap={dp(8)}>
         <Image
           source={require('../../assets/icons/small-icon.png')}
@@ -73,7 +82,12 @@ const CarWashCard = ({
       )}
 
       {showHeart && (
-        <Button unstyled>
+        <Button
+          unstyled
+          onPress={e => {
+            e.stopPropagation();
+            handleHeartPress();
+          }}>
           <Image
             source={
               isHeartActive
