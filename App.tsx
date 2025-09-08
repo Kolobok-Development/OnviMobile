@@ -131,10 +131,6 @@ function App(): React.JSX.Element {
   useAppState();
 
   useEffect(() => {
-    loadFavorites();
-  }, [loadFavorites]);
-
-  useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       const networkState = state.isConnected ? state.isConnected : false;
       setConnected(networkState);
@@ -190,7 +186,16 @@ function App(): React.JSX.Element {
       }
     };
 
+    const updateFavorites = async () => {
+      try {
+        if (user) {
+          await loadFavorites();
+        }
+      } catch (error) { }
+    }
+
     syncMetaData();
+    updateFavorites();
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (

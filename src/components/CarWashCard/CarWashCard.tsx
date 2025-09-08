@@ -26,11 +26,13 @@ const CarWashCard = ({
   const isHeartActive = isFavorite(Number(carWash.carwashes[0].id));
 
   const handleHeartPress = () => {
-    if (isHeartActive) {
-      removeFromFavorites(Number(carWash.carwashes[0].id));
-    } else {
-      addToFavorites(Number(carWash.carwashes[0].id));
-    }
+    try {
+      if (isHeartActive) {
+        removeFromFavorites(Number(carWash.carwashes[0].id));
+      } else {
+        addToFavorites(Number(carWash.carwashes[0].id));
+      }
+    } catch (error) {}
   };
 
   return (
