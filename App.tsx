@@ -39,6 +39,7 @@ MapboxGL.setAccessToken(
 );
 
 import TamaguiProvider from './src/components/TamaguiProvider';
+import Toast from 'react-native-toast-message';
 
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
@@ -191,7 +192,12 @@ function App(): React.JSX.Element {
         if (user) {
           await loadFavorites();
         }
-      } catch (error) { }
+      } catch (error) {
+        Toast.show({
+          type: 'customErrorToast',
+          text1: i18n.t('app.favorites.errorLoadingFavorites'),
+        });
+      }
     }
 
     syncMetaData();
