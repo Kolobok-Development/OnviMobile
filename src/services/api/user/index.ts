@@ -12,6 +12,7 @@ import {IUpdateUserMetaRequest} from '../../../types/api/user/req/IUpdateUserMet
 import {IPersonalPromotion} from '../../../types/models/PersonalPromotion.ts';
 import {IGetFreeVacuum} from 'src/types/api/user/res/IGetFreeVacuum.ts';
 import {IgetActiveClientPromotionsParams} from 'src/types/api/promotion/req/IApplyPromotionRequest.ts';
+import {IPostAccountFavorites} from '@app-types/api/user/req/IPostAccountFavorites.ts';
 
 enum ACCOUNT {
   GET_MET_URL = '/account/me',
@@ -24,6 +25,7 @@ enum ACCOUNT {
   CREATE_ACCOUNT_META = '/account/meta/create',
   UPDATE_ACCOUNT_META = '/account/meta/update',
   GET_FREE_VACUUM = '/account/free-vacuum',
+  FAVORITES = '/account/favorites',
 }
 
 export async function getMe(): Promise<IUser> {
@@ -122,6 +124,33 @@ export async function deleteAccount(): Promise<number> {
 export async function getFreeVacuum(): Promise<IGetFreeVacuum> {
   const response = await userApiInstance.get<IUserApiResponse<IGetFreeVacuum>>(
     ACCOUNT.GET_FREE_VACUUM,
+  );
+  return response.data.data;
+}
+
+export async function getFavorites(): Promise<number[]> {
+  const response = await userApiInstance.get<IUserApiResponse<number[]>>(
+    ACCOUNT.FAVORITES,
+  );
+  return response.data.data;
+}
+
+export async function postFavorites(
+  body: IPostAccountFavorites,
+): Promise<number[]> {
+  const response = await userApiInstance.post<IUserApiResponse<number[]>>(
+    ACCOUNT.FAVORITES,
+    body,
+  );
+  return response.data.data;
+}
+
+export async function removeFavorites(
+  body: IPostAccountFavorites,
+): Promise<number[]> {
+  const response = await userApiInstance.delete<IUserApiResponse<number[]>>(
+    ACCOUNT.FAVORITES,
+    {data: body},
   );
   return response.data.data;
 }

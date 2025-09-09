@@ -3,12 +3,9 @@ import {dp} from '@utils/dp';
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/core';
-
 import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {XStack, YStack} from 'tamagui';
-import useSWRMutation from 'swr/mutation';
-import {getPOSList} from '@services/api/pos/index.ts';
 import calculateDistance from '@utils/calculateDistance.ts';
 import {
   CarWashLocation,
@@ -20,61 +17,46 @@ import useStore from '@state/store.ts';
 const Favorites = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Избранное'>>();
   const {t} = useTranslation();
-
   const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
-
-  const {location} = useStore.getState();
-
-  const {trigger} = useSWRMutation(
-    'getPOSList',
-    (
-      key,
-      {
-        arg,
-      }: {
-        arg: {
-          [key: string]: string;
-        };
-      },
-    ) => getPOSList(arg),
-  );
+  const {location, posList, favorites} = useStore.getState();
 
   useEffect(() => {
-    if (location?.latitude && location?.longitude) {
-      trigger({}).then(res => {
-        if (res?.businessesLocations?.length > 0) {
-          const sortedCarwashes = res.businessesLocations.map(
-            (carwash: CarWashLocation) => {
-              const carwashLat = carwash.location.lat;
-              const carwashLon = carwash.location.lon;
-              const distance = calculateDistance(
-                location.latitude,
-                location.longitude,
-                carwashLat,
-                carwashLon,
-              );
+    if (
+      location?.latitude &&
+      location?.longitude &&
+      posList.length > 0 &&
+      favorites.length > 0
+    ) {
+      const favoriteCarWashes = posList.filter(carwash =>
+        favorites.includes(Number(carwash.carwashes[0].id)),
+      );
 
-              const carWashWithDistance: SortedCarWashLocation = {
-                ...carwash,
-                distance,
-              };
-
-              return carWashWithDistance;
-            },
+      const sortedCarwashes = favoriteCarWashes.map(
+        (carwash: CarWashLocation) => {
+          const carwashLat = carwash.location.lat;
+          const carwashLon = carwash.location.lon;
+          const distance = calculateDistance(
+            location.latitude,
+            location.longitude,
+            carwashLat,
+            carwashLon,
           );
+          const carWashWithDistance: SortedCarWashLocation = {
+            ...carwash,
+            distance,
+          };
+          return carWashWithDistance;
+        },
+      );
 
-          // Sort by distance (ascending)
-          sortedCarwashes.sort((a: any, b: any) => a.distance - b.distance);
+      sortedCarwashes.sort((a, b) => a.distance - b.distance);
 
-          // Update state with the sorted and limited carwashes
-          setSortedData(sortedCarwashes);
-        }
-      });
+      setSortedData(sortedCarwashes);
     }
-  }, [location, trigger]);
+  }, [location, posList, favorites]);
 
   const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return <CarWashCard carWash={item} showHeart={true} isHeartActive={true} />;
+    return <CarWashCard carWash={item} showHeart={true} />;
   };
 
   return (

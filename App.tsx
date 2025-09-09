@@ -39,6 +39,7 @@ MapboxGL.setAccessToken(
 );
 
 import TamaguiProvider from './src/components/TamaguiProvider';
+import Toast from 'react-native-toast-message';
 
 const getLocalMetaData = async (): Promise<DeviceMeta> => {
   const deviceId = await DeviceInfo.getUniqueId();
@@ -119,7 +120,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken} = useStore.getState();
+  const {loadUser, user, fcmToken, loadFavorites} = useStore.getState();
 
   const {t} = useTranslation();
 
@@ -186,7 +187,21 @@ function App(): React.JSX.Element {
       }
     };
 
+    const updateFavorites = async () => {
+      try {
+        if (user) {
+          await loadFavorites();
+        }
+      } catch (error) {
+        Toast.show({
+          type: 'customErrorToast',
+          text1: i18n.t('app.favorites.errorLoadingFavorites'),
+        });
+      }
+    }
+
     syncMetaData();
+    updateFavorites();
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
