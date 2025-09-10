@@ -55,9 +55,9 @@
 		<true/>
 	</dict>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location allows you to view carwashes naer by</string>
+	<string>Ваше местоположение позволяет видеть автомойки поблизости</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Your location allows you to view carwashes naer by</string>
+	<string>Ваше местоположение позволяет видеть автомойки поблизости</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
