@@ -88,6 +88,7 @@ const Main = () => {
       setSelectedPos(null);
       setBusiness(null);
       loadLatest();
+
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({y: 0, animated: false});
       }
@@ -131,7 +132,7 @@ const Main = () => {
 
       setLatestCarwashes(latestCarWashes);
     }
-  }, [latest]);
+  }, [latest, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
