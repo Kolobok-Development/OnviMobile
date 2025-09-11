@@ -80,7 +80,6 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
     set({isLoading: true});
     try {
       const serverLatest = await getLatestCarwash({size: 3, page: 1});
-      console.log(serverLatest);
 
       set({latest: serverLatest});
 

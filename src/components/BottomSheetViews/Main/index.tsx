@@ -58,7 +58,6 @@ const Main = () => {
 
   const {setIsMainScreen} = useNavStore.getState();
 
-  // const {drawerNavigation} = useNavStore();
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
   const {backgroundColor, currentThemeName} = useCombinedTheme();
 
