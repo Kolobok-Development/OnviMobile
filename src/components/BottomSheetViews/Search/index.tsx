@@ -76,9 +76,7 @@ const Search = () => {
   }, [location, trigger]);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
-    return (
-      <CarWashCard carWash={item} onClick={onClick} showIsFavorite={true} />
-    );
+    return <CarWashCard carWash={item} onClick={onClick} />;
   };
 
   const doSearch = useCallback(

@@ -21,10 +21,10 @@ const CarWashCard = ({
   onClick,
   showDistance = true,
   showClip = false,
-  showIsFavorite = true,
+  showIsFavorite = false,
   heartIsClickable = false,
   showBorder = true,
-  showActionModal = true,
+  showActionModal = false,
 }: CarWashCardProps) => {
   const {addToFavorites, removeFromFavorites, isFavorite} = useStore();
   const [menuVisible, setMenuVisible] = useState(false);
