@@ -10,6 +10,7 @@ import {IRegisterOrderRequest} from 'src/types/api/order/req/IRegisterOrderReque
 import {IRegisterOrderResponse} from 'src/types/api/order/res/IRegisterOrderResponse.ts';
 import {IGetOrderResponse} from 'src/types/api/order/res/IGetOrderByResponse.ts';
 import {OrderStatusCode} from '@app-types/api/order/status/OrderStatusCode.ts';
+import {IGetLatestCarwashRequestParams} from '@app-types/api/order/req/IGetLatestCarwashRequestParams.ts';
 
 enum ORDER {
   CREATE_ORDER_URL = '/order/create',
@@ -18,6 +19,7 @@ enum ORDER {
   REGISTER_ORDER = '/order/register',
   GET_ORDER_BY_ORDER_ID = '/order',
   UPDATE_ORDER_STATUS = '/order/status',
+  LATEST = '/order/latest',
 }
 
 export async function create(
@@ -72,6 +74,16 @@ export async function updateOrderStatus(
   const response = await userApiInstance.post<IUserApiResponse<void>>(
     `${ORDER.UPDATE_ORDER_STATUS}/${id}`,
     {status},
+  );
+  return response.data.data;
+}
+
+export async function getLatestCarwash(
+  params: IGetLatestCarwashRequestParams,
+): Promise<number[]> {
+  const response = await userApiInstance.get<IUserApiResponse<number[]>>(
+    ORDER.LATEST,
+    {params},
   );
   return response.data.data;
 }

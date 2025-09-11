@@ -1,9 +1,9 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Dimensions, Platform} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
-import {BLACKTWO, WHITE, BLACK} from '@utils/colors.ts';
+import {BLACK} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {
   BottomSheetScrollView,
@@ -20,22 +20,36 @@ import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {useNavStore} from '@state/useNavStore/index.ts';
-import {Campaign} from '@app-types/api/app/types.ts';
+import {
+  Campaign,
+  CarWashLocation,
+  SortedCarWashLocation,
+} from '@app-types/api/app/types.ts';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
-import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 import {useCombinedTheme} from '@hooks/useCombinedTheme';
 import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
+import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
+import calculateDistance from '@utils/calculateDistance.ts';
 
 const Main = () => {
   const {t} = useTranslation();
-  const {bottomSheetRef, bottomSheetSnapPoints, setSelectedPos, setBusiness} =
-    useStore.getState();
+  const {
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setSelectedPos,
+    setBusiness,
+    latest,
+    posList,
+    location,
+    setOrderDetails,
+    cameraRef,
+  } = useStore.getState();
 
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -49,9 +63,13 @@ const Main = () => {
 
   const {setIsMainScreen} = useNavStore.getState();
 
-  const {drawerNavigation} = useNavStore();
+  // const {drawerNavigation} = useNavStore();
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
   const {backgroundColor, currentThemeName} = useCombinedTheme();
+
+  const [latestCarwashes, setLatestCarwashes] = useState<
+    SortedCarWashLocation[]
+  >([]);
 
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
@@ -87,6 +105,66 @@ const Main = () => {
       };
     }, []),
   );
+
+  const onClick = (carwash: any) => {
+    navigateBottomSheet('Business', {});
+    setBusiness(carwash);
+    setOrderDetails({
+      posId: 0,
+      sum: 0,
+      bayNumber: null,
+      promoCodeId: null,
+      rewardPointsUsed: null,
+      type: null,
+      name: null,
+      prices: [],
+      order: null,
+      orderDate: null,
+    });
+    bottomSheetRef?.current?.snapToPosition('42%');
+
+    cameraRef?.current?.setCameraPosition({
+      longitude: carwash.location.lon,
+      latitude: carwash.location.lat,
+      zoomLevel: 16,
+      animationDuration: 1000,
+    });
+  };
+
+  useEffect(() => {
+    if (
+      location?.latitude &&
+      location?.longitude &&
+      posList.length > 0 &&
+      latest.length > 0
+    ) {
+      const favoriteCarWashes = posList.filter(carwash =>
+        latest.includes(Number(carwash.carwashes[0].id)),
+      );
+
+      const sortedCarwashes = favoriteCarWashes.map(
+        (carwash: CarWashLocation) => {
+          const carwashLat = carwash.location.lat;
+          const carwashLon = carwash.location.lon;
+          const distance = calculateDistance(
+            location.latitude,
+            location.longitude,
+            carwashLat,
+            carwashLon,
+          );
+          const carWashWithDistance: SortedCarWashLocation = {
+            ...carwash,
+            distance,
+          };
+          return carWashWithDistance;
+        },
+      );
+
+      sortedCarwashes.sort((a, b) => a.distance - b.distance);
+
+      setLatestCarwashes(sortedCarwashes);
+    }
+  }, [location, posList, latest]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -172,7 +250,26 @@ const Main = () => {
               </Button>
             </XStack>
           </XStack>
-          <XStack gap={dp(16)} marginTop={dp(16)}>
+          <YStack>
+            <Text
+              color={BLACK}
+              fontSize={dp(24)}
+              fontWeight="600"
+              marginTop={dp(16)}>
+              {t('app.latest.latest')}
+            </Text>
+
+            <YStack marginTop={dp(12)} gap={dp(8)}>
+              {latestCarwashes.map(item => (
+                <CarWashCard
+                  carWash={item}
+                  onClick={onClick}
+                  showDistance={false}
+                />
+              ))}
+            </YStack>
+          </YStack>
+          {/* <XStack gap={dp(16)} marginTop={dp(16)}>
             <NearPosButton />
 
             <PressableCard
@@ -194,7 +291,7 @@ const Main = () => {
                 </Text>
               </YStack>
             </PressableCard>
-          </XStack>
+          </XStack> */}
         </Card>
         <Card
           backgroundColor={backgroundColor}
@@ -218,7 +315,7 @@ const Main = () => {
               color={BLACK}
               fontSize={dp(24)}
               fontWeight="600"
-              marginTop={dp(16)}>
+              marginTop={dp(12)}>
               {t('app.main.PromotionsForYou')}
             </Text>
           </XStack>
