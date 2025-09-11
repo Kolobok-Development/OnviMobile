@@ -178,12 +178,7 @@ export type CarWash = {
 export type CarWashLocation = {
   location: Location;
   carwashes: CarWash[];
-};
-
-export type SortedCarWashLocation = {
-  location: Location;
-  carwashes: CarWash[];
-  distance: number;
+  distance?: number;
 };
 
 export type BusinessSuccessRequestPayload = {

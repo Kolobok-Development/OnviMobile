@@ -1,16 +1,16 @@
 import React, {useState} from 'react';
 import {dp} from '@utils/dp';
 import {Button, Image, Text, XStack, YStack} from 'tamagui';
-import {SortedCarWashLocation} from '@app-types/api/app/types';
+import {CarWashLocation} from '@app-types/api/app/types';
 import useStore from '@state/store';
 import {StyleSheet, Modal, TouchableWithoutFeedback} from 'react-native';
 
 interface CarWashCardProps {
-  carWash: SortedCarWashLocation;
-  onClick?: (carWash: SortedCarWashLocation) => void;
+  carWash: CarWashLocation;
+  onClick?: (carWash: CarWashLocation) => void;
   showDistance?: boolean;
   showClip?: boolean;
-  showHeart?: boolean;
+  showIsFavorite?: boolean;
   heartIsClickable?: boolean;
   showBorder?: boolean;
   showActionModal?: boolean;
@@ -21,7 +21,7 @@ const CarWashCard = ({
   onClick,
   showDistance = true,
   showClip = false,
-  showHeart = true,
+  showIsFavorite = true,
   heartIsClickable = false,
   showBorder = true,
   showActionModal = true,
@@ -29,8 +29,12 @@ const CarWashCard = ({
   const {addToFavorites, removeFromFavorites, isFavorite} = useStore();
   const [menuVisible, setMenuVisible] = useState(false);
 
-  if (!carWash?.carwashes[0] || !carWash?.distance) {
+  if (!carWash?.carwashes[0]) {
     return null;
+  }
+
+  if (!carWash?.distance) {
+    showDistance = false;
   }
 
   const isHeartActive = isFavorite(Number(carWash.carwashes[0].id));
@@ -94,7 +98,7 @@ const CarWashCard = ({
                 color={'#6F6F6F'}
                 ellipsizeMode="tail"
                 numberOfLines={1}>
-                {`${carWash.distance.toFixed(2)} km away`}
+                {`${carWash.distance?.toFixed(2)} km away`}
               </Text>
             )}
           </YStack>
@@ -110,7 +114,7 @@ const CarWashCard = ({
           </Button>
         )}
 
-        {showHeart && (
+        {showIsFavorite && isHeartActive && (
           <Button
             unstyled
             onPress={() => {
@@ -119,11 +123,7 @@ const CarWashCard = ({
               }
             }}>
             <Image
-              source={
-                isHeartActive
-                  ? require('../../assets/icons/heart-active.png')
-                  : require('../../assets/icons/heart.png')
-              }
+              source={require('../../assets/icons/heart-active.png')}
               width={20}
               height={20}
             />

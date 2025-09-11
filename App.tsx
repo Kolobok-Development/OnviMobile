@@ -120,7 +120,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken, loadFavorites, loadLatest} = useStore.getState();
+  const {loadUser, user, fcmToken, loadFavorites} = useStore.getState();
 
   const {t} = useTranslation();
 
@@ -191,7 +191,6 @@ function App(): React.JSX.Element {
       try {
         if (user) {
           await loadFavorites();
-          await loadLatest();
         }
       } catch (error) {
         Toast.show({

@@ -7,17 +7,14 @@ import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
 import {XStack, YStack} from 'tamagui';
 import calculateDistance from '@utils/calculateDistance.ts';
-import {
-  CarWashLocation,
-  SortedCarWashLocation,
-} from '@app-types/api/app/types.ts';
+import {CarWashLocation} from '@app-types/api/app/types.ts';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
 import useStore from '@state/store.ts';
 
 const Favorites = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Избранное'>>();
   const {t} = useTranslation();
-  const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
+  const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
   const {location, posList, favorites} = useStore.getState();
 
   useEffect(() => {
@@ -31,32 +28,28 @@ const Favorites = () => {
         favorites.includes(Number(carwash.carwashes[0].id)),
       );
 
-      const sortedCarwashes = favoriteCarWashes.map(
-        (carwash: CarWashLocation) => {
-          const carwashLat = carwash.location.lat;
-          const carwashLon = carwash.location.lon;
-          const distance = calculateDistance(
-            location.latitude,
-            location.longitude,
-            carwashLat,
-            carwashLon,
-          );
-          const carWashWithDistance: SortedCarWashLocation = {
-            ...carwash,
-            distance,
-          };
-          return carWashWithDistance;
-        },
-      );
+      const favoriteCarWashesDistance = favoriteCarWashes.map(carwash => {
+        const distance = calculateDistance(
+          location.latitude,
+          location.longitude,
+          carwash.location.lat,
+          carwash.location.lon,
+        );
 
-      sortedCarwashes.sort((a, b) => a.distance - b.distance);
+        const carWashWithDistance = {
+          ...carwash,
+          distance,
+        };
 
-      setSortedData(sortedCarwashes);
+        return carWashWithDistance;
+      });
+
+      setSortedData(favoriteCarWashesDistance);
     }
   }, [location, posList, favorites]);
 
-  const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return <CarWashCard carWash={item} showHeart={true} />;
+  const renderBusiness = ({item}: {item: CarWashLocation}) => {
+    return <CarWashCard carWash={item} showIsFavorite={true} />;
   };
 
   return (

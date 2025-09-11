@@ -3,7 +3,7 @@ import {StoreSlice} from '../store';
 import LocalStorage from '@services/local-storage';
 import {getLatestCarwash} from '@services/api/order';
 
-export interface FavoritesSlice {
+export interface CarwashSlice {
   favorites: number[];
   latest: number[];
   isLoading: boolean;
@@ -15,7 +15,7 @@ export interface FavoritesSlice {
   refreshFavorites: () => Promise<void>;
 }
 
-const createFavoritesSlice: StoreSlice<FavoritesSlice> = (set, get) => ({
+const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   favorites: [],
   latest: [],
   isLoading: false,
@@ -97,4 +97,4 @@ const createFavoritesSlice: StoreSlice<FavoritesSlice> = (set, get) => ({
   },
 });
 
-export default createFavoritesSlice;
+export default createCarwashSlice;

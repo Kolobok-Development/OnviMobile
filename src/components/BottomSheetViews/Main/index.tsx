@@ -20,11 +20,7 @@ import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {useNavStore} from '@state/useNavStore/index.ts';
-import {
-  Campaign,
-  CarWashLocation,
-  SortedCarWashLocation,
-} from '@app-types/api/app/types.ts';
+import {Campaign, CarWashLocation} from '@app-types/api/app/types.ts';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
@@ -35,7 +31,6 @@ import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
-import calculateDistance from '@utils/calculateDistance.ts';
 
 const Main = () => {
   const {t} = useTranslation();
@@ -46,9 +41,9 @@ const Main = () => {
     setBusiness,
     latest,
     posList,
-    location,
     setOrderDetails,
     cameraRef,
+    loadLatest,
   } = useStore.getState();
 
   const ref = React.useRef<ICarouselInstance>(null);
@@ -67,9 +62,7 @@ const Main = () => {
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
   const {backgroundColor, currentThemeName} = useCombinedTheme();
 
-  const [latestCarwashes, setLatestCarwashes] = useState<
-    SortedCarWashLocation[]
-  >([]);
+  const [latestCarwashes, setLatestCarwashes] = useState<CarWashLocation[]>([]);
 
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
@@ -95,7 +88,7 @@ const Main = () => {
       setIsMainScreen(true);
       setSelectedPos(null);
       setBusiness(null);
-
+      loadLatest();
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({y: 0, animated: false});
       }
@@ -132,39 +125,14 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (
-      location?.latitude &&
-      location?.longitude &&
-      posList.length > 0 &&
-      latest.length > 0
-    ) {
-      const favoriteCarWashes = posList.filter(carwash =>
+    if (latest) {
+      const latestCarWashes = posList.filter(carwash =>
         latest.includes(Number(carwash.carwashes[0].id)),
       );
 
-      const sortedCarwashes = favoriteCarWashes.map(
-        (carwash: CarWashLocation) => {
-          const carwashLat = carwash.location.lat;
-          const carwashLon = carwash.location.lon;
-          const distance = calculateDistance(
-            location.latitude,
-            location.longitude,
-            carwashLat,
-            carwashLon,
-          );
-          const carWashWithDistance: SortedCarWashLocation = {
-            ...carwash,
-            distance,
-          };
-          return carWashWithDistance;
-        },
-      );
-
-      sortedCarwashes.sort((a, b) => a.distance - b.distance);
-
-      setLatestCarwashes(sortedCarwashes);
+      setLatestCarwashes(latestCarWashes);
     }
-  }, [location, posList, latest]);
+  }, [latest]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -269,29 +237,6 @@ const Main = () => {
               ))}
             </YStack>
           </YStack>
-          {/* <XStack gap={dp(16)} marginTop={dp(16)}>
-            <NearPosButton />
-
-            <PressableCard
-              backgroundColor={BLACKTWO}
-              borderRadius={dp(22)}
-              height={dp(90)}
-              width={'48%'}
-              flex={1}
-              onPress={() => {
-                drawerNavigation?.navigate('Промокоды');
-              }}>
-              <YStack alignItems="flex-start" padding={dp(16)} height="100%">
-                <Text
-                  color={WHITE}
-                  fontSize={dp(16)}
-                  fontWeight="700"
-                  textAlign="center">
-                  {t('navigation.promos')}
-                </Text>
-              </YStack>
-            </PressableCard>
-          </XStack> */}
         </Card>
         <Card
           backgroundColor={backgroundColor}
