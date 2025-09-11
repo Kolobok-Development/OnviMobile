@@ -4,63 +4,67 @@ import LocalStorage from '@services/local-storage';
 import {getLatestCarwash} from '@services/api/order';
 
 export interface CarwashSlice {
-  favorites: number[];
-  latest: number[];
+  favoritesCarwashes: number[];
+  latestCarwashes: number[];
   isLoading: boolean;
-  addToFavorites: (id: number) => void;
-  removeFromFavorites: (id: number) => void;
-  loadFavorites: () => Promise<void>;
-  loadLatest: () => Promise<void>;
-  isFavorite: (id: number) => boolean;
-  refreshFavorites: () => Promise<void>;
+  addToFavoritesCarwashes: (id: number) => void;
+  removeFromFavoritesCarwashes: (id: number) => void;
+  loadFavoritesCarwashes: () => Promise<void>;
+  loadLatestCarwashes: () => Promise<void>;
+  isFavoriteCarwash: (id: number) => boolean;
+  refreshFavoritesCarwashes: () => Promise<void>;
 }
 
 const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
-  favorites: [],
-  latest: [],
+  favoritesCarwashes: [],
+  latestCarwashes: [],
   isLoading: false,
 
-  addToFavorites: async (id: number) => {
+  addToFavoritesCarwashes: async (id: number) => {
     try {
-      const newFavorites = [...get().favorites, id];
-      set({favorites: newFavorites});
+      const newFavorites = [...get().favoritesCarwashes, id];
+      set({favoritesCarwashes: newFavorites});
 
       await LocalStorage.set('favorites', JSON.stringify(newFavorites));
       await postFavorites({carwashId: id});
     } catch (error) {
-      const currentFavorites = get().favorites.filter(favId => favId !== id);
-      set({favorites: currentFavorites});
+      const currentFavorites = get().favoritesCarwashes.filter(
+        favId => favId !== id,
+      );
+      set({favoritesCarwashes: currentFavorites});
       await LocalStorage.set('favorites', JSON.stringify(currentFavorites));
       throw error;
     }
   },
 
-  removeFromFavorites: async (id: number) => {
+  removeFromFavoritesCarwashes: async (id: number) => {
     try {
-      const newFavorites = get().favorites.filter(favId => favId !== id);
-      set({favorites: newFavorites});
+      const newFavorites = get().favoritesCarwashes.filter(
+        favId => favId !== id,
+      );
+      set({favoritesCarwashes: newFavorites});
 
       await LocalStorage.set('favorites', JSON.stringify(newFavorites));
       await removeFavorites({carwashId: id});
     } catch (error) {
-      const currentFavorites = [...get().favorites, id];
-      set({favorites: currentFavorites});
+      const currentFavorites = [...get().favoritesCarwashes, id];
+      set({favoritesCarwashes: currentFavorites});
       await LocalStorage.set('favorites', JSON.stringify(currentFavorites));
       throw error;
     }
   },
 
-  loadFavorites: async () => {
+  loadFavoritesCarwashes: async () => {
     set({isLoading: true});
     try {
       const serverFavorites = await getFavorites();
-      set({favorites: serverFavorites});
+      set({favoritesCarwashes: serverFavorites});
 
       await LocalStorage.set('favorites', JSON.stringify(serverFavorites));
     } catch (error) {
       const stored = await LocalStorage.getString('favorites');
       if (stored) {
-        set({favorites: JSON.parse(stored)});
+        set({favoritesCarwashes: JSON.parse(stored)});
       }
       throw error;
     } finally {
@@ -68,26 +72,26 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
     }
   },
 
-  refreshFavorites: async () => {
-    await get().loadFavorites();
+  refreshFavoritesCarwashes: async () => {
+    await get().loadFavoritesCarwashes();
   },
 
-  isFavorite: (id: number) => {
-    return get().favorites.includes(id);
+  isFavoriteCarwash: (id: number) => {
+    return get().favoritesCarwashes.includes(id);
   },
 
-  loadLatest: async () => {
+  loadLatestCarwashes: async () => {
     set({isLoading: true});
     try {
       const serverLatest = await getLatestCarwash({size: 3, page: 1});
 
-      set({latest: serverLatest});
+      set({latestCarwashes: serverLatest});
 
       await LocalStorage.set('latest', JSON.stringify(serverLatest));
     } catch (error) {
       const stored = await LocalStorage.getString('latest');
       if (stored) {
-        set({latest: JSON.parse(stored)});
+        set({latestCarwashes: JSON.parse(stored)});
       }
       throw error;
     } finally {

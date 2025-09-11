@@ -270,10 +270,10 @@
       "smsFailure": "Не получилось отправить СМС сообщение.",
       "authorizationError": "Ошибка авторизации"
     },
-    "favorites": {
+    "favoritesCarwashes": {
       "errorLoadingFavorites": "Ошибка загрузки избранных автомоек"
     },
-    "latest": {
+    "latestCarwashes": {
       "latest": "Недавние"
     },
     "mainExtras": {

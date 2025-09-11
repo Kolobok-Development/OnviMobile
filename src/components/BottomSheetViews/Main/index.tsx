@@ -39,11 +39,11 @@ const Main = () => {
     bottomSheetSnapPoints,
     setSelectedPos,
     setBusiness,
-    latest,
+    latestCarwashes,
     posList,
     setOrderDetails,
     cameraRef,
-    loadLatest,
+    loadLatestCarwashes,
   } = useStore.getState();
 
   const ref = React.useRef<ICarouselInstance>(null);
@@ -61,7 +61,9 @@ const Main = () => {
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
   const {backgroundColor, currentThemeName} = useCombinedTheme();
 
-  const [latestCarwashes, setLatestCarwashes] = useState<CarWashLocation[]>([]);
+  const [latestCarwashesData, setLatestCarwashesData] = useState<
+    CarWashLocation[]
+  >([]);
 
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
@@ -87,7 +89,7 @@ const Main = () => {
       setIsMainScreen(true);
       setSelectedPos(null);
       setBusiness(null);
-      loadLatest();
+      loadLatestCarwashes();
 
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({y: 0, animated: false});
@@ -125,14 +127,14 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (latest) {
+    if (latestCarwashes) {
       const latestCarWashes = posList.filter(carwash =>
-        latest.includes(Number(carwash.carwashes[0].id)),
+        latestCarwashes.includes(Number(carwash.carwashes[0].id)),
       );
 
-      setLatestCarwashes(latestCarWashes);
+      setLatestCarwashesData(latestCarWashes);
     }
-  }, [latest, posList]);
+  }, [latestCarwashes, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -224,11 +226,11 @@ const Main = () => {
               fontSize={dp(24)}
               fontWeight="600"
               marginTop={dp(16)}>
-              {t('app.latest.latest')}
+              {t('app.latestCarwashes.latest')}
             </Text>
 
             <YStack marginTop={dp(12)} gap={dp(8)}>
-              {latestCarwashes.map(item => (
+              {latestCarwashesData.map(item => (
                 <CarWashCard
                   carWash={item}
                   onClick={onClick}

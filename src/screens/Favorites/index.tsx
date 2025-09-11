@@ -15,17 +15,17 @@ const Favorites = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Избранное'>>();
   const {t} = useTranslation();
   const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
-  const {location, posList, favorites} = useStore.getState();
+  const {location, posList, favoritesCarwashes} = useStore.getState();
 
   useEffect(() => {
     if (
       location?.latitude &&
       location?.longitude &&
       posList.length > 0 &&
-      favorites.length > 0
+      favoritesCarwashes.length > 0
     ) {
       const favoriteCarWashes = posList.filter(carwash =>
-        favorites.includes(Number(carwash.carwashes[0].id)),
+        favoritesCarwashes.includes(Number(carwash.carwashes[0].id)),
       );
 
       const favoriteCarWashesDistance = favoriteCarWashes.map(carwash => {
@@ -46,7 +46,7 @@ const Favorites = () => {
 
       setSortedData(favoriteCarWashesDistance);
     }
-  }, [location, posList, favorites]);
+  }, [location, posList, favoritesCarwashes]);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
     return <CarWashCard carWash={item} showIsFavorite={true} />;

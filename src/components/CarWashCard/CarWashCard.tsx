@@ -26,7 +26,11 @@ const CarWashCard = ({
   showBorder = true,
   showActionModal = false,
 }: CarWashCardProps) => {
-  const {addToFavorites, removeFromFavorites, isFavorite} = useStore();
+  const {
+    addToFavoritesCarwashes,
+    removeFromFavoritesCarwashes,
+    isFavoriteCarwash,
+  } = useStore();
   const [menuVisible, setMenuVisible] = useState(false);
 
   if (!carWash?.carwashes[0]) {
@@ -37,14 +41,14 @@ const CarWashCard = ({
     showDistance = false;
   }
 
-  const isHeartActive = isFavorite(Number(carWash.carwashes[0].id));
+  const isHeartActive = isFavoriteCarwash(Number(carWash.carwashes[0].id));
 
   const handleHeartPress = () => {
     try {
       if (isHeartActive) {
-        removeFromFavorites(Number(carWash.carwashes[0].id));
+        removeFromFavoritesCarwashes(Number(carWash.carwashes[0].id));
       } else {
-        addToFavorites(Number(carWash.carwashes[0].id));
+        addToFavoritesCarwashes(Number(carWash.carwashes[0].id));
       }
     } catch (error) {}
     setMenuVisible(false);
