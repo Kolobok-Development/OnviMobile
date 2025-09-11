@@ -182,7 +182,7 @@ const CustomDrawerContent = ({
                   });
                 }}
               />
-              <CustomDrawerItem
+              {/* <CustomDrawerItem
                 label={t('navigation.favorites')}
                 color={route === 'Избранное' ? theme.primary : theme.textColor}
                 onPress={() => {
@@ -191,7 +191,7 @@ const CustomDrawerContent = ({
                     routes: [{name: 'Избранное'}],
                   });
                 }}
-              />
+              /> */}
               <CustomDrawerItem
                 label={t('navigation.settings')}
                 color={route === 'Настройки' ? theme.primary : theme.textColor}
