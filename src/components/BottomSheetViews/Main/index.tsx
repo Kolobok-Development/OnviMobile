@@ -1,9 +1,9 @@
-import React, {useCallback, useRef} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {StyleSheet, Dimensions, Platform} from 'react-native';
 
 import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
-import {BLACKTWO, WHITE, BLACK} from '@utils/colors.ts';
+import {BLACK} from '@utils/colors.ts';
 import {dp} from '@utils/dp.ts';
 import {
   BottomSheetScrollView,
@@ -20,22 +20,31 @@ import {getCampaignList} from '@services/api/campaign';
 import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {useNavStore} from '@state/useNavStore/index.ts';
-import {Campaign} from '@app-types/api/app/types.ts';
+import {Campaign, CarWashLocation} from '@app-types/api/app/types.ts';
 import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
-import NearPosButton from './NearPosButton/index.tsx';
 import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 import {useCombinedTheme} from '@hooks/useCombinedTheme';
 import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
+import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
-  const {bottomSheetRef, bottomSheetSnapPoints, setSelectedPos, setBusiness} =
-    useStore.getState();
+  const {
+    bottomSheetRef,
+    bottomSheetSnapPoints,
+    setSelectedPos,
+    setBusiness,
+    latestCarwashes,
+    posList,
+    setOrderDetails,
+    cameraRef,
+    loadLatestCarwashes,
+  } = useStore.getState();
 
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -49,9 +58,12 @@ const Main = () => {
 
   const {setIsMainScreen} = useNavStore.getState();
 
-  const {drawerNavigation} = useNavStore();
   const scrollViewRef = useRef<BottomSheetScrollViewMethods>(null);
   const {backgroundColor, currentThemeName} = useCombinedTheme();
+
+  const [latestCarwashesData, setLatestCarwashesData] = useState<
+    CarWashLocation[]
+  >([]);
 
   const {isLoading: campaignLoading, data: campaignData} = useSWR(
     ['getCampaignList'],
@@ -77,6 +89,7 @@ const Main = () => {
       setIsMainScreen(true);
       setSelectedPos(null);
       setBusiness(null);
+      loadLatestCarwashes();
 
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({y: 0, animated: false});
@@ -87,6 +100,41 @@ const Main = () => {
       };
     }, []),
   );
+
+  const onClick = (carwash: any) => {
+    navigateBottomSheet('Business', {});
+    setBusiness(carwash);
+    setOrderDetails({
+      posId: 0,
+      sum: 0,
+      bayNumber: null,
+      promoCodeId: null,
+      rewardPointsUsed: null,
+      type: null,
+      name: null,
+      prices: [],
+      order: null,
+      orderDate: null,
+    });
+    bottomSheetRef?.current?.snapToPosition('42%');
+
+    cameraRef?.current?.setCameraPosition({
+      longitude: carwash.location.lon,
+      latitude: carwash.location.lat,
+      zoomLevel: 16,
+      animationDuration: 1000,
+    });
+  };
+
+  useEffect(() => {
+    if (latestCarwashes) {
+      const latestCarWashes = posList.filter(carwash =>
+        latestCarwashes.includes(Number(carwash.carwashes[0].id)),
+      );
+
+      setLatestCarwashesData(latestCarWashes);
+    }
+  }, [latestCarwashes, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -172,29 +220,25 @@ const Main = () => {
               </Button>
             </XStack>
           </XStack>
-          <XStack gap={dp(16)} marginTop={dp(16)}>
-            <NearPosButton />
+          <YStack>
+            <Text
+              color={BLACK}
+              fontSize={dp(24)}
+              fontWeight="600"
+              marginTop={dp(16)}>
+              {t('app.latestCarwashes.latest')}
+            </Text>
 
-            <PressableCard
-              backgroundColor={BLACKTWO}
-              borderRadius={dp(22)}
-              height={dp(90)}
-              width={'48%'}
-              flex={1}
-              onPress={() => {
-                drawerNavigation?.navigate('Промокоды');
-              }}>
-              <YStack alignItems="flex-start" padding={dp(16)} height="100%">
-                <Text
-                  color={WHITE}
-                  fontSize={dp(16)}
-                  fontWeight="700"
-                  textAlign="center">
-                  {t('navigation.promos')}
-                </Text>
-              </YStack>
-            </PressableCard>
-          </XStack>
+            <YStack marginTop={dp(12)} gap={dp(8)}>
+              {latestCarwashesData.map(item => (
+                <CarWashCard
+                  carWash={item}
+                  onClick={onClick}
+                  showDistance={false}
+                />
+              ))}
+            </YStack>
+          </YStack>
         </Card>
         <Card
           backgroundColor={backgroundColor}
@@ -218,7 +262,7 @@ const Main = () => {
               color={BLACK}
               fontSize={dp(24)}
               fontWeight="600"
-              marginTop={dp(16)}>
+              marginTop={dp(12)}>
               {t('app.main.PromotionsForYou')}
             </Text>
           </XStack>

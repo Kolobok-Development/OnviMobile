@@ -15,10 +15,7 @@ import SearchPlaceholder from './SearchPlaceholder';
 import useSWRMutation from 'swr/mutation';
 import {getPOSList} from '@services/api/pos';
 import calculateDistance from '@utils/calculateDistance.ts';
-import {
-  CarWashLocation,
-  SortedCarWashLocation,
-} from '@app-types/api/app/types.ts';
+import {CarWashLocation} from '@app-types/api/app/types.ts';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard';
 
 const Search = () => {
@@ -28,7 +25,7 @@ const Search = () => {
   const {setOrderDetails, setBusiness, location, bottomSheetRef, cameraRef} =
     useStore.getState();
 
-  const [sortedData, setSortedData] = useState<SortedCarWashLocation[]>([]);
+  const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
 
   const {isMutating, trigger, data} = useSWRMutation(
     'getPOSList',
@@ -59,7 +56,7 @@ const Search = () => {
                 carwashLon,
               );
 
-              const carWashWithDistance: SortedCarWashLocation = {
+              const carWashWithDistance: CarWashLocation = {
                 ...carwash,
                 distance,
               };
@@ -78,15 +75,8 @@ const Search = () => {
     }
   }, [location, trigger]);
 
-  const renderBusiness = ({item}: {item: SortedCarWashLocation}) => {
-    return (
-      <CarWashCard
-        carWash={item}
-        onClick={onClick}
-        showHeart={false}
-        showActionModal={false}
-      />
-    );
+  const renderBusiness = ({item}: {item: CarWashLocation}) => {
+    return <CarWashCard carWash={item} onClick={onClick} />;
   };
 
   const doSearch = useCallback(
@@ -105,7 +95,7 @@ const Search = () => {
               carwashLon,
             );
 
-            const carWashWithDistance: SortedCarWashLocation = {
+            const carWashWithDistance: CarWashLocation = {
               ...carwash,
               distance,
             };

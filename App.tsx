@@ -120,7 +120,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
-  const {loadUser, user, fcmToken, loadFavorites} = useStore.getState();
+  const {loadUser, user, fcmToken, loadFavoritesCarwashes} = useStore.getState();
 
   const {t} = useTranslation();
 
@@ -190,12 +190,12 @@ function App(): React.JSX.Element {
     const updateFavorites = async () => {
       try {
         if (user) {
-          await loadFavorites();
+          await loadFavoritesCarwashes();
         }
       } catch (error) {
         Toast.show({
           type: 'customErrorToast',
-          text1: i18n.t('app.favorites.errorLoadingFavorites'),
+          text1: i18n.t('app.favoritesCarwashes.errorLoadingFavorites'),
         });
       }
     }
