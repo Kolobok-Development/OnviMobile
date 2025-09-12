@@ -5,17 +5,19 @@ import {useTranslation} from 'react-i18next';
 import {useNavigation} from '@react-navigation/core';
 import ScreenHeader from '@components/ScreenHeader';
 import {GeneralDrawerNavigationProp} from '../../types/navigation/DrawerNavigation.ts';
-import {XStack, YStack} from 'tamagui';
+import {Text, XStack, YStack} from 'tamagui';
 import calculateDistance from '@utils/calculateDistance.ts';
 import {CarWashLocation} from '@app-types/api/app/types.ts';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
 import useStore from '@state/store.ts';
+import CarwashesPlaceholder from '@components/BottomSheetViews/CarwashesPlaceholder/index.tsx';
 
 const Favorites = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Избранное'>>();
   const {t} = useTranslation();
   const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
-  const {location, posList, favoritesCarwashes} = useStore.getState();
+  const {location, posList} = useStore.getState();
+  const {favoritesCarwashesIsLoading, favoritesCarwashes} = useStore();
 
   useEffect(() => {
     if (
@@ -45,6 +47,8 @@ const Favorites = () => {
       });
 
       setSortedData(favoriteCarWashesDistance);
+    } else {
+      setSortedData([]);
     }
   }, [location, posList, favoritesCarwashes]);
 
@@ -60,18 +64,33 @@ const Favorites = () => {
           btnType="back"
           btnCallback={() => navigation.navigate('Главная')}
         />
-        <XStack marginTop={dp(25)}>
-          <FlatList
-            data={sortedData}
-            renderItem={renderBusiness}
-            keyExtractor={(_, index: number) => index.toString()}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            bounces={true}
-            contentContainerStyle={{paddingBottom: dp(40)}}
-            ItemSeparatorComponent={() => <XStack style={{height: 8}} />}
-          />
-        </XStack>
+        {favoritesCarwashesIsLoading ? (
+          <>
+            <XStack marginTop={dp(25)} />
+            <CarwashesPlaceholder heightItems={63} />
+          </>
+        ) : (
+          <XStack marginTop={dp(25)} flex={1}>
+            {sortedData.length > 0 ? (
+              <FlatList
+                data={sortedData}
+                renderItem={renderBusiness}
+                keyExtractor={(_, index: number) => index.toString()}
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}
+                bounces={true}
+                contentContainerStyle={{paddingBottom: dp(40)}}
+                ItemSeparatorComponent={() => (
+                  <XStack style={{height: dp(8)}} />
+                )}
+              />
+            ) : (
+              <Text width="100%" textAlign="center">
+                Список избранных пуст.
+              </Text>
+            )}
+          </XStack>
+        )}
       </YStack>
     </SafeAreaView>
   );

@@ -6,7 +6,8 @@ import {getLatestCarwash} from '@services/api/order';
 export interface CarwashSlice {
   favoritesCarwashes: number[];
   latestCarwashes: number[];
-  isLoading: boolean;
+  favoritesCarwashesIsLoading: boolean;
+  latestCarwashesIsLoading: boolean;
   addToFavoritesCarwashes: (id: number) => void;
   removeFromFavoritesCarwashes: (id: number) => void;
   loadFavoritesCarwashes: () => Promise<void>;
@@ -18,7 +19,8 @@ export interface CarwashSlice {
 const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   favoritesCarwashes: [],
   latestCarwashes: [],
-  isLoading: false,
+  favoritesCarwashesIsLoading: false,
+  latestCarwashesIsLoading: false,
 
   addToFavoritesCarwashes: async (id: number) => {
     try {
@@ -55,7 +57,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   },
 
   loadFavoritesCarwashes: async () => {
-    set({isLoading: true});
+    set({favoritesCarwashesIsLoading: true});
     try {
       const serverFavorites = await getFavorites();
       set({favoritesCarwashes: serverFavorites});
@@ -68,7 +70,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
       }
       throw error;
     } finally {
-      set({isLoading: false});
+      set({favoritesCarwashesIsLoading: false});
     }
   },
 
@@ -81,7 +83,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   },
 
   loadLatestCarwashes: async () => {
-    set({isLoading: true});
+    set({latestCarwashesIsLoading: true});
     try {
       const serverLatest = await getLatestCarwash({size: 3, page: 1});
 
@@ -95,7 +97,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
       }
       throw error;
     } finally {
-      set({isLoading: false});
+      set({latestCarwashesIsLoading: false});
     }
   },
 });

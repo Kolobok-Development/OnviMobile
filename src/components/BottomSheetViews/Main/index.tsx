@@ -31,6 +31,7 @@ import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
+import CarwashesPlaceholder from '../CarwashesPlaceholder/index.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
@@ -45,6 +46,8 @@ const Main = () => {
     cameraRef,
     loadLatestCarwashes,
   } = useStore.getState();
+
+  const {latestCarwashesIsLoading} = useStore();
 
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
@@ -228,16 +231,24 @@ const Main = () => {
               marginTop={dp(16)}>
               {t('app.latestCarwashes.latest')}
             </Text>
-
-            <YStack marginTop={dp(12)} gap={dp(8)}>
-              {latestCarwashesData.map(item => (
-                <CarWashCard
-                  carWash={item}
-                  onClick={onClick}
-                  showDistance={false}
-                />
-              ))}
-            </YStack>
+            {latestCarwashesIsLoading ? (
+              <>
+                <XStack marginTop={dp(12)} />
+                <CarwashesPlaceholder />
+              </>
+            ) : (
+              <>
+                <YStack marginTop={dp(12)} gap={dp(8)}>
+                  {latestCarwashesData.map(item => (
+                    <CarWashCard
+                      carWash={item}
+                      onClick={onClick}
+                      showDistance={false}
+                    />
+                  ))}
+                </YStack>
+              </>
+            )}
           </YStack>
         </Card>
         <Card
