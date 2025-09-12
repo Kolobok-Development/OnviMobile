@@ -49,7 +49,13 @@ const Favorites = () => {
   }, [location, posList, favoritesCarwashes]);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
-    return <CarWashCard carWash={item} showIsFavorite={true} />;
+    return (
+      <CarWashCard
+        carWash={item}
+        showIsFavorite={true}
+        heartIsClickable={true}
+      />
+    );
   };
 
   return (
