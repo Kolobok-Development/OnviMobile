@@ -67,7 +67,7 @@ const Favorites = () => {
         {favoritesCarwashesIsLoading ? (
           <>
             <XStack marginTop={dp(25)} />
-            <CarwashesPlaceholder heightItems={63} />{' '}
+            <CarwashesPlaceholder heightItems={63} />
           </>
         ) : (
           <XStack marginTop={dp(25)} flex={1}>
