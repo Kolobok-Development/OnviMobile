@@ -22,8 +22,14 @@ const Search = () => {
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
 
-  const {setOrderDetails, setBusiness, location, bottomSheetRef, cameraRef} =
-    useStore.getState();
+  const {
+    setOrderDetails,
+    setBusiness,
+    location,
+    bottomSheetRef,
+    cameraRef,
+    favoritesCarwashes,
+  } = useStore.getState();
 
   const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
 
@@ -41,77 +47,67 @@ const Search = () => {
     ) => getPOSList(arg),
   );
 
+  const processCarwashes = useCallback(
+    (carwashes: CarWashLocation[]) => {
+      return carwashes
+        .map((carwash: CarWashLocation) => {
+          const carwashLat = carwash.location.lat;
+          const carwashLon = carwash.location.lon;
+          const distance = calculateDistance(
+            location?.latitude,
+            location?.longitude,
+            carwashLat,
+            carwashLon,
+          );
+
+          const isFavorite = favoritesCarwashes.includes(
+            Number(carwash.carwashes[0].id),
+          );
+
+          return {
+            ...carwash,
+            distance,
+            isFavorite,
+          };
+        })
+        .sort((a, b) => {
+          if (a.isFavorite && !b.isFavorite) {
+            return -1;
+          }
+          if (!a.isFavorite && b.isFavorite) {
+            return 1;
+          }
+
+          return a.distance - b.distance;
+        });
+    },
+    [location, favoritesCarwashes],
+  );
+
   useEffect(() => {
     if (location?.latitude && location?.longitude) {
       trigger({}).then(res => {
         if (res?.businessesLocations?.length > 0) {
-          const sortedCarwashes = res.businessesLocations.map(
-            (carwash: CarWashLocation) => {
-              const carwashLat = carwash.location.lat;
-              const carwashLon = carwash.location.lon;
-              const distance = calculateDistance(
-                location.latitude,
-                location.longitude,
-                carwashLat,
-                carwashLon,
-              );
-
-              const carWashWithDistance: CarWashLocation = {
-                ...carwash,
-                distance,
-              };
-
-              return carWashWithDistance;
-            },
-          );
-
-          // Sort by distance (ascending)
-          sortedCarwashes.sort((a: any, b: any) => a.distance - b.distance);
-
-          // Update state with the sorted and limited carwashes
-          setSortedData(sortedCarwashes);
+          setSortedData(processCarwashes(res.businessesLocations));
         }
       });
     }
-  }, [location, trigger]);
+  }, [location, trigger, processCarwashes]);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
-    return <CarWashCard carWash={item} onClick={onClick} />;
+    return (
+      <CarWashCard carWash={item} onClick={onClick} showIsFavorite={true} />
+    );
   };
 
   const doSearch = useCallback(
     debounce(async (val: string) => {
       const res = await trigger({search: val});
-
       if (res?.businessesLocations?.length > 0) {
-        const searchResults = res.businessesLocations.map(
-          (carwash: CarWashLocation) => {
-            const carwashLat = carwash.location.lat;
-            const carwashLon = carwash.location.lon;
-            const distance = calculateDistance(
-              location?.latitude,
-              location?.longitude,
-              carwashLat,
-              carwashLon,
-            );
-
-            const carWashWithDistance: CarWashLocation = {
-              ...carwash,
-              distance,
-            };
-
-            return carWashWithDistance;
-          },
-        );
-
-        // Sort by distance (if needed, based on user location)
-        searchResults.sort((a: any, b: any) => a.distance - b.distance);
-
-        // Update the search results state (no limit)
-        setSortedData(searchResults);
+        setSortedData(processCarwashes(res.businessesLocations));
       }
     }, 1300),
-    [location, trigger],
+    [trigger, processCarwashes],
   );
 
   const onClick = (carwash: any) => {
@@ -225,7 +221,7 @@ const styles = StyleSheet.create({
   },
   listContentContainer: {
     paddingTop: dp(8),
-    paddingBottom: dp(40), // Add padding at the bottom of the list
+    paddingBottom: dp(40),
   },
 });
 
