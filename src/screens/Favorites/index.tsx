@@ -68,11 +68,10 @@ const Favorites = () => {
           <>
             <XStack marginTop={dp(25)} />
             <CarwashesPlaceholder heightItems={63} />{' '}
-            {/* Исправлено опечатку: heighеItems → heightItems */}
           </>
         ) : (
           <XStack marginTop={dp(25)} flex={1}>
-            {sortedData.length > 0 ? ( // Убраны лишние скобки и добавлен flex={1} для корректного отображения FlatList
+            {sortedData.length > 0 ? (
               <FlatList
                 data={sortedData}
                 renderItem={renderBusiness}
