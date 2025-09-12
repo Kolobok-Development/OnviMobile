@@ -123,7 +123,7 @@ const CarWashCard = ({
             unstyled
             onPress={() => {
               if (heartIsClickable) {
-                handleHeartPress();
+                setMenuVisible(true);
               }
             }}>
             <Image

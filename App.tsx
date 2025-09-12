@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {ThemeProvider} from './src/context/ThemeProvider';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -121,6 +121,7 @@ const DatadogWrapper = ({children}: DatadogWrapperProps) => {
 function App(): React.JSX.Element {
   const [isConnected, setConnected] = useState(true);
   const {loadUser, user, fcmToken, loadFavoritesCarwashes} = useStore.getState();
+  const favoritesLoadedRef = useRef(false); 
 
   const {t} = useTranslation();
 
@@ -189,8 +190,9 @@ function App(): React.JSX.Element {
 
     const updateFavorites = async () => {
       try {
-        if (user) {
+        if (user && !favoritesLoadedRef.current) { 
           await loadFavoritesCarwashes();
+          favoritesLoadedRef.current = true; 
         }
       } catch (error) {
         Toast.show({
@@ -201,7 +203,7 @@ function App(): React.JSX.Element {
     }
 
     syncMetaData();
-    // updateFavorites();
+    updateFavorites();
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (

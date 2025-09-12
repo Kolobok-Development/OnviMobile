@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Text, View, Image, StyleSheet} from 'react-native';
+import {Text, View, Image, StyleSheet, Pressable} from 'react-native';
 
 import Modal from '@styled/Modal';
 
@@ -30,7 +30,10 @@ const BusinessInfo = () => {
     bottomSheetRef,
     bottomSheetSnapPoints,
     setFreeVacuum,
+    isFavoriteCarwash,
   } = useStore.getState();
+
+  const {addToFavoritesCarwashes} = useStore();
 
   const modalCallback = async (bayType: string) => {
     setOrderDetails({...orderDetails, bayType: bayType});
@@ -99,6 +102,22 @@ const BusinessInfo = () => {
       </Modal>
       <View style={styles.paddingTop} />
       <BusinessHeader type="navigate" />
+      <Pressable
+        style={styles.heartButton}
+        onPress={() => {
+          if (!isFavoriteCarwash(Number(business?.carwashes[0].id))) {
+            addToFavoritesCarwashes(Number(business?.carwashes[0].id));
+          }
+        }}>
+        <Image
+          style={styles.heartButtonImage}
+          source={
+            isFavoriteCarwash(Number(business?.carwashes[0].id))
+              ? require('../../../assets/icons/heart-active.png')
+              : require('../../../assets/icons/heart.png')
+          }
+        />
+      </Pressable>
       <View style={styles.tagsContainer}>
         {business &&
           business.carwashes.length &&
@@ -196,6 +215,17 @@ const styles = StyleSheet.create({
   text: {
     fontSize: dp(16),
     fontWeight: '400',
+  },
+  heartButton: {
+    position: 'absolute',
+    height: dp(27),
+    width: dp(27),
+    right: dp(25),
+    top: dp(25),
+  },
+  heartButtonImage: {
+    height: '100%',
+    width: '100%',
   },
   circleImage: {
     width: dp(45),
