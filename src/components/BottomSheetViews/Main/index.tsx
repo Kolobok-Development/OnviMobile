@@ -47,6 +47,8 @@ const Main = () => {
     loadLatestCarwashes,
   } = useStore.getState();
 
+  const {latestCarwashesIsLoading} = useStore();
+
   const ref = React.useRef<ICarouselInstance>(null);
   const progress = useSharedValue<number>(0);
 
@@ -229,18 +231,23 @@ const Main = () => {
               marginTop={dp(16)}>
               {t('app.latestCarwashes.latest')}
             </Text>
-            {latestCarwashesData.length > 1 ? (
-              <YStack marginTop={dp(12)} gap={dp(8)}>
-                {latestCarwashesData.map(item => (
-                  <CarWashCard
-                    carWash={item}
-                    onClick={onClick}
-                    showDistance={false}
-                  />
-                ))}
-              </YStack>
+            {latestCarwashesIsLoading ? (
+              <>
+                <XStack marginTop={dp(12)} />
+                <CarwashesPlaceholder />
+              </>
             ) : (
-              <CarwashesPlaceholder />
+              <>
+                <YStack marginTop={dp(12)} gap={dp(8)}>
+                  {latestCarwashesData.map(item => (
+                    <CarWashCard
+                      carWash={item}
+                      onClick={onClick}
+                      showDistance={false}
+                    />
+                  ))}
+                </YStack>
+              </>
             )}
           </YStack>
         </Card>

@@ -4,7 +4,7 @@ import {dp} from '../../../utils/dp';
 import {YStack} from 'tamagui';
 
 interface ICarwashesPlaceholderProps {
-  heighеItems?: number;
+  heightItems?: number;
   gapItems?: number;
 }
 
@@ -20,18 +20,18 @@ export default function CarwashesPlaceholder(
       <YStack>
         <SkeletonPlaceholder.Item
           width="100%"
-          height={props.heighеItems ? dp(props.heighеItems) : dp(46)}
+          height={props.heightItems ? dp(props.heightItems) : dp(46)}
           borderRadius={12}
         />
         <SkeletonPlaceholder.Item
           width="100%"
-          height={props.heighеItems ? dp(props.heighеItems) : dp(46)}
+          height={props.heightItems ? dp(props.heightItems) : dp(46)}
           borderRadius={12}
           marginTop={props.gapItems ? dp(props.gapItems) : dp(8)}
         />
         <SkeletonPlaceholder.Item
           width="100%"
-          height={props.heighеItems ? dp(props.heighеItems) : dp(46)}
+          height={props.heightItems ? dp(props.heightItems) : dp(46)}
           borderRadius={12}
           marginTop={props.gapItems ? dp(props.gapItems) : dp(8)}
         />
