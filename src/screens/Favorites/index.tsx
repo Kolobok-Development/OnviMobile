@@ -10,6 +10,7 @@ import calculateDistance from '@utils/calculateDistance.ts';
 import {CarWashLocation} from '@app-types/api/app/types.ts';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
 import useStore from '@state/store.ts';
+import CarwashesPlaceholder from '@components/BottomSheetViews/CarwashesPlaceholder/index.tsx';
 
 const Favorites = () => {
   const navigation = useNavigation<GeneralDrawerNavigationProp<'Избранное'>>();
@@ -61,16 +62,20 @@ const Favorites = () => {
           btnCallback={() => navigation.navigate('Главная')}
         />
         <XStack marginTop={dp(25)}>
-          <FlatList
-            data={sortedData}
-            renderItem={renderBusiness}
-            keyExtractor={(_, index: number) => index.toString()}
-            scrollEnabled={true}
-            showsVerticalScrollIndicator={false}
-            bounces={true}
-            contentContainerStyle={{paddingBottom: dp(40)}}
-            ItemSeparatorComponent={() => <XStack style={{height: 8}} />}
-          />
+          {sortedData.length > 1 ? (
+            <FlatList
+              data={sortedData}
+              renderItem={renderBusiness}
+              keyExtractor={(_, index: number) => index.toString()}
+              scrollEnabled={true}
+              showsVerticalScrollIndicator={false}
+              bounces={true}
+              contentContainerStyle={{paddingBottom: dp(40)}}
+              ItemSeparatorComponent={() => <XStack style={{height: 8}} />}
+            />
+          ) : (
+            <CarwashesPlaceholder />
+          )}
         </XStack>
       </YStack>
     </SafeAreaView>

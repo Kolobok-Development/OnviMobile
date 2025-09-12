@@ -201,7 +201,7 @@ function App(): React.JSX.Element {
     }
 
     syncMetaData();
-    // updateFavorites();
+    updateFavorites();
   }, [fcmToken, isConnected, loadUser, user?.id]);
 
   return (
