@@ -12,7 +12,7 @@ interface CarWashCardProps {
   showIsFavorite?: boolean;
   heartIsClickable?: boolean;
   showBorder?: boolean;
-  longPressClipAction?: boolean;
+  longPressPinAction?: boolean;
   enablePinIcon?: boolean;
   cardIsClickable?: boolean;
 }
@@ -23,7 +23,7 @@ const CarWashCard = ({
   showIsFavorite = false,
   heartIsClickable = false,
   showBorder = true,
-  longPressClipAction = false,
+  longPressPinAction = false,
   enablePinIcon = false,
   cardIsClickable = true,
 }: CarWashCardProps) => {
@@ -31,9 +31,9 @@ const CarWashCard = ({
     addToFavoritesCarwashes,
     removeFromFavoritesCarwashes,
     isFavoriteCarwash,
-    addToClipCarwashes,
-    removeFromClipCarwashes,
-    isClipCarwash,
+    addToPinnedCarwashes,
+    removeFromPinnedCarwashes,
+    isPinnedCarwash,
     setBusiness,
     setOrderDetails,
     bottomSheetRef,
@@ -50,8 +50,12 @@ const CarWashCard = ({
     showDistance = false;
   }
 
-  const isFavorite = isFavoriteCarwash(Number(carWash.carwashes[0].id));
-  const isClip = isClipCarwash(Number(carWash.carwashes[0].id));
+  const id = carWash.carwashes[0].id;
+  const numericId = Number(id);
+
+  const isFavorite =
+    !id || isNaN(numericId) ? false : isFavoriteCarwash(numericId);
+  const isPinned = !id || isNaN(numericId) ? false : isPinnedCarwash(numericId);
 
   const handleHeartPress = () => {
     try {
@@ -66,17 +70,17 @@ const CarWashCard = ({
 
   const handleClip = () => {
     try {
-      if (isClip) {
-        removeFromClipCarwashes(Number(carWash.carwashes[0].id));
+      if (isPinned) {
+        removeFromPinnedCarwashes(Number(carWash.carwashes[0].id));
       } else {
-        addToClipCarwashes(Number(carWash.carwashes[0].id));
+        addToPinnedCarwashes(Number(carWash.carwashes[0].id));
       }
     } catch (error) {}
     setMenuVisible(false);
   };
 
   const handleLongPress = () => {
-    if (longPressClipAction) {
+    if (longPressPinAction) {
       setMenuVisible(true);
     }
   };
@@ -128,7 +132,7 @@ const CarWashCard = ({
           {enablePinIcon ? (
             <Image
               source={
-                isClip
+                isPinned
                   ? require('../../assets/icons/map-pin-active.png')
                   : require('../../assets/icons/map-pin.png')
               }
@@ -197,7 +201,7 @@ const CarWashCard = ({
         <XStack style={styles.modalContent}>
           <TouchableWithoutFeedback>
             <YStack style={styles.contextMenu}>
-              {longPressClipAction ? (
+              {longPressPinAction ? (
                 <Button unstyled onPress={handleClip} style={styles.menuButton}>
                   <XStack
                     padding={dp(15)}
@@ -208,11 +212,11 @@ const CarWashCard = ({
                     width="100%"
                     gap={dp(6)}>
                     <Text fontSize={dp(13)} color="#333" fontWeight="500">
-                      {isClip ? 'Открепить' : 'Закрепить'}
+                      {isPinned ? 'Открепить' : 'Закрепить'}
                     </Text>
                     <Image
                       source={
-                        isClip
+                        isPinned
                           ? require('../../assets/icons/clip.png')
                           : require('../../assets/icons/clip.png')
                       }

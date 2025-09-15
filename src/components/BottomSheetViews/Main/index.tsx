@@ -43,7 +43,7 @@ const Main = () => {
     latestCarwashes,
     posList,
     loadLatestCarwashes,
-    clipCarwashes,
+    pinnedCarwashes,
   } = useStore.getState();
 
   const {latestCarwashesIsLoading} = useStore();
@@ -108,14 +108,14 @@ const Main = () => {
       const carwashMap = new Map();
 
       posList.forEach(carwash => {
-        const id = Number(carwash.carwashes[0].id);
+        const id = Number(carwash?.carwashes[0]?.id) || undefined;
         carwashMap.set(id, carwash);
       });
 
       const result: CarWashLocation[] = [];
 
-      if (clipCarwashes && clipCarwashes.length > 0) {
-        clipCarwashes.forEach(id => {
+      if (pinnedCarwashes && pinnedCarwashes.length > 0) {
+        pinnedCarwashes.forEach(id => {
           const carwash = carwashMap.get(id);
           if (carwash) {
             result.push(carwash);
@@ -133,7 +133,7 @@ const Main = () => {
 
       setLatestCarwashesData(result.slice(0, 3));
     }
-  }, [latestCarwashes, clipCarwashes, posList]);
+  }, [latestCarwashes, pinnedCarwashes, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -239,7 +239,7 @@ const Main = () => {
                     <CarWashCard
                       carWash={item}
                       showDistance={false}
-                      longPressClipAction={true}
+                      longPressPinAction={true}
                       enablePinIcon={true}
                     />
                   ))}

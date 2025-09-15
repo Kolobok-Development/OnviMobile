@@ -6,7 +6,7 @@ import {getLatestCarwash} from '@services/api/order';
 export interface CarwashSlice {
   favoritesCarwashes: number[];
   latestCarwashes: number[];
-  clipCarwashes: number[];
+  pinnedCarwashes: number[];
   favoritesCarwashesIsLoading: boolean;
   latestCarwashesIsLoading: boolean;
   addToFavoritesCarwashes: (id: number) => void;
@@ -15,16 +15,16 @@ export interface CarwashSlice {
   loadLatestCarwashes: () => Promise<void>;
   isFavoriteCarwash: (id: number) => boolean;
   refreshFavoritesCarwashes: () => Promise<void>;
-  addToClipCarwashes: (id: number) => void;
-  removeFromClipCarwashes: (id: number) => void;
-  isClipCarwash: (id: number) => boolean;
-  loadClipCarwashes: () => Promise<void>;
+  addToPinnedCarwashes: (id: number) => void;
+  removeFromPinnedCarwashes: (id: number) => void;
+  isPinnedCarwash: (id: number) => boolean;
+  loadPinnedCarwashes: () => Promise<void>;
 }
 
 const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   favoritesCarwashes: [],
   latestCarwashes: [],
-  clipCarwashes: [],
+  pinnedCarwashes: [],
   favoritesCarwashesIsLoading: false,
   latestCarwashesIsLoading: false,
 
@@ -95,7 +95,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
 
       set({latestCarwashes: serverLatest});
 
-      await get().loadClipCarwashes();
+      await get().loadPinnedCarwashes();
       await LocalStorage.set('latest', JSON.stringify(serverLatest));
     } catch (error) {
       const stored = await LocalStorage.getString('latest');
@@ -108,43 +108,47 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
     }
   },
 
-  addToClipCarwashes: async (id: number) => {
+  addToPinnedCarwashes: async (id: number) => {
     try {
-      const newClip = [id, ...get().clipCarwashes];
-      set({clipCarwashes: newClip});
+      const newPinned = [id, ...get().pinnedCarwashes];
+      set({pinnedCarwashes: newPinned});
 
-      await LocalStorage.set('clip', JSON.stringify(newClip));
+      await LocalStorage.set('pinned', JSON.stringify(newPinned));
     } catch (error) {
-      const currentClip = get().clipCarwashes.filter(clipId => clipId !== id);
-      set({clipCarwashes: currentClip});
+      const currentPinned = get().pinnedCarwashes.filter(
+        pinnedId => pinnedId !== id,
+      );
+      set({pinnedCarwashes: currentPinned});
       throw error;
     }
   },
 
-  removeFromClipCarwashes: async (id: number) => {
+  removeFromPinnedCarwashes: async (id: number) => {
     try {
-      const newClip = get().clipCarwashes.filter(clipId => clipId !== id);
-      set({clipCarwashes: newClip});
+      const newPinned = get().pinnedCarwashes.filter(
+        pinnedId => pinnedId !== id,
+      );
+      set({pinnedCarwashes: newPinned});
 
-      await LocalStorage.set('clip', JSON.stringify(newClip));
+      await LocalStorage.set('pinned', JSON.stringify(newPinned));
     } catch (error) {
-      const currentClip = [...get().clipCarwashes, id];
-      set({clipCarwashes: currentClip});
-      await LocalStorage.set('clip', JSON.stringify(currentClip));
+      const currentPinned = [...get().pinnedCarwashes, id];
+      set({pinnedCarwashes: currentPinned});
+      await LocalStorage.set('pinned', JSON.stringify(currentPinned));
       throw error;
     }
   },
 
-  isClipCarwash: (id: number) => {
-    return get().clipCarwashes.includes(id);
+  isPinnedCarwash: (id: number) => {
+    return get().pinnedCarwashes.includes(id);
   },
 
-  loadClipCarwashes: async () => {
+  loadPinnedCarwashes: async () => {
     try {
-      const stored = await LocalStorage.getString('clip');
+      const stored = await LocalStorage.getString('pinned');
 
       if (stored) {
-        set({clipCarwashes: JSON.parse(stored)});
+        set({pinnedCarwashes: JSON.parse(stored)});
       }
     } catch (error) {
       throw error;
