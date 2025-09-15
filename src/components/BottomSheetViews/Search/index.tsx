@@ -3,7 +3,6 @@ import {useTranslation} from 'react-i18next';
 
 import {View, StyleSheet, TextInput, Text} from 'react-native';
 import {BottomSheetFlatList} from '@gorhom/bottom-sheet';
-import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 //@ts-ignore
 import {debounce} from 'lodash';
@@ -22,14 +21,7 @@ const Search = () => {
   const {t} = useTranslation();
   const [search, setSearch] = useState('');
 
-  const {
-    setOrderDetails,
-    setBusiness,
-    location,
-    bottomSheetRef,
-    cameraRef,
-    favoritesCarwashes,
-  } = useStore.getState();
+  const {location, favoritesCarwashes} = useStore.getState();
 
   const [sortedData, setSortedData] = useState<CarWashLocation[]>([]);
 
@@ -95,9 +87,7 @@ const Search = () => {
   }, [location, trigger, processCarwashes]);
 
   const renderBusiness = ({item}: {item: CarWashLocation}) => {
-    return (
-      <CarWashCard carWash={item} onClick={onClick} showIsFavorite={true} />
-    );
+    return <CarWashCard carWash={item} showIsFavorite={true} />;
   };
 
   const doSearch = useCallback(
@@ -109,31 +99,6 @@ const Search = () => {
     }, 1300),
     [trigger, processCarwashes],
   );
-
-  const onClick = (carwash: any) => {
-    navigateBottomSheet('Business', {});
-    setBusiness(carwash);
-    setOrderDetails({
-      posId: 0,
-      sum: 0,
-      bayNumber: null,
-      promoCodeId: null,
-      rewardPointsUsed: null,
-      type: null,
-      name: null,
-      prices: [],
-      order: null,
-      orderDate: null,
-    });
-    bottomSheetRef?.current?.snapToPosition('42%');
-
-    cameraRef?.current?.setCameraPosition({
-      longitude: carwash.location.lon,
-      latitude: carwash.location.lat,
-      zoomLevel: 16,
-      animationDuration: 1000,
-    });
-  };
 
   return (
     <View style={styles.container}>

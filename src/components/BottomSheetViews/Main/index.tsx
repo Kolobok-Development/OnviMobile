@@ -42,9 +42,8 @@ const Main = () => {
     setBusiness,
     latestCarwashes,
     posList,
-    setOrderDetails,
-    cameraRef,
     loadLatestCarwashes,
+    pinnedCarwashes,
   } = useStore.getState();
 
   const {latestCarwashesIsLoading} = useStore();
@@ -104,40 +103,37 @@ const Main = () => {
     }, []),
   );
 
-  const onClick = (carwash: any) => {
-    navigateBottomSheet('Business', {});
-    setBusiness(carwash);
-    setOrderDetails({
-      posId: 0,
-      sum: 0,
-      bayNumber: null,
-      promoCodeId: null,
-      rewardPointsUsed: null,
-      type: null,
-      name: null,
-      prices: [],
-      order: null,
-      orderDate: null,
-    });
-    bottomSheetRef?.current?.snapToPosition('42%');
-
-    cameraRef?.current?.setCameraPosition({
-      longitude: carwash.location.lon,
-      latitude: carwash.location.lat,
-      zoomLevel: 16,
-      animationDuration: 1000,
-    });
-  };
-
   useEffect(() => {
-    if (latestCarwashes) {
-      const latestCarWashes = posList.filter(carwash =>
-        latestCarwashes.includes(Number(carwash.carwashes[0].id)),
-      );
+    if (latestCarwashes.length > 0) {
+      const carwashMap = new Map();
 
-      setLatestCarwashesData(latestCarWashes);
+      posList.forEach(carwash => {
+        const id = Number(carwash?.carwashes[0]?.id) || undefined;
+        carwashMap.set(id, carwash);
+      });
+
+      const result: CarWashLocation[] = [];
+
+      if (pinnedCarwashes && pinnedCarwashes.length > 0) {
+        pinnedCarwashes.forEach(id => {
+          const carwash = carwashMap.get(id);
+          if (carwash) {
+            result.push(carwash);
+            carwashMap.delete(id);
+          }
+        });
+      }
+
+      latestCarwashes.forEach(id => {
+        const carwash = carwashMap.get(id);
+        if (carwash) {
+          result.push(carwash);
+        }
+      });
+
+      setLatestCarwashesData(result.slice(0, 3));
     }
-  }, [latestCarwashes, posList]);
+  }, [latestCarwashes, pinnedCarwashes, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -242,8 +238,9 @@ const Main = () => {
                   {latestCarwashesData.map(item => (
                     <CarWashCard
                       carWash={item}
-                      onClick={onClick}
                       showDistance={false}
+                      longPressPinAction={true}
+                      enablePinIcon={true}
                     />
                   ))}
                 </YStack>

@@ -4,33 +4,42 @@ import {Button, Image, Text, XStack, YStack} from 'tamagui';
 import {CarWashLocation} from '@app-types/api/app/types';
 import useStore from '@state/store';
 import {StyleSheet, Modal, TouchableWithoutFeedback} from 'react-native';
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 interface CarWashCardProps {
   carWash: CarWashLocation;
-  onClick?: (carWash: CarWashLocation) => void;
   showDistance?: boolean;
-  showClip?: boolean;
   showIsFavorite?: boolean;
   heartIsClickable?: boolean;
   showBorder?: boolean;
-  showActionModal?: boolean;
+  longPressPinAction?: boolean;
+  enablePinIcon?: boolean;
+  cardIsClickable?: boolean;
 }
 
 const CarWashCard = ({
   carWash,
-  onClick,
   showDistance = true,
-  showClip = false,
   showIsFavorite = false,
   heartIsClickable = false,
   showBorder = true,
-  showActionModal = false,
+  longPressPinAction = false,
+  enablePinIcon = false,
+  cardIsClickable = true,
 }: CarWashCardProps) => {
   const {
     addToFavoritesCarwashes,
     removeFromFavoritesCarwashes,
     isFavoriteCarwash,
-  } = useStore();
+    addToPinnedCarwashes,
+    removeFromPinnedCarwashes,
+    isPinnedCarwash,
+    setBusiness,
+    setOrderDetails,
+    bottomSheetRef,
+    cameraRef,
+  } = useStore.getState();
+
   const [menuVisible, setMenuVisible] = useState(false);
 
   if (!carWash?.carwashes[0]) {
@@ -41,11 +50,16 @@ const CarWashCard = ({
     showDistance = false;
   }
 
-  const isHeartActive = isFavoriteCarwash(Number(carWash.carwashes[0].id));
+  const id = carWash.carwashes[0].id;
+  const numericId = Number(id);
+
+  const isFavorite =
+    !id || isNaN(numericId) ? false : isFavoriteCarwash(numericId);
+  const isPinned = !id || isNaN(numericId) ? false : isPinnedCarwash(numericId);
 
   const handleHeartPress = () => {
     try {
-      if (isHeartActive) {
+      if (isFavorite) {
         removeFromFavoritesCarwashes(Number(carWash.carwashes[0].id));
       } else {
         addToFavoritesCarwashes(Number(carWash.carwashes[0].id));
@@ -54,14 +68,49 @@ const CarWashCard = ({
     setMenuVisible(false);
   };
 
+  const handleClip = () => {
+    try {
+      if (isPinned) {
+        removeFromPinnedCarwashes(Number(carWash.carwashes[0].id));
+      } else {
+        addToPinnedCarwashes(Number(carWash.carwashes[0].id));
+      }
+    } catch (error) {}
+    setMenuVisible(false);
+  };
+
   const handleLongPress = () => {
-    if (showActionModal) {
+    if (longPressPinAction) {
       setMenuVisible(true);
     }
   };
 
   const handleCardPress = () => {
-    onClick?.(carWash);
+    if (cardIsClickable) {
+      navigateBottomSheet('Business', {});
+      setBusiness(carWash);
+      setOrderDetails({
+        posId: 0,
+        sum: 0,
+        bayNumber: null,
+        promoCodeId: null,
+        rewardPointsUsed: null,
+        type: null,
+        name: null,
+        prices: [],
+        order: null,
+        orderDate: null,
+      });
+
+      bottomSheetRef?.current?.snapToPosition('42%');
+
+      cameraRef?.current?.setCameraPosition({
+        longitude: carWash.location.lon,
+        latitude: carWash.location.lat,
+        zoomLevel: 16,
+        animationDuration: 1000,
+      });
+    }
   };
 
   const closeModal = () => {
@@ -80,11 +129,24 @@ const CarWashCard = ({
         onPress={handleCardPress}
         onLongPress={handleLongPress}>
         <XStack flex={1} alignItems="center" gap={dp(8)}>
-          <Image
-            source={require('../../assets/icons/small-icon.png')}
-            width={18}
-            height={18}
-          />
+          {enablePinIcon ? (
+            <Image
+              source={
+                isPinned
+                  ? require('../../assets/icons/map-pin-active.png')
+                  : require('../../assets/icons/map-pin.png')
+              }
+              width={29}
+              height={29}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/icons/small-icon.png')}
+              width={18}
+              height={18}
+            />
+          )}
+
           <YStack paddingRight={dp(15)}>
             <Text fontSize={13} ellipsizeMode="tail" numberOfLines={1}>
               {carWash.carwashes[0].name}
@@ -108,17 +170,7 @@ const CarWashCard = ({
           </YStack>
         </XStack>
 
-        {showClip && (
-          <Button unstyled>
-            <Image
-              source={require('../../assets/icons/clip.png')}
-              width={20}
-              height={20}
-            />
-          </Button>
-        )}
-
-        {showIsFavorite && isHeartActive && (
+        {showIsFavorite && isFavorite && (
           <Button
             unstyled
             onPress={() => {
@@ -149,35 +201,60 @@ const CarWashCard = ({
         <XStack style={styles.modalContent}>
           <TouchableWithoutFeedback>
             <YStack style={styles.contextMenu}>
-              <Button
-                unstyled
-                onPress={handleHeartPress}
-                style={styles.menuButton}>
-                <XStack
-                  padding={dp(15)}
-                  backgroundColor="white"
-                  borderRadius={dp(12)}
-                  alignItems="center"
-                  justifyContent="center"
-                  width="100%"
-                  gap={dp(6)}>
-                  <Text fontSize={dp(13)} color="#333" fontWeight="500">
-                    {isHeartActive
-                      ? 'Удалить из избранного'
-                      : 'Добавить в избранное'}
-                  </Text>
-                  <Image
-                    source={
-                      isHeartActive
-                        ? require('../../assets/icons/heart-active.png')
-                        : require('../../assets/icons/heart.png')
-                    }
-                    width={20}
-                    height={20}
-                  />
-                </XStack>
-              </Button>
-
+              {longPressPinAction ? (
+                <Button unstyled onPress={handleClip} style={styles.menuButton}>
+                  <XStack
+                    padding={dp(15)}
+                    backgroundColor="white"
+                    borderRadius={dp(12)}
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={dp(6)}>
+                    <Text fontSize={dp(13)} color="#333" fontWeight="500">
+                      {isPinned ? 'Открепить' : 'Закрепить'}
+                    </Text>
+                    <Image
+                      source={
+                        isPinned
+                          ? require('../../assets/icons/clip.png')
+                          : require('../../assets/icons/clip.png')
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </XStack>
+                </Button>
+              ) : (
+                <Button
+                  unstyled
+                  onPress={handleHeartPress}
+                  style={styles.menuButton}>
+                  <XStack
+                    padding={dp(15)}
+                    backgroundColor="white"
+                    borderRadius={dp(12)}
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={dp(6)}>
+                    <Text fontSize={dp(13)} color="#333" fontWeight="500">
+                      {isFavorite
+                        ? 'Удалить из избранного'
+                        : 'Добавить в избранное'}
+                    </Text>
+                    <Image
+                      source={
+                        isFavorite
+                          ? require('../../assets/icons/heart-active.png')
+                          : require('../../assets/icons/heart.png')
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </XStack>
+                </Button>
+              )}
               <Button unstyled onPress={closeModal} style={styles.closeButton}>
                 <XStack
                   padding={dp(15)}
