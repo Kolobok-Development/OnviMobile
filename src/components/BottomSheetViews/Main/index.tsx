@@ -45,6 +45,7 @@ const Main = () => {
     setOrderDetails,
     cameraRef,
     loadLatestCarwashes,
+    clipCarwashes,
   } = useStore.getState();
 
   const {latestCarwashesIsLoading} = useStore();
@@ -130,14 +131,36 @@ const Main = () => {
   };
 
   useEffect(() => {
-    if (latestCarwashes) {
-      const latestCarWashes = posList.filter(carwash =>
-        latestCarwashes.includes(Number(carwash.carwashes[0].id)),
-      );
+    if (latestCarwashes.length > 0) {
+      const carwashMap = new Map();
 
-      setLatestCarwashesData(latestCarWashes);
+      posList.forEach(carwash => {
+        const id = Number(carwash.carwashes[0].id);
+        carwashMap.set(id, carwash);
+      });
+
+      const result: CarWashLocation[] = [];
+
+      if (clipCarwashes && clipCarwashes.length > 0) {
+        clipCarwashes.forEach(id => {
+          const carwash = carwashMap.get(id);
+          if (carwash) {
+            result.push(carwash);
+            carwashMap.delete(id);
+          }
+        });
+      }
+
+      latestCarwashes.forEach(id => {
+        const carwash = carwashMap.get(id);
+        if (carwash) {
+          result.push(carwash);
+        }
+      });
+
+      setLatestCarwashesData(result.slice(0, 3));
     }
-  }, [latestCarwashes, posList]);
+  }, [latestCarwashes, clipCarwashes, posList]);
 
   const handleCampaignItemPress = (data: Campaign) => {
     navigateBottomSheet('Campaign', {
@@ -244,6 +267,8 @@ const Main = () => {
                       carWash={item}
                       onClick={onClick}
                       showDistance={false}
+                      longPressClipAction={true}
+                      enablePinIcon={true}
                     />
                   ))}
                 </YStack>

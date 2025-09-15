@@ -9,27 +9,30 @@ interface CarWashCardProps {
   carWash: CarWashLocation;
   onClick?: (carWash: CarWashLocation) => void;
   showDistance?: boolean;
-  showClip?: boolean;
   showIsFavorite?: boolean;
   heartIsClickable?: boolean;
   showBorder?: boolean;
-  showActionModal?: boolean;
+  longPressClipAction?: boolean;
+  enablePinIcon?: boolean;
 }
 
 const CarWashCard = ({
   carWash,
   onClick,
   showDistance = true,
-  showClip = false,
   showIsFavorite = false,
   heartIsClickable = false,
   showBorder = true,
-  showActionModal = false,
+  longPressClipAction = false,
+  enablePinIcon = false,
 }: CarWashCardProps) => {
   const {
     addToFavoritesCarwashes,
     removeFromFavoritesCarwashes,
     isFavoriteCarwash,
+    addToClipCarwashes,
+    removeFromClipCarwashes,
+    isClipCarwash,
   } = useStore();
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -41,11 +44,12 @@ const CarWashCard = ({
     showDistance = false;
   }
 
-  const isHeartActive = isFavoriteCarwash(Number(carWash.carwashes[0].id));
+  const isFavorite = isFavoriteCarwash(Number(carWash.carwashes[0].id));
+  const isClip = isClipCarwash(Number(carWash.carwashes[0].id));
 
   const handleHeartPress = () => {
     try {
-      if (isHeartActive) {
+      if (isFavorite) {
         removeFromFavoritesCarwashes(Number(carWash.carwashes[0].id));
       } else {
         addToFavoritesCarwashes(Number(carWash.carwashes[0].id));
@@ -54,8 +58,19 @@ const CarWashCard = ({
     setMenuVisible(false);
   };
 
+  const handleClip = () => {
+    try {
+      if (isClip) {
+        removeFromClipCarwashes(Number(carWash.carwashes[0].id));
+      } else {
+        addToClipCarwashes(Number(carWash.carwashes[0].id));
+      }
+    } catch (error) {}
+    setMenuVisible(false);
+  };
+
   const handleLongPress = () => {
-    if (showActionModal) {
+    if (longPressClipAction) {
       setMenuVisible(true);
     }
   };
@@ -80,14 +95,27 @@ const CarWashCard = ({
         onPress={handleCardPress}
         onLongPress={handleLongPress}>
         <XStack flex={1} alignItems="center" gap={dp(8)}>
-          <Image
-            source={require('../../assets/icons/small-icon.png')}
-            width={18}
-            height={18}
-          />
+          {enablePinIcon ? (
+            <Image
+              source={
+                isClip
+                  ? require('../../assets/icons/map-pin-active.png')
+                  : require('../../assets/icons/map-pin.png')
+              }
+              width={29}
+              height={29}
+            />
+          ) : (
+            <Image
+              source={require('../../assets/icons/small-icon.png')}
+              width={18}
+              height={18}
+            />
+          )}
+
           <YStack paddingRight={dp(15)}>
             <Text fontSize={13} ellipsizeMode="tail" numberOfLines={1}>
-              {carWash.carwashes[0].name}
+              {carWash.carwashes[0].name} {carWash.carwashes[0].id}
             </Text>
             <Text
               fontSize={12}
@@ -108,17 +136,7 @@ const CarWashCard = ({
           </YStack>
         </XStack>
 
-        {showClip && (
-          <Button unstyled>
-            <Image
-              source={require('../../assets/icons/clip.png')}
-              width={20}
-              height={20}
-            />
-          </Button>
-        )}
-
-        {showIsFavorite && isHeartActive && (
+        {showIsFavorite && isFavorite && (
           <Button
             unstyled
             onPress={() => {
@@ -149,35 +167,60 @@ const CarWashCard = ({
         <XStack style={styles.modalContent}>
           <TouchableWithoutFeedback>
             <YStack style={styles.contextMenu}>
-              <Button
-                unstyled
-                onPress={handleHeartPress}
-                style={styles.menuButton}>
-                <XStack
-                  padding={dp(15)}
-                  backgroundColor="white"
-                  borderRadius={dp(12)}
-                  alignItems="center"
-                  justifyContent="center"
-                  width="100%"
-                  gap={dp(6)}>
-                  <Text fontSize={dp(13)} color="#333" fontWeight="500">
-                    {isHeartActive
-                      ? 'Удалить из избранного'
-                      : 'Добавить в избранное'}
-                  </Text>
-                  <Image
-                    source={
-                      isHeartActive
-                        ? require('../../assets/icons/heart-active.png')
-                        : require('../../assets/icons/heart.png')
-                    }
-                    width={20}
-                    height={20}
-                  />
-                </XStack>
-              </Button>
-
+              {longPressClipAction ? (
+                <Button unstyled onPress={handleClip} style={styles.menuButton}>
+                  <XStack
+                    padding={dp(15)}
+                    backgroundColor="white"
+                    borderRadius={dp(12)}
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={dp(6)}>
+                    <Text fontSize={dp(13)} color="#333" fontWeight="500">
+                      {isClip ? 'Открепить' : 'Закрепить'}
+                    </Text>
+                    <Image
+                      source={
+                        isClip
+                          ? require('../../assets/icons/clip.png')
+                          : require('../../assets/icons/clip.png')
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </XStack>
+                </Button>
+              ) : (
+                <Button
+                  unstyled
+                  onPress={handleHeartPress}
+                  style={styles.menuButton}>
+                  <XStack
+                    padding={dp(15)}
+                    backgroundColor="white"
+                    borderRadius={dp(12)}
+                    alignItems="center"
+                    justifyContent="center"
+                    width="100%"
+                    gap={dp(6)}>
+                    <Text fontSize={dp(13)} color="#333" fontWeight="500">
+                      {isFavorite
+                        ? 'Удалить из избранного'
+                        : 'Добавить в избранное'}
+                    </Text>
+                    <Image
+                      source={
+                        isFavorite
+                          ? require('../../assets/icons/heart-active.png')
+                          : require('../../assets/icons/heart.png')
+                      }
+                      width={20}
+                      height={20}
+                    />
+                  </XStack>
+                </Button>
+              )}
               <Button unstyled onPress={closeModal} style={styles.closeButton}>
                 <XStack
                   padding={dp(15)}

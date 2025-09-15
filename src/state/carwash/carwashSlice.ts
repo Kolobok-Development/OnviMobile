@@ -6,6 +6,7 @@ import {getLatestCarwash} from '@services/api/order';
 export interface CarwashSlice {
   favoritesCarwashes: number[];
   latestCarwashes: number[];
+  clipCarwashes: number[];
   favoritesCarwashesIsLoading: boolean;
   latestCarwashesIsLoading: boolean;
   addToFavoritesCarwashes: (id: number) => void;
@@ -14,11 +15,16 @@ export interface CarwashSlice {
   loadLatestCarwashes: () => Promise<void>;
   isFavoriteCarwash: (id: number) => boolean;
   refreshFavoritesCarwashes: () => Promise<void>;
+  addToClipCarwashes: (id: number) => void;
+  removeFromClipCarwashes: (id: number) => void;
+  isClipCarwash: (id: number) => boolean;
+  loadClipCarwashes: () => Promise<void>;
 }
 
 const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
   favoritesCarwashes: [],
   latestCarwashes: [],
+  clipCarwashes: [],
   favoritesCarwashesIsLoading: false,
   latestCarwashesIsLoading: false,
 
@@ -89,6 +95,7 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
 
       set({latestCarwashes: serverLatest});
 
+      await get().loadClipCarwashes();
       await LocalStorage.set('latest', JSON.stringify(serverLatest));
     } catch (error) {
       const stored = await LocalStorage.getString('latest');
@@ -98,6 +105,49 @@ const createCarwashSlice: StoreSlice<CarwashSlice> = (set, get) => ({
       throw error;
     } finally {
       set({latestCarwashesIsLoading: false});
+    }
+  },
+
+  addToClipCarwashes: async (id: number) => {
+    try {
+      const newClip = [id, ...get().clipCarwashes];
+      set({clipCarwashes: newClip});
+
+      await LocalStorage.set('clip', JSON.stringify(newClip));
+    } catch (error) {
+      const currentClip = get().clipCarwashes.filter(clipId => clipId !== id);
+      set({clipCarwashes: currentClip});
+      throw error;
+    }
+  },
+
+  removeFromClipCarwashes: async (id: number) => {
+    try {
+      const newClip = get().clipCarwashes.filter(clipId => clipId !== id);
+      set({clipCarwashes: newClip});
+
+      await LocalStorage.set('clip', JSON.stringify(newClip));
+    } catch (error) {
+      const currentClip = [...get().clipCarwashes, id];
+      set({clipCarwashes: currentClip});
+      await LocalStorage.set('clip', JSON.stringify(currentClip));
+      throw error;
+    }
+  },
+
+  isClipCarwash: (id: number) => {
+    return get().clipCarwashes.includes(id);
+  },
+
+  loadClipCarwashes: async () => {
+    try {
+      const stored = await LocalStorage.getString('clip');
+
+      if (stored) {
+        set({clipCarwashes: JSON.parse(stored)});
+      }
+    } catch (error) {
+      throw error;
     }
   },
 });
