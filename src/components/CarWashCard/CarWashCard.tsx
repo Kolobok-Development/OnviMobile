@@ -4,27 +4,28 @@ import {Button, Image, Text, XStack, YStack} from 'tamagui';
 import {CarWashLocation} from '@app-types/api/app/types';
 import useStore from '@state/store';
 import {StyleSheet, Modal, TouchableWithoutFeedback} from 'react-native';
+import {navigateBottomSheet} from '@navigators/BottomSheetStack';
 
 interface CarWashCardProps {
   carWash: CarWashLocation;
-  onClick?: (carWash: CarWashLocation) => void;
   showDistance?: boolean;
   showIsFavorite?: boolean;
   heartIsClickable?: boolean;
   showBorder?: boolean;
   longPressClipAction?: boolean;
   enablePinIcon?: boolean;
+  cardIsClickable?: boolean;
 }
 
 const CarWashCard = ({
   carWash,
-  onClick,
   showDistance = true,
   showIsFavorite = false,
   heartIsClickable = false,
   showBorder = true,
   longPressClipAction = false,
   enablePinIcon = false,
+  cardIsClickable = true,
 }: CarWashCardProps) => {
   const {
     addToFavoritesCarwashes,
@@ -33,7 +34,12 @@ const CarWashCard = ({
     addToClipCarwashes,
     removeFromClipCarwashes,
     isClipCarwash,
-  } = useStore();
+    setBusiness,
+    setOrderDetails,
+    bottomSheetRef,
+    cameraRef,
+  } = useStore.getState();
+
   const [menuVisible, setMenuVisible] = useState(false);
 
   if (!carWash?.carwashes[0]) {
@@ -76,7 +82,31 @@ const CarWashCard = ({
   };
 
   const handleCardPress = () => {
-    onClick?.(carWash);
+    if (cardIsClickable) {
+      navigateBottomSheet('Business', {});
+      setBusiness(carWash);
+      setOrderDetails({
+        posId: 0,
+        sum: 0,
+        bayNumber: null,
+        promoCodeId: null,
+        rewardPointsUsed: null,
+        type: null,
+        name: null,
+        prices: [],
+        order: null,
+        orderDate: null,
+      });
+
+      bottomSheetRef?.current?.snapToPosition('42%');
+
+      cameraRef?.current?.setCameraPosition({
+        longitude: carWash.location.lon,
+        latitude: carWash.location.lat,
+        zoomLevel: 16,
+        animationDuration: 1000,
+      });
+    }
   };
 
   const closeModal = () => {
@@ -115,7 +145,7 @@ const CarWashCard = ({
 
           <YStack paddingRight={dp(15)}>
             <Text fontSize={13} ellipsizeMode="tail" numberOfLines={1}>
-              {carWash.carwashes[0].name} {carWash.carwashes[0].id}
+              {carWash.carwashes[0].name}
             </Text>
             <Text
               fontSize={12}

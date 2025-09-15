@@ -42,8 +42,6 @@ const Main = () => {
     setBusiness,
     latestCarwashes,
     posList,
-    setOrderDetails,
-    cameraRef,
     loadLatestCarwashes,
     clipCarwashes,
   } = useStore.getState();
@@ -104,31 +102,6 @@ const Main = () => {
       };
     }, []),
   );
-
-  const onClick = (carwash: any) => {
-    navigateBottomSheet('Business', {});
-    setBusiness(carwash);
-    setOrderDetails({
-      posId: 0,
-      sum: 0,
-      bayNumber: null,
-      promoCodeId: null,
-      rewardPointsUsed: null,
-      type: null,
-      name: null,
-      prices: [],
-      order: null,
-      orderDate: null,
-    });
-    bottomSheetRef?.current?.snapToPosition('42%');
-
-    cameraRef?.current?.setCameraPosition({
-      longitude: carwash.location.lon,
-      latitude: carwash.location.lat,
-      zoomLevel: 16,
-      animationDuration: 1000,
-    });
-  };
 
   useEffect(() => {
     if (latestCarwashes.length > 0) {
@@ -265,7 +238,6 @@ const Main = () => {
                   {latestCarwashesData.map(item => (
                     <CarWashCard
                       carWash={item}
-                      onClick={onClick}
                       showDistance={false}
                       longPressClipAction={true}
                       enablePinIcon={true}
