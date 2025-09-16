@@ -36,6 +36,7 @@ export const PersonalPromoBanner: React.FC<PersonalPromoBannerProps> = ({
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>
               {date.toLocaleDateString(i18n.language, {
+                year: 'numeric',
                 month: 'long',
                 day: 'numeric',
               })}
