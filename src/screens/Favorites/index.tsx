@@ -58,6 +58,7 @@ const Favorites = () => {
         carWash={item}
         showIsFavorite={true}
         heartIsClickable={true}
+        cardIsClickable={false}
       />
     );
   };
