@@ -5,6 +5,12 @@ import {CarWashLocation} from '@app-types/api/app/types';
 import useStore from '@state/store';
 import {StyleSheet, Modal, TouchableWithoutFeedback} from 'react-native';
 import {navigateBottomSheet} from '@navigators/BottomSheetStack';
+import ReactNativeHapticFeedback from 'react-native-haptic-feedback';
+
+const HapticOptions = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
 
 interface CarWashCardProps {
   carWash: CarWashLocation;
@@ -82,6 +88,7 @@ const CarWashCard = ({
   const handleLongPress = () => {
     if (longPressPinAction) {
       setMenuVisible(true);
+      ReactNativeHapticFeedback.trigger('impactLight', HapticOptions);
     }
   };
 

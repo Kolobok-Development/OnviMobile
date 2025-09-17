@@ -1,7 +1,7 @@
 import {
   NewsPost,
-  NewsPostsSuccessRequestPayload,
   NewsPostSuccessRequestPayload,
+  PaginatedResponse,
 } from '../../../types/api/app/types.ts';
 import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
@@ -12,8 +12,13 @@ enum NEWS {
 
 export async function getNewsList(
   populate: Record<string, any> | '*' = {},
-): Promise<NewsPost[]> {
-  const params: Record<string, any> = {};
+  page: number = 1,
+  pageSize: number = 4,
+): Promise<PaginatedResponse<NewsPost>> {
+  const params: Record<string, any> = {
+    'pagination[page]': page,
+    'pagination[pageSize]': pageSize,
+  };
 
   if (populate === '*') {
     // If user wants to populate everything
@@ -25,12 +30,15 @@ export async function getNewsList(
     }
   }
 
-  const response = await contentApiInstance.get<NewsPostsSuccessRequestPayload>(
-    NEWS.GET_NEWS_LIST,
-    {params},
-  );
+  const response = await contentApiInstance.get<{
+    data: NewsPost[];
+    meta: {pagination: any};
+  }>(NEWS.GET_NEWS_LIST, {params});
 
-  return response.data.data;
+  return {
+    data: response.data.data,
+    meta: response.data.meta,
+  };
 }
 
 export async function getNewsById(

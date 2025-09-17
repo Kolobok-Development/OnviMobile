@@ -17,7 +17,6 @@ import Carousel, {
 } from 'react-native-reanimated-carousel';
 import useSWR from 'swr';
 import {getCampaignList} from '@services/api/campaign';
-import {getNewsList} from '@services/api/news';
 import CampaignPlaceholder from './CampaignPlaceholder';
 import {useNavStore} from '@state/useNavStore/index.ts';
 import {Campaign, CarWashLocation} from '@app-types/api/app/types.ts';
@@ -25,13 +24,13 @@ import {getStoryView} from '@services/api/story-view';
 import {StoryViewPlaceholder} from '@components/StoryView/StoryViewPlaceholder.tsx';
 import {transformContentDataToUserStories} from '@shared/mappers/StoryViewMapper.ts';
 import {StoryView} from '@components/StoryView';
-import PostsPlaceholder from './PostsPlaceholder/index.tsx';
 import {useCombinedTheme} from '@hooks/useCombinedTheme';
 import {YStack, Text, Card, Image, XStack, Button} from 'tamagui';
 import PressableCard from '@components/PressableCard/PressableCard.tsx';
 import {useSharedValue} from 'react-native-reanimated';
 import {CarWashCard} from '@components/CarWashCard/CarWashCard.tsx';
 import CarwashesPlaceholder from '../CarwashesPlaceholder/index.tsx';
+import {NewsList} from './NewsList/NewsList.tsx';
 
 const Main = () => {
   const {t} = useTranslation();
@@ -71,12 +70,6 @@ const Main = () => {
     ['getCampaignList'],
     () => getCampaignList('*'),
   );
-
-  const {
-    isLoading: newsLoading,
-    data: newsData,
-    error: newsError,
-  } = useSWR(['getNewsList'], () => getNewsList('*'));
 
   const {
     isLoading: storyLoading,
@@ -313,7 +306,7 @@ const Main = () => {
               </YStack>
             )}
           </YStack>
-          <XStack justifyContent={'space-between'}>
+          <YStack>
             <Text
               color={BLACK}
               fontSize={dp(24)}
@@ -321,45 +314,8 @@ const Main = () => {
               marginTop={dp(12)}>
               {t('app.main.freshNews')}
             </Text>
-          </XStack>
-          <XStack marginTop={dp(12)}>
-            {newsLoading || newsError ? (
-              <PostsPlaceholder />
-            ) : (
-              <>
-                {newsData && (
-                  <XStack
-                    flexWrap="wrap"
-                    justifyContent="space-between"
-                    gap={dp(11)}>
-                    {newsData.map((newsItem, index) => (
-                      <PressableCard
-                        key={newsItem.id || index}
-                        width="48%"
-                        aspectRatio={1}
-                        borderRadius={dp(23)}
-                        overflow="hidden"
-                        onPress={() =>
-                          navigateBottomSheet('Post', {data: newsItem})
-                        }>
-                        <Image
-                          source={{
-                            uri:
-                              newsItem.attributes.vertical_image?.data
-                                ?.attributes?.url ||
-                              newsItem.attributes.horizontal_image?.data
-                                ?.attributes?.url,
-                          }}
-                          width="100%"
-                          height="100%"
-                        />
-                      </PressableCard>
-                    ))}
-                  </XStack>
-                )}
-              </>
-            )}
-          </XStack>
+            <NewsList />
+          </YStack>
         </Card>
       </YStack>
     </BottomSheetScrollView>
