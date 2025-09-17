@@ -5,6 +5,9 @@ import {
 } from '../../../types/api/app/types.ts';
 import {contentApiInstance} from '@services/api/axiosConfig.ts';
 
+const PAGE = 1;
+const PAGE_SIZE = 4;
+
 enum NEWS {
   GET_NEWS_LIST = 'api/posts',
   GET_NEWS_BY_ID = 'api/posts',
@@ -12,8 +15,8 @@ enum NEWS {
 
 export async function getNewsList(
   populate: Record<string, any> | '*' = {},
-  page: number = 1,
-  pageSize: number = 4,
+  page: number = PAGE,
+  pageSize: number = PAGE_SIZE,
 ): Promise<PaginatedResponse<NewsPost>> {
   const params: Record<string, any> = {
     'pagination[page]': page,
