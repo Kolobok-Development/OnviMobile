@@ -308,7 +308,7 @@ export default function VacuumLaunch() {
             style={{
               justifyContent: 'space-evenly',
               alignItems: 'center',
-              flex: 1,
+              marginTop: 'auto',
               paddingTop: dp(20),
               paddingBottom: dp(90),
             }}>
@@ -335,6 +335,7 @@ export default function VacuumLaunch() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    justifyContent: 'space-between',
     borderRadius: moderateScale(38),
     paddingLeft: horizontalScale(22),
     paddingRight: horizontalScale(22),
