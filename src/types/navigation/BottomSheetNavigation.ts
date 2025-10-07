@@ -58,6 +58,7 @@ export type RootStackParamList = {
     paymentMethod: PaymentMethodType;
   };
   PostPayment: {};
+  PostPaymentVacuum: {};
 };
 
 export type GeneralBottomSheetNavigationProp<

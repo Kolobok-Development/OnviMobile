@@ -94,7 +94,9 @@
       "vacuum": {
         "freeActivation": "Бесплатная активация пылесоса",
         "remainingFreeActivations": "Остаток бесплатных включений: {{count}} шт.",
-        "activateFree": "Включить бесплатно"
+        "activateFree": "Включить бесплатно",
+        "sessionEnded": "Сеанс пылесоса завершен!",
+        "retrySession": "Хотите повторить сеанс?"
       },
       "yourCashback": "Ваш Cashback",
       "noCashbackMessage": "Кешбэк не начисляется. Автомойка не участвует в программе лояльности.",

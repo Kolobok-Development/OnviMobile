@@ -27,6 +27,7 @@ export const DRAGGABLE_SCREENS: DraggableScreensMap = {
   Post: true,
   Campaign: true,
   PostPayment: false,
+  PostPaymentVacuum: false,
 };
 
 /**
@@ -56,6 +57,7 @@ export const SCREEN_SNAP_POINTS: Partial<
   Payment: SNAP_POINTS.EXPANDED,
   AddCard: SNAP_POINTS.EXPANDED,
   PostPayment: SNAP_POINTS.EXPANDED,
+  PostPaymentVacuum: SNAP_POINTS.EXPANDED,
   // For other screens, default to HALF_EXPANDED
 };
 

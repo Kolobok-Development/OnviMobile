@@ -14,6 +14,7 @@ import {
   Payment,
   AddCard,
   PostPayment,
+  PostPaymentVacuum,
   PaymentLoading,
 } from '@components/BottomSheetViews';
 
@@ -236,6 +237,11 @@ const BottomSheetStack = React.memo(({active}: BottomSheetStackInterface) => {
           name="PostPayment"
           key="PostPaymentScreen"
           component={PostPayment}
+        />
+        <RootStack.Screen
+          name="PostPaymentVacuum"
+          key="PostPaymentVacuumScreen"
+          component={PostPaymentVacuum}
         />
         <RootStack.Screen
           name="PaymentLoading"

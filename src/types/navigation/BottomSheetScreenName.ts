@@ -11,7 +11,8 @@ export type ScreenName =
   | 'AddCard'
   | 'Post'
   | 'Campaign'
-  | 'PostPayment';
+  | 'PostPayment'
+  | 'PostPaymentVacuum';
 
 export type DraggableScreensMap = {
   [key in ScreenName]: boolean;
