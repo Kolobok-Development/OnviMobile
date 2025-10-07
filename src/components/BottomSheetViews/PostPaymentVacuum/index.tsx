@@ -46,7 +46,6 @@ const PostPaymentVacuum = () => {
   ];
 
   useEffect(() => {
-    console.log(freeVacuum.remains);
     if (freeVacuum.remains - 1 > 0) {
       setFreeVacuumeActivate(true);
     }
@@ -62,12 +61,12 @@ const PostPaymentVacuum = () => {
       sum: freeVacuumeActivate ? 0 : Number(InputSums[activeIndex].label),
     });
 
-    navigateBottomSheet('Payment', {});
-
     if (freeVacuumeActivate) {
       const data = await getFreeVacuum();
       setFreeVacuum(data);
     }
+
+    navigateBottomSheet('Payment', {});
   };
 
   const finish = () => {
