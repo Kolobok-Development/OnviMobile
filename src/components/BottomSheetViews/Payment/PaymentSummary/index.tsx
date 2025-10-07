@@ -78,12 +78,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: dp(6),
+    marginTop: dp(10),
   },
   itemName: {
     fontWeight: '300',
     fontSize: dp(15),
     color: 'rgba(0, 0, 0, 1)',
+    flexShrink: 1,
+    flex: 1,
+    flexWrap: 'wrap',
   },
   itemPrice: {
     color: 'rgba(0, 0, 0, 1)',

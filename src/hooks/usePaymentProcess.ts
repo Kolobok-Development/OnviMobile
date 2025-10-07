@@ -34,6 +34,7 @@ import {DdLogs} from '@datadog/mobile-react-native';
 import AppMetrica from '@appmetrica/react-native-analytics';
 import i18n from '../locales';
 import {OrderStatusCode} from '@app-types/api/order/status/OrderStatusCode.ts';
+import {BayTypeEnum} from '@app-types/BayTypeEnum.ts';
 
 export const usePaymentProcess = (
   user: IUser,
@@ -327,7 +328,11 @@ export const usePaymentProcess = (
             DdLogs.info('Successful order creation', {order});
             // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
             setTimeout(() => {
-              navigateBottomSheet('PostPayment', {});
+              if (order.bayType === BayTypeEnum.VACUUME) {
+                navigateBottomSheet('PostPaymentVacuum', {});
+              } else {
+                navigateBottomSheet('PostPayment', {});
+              }
               setOrderStatus(null);
             }, 3000);
           } else if (response.status === OrderStatusCode.FAILED) {
@@ -434,7 +439,7 @@ export const usePaymentProcess = (
           DdLogs.info('Successful order creation (free vacuume)', {order});
           // При успешном окончании оплаты через 3 секунды закрываем BottomSheet и переходим на страницу PostPayment
           setTimeout(() => {
-            navigateBottomSheet('PostPayment', {});
+            navigateBottomSheet('PostPaymentVacuum', {});
             setOrderStatus(null);
           }, 3000);
         } else if (response.status === OrderStatusCode.FAILED) {

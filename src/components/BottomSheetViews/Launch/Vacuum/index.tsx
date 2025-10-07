@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 // components
@@ -27,6 +27,7 @@ import {Button} from '@styled/buttons';
 import {GeneralBottomSheetNavigationProp} from '../../../../types/navigation/BottomSheetNavigation.ts';
 import {WHITE} from '@utils/colors.ts';
 import {useTranslation} from 'react-i18next';
+import {getFreeVacuum} from '@services/api/user/index.ts';
 
 export default function VacuumLaunch() {
   const [value, setValue] = useState(50);
@@ -36,14 +37,25 @@ export default function VacuumLaunch() {
   const navigation =
     useNavigation<GeneralBottomSheetNavigationProp<'Launch'>>();
 
-  const {isBottomSheetOpen, setOrderDetails, orderDetails, freeVacuum} =
+  const {isBottomSheetOpen, setOrderDetails, orderDetails} =
     useStore.getState();
+
+  const {freeVacuum, setFreeVacuum} = useStore();
 
   const order = orderDetails;
 
   const isOpened = isBottomSheetOpen;
 
   const freeVacOn = freeVacuum.remains > 0;
+
+  const updateFreeVacuume = async () => {
+    const data = await getFreeVacuum();
+    setFreeVacuum(data);
+  };
+
+  useEffect(() => {
+    updateFreeVacuume();
+  }, []);
 
   return (
     <>
