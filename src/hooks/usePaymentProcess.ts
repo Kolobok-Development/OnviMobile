@@ -82,7 +82,7 @@ export const usePaymentProcess = (
       DdLogs.error(`Payment process error: ${errorMessage}`, {errorCode});
       switch (error.response.data.code) {
         case ORDER_ERROR_CODES.PROCESSING_ERROR:
-          setError(i18n.t('app.errors.errorCode'));
+          setError(i18n.t('app.paymentErrors.orderCreationError'));
           break;
         case ORDER_ERROR_CODES.ORDER_NOT_FOUND:
           setError(i18n.t('app.paymentErrors.orderNotFound'));
@@ -94,7 +94,7 @@ export const usePaymentProcess = (
           setError(i18n.t('app.paymentErrors.paymentCanceled'));
           break;
         case ORDER_ERROR_CODES.PAYMENT_TIMEOUT:
-          setError('');
+          setError(i18n.t('app.paymentErrors.paymentTimeout'));
           break;
         case ORDER_ERROR_CODES.ORDER_CREATION_FAILED:
           setError(i18n.t('app.paymentErrors.orderCreationFailed'));

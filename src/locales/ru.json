@@ -136,7 +136,8 @@
       "paymentTimeout": "Время ожидания оплаты истекло. Попробуйте снова..",
       "paymentTimeoutFreeVacuum": "Время ожидания истекло. Попробуйте снова.",
       "orderStatusCheckError": "Ошибка при проверке статуса заказа.",
-      "PaymentCancellationOrPaymentError": "Отмена платежа или ошибка оплаты."
+      "PaymentCancellationOrPaymentError": "Отмена платежа или ошибка оплаты.",
+      "orderCreationError": "Ошибка создания заказа"
     },
     "paymentLoading": {
       "preparingEquipment": "Подготавливаем оборудование...",
