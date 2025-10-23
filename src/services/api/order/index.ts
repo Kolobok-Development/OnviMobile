@@ -11,11 +11,13 @@ import {IRegisterOrderResponse} from 'src/types/api/order/res/IRegisterOrderResp
 import {IGetOrderResponse} from 'src/types/api/order/res/IGetOrderByResponse.ts';
 import {OrderStatusCode} from '@app-types/api/order/status/OrderStatusCode.ts';
 import {IGetLatestCarwashRequestParams} from '@app-types/api/order/req/IGetLatestCarwashRequestParams.ts';
+import {IPingAllResponse} from '@app-types/api/order/res/IPingAllResponse.ts';
 
 enum ORDER {
   CREATE_ORDER_URL = '/order/create',
   VALIDATE_PROMOCODE_URL = '/order/promo/validate',
   PING_POS_URL = '/order/ping',
+  PING_ALL_URL = '/order/ping-all',
   REGISTER_ORDER = '/order/register',
   GET_ORDER_BY_ORDER_ID = '/order',
   UPDATE_ORDER_STATUS = '/order/status',
@@ -46,6 +48,26 @@ export async function pingPos(
   const response = await userApiInstance.get<
     IUserApiResponse<IPingPosResponse>
   >(ORDER.PING_POS_URL, {params});
+  return response.data.data;
+}
+
+export async function pingAllPoses(params: {
+  carWashId: number;
+  bayNumbers: number[];
+  bayType?: string;
+}): Promise<IPingAllResponse> {
+  const bayNumbersString = params.bayNumbers.join(',');
+
+  const response = await userApiInstance.get<
+    IUserApiResponse<IPingAllResponse>
+  >(ORDER.PING_ALL_URL, {
+    params: {
+      carWashId: params.carWashId,
+      bayNumbers: bayNumbersString,
+      bayType: params.bayType,
+    },
+  });
+
   return response.data.data;
 }
 

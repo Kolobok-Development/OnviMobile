@@ -8,6 +8,9 @@ import useStore from '../../../state/store';
 const width = Dimensions.get('window').width;
 
 interface BoxItem {
+  isFree: boolean;
+  status: string;
+  id: string;
   number: number;
 }
 

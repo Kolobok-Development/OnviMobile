@@ -17,6 +17,9 @@ import {
 import {useTranslation} from 'react-i18next';
 import useStore from '@state/store.ts';
 import {BayTypeEnum} from '@app-types/BayTypeEnum';
+import {pingAllPoses} from '@services/api/order';
+import {useState, useEffect} from 'react';
+import {IBayStatus} from '@app-types/api/order/res/IPingAllResponse';
 
 const Boxes = () => {
   const navigation = useNavigation<GeneralBottomSheetNavigationProp<'Boxes'>>();
@@ -25,6 +28,55 @@ const Boxes = () => {
   const type = route.params.bayType;
 
   const {business, orderDetails} = useStore.getState();
+
+  const [bayStatuses, setBayStatuses] = useState<IBayStatus[]>([]);
+
+  const boxesData =
+    business &&
+    orderDetails &&
+    typeof orderDetails.carwashIndex !== 'undefined' &&
+    business.carwashes &&
+    business.carwashes.length
+      ? type === BayTypeEnum.BAY || type === BayTypeEnum.PORTAL
+        ? business.carwashes[orderDetails.carwashIndex].boxes
+        : business.carwashes[orderDetails.carwashIndex].vacuums
+      : [];
+
+  const bayNumbers = boxesData.map(box => box.number);
+  const carWashId = business?.carwashes?.[orderDetails?.carwashIndex || 0]?.id;
+
+  const fetchBayStatuses = async () => {
+    if (!carWashId || bayNumbers.length === 0) {
+      return;
+    }
+
+    try {
+      const response = await pingAllPoses({
+        carWashId: Number(carWashId),
+        bayType: type,
+        bayNumbers,
+      });
+
+      setBayStatuses(response.bayStatuses);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    fetchBayStatuses();
+  }, []);
+
+  const boxesWithStatus = boxesData.map(box => {
+    const bayStatus = bayStatuses.find(
+      status => status.bayNumber === box.number,
+    );
+    const isFree = bayStatus?.status === 'Free';
+
+    return {
+      ...box,
+      isFree,
+      status: bayStatus?.status || 'Unknown',
+    };
+  });
 
   return (
     <GHScrollView
@@ -51,17 +103,7 @@ const Boxes = () => {
 
             <View style={styles.boxes}>
               <BoxesSlide
-                boxes={
-                  business &&
-                  orderDetails &&
-                  typeof orderDetails.carwashIndex !== 'undefined' &&
-                  business.carwashes &&
-                  business.carwashes.length
-                    ? type === BayTypeEnum.BAY || type === BayTypeEnum.PORTAL
-                      ? business.carwashes[orderDetails.carwashIndex].boxes
-                      : business.carwashes[orderDetails.carwashIndex].vacuums
-                    : []
-                }
+                boxes={boxesWithStatus}
                 navigation={navigation}
                 params={route.params}
               />
