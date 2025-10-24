@@ -79,7 +79,7 @@ const Boxes = () => {
 
     return {
       ...box,
-      isFree,
+      isFree: loading ? true : isFree,
       status: bayStatus?.status || 'Unknown',
     };
   });

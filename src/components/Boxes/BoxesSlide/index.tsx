@@ -4,7 +4,6 @@ import {horizontalScale} from '../../../utils/metrics';
 import {dp} from '../../../utils/dp';
 import {Box} from '@components/Boxes/Box';
 import useStore from '../../../state/store';
-import BoxSkeleton from '../BoxSkeleton';
 
 const width = Dimensions.get('window').width;
 
@@ -35,7 +34,7 @@ const BoxesSlide = ({
 
   const handleBoxPress = useCallback(
     (boxNumber: number, isFree: boolean) => {
-      if (!isFree) {
+      if (!loading && !isFree) {
         return;
       }
 
@@ -57,6 +56,7 @@ const BoxesSlide = ({
       bottomSheetSnapPoints,
       navigation,
       params,
+      loading,
     ],
   );
 
@@ -67,45 +67,12 @@ const BoxesSlide = ({
         onClick={() => handleBoxPress(item.number, item.isFree)}
         active={orderDetails.bayNumber === item.number}
         isFree={item.isFree}
-        disabled={!item.isFree}
-        showBorder={true}
+        disabled={!loading && !item.isFree}
+        showBorder={!loading}
       />
     ),
-    [handleBoxPress, orderDetails.bayNumber],
+    [handleBoxPress, orderDetails.bayNumber, loading],
   );
-
-  const renderSkeletonItem = useCallback(
-    ({index}: {index: number}) => <BoxSkeleton key={`skeleton-${index}`} />,
-    [],
-  );
-
-  // Если идет загрузка, показываем скелетоны
-  if (loading) {
-    return (
-      <FlatList
-        data={boxes}
-        renderItem={renderSkeletonItem}
-        keyExtractor={(item, index) => `skeleton-${index}`}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={[
-          styles.container,
-          {
-            paddingLeft: contentPadding,
-            paddingRight: contentPadding,
-          },
-        ]}
-        initialNumToRender={4}
-        maxToRenderPerBatch={4}
-        windowSize={3}
-        getItemLayout={(data, index) => ({
-          length: dp(94.4),
-          offset: dp(94.4) * index,
-          index,
-        })}
-      />
-    );
-  }
 
   return (
     <FlatList
