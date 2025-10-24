@@ -30,6 +30,7 @@ const Boxes = () => {
   const {business, orderDetails} = useStore.getState();
 
   const [bayStatuses, setBayStatuses] = useState<IBayStatus[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const boxesData =
     business &&
@@ -47,10 +48,12 @@ const Boxes = () => {
 
   const fetchBayStatuses = async () => {
     if (!carWashId || bayNumbers.length === 0) {
+      setLoading(false);
       return;
     }
 
     try {
+      setLoading(true);
       const response = await pingAllPoses({
         carWashId: Number(carWashId),
         bayType: type,
@@ -58,7 +61,10 @@ const Boxes = () => {
       });
 
       setBayStatuses(response.bayStatuses);
-    } catch (error) {}
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -106,6 +112,7 @@ const Boxes = () => {
                 boxes={boxesWithStatus}
                 navigation={navigation}
                 params={route.params}
+                loading={loading}
               />
             </View>
           </View>

@@ -24,6 +24,8 @@ interface IBox {
   width?: number;
   height?: number;
   borderRadius?: number;
+  isFree?: boolean;
+  showBorder?: boolean;
 }
 
 const Box: React.FC<IBox> = ({
@@ -31,6 +33,8 @@ const Box: React.FC<IBox> = ({
   onClick = () => null,
   disabled = false,
   active = false,
+  isFree = true,
+  showBorder = false,
   width = horizontalScale(92),
   height = verticalScale(92),
   borderRadius = moderateScale(21),
@@ -40,13 +44,24 @@ const Box: React.FC<IBox> = ({
     color: '#000',
   },
 }) => {
+  const getBorderStyle = () => {
+    if (!showBorder) {
+      return styles.noBorder;
+    }
+
+    if (!isFree) {
+      return styles.occupied;
+    }
+    return active ? styles.active : styles.free;
+  };
+
   return (
     <TouchableOpacity
       onPress={onClick}
-      disabled={disabled}
+      disabled={disabled || (!isFree && showBorder)}
       style={{
         ...styles.box,
-        ...styles[active ? 'active' : 'notActive'],
+        ...getBorderStyle(),
         width,
         height,
         borderRadius,
@@ -63,22 +78,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  grey: {
-    backgroundColor: '#A3A3A6',
+  noBorder: {
+    backgroundColor: 'rgba(245, 245, 245, 1)',
+    borderWidth: 0,
   },
-  blue: {
-    backgroundColor: '#0B68E1',
+  free: {
+    backgroundColor: 'rgba(245, 245, 245, 1)',
+    borderWidth: dp(1),
+    borderColor: 'green',
+  },
+  occupied: {
+    backgroundColor: 'rgba(245, 245, 245, 1)',
+    borderWidth: dp(1),
+    borderColor: 'red',
+  },
+  active: {
+    backgroundColor: 'rgba(191, 250, 0, 1)',
+    borderWidth: dp(1),
+    borderColor: 'green',
   },
   boxText: {
     fontSize: dp(48),
     fontWeight: '600',
     color: '#000',
-  },
-  active: {
-    backgroundColor: 'rgba(191, 250, 0, 1)',
-  },
-  notActive: {
-    backgroundColor: 'rgba(245, 245, 245, 1)',
   },
 });
 
