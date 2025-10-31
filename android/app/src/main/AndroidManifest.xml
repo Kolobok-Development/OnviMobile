@@ -1,4 +1,5 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.onvimobile">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,7 +18,8 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:allowBackup="false"
       android:usesCleartextTraffic="true"
-      android:theme="@style/AppTheme">
+      android:theme="@style/AppTheme"
+      android:supportsRtl="true">
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"
@@ -31,31 +33,35 @@
             <category android:name="android.intent.category.LAUNCHER" />
         </intent-filter>
 
-          <!-- Branch URI Scheme -->
-          <intent-filter>
-              <data android:scheme="branchandroid" />
-              <action android:name="android.intent.action.VIEW" />
-              <category android:name="android.intent.category.DEFAULT" />
-              <category android:name="android.intent.category.BROWSABLE" />
-          </intent-filter>
+        <!-- Branch URI Scheme -->
+        <intent-filter>
+            <data android:scheme="branchandroid" />
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+        </intent-filter>
 
-          <intent-filter android:autoVerify="true">
-              <action android:name="android.intent.action.VIEW" />
-              <category android:name="android.intent.category.DEFAULT" />
-              <category android:name="android.intent.category.BROWSABLE" />
-              <data android:scheme="https" />
-              <data android:host="onvione.ru" />
-              <data android:scheme="https" android:host="wrzx5.app.link" />
-              <data android:scheme="https" android:host="wrzx5-alternate.app.link" />
-              <data android:scheme="https" android:host="wrzx5.test-app.link" /> 
-              <!-- Add path if needed, for example: -->
-              <!-- <data android:pathPattern="/.*" /> -->
-          </intent-filter>
+        <intent-filter android:autoVerify="true">
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.DEFAULT" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+            <data android:host="onvione.ru" />
+            <data android:scheme="https" android:host="wrzx5.app.link" />
+            <data android:scheme="https" android:host="wrzx5-alternate.app.link" />
+            <data android:scheme="https" android:host="wrzx5.test-app.link" /> 
+        </intent-filter>
 
       </activity>
-        <meta-data android:name="io.branch.sdk.BranchKey" android:value="key_live_ark3Xn0ur4EM89pB25kblcldzxmQUqEJ"/>
-        <meta-data android:name="io.branch.sdk.BranchKey.test" android:value="key_test_cqg23l4rq1rH02cDW5odvjlnxxoQLsA3" />
-        <!-- Set to `true` to use `BranchKey.test` -->
-        <meta-data android:name="io.branch.sdk.TestMode" android:value="false" />
+      <meta-data 
+        android:name="io.branch.sdk.BranchKey" 
+        android:value="key_live_ark3Xn0ur4EM89pB25kblcldzxmQUqEJ"/>
+      <meta-data 
+        android:name="io.branch.sdk.BranchKey.test" 
+        android:value="key_test_cqg23l4rq1rH02cDW5odvjlnxxoQLsA3" />
+      <meta-data 
+        android:name="io.branch.sdk.TestMode" 
+        android:value="false" />
+        
     </application>
 </manifest>

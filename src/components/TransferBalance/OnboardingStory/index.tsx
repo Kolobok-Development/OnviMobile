@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Dimensions, TouchableOpacity} from 'react-native';
-import {MultiStoryContainer} from 'react-native-story-view';
+// import {MultiStoryContainer} from 'react-native-story-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {dp} from '@utils/dp';
 import {X} from 'react-native-feather';
@@ -126,7 +126,7 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
 
   return (
     <View style={styles.container}>
-      <MultiStoryContainer
+      {/* <MultiStoryContainer
         enableProgress={true}
         visible={isVisible}
         viewedStories={[]}
@@ -149,7 +149,7 @@ const TransferBalanceOnboardingStory: React.FC<OnboardingStoryProps> = ({
           style: styles.storyContainer,
         }}
         imageStyle={styles.storyImage}
-      />
+      /> */}
     </View>
   );
 };

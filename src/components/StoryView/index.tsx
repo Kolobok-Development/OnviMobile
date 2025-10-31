@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {MultiStoryContainer} from 'react-native-story-view';
+// import {MultiStoryContainer} from 'react-native-story-view';
 import {dp} from '@utils/dp.ts';
 import {UserStoriesList} from '../../types/Stories.ts';
 import {X} from 'react-native-feather';
@@ -88,7 +88,7 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
         )}
       />
 
-      {isStoryViewVisible && (
+      {/* {isStoryViewVisible && (
         <MultiStoryContainer
           enableProgress={true}
           visible={isStoryViewVisible}
@@ -113,7 +113,7 @@ const StoryView: React.FC<StoryViewProps> = ({stories}) => {
           }}
           imageStyle={styles.storyImage}
         />
-      )}
+      )} */}
     </View>
   );
 };
